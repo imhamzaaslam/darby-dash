@@ -27,9 +27,6 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
   <RouterLink to="/">
     <div class="auth-logo d-flex align-center gap-x-3">
       <VNodeRenderer :nodes="themeConfig.app.logo" />
-      <h1 class="auth-title">
-        {{ themeConfig.app.title }}
-      </h1>
     </div>
   </RouterLink>
 
@@ -37,36 +34,11 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
     no-gutters
     class="auth-wrapper bg-surface"
   >
-    <VCol
-      md="8"
-      class="d-none d-md-flex"
-    >
-      <div class="position-relative bg-background w-100 me-0">
-        <div
-          class="d-flex align-center justify-center w-100 h-100"
-          style="padding-inline: 6.25rem;"
-        >
-          <VImg
-            max-width="613"
-            :src="authThemeImg"
-            class="auth-illustration mt-16 mb-2"
-          />
-        </div>
-
-        <img
-          class="auth-footer-mask"
-          :src="authThemeMask"
-          alt="auth-footer-mask"
-          height="280"
-          width="100"
-        >
-      </div>
-    </VCol>
+    
 
     <VCol
       cols="12"
-      md="4"
-      class="auth-card-v2 d-flex align-center justify-center"
+      class="d-flex align-center justify-center"
     >
       <VCard
         flat
@@ -80,19 +52,6 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
           <p class="mb-0">
             Please sign-in to your account and start the adventure
           </p>
-        </VCardText>
-        <VCardText>
-          <VAlert
-            color="primary"
-            variant="tonal"
-          >
-            <p class="text-sm mb-2">
-              Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
-            </p>
-            <p class="text-sm mb-0">
-              Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
-            </p>
-          </VAlert>
         </VCardText>
         <VCardText>
           <VForm @submit.prevent="() => { }">
@@ -138,37 +97,6 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
                 >
                   Login
                 </VBtn>
-              </VCol>
-
-              <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <span>New on our platform?</span>
-
-                <a
-                  class="text-primary ms-2"
-                  href="#"
-                >
-                  Create an account
-                </a>
-              </VCol>
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-                <span class="mx-4">or</span>
-                <VDivider />
-              </VCol>
-
-              <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <AuthProvider />
               </VCol>
             </VRow>
           </VForm>
