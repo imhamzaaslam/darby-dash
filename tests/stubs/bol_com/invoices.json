@@ -1,0 +1,36 @@
+{
+    "invoiceListItems" : [ {
+        "invoiceId" : "4500022543922",
+        "invoiceMediaTypes" : {
+            "availableMediaTypes" : [ "application/vnd.retailer.v8+json", "application/vnd.retailer.v8+pdf" ]
+        },
+        "invoicePeriod" : {
+            "endDate" : 1556575200000,
+            "startDate" : 1554069600000
+        },
+        "invoiceType" : "ALL_IN_ONE",
+        "issueDate" : 1675206000000,
+        "legalMonetaryTotal" : {
+            "lineExtensionAmount" : {
+                "amount" : -1336.3,
+                "currencyID" : "EUR"
+            },
+            "payableAmount" : {
+                "amount" : -1336.3,
+                "currencyID" : "EUR"
+            },
+            "taxExclusiveAmount" : {
+                "amount" : -1290.66,
+                "currencyID" : "EUR"
+            },
+            "taxInclusiveAmount" : {
+                "amount" : -1290.66,
+                "currencyID" : "EUR"
+            }
+        },
+        "specificationMediaTypes" : {
+            "availableMediaTypes" : [ "application/vnd.retailer.v8+json", "application/vnd.retailer.v8+openxmlformats-officedocument.spreadsheetml.sheet" ]
+        }
+    } ],
+    "period" : "2018-04-12T00:00:00+02:00/2018-05-09T00:00:00+02:00"
+}

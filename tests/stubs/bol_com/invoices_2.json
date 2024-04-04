@@ -1,0 +1,69 @@
+{
+    "invoiceListItems" : [ {
+        "invoiceId" : "3908410750704",
+        "invoiceMediaTypes" : {
+            "availableMediaTypes" : [ "application/vnd.retailer.v8+json", "application/vnd.retailer.v8+pdf" ]
+        },
+        "invoicePeriod" : {
+            "endDate" : 1677538800000,
+            "startDate" : 1675206000000
+        },
+        "invoiceType" : "ALL_IN_ONE",
+        "issueDate" : 1677625200000,
+        "legalMonetaryTotal" : {
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": -2120.82
+            },
+            "PayableAmount": {
+                "currencyID": "EUR",
+                "value": -1882.25
+            },
+            "TaxExclusiveAmount": {
+                "currencyID": "EUR",
+                "value": -2120.82
+            },
+            "TaxInclusiveAmount": {
+                "currencyID": "EUR",
+                "value": -1882.25
+            }
+        },
+        "specificationMediaTypes" : {
+            "availableMediaTypes" : [ "application/vnd.retailer.v8+json", "application/vnd.retailer.v8+openxmlformats-officedocument.spreadsheetml.sheet" ]
+        }
+    },
+    {
+        "invoiceId" : "3908410670365",
+        "invoiceMediaTypes" : {
+            "availableMediaTypes" : [ "application/vnd.retailer.v8+json", "application/vnd.retailer.v8+pdf" ]
+        },
+        "invoicePeriod" : {
+            "endDate" : 1677538800000,
+            "startDate" : 1675206000000
+        },
+        "invoiceType" : "ADVERTISING_VIA_BOL",
+        "issueDate" : 1677625200000,
+        "legalMonetaryTotal": {
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": 534.54
+            },
+            "PayableAmount": {
+                "currencyID": "EUR",
+                "value": 646.79
+            },
+            "TaxExclusiveAmount": {
+                "currencyID": "EUR",
+                "value": 534.54
+            },
+            "TaxInclusiveAmount": {
+                "currencyID": "EUR",
+                "value": 646.79
+            }
+        },
+        "specificationMediaTypes" : {
+            "availableMediaTypes" : [ "application/vnd.retailer.v8+json", "application/vnd.retailer.v8+openxmlformats-officedocument.spreadsheetml.sheet" ]
+        }
+    } ],
+    "period" : "2018-04-12T00:00:00+02:00/2018-05-09T00:00:00+02:00"
+}

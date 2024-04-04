@@ -1,0 +1,5 @@
+title,ean,asin,sku,purchase_price
+product 1,EAN123,12345,33333,350
+product 2,EAN124,11111,44444,280
+product 3,,3333,12451,160
+product 4,EAN126,54154,254,287

@@ -1,0 +1,1083 @@
+{
+    "UBLVersionID": {
+        "value": "2.1"
+    },
+    "CustomizationID": {
+        "value": "urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1.x"
+    },
+    "ProfileID": {
+        "value": "urn:www.cenbii.eu:profile:bii04:ver2.0"
+    },
+    "ID": {
+        "value": "3908410547573"
+    },
+    "IssueDate": {
+        "value": "1677625200000"
+    },
+    "InvoiceTypeCode": {
+        "listID": "UNCL1001",
+        "value": "380"
+    },
+    "DocumentCurrencyCode": {
+        "value": "EUR"
+    },
+    "InvoicePeriod": [
+        {
+            "EndDate": {
+                "value": "1677538800000"
+            },
+            "StartDate": {
+                "value": "1675206000000"
+            }
+        }
+    ],
+    "AccountingSupplierParty": {
+        "Party": {
+            "Contact": {
+                "Name": {
+                    "value": "Bol.com B.V."
+                },
+                "Telephone": {
+                    "value": "+31 (0)30 6008888"
+                }
+            },
+            "PartyIdentification": [
+                {
+                    "ID": {
+                        "schemeID": "NL:KVK",
+                        "value": "32147382"
+                    }
+                }
+            ],
+            "PartyLegalEntity": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:KVK",
+                        "value": "32147382"
+                    }
+                }
+            ],
+            "PartyName": [
+                {
+                    "Name": {
+                        "value": "Bol.com B.V."
+                    }
+                }
+            ],
+            "PartyTaxScheme": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:VAT",
+                        "value": "NL820471616B01"
+                    },
+                    "TaxScheme": {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UN\/ECE 5153",
+                            "value": "VAT"
+                        }
+                    }
+                }
+            ],
+            "PostalAddress": {
+                "BuildingNumber": {
+                    "value": "100"
+                },
+                "CityName": {
+                    "value": "Utrecht"
+                },
+                "Country": {
+                    "IdentificationCode": {
+                        "listAgencyID": "6",
+                        "listID": "ISO3166-1:Alpha2",
+                        "value": "NL"
+                    }
+                },
+                "PostalZone": {
+                    "value": "3528 BJ"
+                },
+                "StreetName": {
+                    "value": "Papendorpseweg"
+                }
+            }
+        }
+    },
+    "AccountingCustomerParty": {
+        "Party": {
+            "Contact": {
+                "Name": {
+                    "value": "Orange Trust Online"
+                }
+            },
+            "PartyIdentification": [
+                {
+                    "ID": {
+                        "schemeID": "NL:KVK",
+                        "value": "77080289"
+                    }
+                }
+            ],
+            "PartyLegalEntity": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:KVK",
+                        "value": "77080289"
+                    }
+                }
+            ],
+            "PartyName": [
+                {
+                    "Name": {
+                        "value": "Orange Trust Online"
+                    }
+                }
+            ],
+            "PartyTaxScheme": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:VAT",
+                        "value": "NL003145479B18"
+                    },
+                    "TaxScheme": {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UN\/ECE 5153",
+                            "value": "VAT"
+                        }
+                    }
+                }
+            ],
+            "PostalAddress": {
+                "BuildingNumber": {
+                    "value": "24"
+                },
+                "CityName": {
+                    "value": "ZWIJNDRECHT"
+                },
+                "Country": {
+                    "IdentificationCode": {
+                        "listAgencyID": "6",
+                        "listID": "ISO3166-1:Alpha2",
+                        "value": "NL"
+                    }
+                },
+                "PostalZone": {
+                    "value": "3331EB"
+                },
+                "StreetName": {
+                    "value": "Da Costastraat"
+                }
+            }
+        },
+        "SupplierAssignedAccountID": {
+            "value": "1644070"
+        }
+    },
+    "TaxTotal": [
+        {
+            "TaxAmount": {
+                "currencyID": "EUR",
+                "value": 746.4
+            },
+            "TaxSubtotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 746.4
+                    },
+                    "TaxCategory": {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    },
+                    "TaxableAmount": {
+                        "currencyID": "EUR",
+                        "value": 3554.26
+                    }
+                },
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 0
+                    },
+                    "TaxCategory": {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "O"
+                        },
+                        "Percent": {
+                            "value": 0
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    },
+                    "TaxableAmount": {
+                        "currencyID": "EUR",
+                        "value": -4883.23
+                    }
+                }
+            ]
+        }
+    ],
+    "LegalMonetaryTotal": {
+        "LineExtensionAmount": {
+            "currencyID": "EUR",
+            "value": -1328.97
+        },
+        "PayableAmount": {
+            "currencyID": "EUR",
+            "value": -582.57
+        },
+        "TaxExclusiveAmount": {
+            "currencyID": "EUR",
+            "value": -1328.97
+        },
+        "TaxInclusiveAmount": {
+            "currencyID": "EUR",
+            "value": -582.57
+        }
+    },
+    "InvoiceLine": [
+        {
+            "ID": {
+                "value": "3908410547573#COMMISSION"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Commissie"
+                    }
+                ],
+                "Name": {
+                    "value": "COMMISSION"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": 144.34
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": 144.34
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 30.31
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 30.31
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "S"
+                                },
+                                "Percent": {
+                                    "value": 21
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": 144.34
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#COMPENSATION_LOST_GOODS"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "O"
+                        },
+                        "Percent": {
+                            "value": 0
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Compensatie zoekgeraakte artikel(en)"
+                    }
+                ],
+                "Name": {
+                    "value": "COMPENSATION_LOST_GOODS"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": -15.46
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": -15.46
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 0
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 0
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "O"
+                                },
+                                "Percent": {
+                                    "value": 0
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": -15.46
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#CORRECTION_COMMISSION"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Correctie commissie"
+                    }
+                ],
+                "Name": {
+                    "value": "CORRECTION_COMMISSION"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": -3.97
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": -3.97
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": -0.83
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": -0.83
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "S"
+                                },
+                                "Percent": {
+                                    "value": 21
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": -3.97
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#CORRECTION_DISTRIBUTION_BY_BOLCOM_LABEL"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "O"
+                        },
+                        "Percent": {
+                            "value": 0
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Correctie verzenden via bol.com - verzendzegel"
+                    }
+                ],
+                "Name": {
+                    "value": "CORRECTION_DISTRIBUTION_BY_BOLCOM_LABEL"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": -3144.7
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": -3144.7
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 0
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 0
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "O"
+                                },
+                                "Percent": {
+                                    "value": 0
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": -3144.7
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#CORRECTION_DISTRIBUTION_BY_BOLCOM_LABEL"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Correctie verzenden via bol.com - verzendzegel"
+                    }
+                ],
+                "Name": {
+                    "value": "CORRECTION_DISTRIBUTION_BY_BOLCOM_LABEL"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": -3.05
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": -3.05
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": -0.64
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": -0.64
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "S"
+                                },
+                                "Percent": {
+                                    "value": 21
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": -3.05
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#CORRECTION_TURNOVER"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "O"
+                        },
+                        "Percent": {
+                            "value": 0
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Correctie verkoopprijs artikel(en)"
+                    }
+                ],
+                "Name": {
+                    "value": "CORRECTION_TURNOVER"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": 24.95
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": 24.95
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 0
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 0
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "O"
+                                },
+                                "Percent": {
+                                    "value": 0
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": 24.95
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#DISTRIBUTION_BY_BOLCOM_LABEL"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Verzenden via bol.com - verzendzegel"
+                    }
+                ],
+                "Name": {
+                    "value": "DISTRIBUTION_BY_BOLCOM_LABEL"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": 3414.01
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": 3414.01
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 716.94
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 716.94
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "S"
+                                },
+                                "Percent": {
+                                    "value": 21
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": 3414.01
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#PLAZA_RETURN_SHIPPING_LABEL"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Bijdrage aan retourzegel(s)"
+                    }
+                ],
+                "Name": {
+                    "value": "PLAZA_RETURN_SHIPPING_LABEL"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": 2.93
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": 2.93
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 0.62
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 0.62
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "S"
+                                },
+                                "Percent": {
+                                    "value": 21
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": 2.93
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": {
+                "value": "3908410547573#TURNOVER"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "O"
+                        },
+                        "Percent": {
+                            "value": 0
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Verkoopprijs artikel(en), ontvangen van kopers en door bol.com door te storten"
+                    }
+                ],
+                "Name": {
+                    "value": "TURNOVER"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": -1748.02
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": -1748.02
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 0
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 0
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "O"
+                                },
+                                "Percent": {
+                                    "value": 0
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": -1748.02
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

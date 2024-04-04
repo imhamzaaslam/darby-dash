@@ -1,0 +1,304 @@
+{
+    "turnover": {
+        "months": [
+            {
+                "start": "2022-11-01",
+                "end": "2022-11-30",
+                "turnover": 450
+            },
+            {
+                "start": "2022-12-01",
+                "end": "2022-12-31",
+                "turnover": 0
+            },
+            {
+                "start": "2023-01-01",
+                "end": "2023-01-31",
+                "turnover": 330
+            },
+            {
+                "start": "2023-02-01",
+                "end": "2023-02-28",
+                "turnover": 1000
+            },
+            {
+                "start": "2023-03-01",
+                "end": "2023-03-31",
+                "turnover": 100
+            },
+            {
+                "start": "2023-04-01",
+                "end": "2023-04-30",
+                "turnover": 930
+            },
+            {
+                "start": "2023-05-01",
+                "end": "2023-05-31",
+                "turnover": 640
+            }
+        ],
+        "countries": {
+            "months": [
+                {
+                    "start": "2022-11-01",
+                    "end": "2022-11-30",
+                    "products": [
+                        {
+                            "code": "NL",
+                            "turnover": 450,
+                            "products": [
+                                {
+                                    "cancelled": "0",
+                                    "shipped": "2",
+                                    "difference": "2"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "start": "2022-12-01",
+                    "end": "2022-12-31",
+                    "products": []
+                },
+                {
+                    "start": "2023-01-01",
+                    "end": "2023-01-31",
+                    "products": [
+                        {
+                            "code": "NL",
+                            "turnover": 230,
+                            "products": [
+                                {
+                                    "cancelled": "1",
+                                    "shipped": "9",
+                                    "difference": "8"
+                                }
+                            ]
+                        },
+                        {
+                            "code": "BE",
+                            "turnover": 100,
+                            "products": [
+                                {
+                                    "cancelled": "0",
+                                    "shipped": "3",
+                                    "difference": "3"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "start": "2023-02-01",
+                    "end": "2023-02-28",
+                    "products": [
+                        {
+                            "code": "NL",
+                            "turnover": 1000,
+                            "products": [
+                                {
+                                    "cancelled": "1",
+                                    "shipped": "10",
+                                    "difference": "9"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "start": "2023-03-01",
+                    "end": "2023-03-31",
+                    "products": [
+                        {
+                            "code": "BE",
+                            "turnover": 100,
+                            "products": [
+                                {
+                                    "cancelled": "0",
+                                    "shipped": "1",
+                                    "difference": "1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "start": "2023-04-01",
+                    "end": "2023-04-30",
+                    "products": [
+                        {
+                            "code": "NL",
+                            "turnover": 200,
+                            "products": [
+                                {
+                                    "cancelled": "0",
+                                    "shipped": "50",
+                                    "difference": "50"
+                                }
+                            ]
+                        },
+                        {
+                            "code": "BE",
+                            "turnover": 730,
+                            "products": [
+                                {
+                                    "cancelled": "4",
+                                    "shipped": "10",
+                                    "difference": "6"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "start": "2023-05-01",
+                    "end": "2023-05-31",
+                    "products": [
+                        {
+                            "code": "BE",
+                            "turnover": 640,
+                            "products": [
+                                {
+                                    "cancelled": "0",
+                                    "shipped": "2",
+                                    "difference": "2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "orders": {
+        "months": [
+            {
+                "start": "2022-11-01",
+                "end": "2022-11-30",
+                "count": 1
+            },
+            {
+                "start": "2022-12-01",
+                "end": "2022-12-31",
+                "count": 0
+            },
+            {
+                "start": "2023-01-01",
+                "end": "2023-01-31",
+                "count": 3
+            },
+            {
+                "start": "2023-02-01",
+                "end": "2023-02-28",
+                "count": 2
+            },
+            {
+                "start": "2023-03-01",
+                "end": "2023-03-31",
+                "count": 1
+            },
+            {
+                "start": "2023-04-01",
+                "end": "2023-04-30",
+                "count": 3
+            },
+            {
+                "start": "2023-05-01",
+                "end": "2023-05-31",
+                "count": 2
+            }
+        ]
+    },
+    "products": {
+        "months": [
+            {
+                "start": "2022-11-01",
+                "end": "2022-11-30",
+                "products": [
+                    {
+                        "title": "test product two",
+                        "sales": "2",
+                        "sku": "1002"
+                    }
+                ]
+            },
+            {
+                "start": "2022-12-01",
+                "end": "2022-12-31",
+                "products": []
+            },
+            {
+                "start": "2023-01-01",
+                "end": "2023-01-31",
+                "products": [
+                    {
+                        "title": "test product one",
+                        "sales": "10",
+                        "sku": "1001"
+                    },
+                    {
+                        "title": "test product two",
+                        "sales": "1",
+                        "sku": "1002"
+                    }
+                ]
+            },
+            {
+                "start": "2023-02-01",
+                "end": "2023-02-28",
+                "products": [
+                    {
+                        "title": "test product one",
+                        "sales": "9",
+                        "sku": "1001"
+                    }
+                ]
+            },
+            {
+                "start": "2023-03-01",
+                "end": "2023-03-31",
+                "products": [
+                    {
+                        "title": "test product one",
+                        "sales": "1",
+                        "sku": "1001"
+                    }
+                ]
+            },
+            {
+                "start": "2023-04-01",
+                "end": "2023-04-30",
+                "products": [
+                    {
+                        "title": "test product one",
+                        "sales": "43",
+                        "sku": "1001"
+                    },
+                    {
+                        "title": "test product two",
+                        "sales": "13",
+                        "sku": "1002"
+                    }
+                ]
+            },
+            {
+                "start": "2023-05-01",
+                "end": "2023-05-31",
+                "products": [
+                    {
+                        "title": "test product one",
+                        "sales": "1",
+                        "sku": "1001"
+                    },
+                    {
+                        "title": "test product two",
+                        "sales": "1",
+                        "sku": "1002"
+                    }
+
+                ]
+            }
+        ]
+    }
+}

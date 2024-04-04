@@ -1,0 +1,362 @@
+{
+    "UBLVersionID": {
+        "value": "2.1"
+    },
+    "CustomizationID": {
+        "value": "urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1.x"
+    },
+    "ProfileID": {
+        "value": "urn:www.cenbii.eu:profile:bii04:ver2.0"
+    },
+    "ID": {
+        "value": "3908410670365"
+    },
+    "IssueDate": {
+        "value": "1677625200000"
+    },
+    "InvoiceTypeCode": {
+        "listID": "UNCL1001",
+        "value": "380"
+    },
+    "DocumentCurrencyCode": {
+        "value": "EUR"
+    },
+    "InvoicePeriod": [
+        {
+            "EndDate": {
+                "value": "1677538800000"
+            },
+            "StartDate": {
+                "value": "1675206000000"
+            }
+        }
+    ],
+    "AccountingSupplierParty": {
+        "Party": {
+            "Contact": {
+                "Name": {
+                    "value": "Bol.com B.V."
+                },
+                "Telephone": {
+                    "value": "+31 (0)30 6008888"
+                }
+            },
+            "PartyIdentification": [
+                {
+                    "ID": {
+                        "schemeID": "NL:KVK",
+                        "value": "32147382"
+                    }
+                }
+            ],
+            "PartyLegalEntity": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:KVK",
+                        "value": "32147382"
+                    }
+                }
+            ],
+            "PartyName": [
+                {
+                    "Name": {
+                        "value": "Bol.com B.V."
+                    }
+                }
+            ],
+            "PartyTaxScheme": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:VAT",
+                        "value": "NL820471616B01"
+                    },
+                    "TaxScheme": {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UN\/ECE 5153",
+                            "value": "VAT"
+                        }
+                    }
+                }
+            ],
+            "PostalAddress": {
+                "BuildingNumber": {
+                    "value": "100"
+                },
+                "CityName": {
+                    "value": "Utrecht"
+                },
+                "Country": {
+                    "IdentificationCode": {
+                        "listAgencyID": "6",
+                        "listID": "ISO3166-1:Alpha2",
+                        "value": "NL"
+                    }
+                },
+                "PostalZone": {
+                    "value": "3528 BJ"
+                },
+                "StreetName": {
+                    "value": "Papendorpseweg"
+                }
+            }
+        }
+    },
+    "AccountingCustomerParty": {
+        "Party": {
+            "Contact": {
+                "Name": {
+                    "value": "Joramor"
+                }
+            },
+            "PartyIdentification": [
+                {
+                    "ID": {
+                        "schemeID": "NL:KVK",
+                        "value": "81819447"
+                    }
+                }
+            ],
+            "PartyLegalEntity": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:KVK",
+                        "value": "81819447"
+                    }
+                }
+            ],
+            "PartyName": [
+                {
+                    "Name": {
+                        "value": "Joramor"
+                    }
+                }
+            ],
+            "PartyTaxScheme": [
+                {
+                    "CompanyID": {
+                        "schemeAgencyID": "ZZZ",
+                        "schemeID": "NL:VAT",
+                        "value": "NL003606580B60"
+                    },
+                    "TaxScheme": {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UN\/ECE 5153",
+                            "value": "VAT"
+                        }
+                    }
+                }
+            ],
+            "PostalAddress": {
+                "BuildingNumber": {
+                    "value": "134"
+                },
+                "CityName": {
+                    "value": "HAARLEM"
+                },
+                "Country": {
+                    "IdentificationCode": {
+                        "listAgencyID": "6",
+                        "listID": "ISO3166-1:Alpha2",
+                        "value": "NL"
+                    }
+                },
+                "PostalZone": {
+                    "value": "2021JM"
+                },
+                "StreetName": {
+                    "value": "Generaal Cronjestraat"
+                }
+            }
+        },
+        "SupplierAssignedAccountID": {
+            "value": "1687287"
+        }
+    },
+    "PaymentMeans": [
+        {
+            "PayeeFinancialAccount": {
+                "FinancialInstitutionBranch": {
+                    "FinancialInstitution": {
+                        "ID": {
+                            "schemeID": "BIC",
+                            "value": "INGBNL2A"
+                        }
+                    }
+                },
+                "ID": {
+                    "schemeID": "IBAN",
+                    "value": "NL45INGB0000257133"
+                }
+            },
+            "PaymentDueDate": {
+                "value": "1680213600000"
+            },
+            "PaymentMeansCode": {
+                "listID": "UNCL4461",
+                "value": "31"
+            }
+        }
+    ],
+    "PaymentTerms": [
+        {
+            "Note": [
+                {
+                    "value": "Te voldoen binnen 30 dagen op het bankrekeningnummer van bol.com onder vermelding van het factuurnummer."
+                }
+            ]
+        }
+    ],
+    "TaxTotal": [
+        {
+            "TaxAmount": {
+                "currencyID": "EUR",
+                "value": 112.25
+            },
+            "TaxSubtotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 112.25
+                    },
+                    "TaxCategory": {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    },
+                    "TaxableAmount": {
+                        "currencyID": "EUR",
+                        "value": 534.54
+                    }
+                }
+            ]
+        }
+    ],
+    "LegalMonetaryTotal": {
+        "LineExtensionAmount": {
+            "currencyID": "EUR",
+            "value": 534.54
+        },
+        "PayableAmount": {
+            "currencyID": "EUR",
+            "value": 646.79
+        },
+        "TaxExclusiveAmount": {
+            "currencyID": "EUR",
+            "value": 534.54
+        },
+        "TaxInclusiveAmount": {
+            "currencyID": "EUR",
+            "value": 646.79
+        }
+    },
+    "InvoiceLine": [
+        {
+            "ID": {
+                "value": "3908410670365#SPONSORED_PRODUCTS"
+            },
+            "InvoicedQuantity": {
+                "unitCode": "ZZ",
+                "unitCodeListID": "UNECERec20",
+                "value": 1
+            },
+            "Item": {
+                "ClassifiedTaxCategory": [
+                    {
+                        "ID": {
+                            "schemeAgencyID": "6",
+                            "schemeID": "UNCL5305",
+                            "value": "S"
+                        },
+                        "Percent": {
+                            "value": 21
+                        },
+                        "TaxScheme": {
+                            "ID": {
+                                "schemeAgencyID": "6",
+                                "schemeID": "UN\/ECE 5153",
+                                "value": "VAT"
+                            }
+                        }
+                    }
+                ],
+                "Description": [
+                    {
+                        "value": "Sponsored Products"
+                    }
+                ],
+                "Name": {
+                    "value": "SPONSORED_PRODUCTS"
+                }
+            },
+            "LineExtensionAmount": {
+                "currencyID": "EUR",
+                "value": 534.54
+            },
+            "Price": {
+                "BaseQuantity": {
+                    "unitCode": "ZZ",
+                    "unitCodeListID": "UNECERec20",
+                    "value": 1
+                },
+                "PriceAmount": {
+                    "currencyID": "EUR",
+                    "value": 534.54
+                }
+            },
+            "TaxTotal": [
+                {
+                    "TaxAmount": {
+                        "currencyID": "EUR",
+                        "value": 112.25
+                    },
+                    "TaxSubtotal": [
+                        {
+                            "TaxAmount": {
+                                "currencyID": "EUR",
+                                "value": 112.25
+                            },
+                            "TaxCategory": {
+                                "ID": {
+                                    "schemeAgencyID": "6",
+                                    "schemeID": "UNCL5305",
+                                    "value": "S"
+                                },
+                                "Percent": {
+                                    "value": 21
+                                },
+                                "TaxScheme": {
+                                    "ID": {
+                                        "schemeAgencyID": "6",
+                                        "schemeID": "UN\/ECE 5153",
+                                        "value": "VAT"
+                                    }
+                                }
+                            },
+                            "TaxableAmount": {
+                                "currencyID": "EUR",
+                                "value": 534.54
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

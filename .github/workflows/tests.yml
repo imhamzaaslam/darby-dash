@@ -1,0 +1,65 @@
+name: "Feature & Unit tests"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+
+    env:
+      APP_ENV: testing
+      DB_DATABASE: booky
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      BOL_COM_ACCESS_TOKEN_ENDPOINT: https://login.bol.com/token
+      BOL_COM_API_ENDPOINT: https://api.bol.com/retailer-demo/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Start MySQL service
+        run: sudo systemctl start mysql.service
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: gd, curl, mbstring, zip, pcntl, pdo, pdo_mysql, bcmath
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Composer install
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --prefer-dist
+
+      - name: Add databases
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE booky CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+          mysql -h 127.0.0.1 -u root -proot -e "FLUSH PRIVILEGES"
+
+      - name: Migrate database
+        run: |
+          php artisan migrate:fresh
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+          php artisan cache:clear
+
+      - name: Run tests
+        run: vendor/bin/phpunit --do-not-cache-result
