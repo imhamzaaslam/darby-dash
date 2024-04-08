@@ -87,7 +87,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof ErrorException || $e instanceof Error) {
-            return response()->json(['error' => 'Something went wrong. Please try again later.', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage(), 'message' => 'Something went wrong. Please try again later.'], 500);
         }
 
         return parent::render($request, $e);
