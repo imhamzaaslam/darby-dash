@@ -87,7 +87,7 @@ async function submit() {
       let res = await authStore.login(email, password)
 
       if (!res.data.success) {
-        alert(res.data.error)
+        alert(res.data.message)
         return
       }
 
