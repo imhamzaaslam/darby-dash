@@ -42,7 +42,7 @@ const resolveNavItemComponent = item => {
     return VerticalNavSectionTitle
   if ('children' in item)
     return VerticalNavGroup
-  
+
   return VerticalNavLink
 }
 
@@ -86,8 +86,9 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
           to="/"
           class="app-logo app-title-wrapper"
         >
-          <VNodeRenderer :nodes="layoutConfig.app.logo" />
+          <VNodeRenderer v-if="!configStore.isVerticalNavCollapsed" :nodes="layoutConfig.app.logo" />
         </RouterLink>
+
         <!-- 👉 Vertical nav actions -->
         <!-- Show toggle collapsible in >md and close button in <md -->
         <Component

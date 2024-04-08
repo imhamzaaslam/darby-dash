@@ -6,7 +6,8 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 async function logout() {
-  let res = await authStore.logout();
+  let token = authStore.token
+  let res = await authStore.logout(token)
   if(res.data.success) {
     router.push({ name: 'login' })
   } else {

@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', {
         // initialize state from local storage to enable user to stay logged in
         user: getUserFromLocalStorage(),
         authenticated: false,
+        token: null,
         loadStatus: 0,
         error: null
     }),
@@ -17,11 +18,11 @@ export const useAuthStore = defineStore('auth', {
             this.authenticated = false
             this.error = null
             this.loadStatus = 1
-
             try {
                 let res = await AuthService.login({email, password})
                 this.loadStatus = 2
                 this.authenticated = true
+                this.token = res.data.accessToken
                 return res
             } catch (error) {
                 this.error = error.response
@@ -35,9 +36,8 @@ export const useAuthStore = defineStore('auth', {
             this.authenticated = false
             this.error = null
             this.loadStatus = 0
-
             localStorage.removeItem('user')
-            return await AuthService.logout();
+            return await AuthService.logout(this.token).then(this.token=null)
         },
         async getAuthUser()  {
             this.error = null

@@ -37,8 +37,12 @@ export default {
         return await authClient.post('/api/auth/login', payload)
     },
 
-    logout: () => {
-        return authClient.post('/api/auth/logout')
+    logout: (token) => {
+        return authClient.post('/api/auth/logout', {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
     },
 
     forgotPassword: async email => {
