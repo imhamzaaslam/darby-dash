@@ -41,7 +41,7 @@
                   </a>
                 </div>
 
-                <VBtn block type="submit" :disabled="loadStatus">
+                <VBtn block type="submit" :disabled="loadStatus === 1">
                   <VProgressCircular
                     indeterminate
                     color="white"
@@ -59,14 +59,6 @@
 </template>
 
 <script setup>
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
-import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
-import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
-import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
-import authV2MaskDark from '@images/pages/misc-mask-dark.png'
-import authV2MaskLight from '@images/pages/misc-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { useAuthStore } from "../store/auth"
@@ -83,8 +75,6 @@ const form = ref({
 const refForm = ref(null)
 
 const isPasswordVisible = ref(false)
-const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
-const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 
 const authStore = useAuthStore()
 const $router = useRouter()
@@ -96,10 +86,8 @@ async function submit() {
       let { email, password } = form.value
       let res = await authStore.login(email, password)
 
-      console.log(res);
-
       if (!res.data.success) {
-        alert(res.data.message)
+        alert(res.data.error)
         return
       }
 

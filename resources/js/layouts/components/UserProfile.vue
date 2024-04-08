@@ -10,7 +10,7 @@ async function logout() {
   if(res.data.success) {
     router.push({ name: 'login' })
   } else {
-    alert(res.data.message)
+    alert(res.data.error)
   }
 }
 </script>

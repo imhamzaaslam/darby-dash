@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use ErrorException;
+use Error;
 
 class Handler extends ExceptionHandler
 {
@@ -85,7 +86,7 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'object-not-found', 'message' => $e->getMessage()], 404);
         }
 
-        if ($e instanceof ErrorException) {
+        if ($e instanceof ErrorException || $e instanceof Error) {
             return response()->json(['error' => 'Something went wrong. Please try again later.', 'message' => $e->getMessage()], 500);
         }
 
