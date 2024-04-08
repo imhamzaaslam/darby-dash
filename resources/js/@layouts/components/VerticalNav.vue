@@ -87,15 +87,6 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
           class="app-logo app-title-wrapper"
         >
           <VNodeRenderer :nodes="layoutConfig.app.logo" />
-
-          <Transition name="vertical-nav-app-title">
-            <h1
-              v-show="!hideTitleAndIcon"
-              class="app-logo-title"
-            >
-              {{ layoutConfig.app.title }}
-            </h1>
-          </Transition>
         </RouterLink>
         <!-- 👉 Vertical nav actions -->
         <!-- Show toggle collapsible in >md and close button in <md -->

@@ -6,7 +6,7 @@ const routes = [
         path: '/',
         name: 'dummy',
         meta: { mustBeAuthorized: false },
-        component: Dummy, // Use imported component
+        component: Dummy,
     },
 ]
 

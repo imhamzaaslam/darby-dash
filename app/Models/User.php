@@ -119,7 +119,6 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
     use SoftDeletes;
     use Metable;
     use HasSettings;
-    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.

@@ -1,5 +1,18 @@
 <script setup>
 import avatar1 from '@images/avatars/avatar-1.png'
+import { useAuthStore } from "@/store/auth"
+
+const authStore = useAuthStore()
+const router = useRouter()
+
+async function logout() {
+  let res = await authStore.logout();
+  if(res.data.success) {
+    router.push({ name: 'login' })
+  } else {
+    alert(res.data.message)
+  }
+}
 </script>
 
 <template>
@@ -56,7 +69,7 @@ import avatar1 from '@images/avatars/avatar-1.png'
           <VDivider class="my-2" />
 
           <!-- 👉 Profile -->
-          <VListItem link>
+          <VListItem to="/account-setting">
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -68,50 +81,8 @@ import avatar1 from '@images/avatars/avatar-1.png'
             <VListItemTitle>Profile</VListItemTitle>
           </VListItem>
 
-          <!-- 👉 Settings -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-settings"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Settings</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 Pricing -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-currency-dollar"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Pricing</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 FAQ -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-help"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>FAQ</VListItemTitle>
-          </VListItem>
-
-          <!-- Divider -->
-          <VDivider class="my-2" />
-
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem @click="logout">
             <template #prepend>
               <VIcon
                 class="me-2"
