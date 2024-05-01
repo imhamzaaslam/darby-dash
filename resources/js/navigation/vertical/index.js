@@ -1,12 +1,16 @@
 export default [
-  {
-    title: 'Home',
-    to: { name: 'root' },
-    icon: { icon: 'tabler-smart-home' },
-  },
-  {
-    title: 'Profile',
-    to: { name: 'account-setting' },
-    icon: { icon: 'tabler-user' },
-  },
+    {
+        title: 'Home',
+        to: { name: 'root' },
+        icon: { icon: 'tabler-align-box-bottom-center' },
+      },
+    {
+        title: 'Project Dashboards',
+        icon: { icon: 'tabler-smart-home' },
+        children: [
+        { title: 'Website Design Project', to: 'web-development-dash' },
+        { title: 'SEO Program', to: 'seo-programme' },
+        { title: 'Google Ads', to: 'google-ads' },
+        ],
+    },
 ]

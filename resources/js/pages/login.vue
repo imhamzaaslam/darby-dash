@@ -90,8 +90,6 @@ async function submit() {
 
             localStorage.setItem('user', JSON.stringify(res.data))
 
-            alert('Login successful')
-
             $router.push('/')
         }
     })
