@@ -1,6 +1,7 @@
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { useAuthStore } from '@/store/auth'
+import adminAuthorizedPages from './adminAuthorizedPages'
 
 function recursiveLayouts(route) {
   if (route.children) {
@@ -12,14 +13,6 @@ function recursiveLayouts(route) {
   
   return setupLayouts([route])[0]
 }
-
-const adminAuthorizedPages = [
-  'root',
-  'second-page',
-  'web-development-dash',
-  'seo-programme',
-  'google-ads',
-]
 
 const requireAuth = (to, from, next) => {
   const authStore = useAuthStore()

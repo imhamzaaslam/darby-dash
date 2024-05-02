@@ -3,7 +3,7 @@ export default [
         title: 'Home',
         to: { name: 'root' },
         icon: { icon: 'tabler-align-box-bottom-center' },
-      },
+    },
     {
         title: 'Project Dashboards',
         icon: { icon: 'tabler-smart-home' },
@@ -13,4 +13,9 @@ export default [
             { title: 'Google Ads', to: 'google-ads' },
         ],
     },
+    {
+        title: 'Projects',
+        to: { name: 'projects' },
+        icon: { icon: 'tabler-stack' },
+    }
 ]

@@ -25,6 +25,16 @@ authClient.interceptors.response.use(
     }
 );
 
+authClient.interceptors.request.use(config => {
+    const authStore = useAuthStore()
+    const token = authStore.token
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
+
+    return config
+})
+
 const getCookie = () => {
     console.log('AuthService: sending cookie request')
     return authClient.get('/sanctum/csrf-cookie')
