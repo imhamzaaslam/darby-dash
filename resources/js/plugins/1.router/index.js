@@ -16,9 +16,10 @@ function recursiveLayouts(route) {
 const adminAuthorizedPages = [
   'root',
   'second-page',
+  'web-development-dash',
+  'seo-programme',
+  'google-ads',
 ]
-
-const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
 
 const requireAuth = (to, from, next) => {
   const authStore = useAuthStore()
@@ -48,7 +49,9 @@ router.beforeEach((to, from, next) => {
     return requireAuth(to, from, next)
   }
 
-  if (to.name === 'login' && user) {
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+
+  if (to.name == 'login' && user) {
     return next({ name: 'root' })
   }
 

@@ -32,7 +32,6 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
-            this.user = null
             this.authenticated = false
             this.error = null
             this.loadStatus = 0
@@ -46,7 +45,6 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const response = await AuthService.getAuthUser()
                 const user = response.data.data
-                this.user = user
                 localStorage.setItem('user', JSON.stringify(user))
 
                 this.loadStatus = 2

@@ -8,9 +8,9 @@ export default [
         title: 'Project Dashboards',
         icon: { icon: 'tabler-smart-home' },
         children: [
-        { title: 'Website Design Project', to: 'web-development-dash' },
-        { title: 'SEO Program', to: 'seo-programme' },
-        { title: 'Google Ads', to: 'google-ads' },
+            { title: 'Website Design Project', to: 'web-development-dash' },
+            { title: 'SEO Program', to: 'seo-programme' },
+            { title: 'Google Ads', to: 'google-ads' },
         ],
     },
 ]
