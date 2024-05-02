@@ -64,7 +64,7 @@ const dashboards = ref([
             rounded="pill"
             color="primary"
             >
-            Access Project
+            Access Projects
             </VBtn>
         </RouterLink>
             </div>

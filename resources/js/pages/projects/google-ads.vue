@@ -14,6 +14,10 @@ import react from '@images/icons/project-icons/react.png'
 import sketch from '@images/icons/project-icons/sketch.png'
 import vue from '@images/icons/project-icons/vue.png'
 import xamarin from '@images/icons/project-icons/xamarin.png'
+import AddProjectDrawer from '@/pages/projects/_partials/add-project-drawer.vue'
+
+
+const isAddProjectDrawerOpen = ref(false)
 
 // Project Table Header
 const projectTableHeaders = [
@@ -22,7 +26,7 @@ const projectTableHeaders = [
     key: 'project',
   },
   {
-    title: 'LEADER',
+    title: 'PM',
     key: 'leader',
   },
   {
@@ -36,6 +40,7 @@ const projectTableHeaders = [
   {
     title: 'Action',
     key: 'Action',
+    width: '5%',
     sortable: false,
   },
 ]
@@ -54,6 +59,7 @@ const projects = [
       avatar6,
     ],
     extraMembers: 3,
+    url: '/web-development-dash',
   },
   {
     logo: figma,
@@ -66,6 +72,7 @@ const projects = [
       avatar5,
       avatar2,
     ],
+    url: '/web-development-dash',
   },
   {
     logo: vue,
@@ -79,6 +86,7 @@ const projects = [
       avatar2,
       avatar1,
     ],
+    url: '/web-development-dash',
   },
   {
     logo: xamarin,
@@ -93,6 +101,7 @@ const projects = [
       avatar7,
     ],
     extraMembers: 8,
+    url: '/web-development-dash',
   },
   {
     logo: python,
@@ -107,6 +116,7 @@ const projects = [
       avatar1,
     ],
     extraMembers: 5,
+    url: '/web-development-dash',
   },
   {
     logo: sketch,
@@ -119,6 +129,7 @@ const projects = [
       avatar1,
       avatar8,
     ],
+    url: '/web-development-dash',
   },
   {
     logo: html5,
@@ -132,6 +143,7 @@ const projects = [
       avatar8,
       avatar6,
     ],
+    url: '/web-development-dash',
   },
 ]
 
@@ -144,10 +156,22 @@ const options = ref({
 </script>
 
 <template>
+  <VRow>
+    <VCol cols="12">
+      <div class="d-flex justify-end mb-5">
+        <VBtn
+          prepend-icon="tabler-plus"
+          @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
+        >
+          Add Project
+        </VBtn>
+      </div>
+    </VCol>
+  </VRow>
   <VCard>
     <VCardText class="d-flex justify-space-between align-center flex-wrap gap-4">
       <h5 class="text-h5">
-        Google-Ads Programs
+        Google Ads Programs
       </h5>
       <div style="inline-size: 272px;">
         <AppTextField
@@ -238,9 +262,22 @@ const options = ref({
       </template>
 
       <!-- Action -->
-      <template #item.Action>
+      <template #item.Action="{ item }">
         <IconBtn>
           <VIcon icon="tabler-dots-vertical" />
+          <VMenu activator="parent">
+            <VList>
+              <VListItem
+                value="view"
+                :to="item.url"
+              >
+                View
+              </VListItem>
+              <VListItem value="delete">
+                Delete
+              </VListItem>
+            </VList>
+          </VMenu>
         </IconBtn>
       </template>
 
@@ -255,4 +292,5 @@ const options = ref({
     </VDataTable>
     <!-- !SECTION -->
   </VCard>
+  <AddProjectDrawer v-model:is-drawer-open="isAddProjectDrawerOpen" />
 </template>
