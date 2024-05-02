@@ -2,15 +2,18 @@ import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { useAuthStore } from '@/store/auth'
 import adminAuthorizedPages from './adminAuthorizedPages'
+import WebDesign from '../../../js/pages/projects/web-design.vue'
+import Seo from '../../../js/pages/projects/seo.vue'
+import GoogleAds from '../../../js/pages/projects/google-ads.vue'
 
 function recursiveLayouts(route) {
   if (route.children) {
     for (let i = 0; i < route.children.length; i++)
       route.children[i] = recursiveLayouts(route.children[i])
-    
+
     return route
   }
-  
+
   return setupLayouts([route])[0]
 }
 
@@ -29,11 +32,35 @@ const router = createRouter({
   scrollBehavior(to) {
     if (to.hash)
       return { el: to.hash, behavior: 'smooth', top: 60 }
-    
+
     return { top: 0 }
   },
   extendRoutes: pages => [
-    ...[...pages].map(route => recursiveLayouts(route)),
+    recursiveLayouts(
+      {
+        path: '/projects/web-design',
+        name: 'web-design',
+        component: WebDesign,
+        meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/seo',
+        name: 'seo',
+        component: Seo,
+        meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/google-ads',
+        name: 'google-ads',
+        component: GoogleAds,
+        meta: { layout: 'default' },
+      },
+    ),
+    ...pages.map(route => recursiveLayouts(route)),
   ],
 })
 

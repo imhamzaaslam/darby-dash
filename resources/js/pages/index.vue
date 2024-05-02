@@ -4,18 +4,21 @@ const dashboards = ref([
     icon: 'tabler-world',
     color: 'primary',
     title: 'Website Design Project',
+    url: '/projects/web-design',
     isHover: false,
   },
   {
     icon: 'tabler-military-rank',
     color: 'primary',
     title: 'SEO Program',
+    url: '/projects/seo',
     isHover: false,
   },
   {
     icon: 'tabler-brand-google',
     color: 'primary',
     title: 'Google Ads Program',
+    url: '/projects/google-ads',
     isHover: false,
   },
 ])
@@ -55,7 +58,7 @@ const dashboards = ref([
               </h5>
             </div>
             <div class="text-center">
-                <RouterLink to="/web-development-dash">
+                <RouterLink :to="data.url">
             <VBtn
             size="small"
             rounded="pill"

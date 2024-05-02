@@ -42,10 +42,11 @@ declare module 'vue-router/auto/routes' {
     'root': RouteRecordInfo<'root', '/', Record<never, never>, Record<never, never>>,
     '$error': RouteRecordInfo<'$error', '/:error(.*)', { error: ParamValue<true> }, { error: ParamValue<false> }>,
     'account-setting': RouteRecordInfo<'account-setting', '/account-setting', Record<never, never>, Record<never, never>>,
-    'google-ads': RouteRecordInfo<'google-ads', '/google-ads', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
+    'projects-google-ads': RouteRecordInfo<'projects-google-ads', '/projects/google-ads', Record<never, never>, Record<never, never>>,
+    'projects-seo': RouteRecordInfo<'projects-seo', '/projects/seo', Record<never, never>, Record<never, never>>,
+    'projects-web-design': RouteRecordInfo<'projects-web-design', '/projects/web-design', Record<never, never>, Record<never, never>>,
     'second-page': RouteRecordInfo<'second-page', '/second-page', Record<never, never>, Record<never, never>>,
-    'seo-programme': RouteRecordInfo<'seo-programme', '/seo-programme', Record<never, never>, Record<never, never>>,
     'web-development-dash': RouteRecordInfo<'web-development-dash', '/web-development-dash', Record<never, never>, Record<never, never>>,
   }
 }
