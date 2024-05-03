@@ -188,101 +188,13 @@ const deleteUser = async id => {
   // refetch User
   fetchUsers()
 }
-
-const widgetData = ref([
-  {
-    title: 'Session',
-    value: '21,459',
-    change: 29,
-    desc: 'Total Users',
-    icon: 'tabler-users',
-    iconColor: 'primary',
-  },
-  {
-    title: 'Paid Users',
-    value: '4,567',
-    change: 18,
-    desc: 'Last Week Analytics',
-    icon: 'tabler-user-plus',
-    iconColor: 'error',
-  },
-  {
-    title: 'Active Users',
-    value: '19,860',
-    change: -14,
-    desc: 'Last Week Analytics',
-    icon: 'tabler-user-check',
-    iconColor: 'success',
-  },
-  {
-    title: 'Pending Users',
-    value: '237',
-    change: 42,
-    desc: 'Last Week Analytics',
-    icon: 'tabler-user-search',
-    iconColor: 'warning',
-  },
-])
 </script>
 
 <template>
   <section>
-    <!-- 👉 Widgets -->
-    <div class="d-flex mb-6">
-      <VRow>
-        <template
-          v-for="(data, id) in widgetData"
-          :key="id"
-        >
-          <VCol
-            cols="12"
-            md="3"
-            sm="6"
-          >
-            <VCard>
-              <VCardText>
-                <div class="d-flex justify-space-between">
-                  <div class="d-flex flex-column gap-y-1">
-                    <div class="text-body-1 text-high-emphasis">
-                      {{ data.title }}
-                    </div>
-                    <div class="d-flex gap-x-2 align-center">
-                      <h4 class="text-h4">
-                        {{ data.value }}
-                      </h4>
-                      <div
-                        class="text-base"
-                        :class="data.change > 0 ? 'text-success' : 'text-error'"
-                      >
-                        ({{ prefixWithPlus(data.change) }}%)
-                      </div>
-                    </div>
-                    <div class="text-sm">
-                      {{ data.desc }}
-                    </div>
-                  </div>
-                  <VAvatar
-                    :color="data.iconColor"
-                    variant="tonal"
-                    rounded
-                    size="42"
-                  >
-                    <VIcon
-                      :icon="data.icon"
-                      size="26"
-                    />
-                  </VAvatar>
-                </div>
-              </VCardText>
-            </VCard>
-          </VCol>
-        </template>
-      </VRow>
-    </div>
-
     <VCard class="mb-6">
       <VCardItem class="pb-4">
-        <VCardTitle>Filters</VCardTitle>
+        <VCardTitle>Manage Team</VCardTitle>
       </VCardItem>
 
       <VCardText>
@@ -405,12 +317,7 @@ const widgetData = ref([
             </VAvatar>
             <div class="d-flex flex-column">
               <h6 class="text-base">
-                <RouterLink
-                  :to="{ name: 'apps-user-view-id', params: { id: item.id } }"
-                  class="font-weight-medium text-link"
-                >
-                  {{ item.fullName }}
-                </RouterLink>
+                {{ item.fullName }}
               </h6>
               <div class="text-sm">
                 {{ item.email }}
