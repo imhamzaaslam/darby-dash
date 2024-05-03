@@ -29,14 +29,6 @@ const headers = [
     key: 'role',
   },
   {
-    title: 'Plan',
-    key: 'plan',
-  },
-  {
-    title: 'Billing',
-    key: 'billing',
-  },
-  {
     title: 'Status',
     key: 'status',
   },
@@ -202,7 +194,7 @@ const deleteUser = async id => {
           <!-- 👉 Select Role -->
           <VCol
             cols="12"
-            sm="4"
+            sm="6"
           >
             <AppSelect
               v-model="selectedRole"
@@ -212,23 +204,9 @@ const deleteUser = async id => {
               clear-icon="tabler-x"
             />
           </VCol>
-          <!-- 👉 Select Plan -->
           <VCol
             cols="12"
-            sm="4"
-          >
-            <AppSelect
-              v-model="selectedPlan"
-              placeholder="Select Plan"
-              :items="plans"
-              clearable
-              clear-icon="tabler-x"
-            />
-          </VCol>
-          <!-- 👉 Select Status -->
-          <VCol
-            cols="12"
-            sm="4"
+            sm="6"
           >
             <AppSelect
               v-model="selectedStatus"
@@ -268,15 +246,6 @@ const deleteUser = async id => {
               placeholder="Search User"
             />
           </div>
-
-          <!-- 👉 Export button -->
-          <VBtn
-            variant="tonal"
-            color="secondary"
-            prepend-icon="tabler-upload"
-          >
-            Export
-          </VBtn>
 
           <!-- 👉 Add user button -->
           <VBtn
@@ -338,13 +307,6 @@ const deleteUser = async id => {
             <div class="text-capitalize text-high-emphasis text-body-1">
               {{ item.role }}
             </div>
-          </div>
-        </template>
-
-        <!-- Plan -->
-        <template #item.plan="{ item }">
-          <div class="text-body-1 text-high-emphasis text-capitalize">
-            {{ item.currentPlan }}
           </div>
         </template>
 
