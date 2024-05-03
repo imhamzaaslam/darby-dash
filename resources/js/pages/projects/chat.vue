@@ -206,12 +206,6 @@ const chatContentContainerBg = computed(() => {
           <!-- Header right content -->
           <div class="d-sm-flex align-center d-none text-medium-emphasis">
             <IconBtn>
-              <VIcon icon="tabler-phone" />
-            </IconBtn>
-            <IconBtn>
-              <VIcon icon="tabler-video" />
-            </IconBtn>
-            <IconBtn>
               <VIcon icon="tabler-search" />
             </IconBtn>
             <IconBtn>
@@ -248,12 +242,6 @@ const chatContentContainerBg = computed(() => {
           >
             <template #append-inner>
               <div class="d-flex gap-1">
-                <IconBtn>
-                  <VIcon
-                    icon="tabler-microphone"
-                    size="22"
-                  />
-                </IconBtn>
                 <IconBtn @click="refInputEl?.click()">
                   <VIcon
                     icon="tabler-paperclip"
