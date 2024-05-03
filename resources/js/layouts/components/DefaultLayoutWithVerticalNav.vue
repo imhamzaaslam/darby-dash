@@ -25,12 +25,12 @@ const fetchProjectParams = () => {
   projectType.value = $route.params.project
 }
 
-onMounted(fetchProjectParams)
-
 watch([
   isFallbackStateActive,
   refLoadingIndicator,
 ], () => {
+  fetchProjectParams()
+
   if (isFallbackStateActive.value && refLoadingIndicator.value)
     refLoadingIndicator.value.fallbackHandle()
   if (!isFallbackStateActive.value && refLoadingIndicator.value)
@@ -38,8 +38,6 @@ watch([
 }, { immediate: true })
 
 const showNavigation = computed(() => {
-  fetchProjectParams()
-
   return $route.params.id !== undefined
 })
 // !SECTION

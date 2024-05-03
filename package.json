@@ -44,6 +44,7 @@
     "unplugin-vue-define-options": "1.4.2",
     "vue": "3.4.21",
     "vue-chartjs": "5.3.0",
+    "vue-draggable-next": "^2.2.1",
     "vue-flatpickr-component": "11.0.3",
     "vue-i18n": "9.10.1",
     "vue-prism-component": "2.0.0",
@@ -87,6 +88,7 @@
     "eslint-plugin-sonarjs": "0.23.0",
     "eslint-plugin-unicorn": "50.0.1",
     "eslint-plugin-vue": "9.22.0",
+    "laravel-vite-plugin": "1.0",
     "msw": "2.2.2",
     "postcss-html": "1.6.0",
     "postcss-scss": "4.0.9",
@@ -106,8 +108,7 @@
     "vite-plugin-vue-layouts": "0.11.0",
     "vite-plugin-vuetify": "2.0.1",
     "vite-svg-loader": "5.1.0",
-    "vue-shepherd": "3.0.0",
-    "laravel-vite-plugin": "1.0"
+    "vue-shepherd": "3.0.0"
   },
   "resolutions": {
     "postcss": "^8",

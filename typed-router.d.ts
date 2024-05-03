@@ -52,6 +52,7 @@ declare module 'vue-router/auto/routes' {
     'projects-seo-programs': RouteRecordInfo<'projects-seo-programs', '/projects/seo-programs', Record<never, never>, Record<never, never>>,
     'projects-seo-programs-partials-add-project-drawer': RouteRecordInfo<'projects-seo-programs-partials-add-project-drawer', '/projects/seo-programs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
     'projects-seo-programs-partials-id': RouteRecordInfo<'projects-seo-programs-partials-id', '/projects/seo-programs/_partials/id', Record<never, never>, Record<never, never>>,
+    'projects-tasks': RouteRecordInfo<'projects-tasks', '/projects/tasks', Record<never, never>, Record<never, never>>,
     'projects-team': RouteRecordInfo<'projects-team', '/projects/team', Record<never, never>, Record<never, never>>,
     'projects-web-designs': RouteRecordInfo<'projects-web-designs', '/projects/web-designs', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-add-project-drawer': RouteRecordInfo<'projects-web-designs-partials-add-project-drawer', '/projects/web-designs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
