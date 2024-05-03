@@ -47,6 +47,7 @@ const projectTableHeaders = [
 
 const projects = [
   {
+    id: 1,
     logo: react,
     name: 'BGC eCommerce App',
     project: 'React Project',
@@ -59,9 +60,9 @@ const projects = [
       avatar6,
     ],
     extraMembers: 3,
-    url: '/web-development-dash',
   },
   {
+    id: 2,
     logo: figma,
     name: 'Falcon Logo Design',
     project: 'Figma Project',
@@ -72,9 +73,9 @@ const projects = [
       avatar5,
       avatar2,
     ],
-    url: '/web-development-dash',
   },
   {
+    id: 3,
     logo: vue,
     name: 'Dashboard Design',
     project: 'Vuejs Project',
@@ -86,9 +87,9 @@ const projects = [
       avatar2,
       avatar1,
     ],
-    url: '/web-development-dash',
   },
   {
+    id: 4,
     logo: xamarin,
     name: 'Foodista mobile app',
     project: 'Xamarin Project',
@@ -101,9 +102,9 @@ const projects = [
       avatar7,
     ],
     extraMembers: 8,
-    url: '/web-development-dash',
   },
   {
+    id: 5,
     logo: python,
     name: 'Dojo Email App',
     project: 'Python Project',
@@ -116,9 +117,9 @@ const projects = [
       avatar1,
     ],
     extraMembers: 5,
-    url: '/web-development-dash',
   },
   {
+    id: 6,
     logo: sketch,
     name: 'Blockchain Website',
     project: 'Sketch Project',
@@ -129,9 +130,9 @@ const projects = [
       avatar1,
       avatar8,
     ],
-    url: '/web-development-dash',
   },
   {
+    id: 7,
     logo: html5,
     name: 'Hoffman Website',
     project: 'HTML Project',
@@ -143,7 +144,6 @@ const projects = [
       avatar8,
       avatar6,
     ],
-    url: '/web-development-dash',
   },
 ]
 
@@ -269,7 +269,7 @@ const options = ref({
             <VList>
               <VListItem
                 value="view"
-                :to="item.url"
+                :to='`/projects/google-ads-programs/${item.id}`'
               >
                 View
               </VListItem>

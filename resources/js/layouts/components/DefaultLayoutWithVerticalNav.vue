@@ -62,15 +62,9 @@ watch([
             >
               <span class="inner-badge-text">Inbox</span>
             </VBadge>
-          </a>
-          <a
-            href="#"
-            class="text-h6 me-5 inner-badge-text"
-          >Files</a>
-          <a
-            href="#"
-            class="text-h6 me-5"
-          >
+        </a>
+          <a href="#" class="text-h6 me-8 inner-badge-text">Files</a>
+          <a href="#" class="text-h6 me-8">
             <VBadge
               class="new-badge"
               color="error"
@@ -78,23 +72,11 @@ watch([
             >
               <span class="inner-badge-text">Tasks</span>
             </VBadge>
-          </a>
-          <a
-            href="#"
-            class="text-h6 me-5 inner-badge-text"
-          >Project Scope</a>
-          <a
-            href="#"
-            class="text-h6 me-5 inner-badge-text"
-          >Milestones</a>
-          <RouterLink to="projects/web-design/calendar">
-            <span class="text-h6 me-5 inner-badge-text">
-              Calendar</span>
-          </RouterLink>
-          <a
-            href="#"
-            class="text-h6 me-5 inner-badge-text"
-          >Your Team</a>
+        </a>
+          <a href="#" class="text-h6 me-8 inner-badge-text">Project Scope</a>
+          <a href="#" class="text-h6 me-8 inner-badge-text">Milestones</a>
+          <a href="#" class="text-h6 me-8 inner-badge-text">Calendar</a>
+          <a href="#" class="text-h6 me-8 inner-badge-text">Your Team</a>
         </div>
 
         <VSpacer />

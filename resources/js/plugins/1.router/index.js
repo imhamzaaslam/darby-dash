@@ -8,6 +8,7 @@ import SeoProgramsList from '../../../js/pages/projects/seo-programs/index.vue'
 import SeoProgram from '../../../js/pages/projects/seo-programs/_partials/id.vue'
 import GoogleAdsProgramsList from '../../../js/pages/projects/google-ads-programs/index.vue'
 import GoogleAdsProgram from '../../../js/pages/projects/google-ads-programs/_partials/id.vue'
+import Team from '../../../js/pages/team/index.vue'
 
 function recursiveLayouts(route) {
   if (route.children) {
@@ -84,6 +85,14 @@ const router = createRouter({
         path: '/projects/google-ads-programs/:id',
         name: 'google-ads-program',
         component: GoogleAdsProgram,
+        meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/:project/:id/team',
+        name: 'team',
+        component: Team,
         meta: { layout: 'default' },
       },
     ),
