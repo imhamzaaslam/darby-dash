@@ -8,7 +8,7 @@ import SeoProgramsList from '../../../js/pages/projects/seo-programs/index.vue'
 import SeoProgram from '../../../js/pages/projects/seo-programs/_partials/id.vue'
 import GoogleAdsProgramsList from '../../../js/pages/projects/google-ads-programs/index.vue'
 import GoogleAdsProgram from '../../../js/pages/projects/google-ads-programs/_partials/id.vue'
-import Team from '../../../js/pages/team/index.vue'
+import Team from '../../../js/pages/projects/team.vue'
 import Calendar from '../../../js/pages/projects/calendar.vue'
 import Files from '../../../js/pages/projects/files.vue'
 
