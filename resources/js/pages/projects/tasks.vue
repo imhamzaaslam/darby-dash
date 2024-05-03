@@ -1,34 +1,51 @@
 <template>
     <v-container>
         <h2>Task List</h2>
-        <v-row>
-            <v-col v-for="(column, columnIndex) in columns" :key="columnIndex" cols="4">
-                <v-card class="mb-3">
-                    <v-card-title class="text-center">{{ column.title }}</v-card-title>
-                    <v-divider></v-divider>
-                    <v-list droppable @drop="onDrop(columnIndex)">
-                        <v-list-item v-for="(task, taskIndex) in column.tasks" :key="taskIndex"
-                            @click="editTask(columnIndex, taskIndex)" draggable
-                            @dragstart="onDragStart(columnIndex, taskIndex)"
-                            @dragover="onDragOver($event, columnIndex, taskIndex)" @dragend="onDragEnd">
-                            <v-list-item-content>
-                                <v-list-item-title>{{ task.title }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ task.description }}</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list>
-                    <v-divider></v-divider>
-                    <v-card-actions class="justify-center">
-                        <v-btn @click="addTask(columnIndex)" color="primary">Add Task</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
-        </v-row>
+        <div class="kanban-scroll">
+            <v-row class="kanban-columns" no-gutters>
+                <v-col v-for="(column, index) in columns" :key="index" cols="4">
+                    <v-card class="mb-3">
+                        <div class="kanban-column-header" @click="editTitle(index)">
+                            <template v-if="!column.isEditing">
+                                <span class="kanban-column-title">{{ column.title }}</span>
+                            </template>
+                            <template v-else>
+                                <v-text-field v-model="column.title" dense hide-details single-line autofocus
+                                    @blur="saveTitle(index)" ref="titleInput"></v-text-field>
+                            </template>
+                        </div>
+                        <v-divider></v-divider>
+                        <v-list droppable @drop="onDrop(index)">
+                            <v-list-item v-for="(task, taskIndex) in column.tasks" :key="taskIndex"
+                                @click="editTask(index, taskIndex)" draggable @dragstart="onDragStart(index, taskIndex)"
+                                @dragover="onDragOver($event, index, taskIndex)" @dragend="onDragEnd" class="task-card">
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ task.title }}</v-list-item-title>
+                                    <v-list-item-subtitle>{{ task.description }}</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                        <v-divider></v-divider>
+                        <v-card-actions class="justify-center">
+                            <v-btn @click="addTask(index)" color="primary">Add Task</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+                <!-- Add column button -->
+                <v-col cols="4">
+                    <v-card class="mb-3">
+                        <v-card-actions class="justify-center">
+                            <v-btn @click="addColumn" color="primary">Add Column</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </div>
         <v-dialog v-model="dialog" max-width="500">
             <v-card>
                 <v-card-title>Edit Task</v-card-title>
                 <v-card-text>
-                    <v-text-field v-model="editedTask.title" label="Title"></v-text-field>
+                    <v-text-field v-model="editedTask.title" label="Title" class="mb-4" autofocus></v-text-field>
                     <v-text-field v-model="editedTask.description" label="Description"></v-text-field>
                 </v-card-text>
                 <v-card-actions>
@@ -45,9 +62,9 @@ import { ref } from 'vue';
 
 // Define the columns array with initial tasks
 const columns = ref([
-    { title: 'To Do', tasks: [{ id: 1, title: 'Task 1', description: 'Description of Task 1' }, { id: 2, title: 'Task 2', description: 'Description of Task 2' }] },
-    { title: 'In Progress', tasks: [{ id: 3, title: 'Task 3', description: 'Description of Task 3' }] },
-    { title: 'Done', tasks: [] }
+    { title: 'To Do', tasks: [{ id: 1, title: 'Task 1', description: 'Description of Task 1' }, { id: 2, title: 'Task 2', description: 'Description of Task 2' }], isEditing: false },
+    { title: 'In Progress', tasks: [{ id: 3, title: 'Task 3', description: 'Description of Task 3' }], isEditing: false },
+    { title: 'Done', tasks: [], isEditing: false }
 ]);
 
 // Define the dialog state for editing tasks
@@ -55,6 +72,19 @@ const dialog = ref(false);
 
 // Define the editedTask object for editing
 const editedTask = ref({});
+
+// Method to edit the column title
+const editTitle = (index) => {
+    columns.value[index].isEditing = true;
+    // Focus on the title input field when editing starts
+    const titleInput = $refs.titleInput[index];
+    titleInput && titleInput.focus();
+};
+
+// Method to save the edited column title
+const saveTitle = (index) => {
+    columns.value[index].isEditing = false;
+};
 
 // Method to edit a task
 const editTask = (columnIndex, taskIndex) => {
@@ -90,6 +120,16 @@ const addTask = (columnIndex) => {
     columns.value[columnIndex].tasks.push(newTask);
 };
 
+// Method to add a new column
+const addColumn = () => {
+    // Generate a unique ID for the new column
+    const id = Date.now();
+    // Create a new column object
+    const newColumn = { id, title: 'New Column', tasks: [] };
+    // Add the new column to the columns array
+    columns.value.push(newColumn);
+};
+
 // Method to handle drag start event
 const onDragStart = (sourceColumnIndex, sourceTaskIndex) => {
     // Store the dragged task details
@@ -122,7 +162,48 @@ const onDragEnd = () => {
     targetPosition.value = null;
 };
 
-// Define reactive references for dragged task and target position
-const draggedTask = ref(null);
-const targetPosition = ref(null);
+// Method to update column title
+const updateColumnTitle = (index, value) => {
+    columns.value[index].title = value;
+};
 </script>
+
+<style scoped>
+.kanban-scroll {
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 20px;
+}
+
+.kanban-columns {
+    flex-wrap: nowrap !important;
+}
+
+.kanban-column-header {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+}
+
+.kanban-column-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.v-card {
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+
+.task-card {
+    margin-bottom: 10px;
+}
+
+.v-list-item {
+    cursor: pointer;
+}
+
+.v-list-item:hover {
+    background-color: #f0f0f0;
+}
+</style>
