@@ -42,7 +42,7 @@ const store = useChatStore()
       bordered
     >
       <VAvatar
-        size="38"
+        size="40"
         class="cursor-pointer"
         @click="$emit('showUserProfile')"
       >
@@ -53,18 +53,12 @@ const store = useChatStore()
       </VAvatar>
     </VBadge>
 
-    <VTextField
+    <AppTextField
       v-model="search"
       placeholder="Search..."
+      prepend-inner-icon="tabler-search"
       class="ms-4 me-1 chat-list-search"
-    >
-      <template #prepend-inner>
-        <VIcon
-          size="22"
-          icon="tabler-search"
-        />
-      </template>
-    </VTextField>
+    />
 
     <IconBtn
       v-if="$vuetify.display.smAndDown"
@@ -80,11 +74,13 @@ const store = useChatStore()
 
   <PerfectScrollbar
     tag="ul"
-    class="d-flex flex-column gap-y-1 chat-contacts-list px-3 list-none"
+    class="d-flex flex-column gap-y-1 chat-contacts-list px-3 py-2 list-none"
     :options="{ wheelPropagation: false }"
   >
     <li class="list-none">
-      <span class="chat-contact-header d-block text-primary text-xl font-weight-medium">Chats</span>
+      <h5 class="chat-contact-header text-primary text-h5">
+        Chats
+      </h5>
     </li>
 
     <ChatContact
@@ -99,8 +95,10 @@ const store = useChatStore()
       v-show="!store.chatsContacts.length"
       class="no-chat-items-text text-disabled"
     >No chats found</span>
-    <li class="list-none">
-      <span class="chat-contact-header d-block text-primary text-xl font-weight-medium">Contacts</span>
+    <li class="list-none pt-2">
+      <h5 class="chat-contact-header text-primary text-h5">
+        Contacts
+      </h5>
     </li>
 
     <ChatContact
@@ -124,8 +122,7 @@ const store = useChatStore()
   padding-block-end: 0.75rem;
 
   .chat-contact-header {
-    margin-block-end: 0.625rem;
-    margin-block-start: 1.25rem;
+    margin-block: 0.5rem 0.25rem;
   }
 
   .chat-contact-header,

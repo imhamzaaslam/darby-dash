@@ -70,18 +70,17 @@ const showNavigation = computed(() => {
             href="#"
             class="text-h6 ms-3 me-5 text-primary"
           >Overview</a>
-          <a
-            href="#"
-            class="text-h6 me-5"
-          >
-            <VBadge
-              class="new-badge"
-              color="error"
-              content="14"
-            >
-              <span class="inner-badge-text">Inbox</span>
-            </VBadge>
-          </a>
+          <RouterLink :to="`/projects/${projectType}/${projectId}/chat`">
+            <span class="text-h6 me-5">
+              <VBadge
+                class="new-badge"
+                color="error"
+                content="14"
+              >
+                <span class="inner-badge-text">Inbox</span>
+              </VBadge>
+            </span>
+          </RouterLink>
           <RouterLink :to="`/projects/${projectType}/${projectId}/files`">
             <span class="text-h6 me-8 inner-badge-text">Files</span>
           </RouterLink>
@@ -110,7 +109,7 @@ const showNavigation = computed(() => {
           </RouterLink>
           <RouterLink :to="`/projects/${projectType}/${projectId}/team`">
             <span class="text-h6 me-8 inner-badge-text">Your Team</span>
-        </RouterLink>
+          </RouterLink>
         </div>
 
         <VSpacer />

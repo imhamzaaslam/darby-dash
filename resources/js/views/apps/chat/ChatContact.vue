@@ -42,7 +42,7 @@ const isChatContactActive = computed(() => {
       :model-value="props.isChatContact"
     >
       <VAvatar
-        size="38"
+        size="40"
         :variant="!props.user.avatar ? 'tonal' : undefined"
         :color="!props.user.avatar ? resolveAvatarBadgeVariant(props.user.status) : undefined"
       >
@@ -55,10 +55,10 @@ const isChatContactActive = computed(() => {
       </VAvatar>
     </VBadge>
     <div class="flex-grow-1 ms-4 overflow-hidden">
-      <p class="text-h6 mb-0">
+      <p class="text-base text-high-emphasis mb-0">
         {{ props.user.fullName }}
       </p>
-      <p class="mb-0 text-truncate text-disabled">
+      <p class="mb-0 text-truncate text-body-2">
         {{ props.isChatContact && 'chat' in props.user ? props.user.chat.lastMessage.message : props.user.about }}
       </p>
     </div>
@@ -66,7 +66,9 @@ const isChatContactActive = computed(() => {
       v-if="props.isChatContact && 'chat' in props.user"
       class="d-flex flex-column align-self-start"
     >
-      <span class="d-block text-sm text-disabled whitespace-no-wrap">{{ formatDateToMonthShort(props.user.chat.lastMessage.time) }}</span>
+      <div class="text-body-2 text-disabled whitespace-no-wrap">
+        {{ formatDateToMonthShort(props.user.chat.lastMessage.time) }}
+      </div>
       <VBadge
         v-if="props.user.chat.unseenMsgs"
         color="error"
@@ -79,7 +81,8 @@ const isChatContactActive = computed(() => {
 </template>
 
 <style lang="scss">
-@use "@styles/variables/_vuetify.scss";
+@use "@core-scss/template/mixins" as templateMixins;
+@use "@styles/variables/vuetify.scss";
 @use "@core-scss/base/mixins";
 @use "vuetify/lib/styles/tools/states" as vuetifyStates;
 
@@ -92,15 +95,12 @@ const isChatContactActive = computed(() => {
   @include vuetifyStates.states($active: false);
 
   &.chat-contact-active {
-    background: linear-gradient(72.47deg, rgb(var(--v-theme-primary)) 0%, #fff 300%);
+    @include templateMixins.custom-elevation(var(--v-theme-primary), "sm");
+
+    background: rgb(var(--v-theme-primary));
     color: #fff;
 
     --v-theme-on-background: #fff;
-
-    .v-avatar {
-      border: 2px solid #fff;
-      background: #fff;
-    }
   }
 
   .v-badge--bordered .v-badge__badge::after {

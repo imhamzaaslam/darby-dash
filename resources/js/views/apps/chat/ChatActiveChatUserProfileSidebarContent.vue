@@ -13,13 +13,12 @@ const { resolveAvatarBadgeVariant } = useChat()
   <template v-if="store.activeChat">
     <!-- Close Button -->
     <div
-      class="pt-2 me-2"
+      class="pt-6 px-6"
       :class="$vuetify.locale.isRtl ? 'text-left' : 'text-right'"
     >
       <IconBtn @click="$emit('close')">
         <VIcon
           icon="tabler-x"
-          color="disabled"
           class="text-medium-emphasis"
         />
       </IconBtn>
@@ -36,7 +35,7 @@ const { resolveAvatarBadgeVariant } = useChat()
         class="chat-user-profile-badge mb-5"
       >
         <VAvatar
-          size="80"
+          size="84"
           :variant="!store.activeChat.contact.avatar ? 'tonal' : undefined"
           :color="!store.activeChat.contact.avatar ? resolveAvatarBadgeVariant(store.activeChat.contact.status) : undefined"
         >
@@ -53,96 +52,127 @@ const { resolveAvatarBadgeVariant } = useChat()
       <h5 class="text-h5">
         {{ store.activeChat.contact.fullName }}
       </h5>
-      <p class="text-capitalize text-medium-emphasis">
+      <p class="text-capitalize text-body-1 mb-0">
         {{ store.activeChat.contact.role }}
       </p>
     </div>
 
     <!-- User Data -->
     <PerfectScrollbar
-      class="ps-chat-user-profile-sidebar-content text-medium-emphasis pb-5 px-5"
+      class="ps-chat-user-profile-sidebar-content text-medium-emphasis pb-6 px-6"
       :options="{ wheelPropagation: false }"
     >
       <!-- About -->
-      <div class="my-8">
-        <span class="text-sm text-disabled">ABOUT</span>
-        <p class="mt-2">
+      <div class="my-6">
+        <div class="text-sm text-disabled">
+          ABOUT
+        </div>
+        <p class="mt-1 mb-6">
           {{ store.activeChat.contact.about }}
         </p>
       </div>
 
       <!-- Personal Information -->
-      <div class="mb-8">
-        <span class="d-block text-sm text-disabled mb-3">PERSONAL INFORMATION</span>
-        <div class="d-flex align-center">
+      <div class="mb-6">
+        <div class="text-sm text-disabled mb-1">
+          PERSONAL INFORMATION
+        </div>
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
             icon="tabler-mail"
-            size="24"
+            size="22"
           />
-          <span>lucifer@email.com</span>
+          <div class="text-base">
+            lucifer@email.com
+          </div>
         </div>
-        <div class="d-flex align-center my-3">
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
-            icon="tabler-phone-call"
-            size="24"
+            icon="tabler-phone"
+            size="22"
           />
-          <span>+1(123) 456 - 7890</span>
+          <div class="text-base">
+            +1(123) 456 - 7890
+          </div>
         </div>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
             icon="tabler-clock"
-            size="24"
+            size="22"
           />
-          <span>Mon - Fri 10AM - 8PM</span>
+          <div class="text-base">
+            Mon - Fri 10AM - 8PM
+          </div>
         </div>
       </div>
 
       <!-- Options -->
       <div>
-        <span class="d-block text-sm text-disabled mb-3">OPTIONS</span>
-        <div class="d-flex align-center">
+        <div class="text-sm text-disabled mb-1">
+          OPTIONS
+        </div>
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
             icon="tabler-badge"
-            size="24"
+            size="22"
           />
-          <span>Add Tag</span>
+          <div class="text-base">
+            Add Tag
+          </div>
         </div>
-        <div class="d-flex align-center my-3">
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
             icon="tabler-star"
-            size="24"
+            size="22"
           />
-          <span>Important Contact</span>
+          <div class="text-base">
+            Important Contact
+          </div>
         </div>
-        <div class="d-flex align-center mb-3">
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
             icon="tabler-photo"
-            size="24"
+            size="22"
           />
-          <span>Shared Media</span>
+          <div class="text-base">
+            Shared Media
+          </div>
         </div>
-        <div class="d-flex align-center mb-3">
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
             icon="tabler-trash"
-            size="24"
+            size="22"
           />
-          <span>Delete Contact</span>
+          <div class="text-base">
+            Delete Contact
+          </div>
         </div>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
-            class="me-2 ms-1"
-            size="18"
             icon="tabler-ban"
+            class="me-2"
+            size="22"
           />
-          <span>Block Contact</span>
+          <div class="text-base">
+            Block Contact
+          </div>
         </div>
+
+        <VBtn
+          block
+          color="error"
+          append-icon="tabler-trash"
+          class="mt-6"
+        >
+          Delete Contact
+        </VBtn>
       </div>
     </PerfectScrollbar>
   </template>

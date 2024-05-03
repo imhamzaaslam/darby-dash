@@ -32,6 +32,9 @@ const userStatusRadioOptions = [
     color: 'secondary',
   },
 ]
+
+const isAuthenticationEnabled = ref(true)
+const isNotificationEnabled = ref(false)
 </script>
 
 <template>
@@ -75,34 +78,38 @@ const userStatusRadioOptions = [
       <h5 class="text-h5">
         {{ store.profileUser.fullName }}
       </h5>
-      <p class="text-capitalize text-medium-emphasis">
+      <p class="text-capitalize text-medium-emphasis mb-0">
         {{ store.profileUser.role }}
       </p>
     </div>
 
     <!-- User Data -->
     <PerfectScrollbar
-      class="ps-chat-user-profile-sidebar-content pb-5 px-5"
+      class="ps-chat-user-profile-sidebar-content pb-5 px-6"
       :options="{ wheelPropagation: false }"
     >
       <!-- About -->
-      <div class="my-5 text-medium-emphasis">
-        <span
+      <div class="my-6 text-medium-emphasis">
+        <div
           for="textarea-user-about"
-          class="text-sm text-disabled"
-        >ABOUT</span>
+          class="text-base text-disabled"
+        >
+          ABOUT
+        </div>
         <AppTextarea
           id="textarea-user-about"
           v-model="store.profileUser.about"
           auto-grow
           class="mt-1"
-          rows="4"
+          rows="3"
         />
       </div>
 
       <!-- Status -->
-      <div class="mb-5">
-        <span class="text-sm text-disabled">STATUS</span>
+      <div class="mb-6">
+        <div class="text-base text-disabled">
+          STATUS
+        </div>
         <VRadioGroup
           v-model="store.profileUser.status"
           class="mt-1"
@@ -119,46 +126,70 @@ const userStatusRadioOptions = [
 
       <!-- Settings -->
       <div class="text-medium-emphasis">
-        <span class="text-sm text-disabled">SETTINGS</span>
+        <div class="text-base text-disabled">
+          SETTINGS
+        </div>
 
-        <div class="d-flex align-center my-3">
+        <div class="d-flex align-center pa-2">
           <VIcon
-            class="me-2"
-            icon="tabler-message-dots"
+            class="me-2 text-high-emphasis"
+            icon="tabler-lock"
             size="22"
           />
-          <span class="text-high-emphasis">Two-step Verification</span>
+          <div class="text-high-emphasis d-flex align-center justify-space-between flex-grow-1">
+            <div class="text-body-1 text-high-emphasis">
+              Two-step Verification
+            </div>
+            <VSwitch
+              v-model="isAuthenticationEnabled"
+              density="compact"
+            />
+          </div>
         </div>
-        <div class="d-flex align-center mb-3">
+        <div class="d-flex align-center pa-2">
           <VIcon
-            class="me-2"
+            class="me-2 text-high-emphasis"
             icon="tabler-bell"
             size="22"
           />
-          <span class="text-high-emphasis">Notification</span>
+          <div class="text-high-emphasis d-flex align-center justify-space-between flex-grow-1">
+            <div class="text-body-1 text-high-emphasis">
+              Notification
+            </div>
+            <VSwitch
+              v-model="isNotificationEnabled"
+              density="compact"
+            />
+          </div>
         </div>
-        <div class="d-flex align-center mb-3">
+        <div class="d-flex align-center pa-2">
           <VIcon
-            class="me-2"
+            class="me-2 text-high-emphasis"
             icon="tabler-user-plus"
             size="22"
           />
-          <span class="text-high-emphasis">Invite Friends</span>
+          <div class="text-high-emphasis">
+            Invite Friends
+          </div>
         </div>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center pa-2">
           <VIcon
-            class="me-2"
+            class="me-2 text-high-emphasis"
             icon="tabler-trash"
             size="22"
           />
-          <span class="text-high-emphasis">Delete Account</span>
+          <div class="text-high-emphasis">
+            Delete Account
+          </div>
         </div>
       </div>
 
       <!-- Logout Button -->
       <VBtn
         color="primary"
-        class="mt-11"
+        class="mt-12"
+        block
+        append-icon="tabler-logout"
       >
         Logout
       </VBtn>

@@ -11,6 +11,7 @@ import GoogleAdsProgram from '../../../js/pages/projects/google-ads-programs/_pa
 import Team from '../../../js/pages/projects/team.vue'
 import Calendar from '../../../js/pages/projects/calendar.vue'
 import Files from '../../../js/pages/projects/files.vue'
+import Chat from '../../../js/pages/projects/chat.vue'
 
 function recursiveLayouts(route) {
   if (route.children) {
@@ -116,6 +117,15 @@ const router = createRouter({
         path: '/projects/:project/:id/files',
         name: 'files',
         component: Files,
+        meta: { layout: 'default' },
+        props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/:project/:id/chat',
+        name: 'chat',
+        component: Chat,
         meta: { layout: 'default' },
         props: true,
       },
