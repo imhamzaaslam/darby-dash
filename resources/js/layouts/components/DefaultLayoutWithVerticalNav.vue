@@ -82,10 +82,11 @@ const showNavigation = computed(() => {
               <span class="inner-badge-text">Inbox</span>
             </VBadge>
           </a>
-          <a
-            href="#"
-            class="text-h6 me-8 inner-badge-text"
-          >Files</a>
+          <RouterLink :to="`/projects/${projectType}/${projectId}/files`">
+            <span
+              class="text-h6 me-8 inner-badge-text"
+            >Files</span>
+          </RouterLink>
           <a
             href="#"
             class="text-h6 me-8"
