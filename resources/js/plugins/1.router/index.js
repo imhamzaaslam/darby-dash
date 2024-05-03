@@ -10,7 +10,7 @@ import GoogleAdsProgramsList from '../../../js/pages/projects/google-ads-program
 import GoogleAdsProgram from '../../../js/pages/projects/google-ads-programs/_partials/id.vue'
 import Team from '../../../js/pages/team/index.vue'
 import Calendar from '../../../js/pages/projects/calendar.vue'
-import Files from '../../../js/pages/files/index.vue'
+import Files from '../../../js/pages/projects/files.vue'
 
 function recursiveLayouts(route) {
   if (route.children) {

@@ -44,6 +44,7 @@ declare module 'vue-router/auto/routes' {
     'account-setting': RouteRecordInfo<'account-setting', '/account-setting', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
     'projects-calendar': RouteRecordInfo<'projects-calendar', '/projects/calendar', Record<never, never>, Record<never, never>>,
+    'projects-files': RouteRecordInfo<'projects-files', '/projects/files', Record<never, never>, Record<never, never>>,
     'projects-google-ads-programs': RouteRecordInfo<'projects-google-ads-programs', '/projects/google-ads-programs', Record<never, never>, Record<never, never>>,
     'projects-google-ads-programs-partials-add-project-drawer': RouteRecordInfo<'projects-google-ads-programs-partials-add-project-drawer', '/projects/google-ads-programs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
     'projects-google-ads-programs-partials-id': RouteRecordInfo<'projects-google-ads-programs-partials-id', '/projects/google-ads-programs/_partials/id', Record<never, never>, Record<never, never>>,
