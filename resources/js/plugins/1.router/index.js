@@ -99,6 +99,7 @@ const router = createRouter({
         name: 'team',
         component: Team,
         meta: { layout: 'default' },
+        props: true,
       },
     ),
     recursiveLayouts(
