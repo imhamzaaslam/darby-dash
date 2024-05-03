@@ -84,18 +84,17 @@ const showNavigation = computed(() => {
           <RouterLink :to="`/projects/${projectType}/${projectId}/files`">
             <span class="text-h6 me-8 inner-badge-text">Files</span>
           </RouterLink>
-          <a
-            href="#"
-            class="text-h6 me-8"
-          >
-            <VBadge
-              class="new-badge"
-              color="error"
-              content="390"
-            >
-              <span class="inner-badge-text">Tasks</span>
-            </VBadge>
-          </a>
+          <RouterLink :to="`/projects/${projectType}/${projectId}/tasks`">
+            <span class="text-h6 me-8">
+              <VBadge
+                class="new-badge"
+                color="error"
+                content="390"
+              >
+                <span class="inner-badge-text">Tasks</span>
+              </VBadge>
+            </span>
+          </RouterLink>
           <a
             href="#"
             class="text-h6 me-8 inner-badge-text"
