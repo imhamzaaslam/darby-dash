@@ -4,28 +4,28 @@ const dashboards = ref([
     icon: 'tabler-world',
     color: 'primary',
     title: 'Website Design Project',
-    url: '/projects/web-design',
+    url: '/projects/web-designs',
     isHover: false,
   },
   {
     icon: 'tabler-military-rank',
     color: 'primary',
     title: 'SEO Program',
-    url: '/projects/seo',
+    url: '/projects/seo-programs',
     isHover: false,
   },
   {
     icon: 'tabler-brand-google',
     color: 'primary',
     title: 'Google Ads Program',
-    url: '/projects/google-ads',
+    url: '/projects/google-ads-programs',
     isHover: false,
   },
 ])
 </script>
 
 <template>
-    <h3>Project Dashboards</h3>
+  <h3>Project Dashboards</h3>
   <VRow class="mt-3">
     <VCol
       v-for="(data, index) in dashboards"
@@ -58,15 +58,15 @@ const dashboards = ref([
               </h5>
             </div>
             <div class="text-center">
-                <RouterLink :to="data.url">
-            <VBtn
-            size="small"
-            rounded="pill"
-            color="primary"
-            >
-            Access Projects
-            </VBtn>
-        </RouterLink>
+              <RouterLink :to="data.url">
+                <VBtn
+                  size="small"
+                  rounded="pill"
+                  color="primary"
+                >
+                  Access Projects
+                </VBtn>
+              </RouterLink>
             </div>
           </VCardText>
         </VCard>

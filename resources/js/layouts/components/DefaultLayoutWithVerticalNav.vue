@@ -43,31 +43,58 @@ watch([
         </IconBtn>
 
         <NavbarThemeSwitcher />
-        <div class="d-flex align-center" v-if="$route.path === '/web-development-dash'">
-          <a href="#" class="text-h6 ms-3 me-4 text-primary">Overview</a>
-          <a href="#" class="text-h6 me-4">
+        <div
+          v-if="$route.path === '/web-development-dash' || $route.path === '/projects/web-design/calendar'"
+          class="d-flex align-center"
+        >
+          <a
+            href="#"
+            class="text-h6 ms-3 me-5 text-primary"
+          >Overview</a>
+          <a
+            href="#"
+            class="text-h6 me-5"
+          >
             <VBadge
-            class="new-badge"
-            color="error"
-            content="14"
+              class="new-badge"
+              color="error"
+              content="14"
             >
-            <span class="inner-badge-text">Inbox</span>
+              <span class="inner-badge-text">Inbox</span>
             </VBadge>
-        </a>
-          <a href="#" class="text-h6 me-4 inner-badge-text">Files</a>
-          <a href="#" class="text-h6 me-4">
+          </a>
+          <a
+            href="#"
+            class="text-h6 me-5 inner-badge-text"
+          >Files</a>
+          <a
+            href="#"
+            class="text-h6 me-5"
+          >
             <VBadge
-            class="new-badge"
-            color="error"
-            content="390"
+              class="new-badge"
+              color="error"
+              content="390"
             >
-            <span class="inner-badge-text">Tasks</span>
+              <span class="inner-badge-text">Tasks</span>
             </VBadge>
-        </a>
-          <a href="#" class="text-h6 me-4 inner-badge-text">Project Scope</a>
-          <a href="#" class="text-h6 me-4 inner-badge-text">Milestones</a>
-          <a href="#" class="text-h6 me-4 inner-badge-text">Calendar</a>
-          <a href="#" class="text-h6 me-4 inner-badge-text">Your Team</a>
+          </a>
+          <a
+            href="#"
+            class="text-h6 me-5 inner-badge-text"
+          >Project Scope</a>
+          <a
+            href="#"
+            class="text-h6 me-5 inner-badge-text"
+          >Milestones</a>
+          <RouterLink to="projects/web-design/calendar">
+            <span class="text-h6 me-5 inner-badge-text">
+              Calendar</span>
+          </RouterLink>
+          <a
+            href="#"
+            class="text-h6 me-5 inner-badge-text"
+          >Your Team</a>
         </div>
 
         <VSpacer />

@@ -14,7 +14,7 @@ import react from '@images/icons/project-icons/react.png'
 import sketch from '@images/icons/project-icons/sketch.png'
 import vue from '@images/icons/project-icons/vue.png'
 import xamarin from '@images/icons/project-icons/xamarin.png'
-import AddProjectDrawer from '@/pages/projects/_partials/add-project-drawer.vue'
+import AddProjectDrawer from '@/pages/projects/google-ads-programs/_partials/add-project-drawer.vue'
 
 
 const isAddProjectDrawerOpen = ref(false)
