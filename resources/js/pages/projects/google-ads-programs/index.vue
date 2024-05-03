@@ -269,7 +269,7 @@ const options = ref({
             <VList>
               <VListItem
                 value="view"
-                :to='`/projects/google-ads-programs/${item.id}`'
+                :to="{ name: 'google-ads-program', params: { id: item.id } }"
               >
                 View
               </VListItem>

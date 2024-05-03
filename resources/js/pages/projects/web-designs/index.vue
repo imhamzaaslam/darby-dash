@@ -269,7 +269,7 @@ const options = ref({
             <VList>
               <VListItem
                 value="view"
-                :to='`/projects/web-designs/${item.id}`'
+                :to="{ name: 'web-design', params: { id: item.id } }"
               >
                 View
               </VListItem>

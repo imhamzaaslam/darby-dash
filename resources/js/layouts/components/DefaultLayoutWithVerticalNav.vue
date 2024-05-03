@@ -6,6 +6,7 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import NavBarNotifications from '@/layouts/components/NavBarNotifications.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import NavBarI18n from '@core/components/I18n.vue'
+import { useRoute } from 'vue-router'
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
@@ -13,6 +14,18 @@ import { VerticalNavLayout } from '@layouts'
 // SECTION: Loading Indicator
 const isFallbackStateActive = ref(false)
 const refLoadingIndicator = ref(null)
+
+const $route = useRoute()
+
+const projectId = ref(null)
+const projectType = ref(null)
+
+const fetchProjectParams = () => {
+  projectId.value = $route.params.id
+  projectType.value = $route.params.project
+}
+
+onMounted(fetchProjectParams)
 
 watch([
   isFallbackStateActive,
@@ -23,6 +36,12 @@ watch([
   if (!isFallbackStateActive.value && refLoadingIndicator.value)
     refLoadingIndicator.value.resolveHandle()
 }, { immediate: true })
+
+const showNavigation = computed(() => {
+  fetchProjectParams()
+
+  return $route.params.id !== undefined
+})
 // !SECTION
 </script>
 
@@ -44,7 +63,7 @@ watch([
 
         <NavbarThemeSwitcher />
         <div
-          v-if="$route.path === '/web-development-dash' || $route.path === '/projects/web-design/calendar'"
+          v-if="showNavigation"
           class="d-flex align-center"
         >
           <a
@@ -62,9 +81,15 @@ watch([
             >
               <span class="inner-badge-text">Inbox</span>
             </VBadge>
-        </a>
-          <a href="#" class="text-h6 me-8 inner-badge-text">Files</a>
-          <a href="#" class="text-h6 me-8">
+          </a>
+          <a
+            href="#"
+            class="text-h6 me-8 inner-badge-text"
+          >Files</a>
+          <a
+            href="#"
+            class="text-h6 me-8"
+          >
             <VBadge
               class="new-badge"
               color="error"
@@ -72,11 +97,22 @@ watch([
             >
               <span class="inner-badge-text">Tasks</span>
             </VBadge>
-        </a>
-          <a href="#" class="text-h6 me-8 inner-badge-text">Project Scope</a>
-          <a href="#" class="text-h6 me-8 inner-badge-text">Milestones</a>
-          <a href="#" class="text-h6 me-8 inner-badge-text">Calendar</a>
-          <a href="#" class="text-h6 me-8 inner-badge-text">Your Team</a>
+          </a>
+          <a
+            href="#"
+            class="text-h6 me-8 inner-badge-text"
+          >Project Scope</a>
+          <a
+            href="#"
+            class="text-h6 me-8 inner-badge-text"
+          >Milestones</a>
+          <RouterLink :to="`/projects/${projectType}/${projectId}/calendar`">
+            <span class="text-h6 me-8 inner-badge-text">Calendar</span>
+          </RouterLink>
+          <a
+            href="#"
+            class="text-h6 me-8 inner-badge-text"
+          >Your Team</a>
         </div>
 
         <VSpacer />

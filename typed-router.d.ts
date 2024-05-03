@@ -43,18 +43,17 @@ declare module 'vue-router/auto/routes' {
     '$error': RouteRecordInfo<'$error', '/:error(.*)', { error: ParamValue<true> }, { error: ParamValue<false> }>,
     'account-setting': RouteRecordInfo<'account-setting', '/account-setting', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
+    'projects-calendar': RouteRecordInfo<'projects-calendar', '/projects/calendar', Record<never, never>, Record<never, never>>,
     'projects-google-ads-programs': RouteRecordInfo<'projects-google-ads-programs', '/projects/google-ads-programs', Record<never, never>, Record<never, never>>,
     'projects-google-ads-programs-partials-add-project-drawer': RouteRecordInfo<'projects-google-ads-programs-partials-add-project-drawer', '/projects/google-ads-programs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
-    'projects-google-ads-programs-partials-calendar': RouteRecordInfo<'projects-google-ads-programs-partials-calendar', '/projects/google-ads-programs/_partials/calendar', Record<never, never>, Record<never, never>>,
     'projects-google-ads-programs-partials-id': RouteRecordInfo<'projects-google-ads-programs-partials-id', '/projects/google-ads-programs/_partials/id', Record<never, never>, Record<never, never>>,
     'projects-seo-programs': RouteRecordInfo<'projects-seo-programs', '/projects/seo-programs', Record<never, never>, Record<never, never>>,
     'projects-seo-programs-partials-add-project-drawer': RouteRecordInfo<'projects-seo-programs-partials-add-project-drawer', '/projects/seo-programs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
-    'projects-seo-programs-partials-calendar': RouteRecordInfo<'projects-seo-programs-partials-calendar', '/projects/seo-programs/_partials/calendar', Record<never, never>, Record<never, never>>,
     'projects-seo-programs-partials-id': RouteRecordInfo<'projects-seo-programs-partials-id', '/projects/seo-programs/_partials/id', Record<never, never>, Record<never, never>>,
     'projects-web-designs': RouteRecordInfo<'projects-web-designs', '/projects/web-designs', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-add-project-drawer': RouteRecordInfo<'projects-web-designs-partials-add-project-drawer', '/projects/web-designs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
-    'projects-web-designs-partials-calendar': RouteRecordInfo<'projects-web-designs-partials-calendar', '/projects/web-designs/_partials/calendar', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-id': RouteRecordInfo<'projects-web-designs-partials-id', '/projects/web-designs/_partials/id', Record<never, never>, Record<never, never>>,
+    'team': RouteRecordInfo<'team', '/team', Record<never, never>, Record<never, never>>,
   }
 }
 

@@ -9,6 +9,7 @@ import SeoProgram from '../../../js/pages/projects/seo-programs/_partials/id.vue
 import GoogleAdsProgramsList from '../../../js/pages/projects/google-ads-programs/index.vue'
 import GoogleAdsProgram from '../../../js/pages/projects/google-ads-programs/_partials/id.vue'
 import Team from '../../../js/pages/team/index.vue'
+import Calendar from '../../../js/pages/projects/calendar.vue'
 
 function recursiveLayouts(route) {
   if (route.children) {
@@ -54,6 +55,7 @@ const router = createRouter({
         name: 'web-design',
         component: WebDesign,
         meta: { layout: 'default' },
+        props: true,
       },
     ),
     recursiveLayouts(
@@ -70,6 +72,7 @@ const router = createRouter({
         name: 'seo-program',
         component: SeoProgram,
         meta: { layout: 'default' },
+        props: true,
       },
     ),
     recursiveLayouts(
@@ -86,6 +89,7 @@ const router = createRouter({
         name: 'google-ads-program',
         component: GoogleAdsProgram,
         meta: { layout: 'default' },
+        props: true,
       },
     ),
     recursiveLayouts(
@@ -94,6 +98,15 @@ const router = createRouter({
         name: 'team',
         component: Team,
         meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/:project/:id/calendar',
+        name: 'calendar',
+        component: Calendar,
+        meta: { layout: 'default' },
+        props: true,
       },
     ),
     ...pages.map(route => recursiveLayouts(route)),
