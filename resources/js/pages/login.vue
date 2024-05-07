@@ -44,7 +44,8 @@
 
                                 <VBtn block type="submit" :disabled="loadStatus === 1">
                                     <VProgressCircular indeterminate size="16" color="white" v-if="loadStatus === 1" />
-                                    <span class="px-1" v-if="loadStatus === 1">Processing...</span><span class="px-1" v-else>Login</span>
+                                    <span class="px-1" v-if="loadStatus === 1">Processing...</span><span class="px-1"
+                                        v-else>Login</span>
                                 </VBtn>
                             </VCol>
                         </VRow>
@@ -68,11 +69,8 @@ const form = ref({
     password: 'password',
     remember: false,
 })
-
 const refForm = ref(null)
-
 const isPasswordVisible = ref(false)
-
 const authStore = useAuthStore()
 const $router = useRouter()
 const loadStatus = computed(() => authStore.getLoadStatus)
