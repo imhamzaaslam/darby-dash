@@ -5,6 +5,11 @@ export default [
     icon: { icon: 'tabler-align-box-bottom-center' },
   },
   {
+    title: 'Members',
+    icon: { icon: 'tabler-users' },
+    to: { name: 'members' },
+  },
+  {
     title: 'Projects',
     icon: { icon: 'tabler-chart-histogram' },
     children: [
