@@ -1,5 +1,5 @@
-/* eslint-disable */
-/* tslint:disable */
+// eslint-disable
+// tslint:disable
 
 /**
  * Mock Service Worker (2.2.2).
@@ -38,50 +38,50 @@ self.addEventListener('message', async function (event) {
   })
 
   switch (event.data) {
-    case 'KEEPALIVE_REQUEST': {
-      sendToClient(client, {
-        type: 'KEEPALIVE_RESPONSE',
-      })
-      break
+  case 'KEEPALIVE_REQUEST': {
+    sendToClient(client, {
+      type: 'KEEPALIVE_RESPONSE',
+    })
+    break
+  }
+
+  case 'INTEGRITY_CHECK_REQUEST': {
+    sendToClient(client, {
+      type: 'INTEGRITY_CHECK_RESPONSE',
+      payload: INTEGRITY_CHECKSUM,
+    })
+    break
+  }
+
+  case 'MOCK_ACTIVATE': {
+    activeClientIds.add(clientId)
+
+    sendToClient(client, {
+      type: 'MOCKING_ENABLED',
+      payload: true,
+    })
+    break
+  }
+
+  case 'MOCK_DEACTIVATE': {
+    activeClientIds.delete(clientId)
+    break
+  }
+
+  case 'CLIENT_CLOSED': {
+    activeClientIds.delete(clientId)
+
+    const remainingClients = allClients.filter(client => {
+      return client.id !== clientId
+    })
+
+    // Unregister itself when there are no more clients
+    if (remainingClients.length === 0) {
+      self.registration.unregister()
     }
 
-    case 'INTEGRITY_CHECK_REQUEST': {
-      sendToClient(client, {
-        type: 'INTEGRITY_CHECK_RESPONSE',
-        payload: INTEGRITY_CHECKSUM,
-      })
-      break
-    }
-
-    case 'MOCK_ACTIVATE': {
-      activeClientIds.add(clientId)
-
-      sendToClient(client, {
-        type: 'MOCKING_ENABLED',
-        payload: true,
-      })
-      break
-    }
-
-    case 'MOCK_DEACTIVATE': {
-      activeClientIds.delete(clientId)
-      break
-    }
-
-    case 'CLIENT_CLOSED': {
-      activeClientIds.delete(clientId)
-
-      const remainingClients = allClients.filter((client) => {
-        return client.id !== clientId
-      })
-
-      // Unregister itself when there are no more clients
-      if (remainingClients.length === 0) {
-        self.registration.unregister()
-      }
-
-      break
-    }
+    break
+  }
   }
 })
 
@@ -108,6 +108,7 @@ self.addEventListener('fetch', function (event) {
 
   // Generate unique request ID.
   const requestId = crypto.randomUUID()
+
   event.respondWith(handleRequest(event, requestId))
 })
 
@@ -160,11 +161,11 @@ async function resolveMainClient(event) {
   })
 
   return allClients
-    .filter((client) => {
+    .filter(client => {
       // Get only those clients that are currently visible.
       return client.visibilityState === 'visible'
     })
-    .find((client) => {
+    .find(client => {
       // Find the client ID that's recorded in the
       // set of clients that have registered the worker.
       return activeClientIds.has(client.id)
@@ -211,6 +212,7 @@ async function getResponse(event, client, requestId) {
 
   // Notify the client that a request has been intercepted.
   const requestBuffer = await request.arrayBuffer()
+
   const clientMessage = await sendToClient(
     client,
     {
@@ -236,13 +238,13 @@ async function getResponse(event, client, requestId) {
   )
 
   switch (clientMessage.type) {
-    case 'MOCK_RESPONSE': {
-      return respondWithMock(clientMessage.data)
-    }
+  case 'MOCK_RESPONSE': {
+    return respondWithMock(clientMessage.data)
+  }
 
-    case 'MOCK_NOT_FOUND': {
-      return passthrough()
-    }
+  case 'MOCK_NOT_FOUND': {
+    return passthrough()
+  }
   }
 
   return passthrough()
@@ -252,7 +254,7 @@ function sendToClient(client, message, transferrables = []) {
   return new Promise((resolve, reject) => {
     const channel = new MessageChannel()
 
-    channel.port1.onmessage = (event) => {
+    channel.port1.onmessage = event => {
       if (event.data && event.data.error) {
         return reject(event.data.error)
       }

@@ -2,7 +2,10 @@
   <VRow>
     <VCol cols="12">
       <div class="d-flex justify-end mb-5">
-        <VBtn prepend-icon="tabler-plus" @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen">
+        <VBtn
+          prepend-icon="tabler-plus"
+          @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
+        >
           Add Project
         </VBtn>
       </div>
@@ -14,7 +17,10 @@
         Web Design Projects
       </h5>
       <div style="inline-size: 272px;">
-        <AppTextField v-model="search" placeholder="Search Project" />
+        <AppTextField
+          v-model="search"
+          placeholder="Search Project"
+        />
       </div>
     </VCardText>
 
@@ -22,12 +28,24 @@
     <!-- 👉 User Project List Table -->
 
     <!-- SECTION Datatable -->
-    <VDataTable v-model:page="options.page" :headers="projectTableHeaders" :items-per-page="options.itemsPerPage"
-      :items="projects" item-value="name" hide-default-footer :search="search" show-select class="text-no-wrap">
+    <VDataTable
+      v-model:page="options.page"
+      :headers="projectTableHeaders"
+      :items-per-page="options.itemsPerPage"
+      :items="projects"
+      item-value="name"
+      hide-default-footer
+      :search="search"
+      show-select
+      class="text-no-wrap"
+    >
       <!-- projects -->
       <template #item.project="{ item }">
         <div class="d-flex align-center gap-x-3">
-          <VAvatar :size="34" :image="item.logo" />
+          <VAvatar
+            :size="34"
+            :image="item.logo"
+          />
           <div>
             <h6 class="text-h6 text-no-wrap">
               {{ item.name }}
@@ -49,10 +67,18 @@
       <template #item.team="{ item }">
         <div class="d-flex">
           <div class="v-avatar-group">
-            <VAvatar v-for="(data, index) in item.team" :key="index" size="26">
+            <VAvatar
+              v-for="(data, index) in item.team"
+              :key="index"
+              size="26"
+            >
               <VImg :src="data" />
             </VAvatar>
-            <VAvatar v-if="item.extraMembers" :color="$vuetify.theme.current.dark ? '#373b50' : '#eeedf0'" :size="26">
+            <VAvatar
+              v-if="item.extraMembers"
+              :color="$vuetify.theme.current.dark ? '#373b50' : '#eeedf0'"
+              :size="26"
+            >
               <div class="text-caption text-high-emphasis">
                 +{{ item.extraMembers }}
               </div>
@@ -65,7 +91,12 @@
       <template #item.progress="{ item }">
         <div class="d-flex align-center gap-3">
           <div class="flex-grow-1">
-            <VProgressLinear :height="6" :model-value="item.progress" color="primary" rounded />
+            <VProgressLinear
+              :height="6"
+              :model-value="item.progress"
+              color="primary"
+              rounded
+            />
           </div>
           <div class="text-body-1 text-high-emphasis">
             {{ item.progress }}%
@@ -79,7 +110,10 @@
           <VIcon icon="tabler-dots-vertical" />
           <VMenu activator="parent">
             <VList>
-              <VListItem value="view" :to="{ name: 'web-design', params: { id: item.id } }">
+              <VListItem
+                value="view"
+                :to="{ name: 'web-design', params: { id: item.id } }"
+              >
                 View
               </VListItem>
               <VListItem value="delete">
@@ -92,13 +126,19 @@
 
       <!-- TODO Refactor this after vuetify provides proper solution for removing default footer -->
       <template #bottom>
-        <TablePagination v-model:page="options.page" :items-per-page="options.itemsPerPage"
-          :total-items="projects.length" />
+        <TablePagination
+          v-model:page="options.page"
+          :items-per-page="options.itemsPerPage"
+          :total-items="projects.length"
+        />
       </template>
     </VDataTable>
     <!-- !SECTION -->
   </VCard>
-  <AddProjectDrawer v-model:is-drawer-open="isAddProjectDrawerOpen" @addProject="addProject" />
+  <AddProjectDrawer
+    v-model:is-drawer-open="isAddProjectDrawerOpen"
+    @add-project="addProject"
+  />
 </template>
 
 <script setup>
@@ -122,6 +162,7 @@ import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project
 
 const isAddProjectDrawerOpen = ref(false)
 const search = ref('')
+
 const options = ref({
   page: 1,
   itemsPerPage: 5,
@@ -256,7 +297,7 @@ const projects = [
 ]
 
 // addProject event
-const addProject = (newProject) => {
+const addProject = newProject => {
   console.log('New Project:', newProject)
 }
 </script>
