@@ -1,5 +1,8 @@
 <script setup>
 import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue'
+import { useRoleStore } from "../store/roles"
+
+const roleStore = useRoleStore()
 
 // 👉 Store
 const searchQuery = ref('')
@@ -12,6 +15,11 @@ const itemsPerPage = ref(10)
 const page = ref(1)
 const sortBy = ref()
 const orderBy = ref()
+const isLoading = ref(false)
+
+onMounted(async () => {
+  await fetchRoles()
+})
 
 const updateOptions = options => {
   sortBy.value = options.sortBy[0]?.key
@@ -59,28 +67,7 @@ const users = computed(() => usersData.value.users)
 const totalUsers = computed(() => usersData.value.totalUsers)
 
 // 👉 search filters
-const roles = [
-  {
-    title: 'Admin',
-    value: 'admin',
-  },
-  {
-    title: 'Author',
-    value: 'author',
-  },
-  {
-    title: 'Editor',
-    value: 'editor',
-  },
-  {
-    title: 'Maintainer',
-    value: 'maintainer',
-  },
-  {
-    title: 'Subscriber',
-    value: 'subscriber',
-  },
-]
+const roles = []
 
 const plans = [
   {
@@ -179,6 +166,22 @@ const deleteUser = async id => {
 
   // refetch User
   fetchUsers()
+}
+
+const fetchRoles = async () => {
+  try {
+    isLoading.value = true
+
+    const res = await roleStore.getAll()
+
+    roles.value = res.roles
+  } catch (error) {
+    console.error('Error fetching roles:', error)
+    toast.error('Error fetching roles:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
 }
 </script>
 
