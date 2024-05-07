@@ -19,32 +19,11 @@ const refVForm = ref()
 const title = ref()
 const projectManager = ref()
 const estHours = ref()
-const estBudget = ref()
+const estCost = ref()
 
 const resetForm = () => {
   refVForm.value?.reset()
   emit('update:isDrawerOpen', false)
-}
-
-// create submitForm method
-const submitForm = () => {
-  refVForm.value?.validate().then(async ({ valid: isValid }) => {
-    if (isValid) {
-      // create new project object
-      const newProject = {
-        title: title.value,
-        projectManager: projectManager.value,
-        estHours: estHours.value,
-        estBudget: estBudget.value,
-      }
-
-      // emit addProject event
-      emit('addProject', newProject)
-
-      // reset form
-      // resetForm()
-    }
-  })
 }
 </script>
 
@@ -72,7 +51,7 @@ const submitForm = () => {
         <VCardText style="block-size: calc(100vh - 5rem);">
           <VForm
             ref="refVForm"
-            @submit.prevent="submitForm"
+            @submit.prevent=""
           >
             <VRow>
               <VCol cols="12">

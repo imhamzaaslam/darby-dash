@@ -1,5 +1,4 @@
 import router from '../router'
-import { defineStore } from 'pinia'
 import AuthService from '../services/AuthService'
 
 const getUserFromLocalStorage = () => localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null

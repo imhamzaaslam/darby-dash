@@ -33,7 +33,5 @@ Route::group(['prefix' => 'auth'], function () {
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
-    Route::get('/me', function (Request $request) {
-        dd('working fine');
-    });
+
 });
