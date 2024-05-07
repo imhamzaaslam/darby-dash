@@ -1,106 +1,3 @@
-<template>
-  <VRow>
-    <VCol cols="12">
-      <div class="d-flex justify-end mb-5">
-        <VBtn prepend-icon="tabler-plus" @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen">
-          Add Project
-        </VBtn>
-      </div>
-    </VCol>
-  </VRow>
-  <VCard>
-    <VCardText class="d-flex justify-space-between align-center flex-wrap gap-4">
-      <h5 class="text-h5">
-        Web Design Projects
-      </h5>
-      <div style="inline-size: 272px;">
-        <AppTextField v-model="search" placeholder="Search Project" />
-      </div>
-    </VCardText>
-
-    <VDivider />
-    <!-- 👉 User Project List Table -->
-
-    <!-- SECTION Datatable -->
-    <VDataTable v-model:page="options.page" :headers="projectTableHeaders" :items-per-page="options.itemsPerPage"
-      :items="projects" item-value="name" hide-default-footer :search="search" show-select class="text-no-wrap">
-      <!-- projects -->
-      <template #item.project="{ item }">
-        <div class="d-flex align-center gap-x-3">
-          <VAvatar :size="34" :image="item.logo" />
-          <div>
-            <h6 class="text-h6 text-no-wrap">
-              {{ item.name }}
-            </h6>
-            <div class="text-body-2">
-              {{ item.project }}
-            </div>
-          </div>
-        </div>
-      </template>
-
-      <template #item.leader="{ item }">
-        <div class="text-base text-high-emphasis">
-          {{ item.leader }}
-        </div>
-      </template>
-
-      <!-- Team -->
-      <template #item.team="{ item }">
-        <div class="d-flex">
-          <div class="v-avatar-group">
-            <VAvatar v-for="(data, index) in item.team" :key="index" size="26">
-              <VImg :src="data" />
-            </VAvatar>
-            <VAvatar v-if="item.extraMembers" :color="$vuetify.theme.current.dark ? '#373b50' : '#eeedf0'" :size="26">
-              <div class="text-caption text-high-emphasis">
-                +{{ item.extraMembers }}
-              </div>
-            </VAvatar>
-          </div>
-        </div>
-      </template>
-
-      <!-- Progress -->
-      <template #item.progress="{ item }">
-        <div class="d-flex align-center gap-3">
-          <div class="flex-grow-1">
-            <VProgressLinear :height="6" :model-value="item.progress" color="primary" rounded />
-          </div>
-          <div class="text-body-1 text-high-emphasis">
-            {{ item.progress }}%
-          </div>
-        </div>
-      </template>
-
-      <!-- Action -->
-      <template #item.Action="{ item }">
-        <IconBtn>
-          <VIcon icon="tabler-dots-vertical" />
-          <VMenu activator="parent">
-            <VList>
-              <VListItem value="view" :to="{ name: 'web-design', params: { id: item.id } }">
-                View
-              </VListItem>
-              <VListItem value="delete">
-                Delete
-              </VListItem>
-            </VList>
-          </VMenu>
-        </IconBtn>
-      </template>
-
-      <!-- TODO Refactor this after vuetify provides proper solution for removing default footer -->
-      <template #bottom>
-        <TablePagination v-model:page="options.page" :items-per-page="options.itemsPerPage"
-          :total-items="projects.length" />
-      </template>
-    </VDataTable>
-    <!-- !SECTION -->
-  </VCard>
-  <AddProjectDrawer v-model:is-drawer-open="isAddProjectDrawerOpen" @addProject="addProject" />
-</template>
-
 <script setup>
 import avatar1 from '@images/avatars/avatar-1.png'
 import avatar2 from '@images/avatars/avatar-2.png'
@@ -121,11 +18,6 @@ import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project
 
 
 const isAddProjectDrawerOpen = ref(false)
-const search = ref('')
-const options = ref({
-  page: 1,
-  itemsPerPage: 5,
-})
 
 // Project Table Header
 const projectTableHeaders = [
@@ -255,8 +147,150 @@ const projects = [
   },
 ]
 
-// addProject event
-const addProject = (newProject) => {
-  console.log('New Project:', newProject)
-}
+const search = ref('')
+
+const options = ref({
+  page: 1,
+  itemsPerPage: 5,
+})
 </script>
+
+<template>
+  <VRow>
+    <VCol cols="12">
+      <div class="d-flex justify-end mb-5">
+        <VBtn
+          prepend-icon="tabler-plus"
+          @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
+        >
+          Add Project
+        </VBtn>
+      </div>
+    </VCol>
+  </VRow>
+  <VCard>
+    <VCardText class="d-flex justify-space-between align-center flex-wrap gap-4">
+      <h5 class="text-h5">
+        Web Design Projects
+      </h5>
+      <div style="inline-size: 272px;">
+        <AppTextField
+          v-model="search"
+          placeholder="Search Project"
+        />
+      </div>
+    </VCardText>
+
+    <VDivider />
+    <!-- 👉 User Project List Table -->
+
+    <!-- SECTION Datatable -->
+    <VDataTable
+      v-model:page="options.page"
+      :headers="projectTableHeaders"
+      :items-per-page="options.itemsPerPage"
+      :items="projects"
+      item-value="name"
+      hide-default-footer
+      :search="search"
+      show-select
+      class="text-no-wrap"
+    >
+      <!-- projects -->
+      <template #item.project="{ item }">
+        <div class="d-flex align-center gap-x-3">
+          <VAvatar
+            :size="34"
+            :image="item.logo"
+          />
+          <div>
+            <h6 class="text-h6 text-no-wrap">
+              {{ item.name }}
+            </h6>
+            <div class="text-body-2">
+              {{ item.project }}
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template #item.leader="{ item }">
+        <div class="text-base text-high-emphasis">
+          {{ item.leader }}
+        </div>
+      </template>
+
+      <!-- Team -->
+      <template #item.team="{ item }">
+        <div class="d-flex">
+          <div class="v-avatar-group">
+            <VAvatar
+              v-for="(data, index) in item.team"
+              :key="index"
+              size="26"
+            >
+              <VImg :src="data" />
+            </VAvatar>
+            <VAvatar
+              v-if="item.extraMembers"
+              :color="$vuetify.theme.current.dark ? '#373b50' : '#eeedf0'"
+              :size="26"
+            >
+              <div class="text-caption text-high-emphasis">
+                +{{ item.extraMembers }}
+              </div>
+            </VAvatar>
+          </div>
+        </div>
+      </template>
+
+      <!-- Progress -->
+      <template #item.progress="{ item }">
+        <div class="d-flex align-center gap-3">
+          <div class="flex-grow-1">
+            <VProgressLinear
+              :height="6"
+              :model-value="item.progress"
+              color="primary"
+              rounded
+            />
+          </div>
+          <div class="text-body-1 text-high-emphasis">
+            {{ item.progress }}%
+          </div>
+        </div>
+      </template>
+
+      <!-- Action -->
+      <template #item.Action="{ item }">
+        <IconBtn>
+          <VIcon icon="tabler-dots-vertical" />
+          <VMenu activator="parent">
+            <VList>
+              <VListItem
+                value="view"
+                :to="{ name: 'web-design', params: { id: item.id } }"
+              >
+                View
+              </VListItem>
+              <VListItem value="delete">
+                Delete
+              </VListItem>
+            </VList>
+          </VMenu>
+        </IconBtn>
+      </template>
+
+      <!-- TODO Refactor this after vuetify provides proper solution for removing default footer -->
+      <template #bottom>
+        <TablePagination
+          v-model:page="options.page"
+          :items-per-page="options.itemsPerPage"
+          :total-items="projects.length"
+        />
+      </template>
+    </VDataTable>
+    <!-- !SECTION -->
+  </VCard>
+  <AddProjectDrawer v-model:is-drawer-open="isAddProjectDrawerOpen" />
+</template>
