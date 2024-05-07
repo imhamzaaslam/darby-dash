@@ -201,6 +201,8 @@ const getRoles = computed(() => {
               v-model="selectedRole"
               placeholder="Select Role"
               :items="getRoles"
+              item-title="name"
+              item-value="id"
               clearable
               clear-icon="tabler-x"
             />

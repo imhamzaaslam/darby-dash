@@ -4,6 +4,7 @@ import RoleService from '../services/RoleService'
 export const useRoleStore = defineStore('roles', {
   state: () => ({
     roles: [],
+    rolesIds: [],
     loadStatus: 0,
     error: null,
   }),
@@ -15,8 +16,7 @@ export const useRoleStore = defineStore('roles', {
       try {
         const response = await RoleService.getRoles()
 
-        this.roles = response.data.data.map(role => ([ role.name]))
-        console.warn('this.roles ----->', this.roles)
+        this.roles = response.data.data.map(role => ({ id: role.id, name: role.name }))
         this.loadStatus = 2
       } catch (error) {
         this.error = error
