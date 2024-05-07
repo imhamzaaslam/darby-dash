@@ -21,7 +21,6 @@ class RoleRepository extends AbstractEloquentRepository implements RoleRepositor
 
     public function all(): Collection
     {
-        dd('here');
-        return $this->model->getAll();
+
     }
 }

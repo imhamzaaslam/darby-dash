@@ -37,6 +37,5 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::get('/projects', function (Request $request) {
         dd('working fine');
     });
-
-    Route::get('/roles', [RoleController::class, 'index']); 
+    Route::get('/roles', [RoleController::class, 'index']);
 });
