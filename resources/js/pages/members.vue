@@ -66,9 +66,6 @@ const {
 const users = computed(() => usersData.value.users)
 const totalUsers = computed(() => usersData.value.totalUsers)
 
-// 👉 search filters
-const roles = []
-
 const plans = [
   {
     title: 'Basic',
@@ -172,17 +169,18 @@ const fetchRoles = async () => {
   try {
     isLoading.value = true
 
-    const res = await roleStore.getAll()
-
-    roles.value = res.roles
+    await roleStore.getAll()
   } catch (error) {
     console.error('Error fetching roles:', error)
-    toast.error('Error fetching roles:', error)
   }
   finally {
     isLoading.value = false
   }
 }
+
+const getRoles = computed(() => {
+  return roleStore.getRoles
+})
 </script>
 
 <template>
@@ -202,7 +200,7 @@ const fetchRoles = async () => {
             <AppSelect
               v-model="selectedRole"
               placeholder="Select Role"
-              :items="roles"
+              :items="getRoles"
               clearable
               clear-icon="tabler-x"
             />

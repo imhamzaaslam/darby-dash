@@ -15,7 +15,8 @@ export const useRoleStore = defineStore('roles', {
       try {
         const response = await RoleService.getRoles()
 
-        this.roles = response.data.data
+        this.roles = response.data.data.map(role => ([ role.name]))
+        console.warn('this.roles ----->', this.roles)
         this.loadStatus = 2
       } catch (error) {
         this.error = error
