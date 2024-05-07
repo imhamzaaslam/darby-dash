@@ -45,3 +45,14 @@ apiClient.interceptors.response.use(
     return Promise.reject(error)
   },
 )
+
+apiClient.interceptors.request.use(config => {
+  const store = useAuthStore()
+  const token = store.token
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+})
