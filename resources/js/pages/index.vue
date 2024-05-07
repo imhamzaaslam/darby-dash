@@ -62,7 +62,8 @@ import { useProjectStore } from '../store/projects'
 
 const projectStore = useProjectStore()
 async function checkApi() {
-  let res = await projectStore.getProjects()
+  let res = await projectStore.getAll()
+  console.log(res)
 }
 
 const dashboards = ref([

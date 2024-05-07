@@ -10,12 +10,10 @@ export const useProjectStore = defineStore('projects', {
   }),
   persist: true,
   actions: {
-    async getProjects() {
+    async getAll() {
       this.error = null
       this.loadStatus = 1
       try {
-        console.log('here')
-
         const response = await ProjectService.getProjects()
 
         this.projects = response.data.data
@@ -26,7 +24,7 @@ export const useProjectStore = defineStore('projects', {
         console.error('getProjects error ', error)
       }
     },
-    async getProject(id) {
+    async show(id) {
       this.error = null
       this.loadStatus = 1
       try {
@@ -40,7 +38,7 @@ export const useProjectStore = defineStore('projects', {
         console.error('getProject error ', error)
       }
     },
-    async createProject(project) {
+    async create(project) {
       this.error = null
       this.loadStatus = 1
       try {
@@ -54,7 +52,7 @@ export const useProjectStore = defineStore('projects', {
         console.error('createProject error ', error)
       }
     },
-    async updateProject(project) {
+    async update(project) {
       this.error = null
       this.loadStatus = 1
       try {
@@ -68,7 +66,7 @@ export const useProjectStore = defineStore('projects', {
         console.error('updateProject error ', error)
       }
     },
-    async deleteProject(id) {
+    async delete(id) {
       this.error = null
       this.loadStatus = 1
       try {
