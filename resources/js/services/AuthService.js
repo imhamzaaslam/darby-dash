@@ -21,7 +21,7 @@ authClient.interceptors.response.use(
     if (error.response && [401, 419].includes(error.response.status) && authStore.user) {
       authStore.logout()
     }
-    
+
     return Promise.reject(error)
   },
 )
@@ -38,7 +38,7 @@ authClient.interceptors.request.use(config => {
 
 const getCookie = () => {
   console.log('AuthService: sending cookie request')
-  
+
   return authClient.get('/sanctum/csrf-cookie')
 }
 
@@ -46,7 +46,7 @@ export default {
   login: async payload => {
     console.log('AuthService: about to start getCookie()')
     await getCookie()
-    
+
     return await authClient.post('/api/auth/login', payload)
   },
 
@@ -60,19 +60,19 @@ export default {
 
   forgotPassword: async email => {
     await getCookie()
-    
+
     return await authClient.post('/forgot-password', email)
   },
 
   getAuthUser: () => {
     console.log('AuthService: getting user')
-    
+
     return authClient.get('/api/v1/me')
   },
 
   resetPassword: async payload => {
     await getCookie()
-    
+
     return await authClient.post('/reset-password', payload)
   },
 
