@@ -1,29 +1,3 @@
-<script setup>
-const dashboards = ref([
-  {
-    icon: 'tabler-world',
-    color: 'primary',
-    title: 'Website Design Project',
-    url: '/projects/web-designs',
-    isHover: false,
-  },
-  {
-    icon: 'tabler-military-rank',
-    color: 'primary',
-    title: 'SEO Program',
-    url: '/projects/seo-programs',
-    isHover: false,
-  },
-  {
-    icon: 'tabler-brand-google',
-    color: 'primary',
-    title: 'Google Ads Program',
-    url: '/projects/google-ads-programs',
-    isHover: false,
-  },
-])
-</script>
-
 <template>
   <h3>Project Dashboards</h3>
   <VRow class="mt-3">
@@ -73,7 +47,48 @@ const dashboards = ref([
       </div>
     </VCol>
   </VRow>
+  <VBtn
+    color="primary"
+    class="mt-3"
+    size="small"
+    @click="checkApi"
+  >
+    Check API
+  </VBtn>
 </template>
+
+<script setup>
+import { useProjectStore } from '../store/projects'
+
+const projectStore = useProjectStore()
+async function checkApi() {
+  let res = await projectStore.getProjects()
+}
+
+const dashboards = ref([
+  {
+    icon: 'tabler-world',
+    color: 'primary',
+    title: 'Website Design Project',
+    url: '/projects/web-designs',
+    isHover: false,
+  },
+  {
+    icon: 'tabler-military-rank',
+    color: 'primary',
+    title: 'SEO Program',
+    url: '/projects/seo-programs',
+    isHover: false,
+  },
+  {
+    icon: 'tabler-brand-google',
+    color: 'primary',
+    title: 'Google Ads Program',
+    url: '/projects/google-ads-programs',
+    isHover: false,
+  },
+])
+</script>
 
 <style lang="scss" scoped>
 @use "@core-scss/base/mixins" as mixins;

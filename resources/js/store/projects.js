@@ -14,6 +14,8 @@ export const useProjectStore = defineStore('projects', {
       this.error = null
       this.loadStatus = 1
       try {
+        console.log('here')
+
         const response = await ProjectService.getProjects()
 
         this.projects = response.data.data
