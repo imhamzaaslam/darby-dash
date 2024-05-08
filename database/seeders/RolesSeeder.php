@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class RolesSeeder extends Seeder
 {
@@ -22,6 +23,7 @@ class RolesSeeder extends Seeder
                 'pm',
                 'developer',
                 'editor',
+                'viewer'
             ];
     
             foreach ($roles as $role) {
@@ -54,6 +56,15 @@ class RolesSeeder extends Seeder
 
             $role = Role::findByName('editor');
             $role->givePermissionTo(['view']);
+
+            $role = Role::findByName('viewer');
+            $role->givePermissionTo(['view']);
+
+            $user = User::where('email', 'admin@demo.com')->first();
+            $user->assignRole('admin');
+
+            $user = User::where('email', 'demo@demo.com')->first();
+            $user->assignRole('viewer');
 
             DB::commit();
         } catch (\Exception $e) {

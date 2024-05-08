@@ -6,7 +6,7 @@ use App\Contracts\AbstractUserRepository;
 use App\Contracts\UserInfoRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
 use App\Events\OssRegistrationDateChanged;
-use App\Notifications\SendSetPasswordNotification;
+// use App\Notifications\SendSetPasswordNotification;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use App\Enums\State;
@@ -30,7 +30,7 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
         $user->assignRole($role);
 
-        $user->notify(new SendSetPasswordNotification());
+        // $user->notify(new SendSetPasswordNotification());
 
         $this->userInfoRepository->create($user, $infoAttributes);
 
@@ -51,7 +51,7 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
     public function delete(User $user): bool
     {
-        return false;
+        return $user->delete();
     }
 
     public function activate(User $user): bool

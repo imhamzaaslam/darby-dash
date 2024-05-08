@@ -28,6 +28,8 @@ class UserSeeder extends Seeder
              'state'             => 'active',
          ]);
 
+         $this->addDummyInfo($faker, $demoUser);
+
          $demoUser2 = User::create([
              'uuid'              => $faker->uuid,
              'name_first'        => $faker->firstName,
@@ -37,5 +39,20 @@ class UserSeeder extends Seeder
              'email_verified_at' => now(),
              'state'             => 'active',
          ]);
+         
+         $this->addDummyInfo($faker, $demoUser2);
+    }
+
+    /**
+     * Add dummy user info.
+     *
+     * @param Generator $faker
+     * @param User $user
+     */
+    private function addDummyInfo(Generator $faker, User $user): void
+    {
+        $user->info()->create([
+            'phone'   => $faker->phoneNumber,
+        ]);
     }
 }

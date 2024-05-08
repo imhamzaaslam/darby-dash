@@ -33,29 +33,13 @@ class UsersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
-        try {
-            $this->authorize('view', auth()->user());
-    
-            $users = $this->userRepository
-                ->hasInfo()
-                ->filtered($request->keyword ?? '')
-                ->ordered($request->orderBy ?? 'id', $request->order ?? 'asc')
-                ->paginate($request->per_page ?? config('pagination.per_page', 10));
+        $users = $this->userRepository
+            ->hasInfo()
+            ->filtered($request->keyword ?? '')
+            ->ordered($request->orderBy ?? 'id', $request->order ?? 'asc')
+            ->paginate($request->per_page ?? config('pagination.per_page', 10));
 
-            return UserResource::collection($users);
-        } catch (AuthorizationException $e) {
-            return response()->json([
-                'error' => 'You do not have the permissions to access this page.'
-            ], 403);
-        } catch (\Exception $e) {
-            activity('error')
-                ->causedBy(auth()->user())
-                ->log("Error in " . __CLASS__ . " on line " . __LINE__ . " while getting users. Exception: {$e->getMessage()}");
-            Log::warning("Error in " . __CLASS__ . " on line " . __LINE__ . " while getting users. Exception: {$e->getMessage()}");
-            return response()->json([
-                'error' => 'Something went wrong while getting the users. Please try again later.'
-            ], 500);
-        }
+        return UserResource::collection($users);
     }
 
     /**
@@ -66,47 +50,27 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $request): JsonResponse
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $attributes = [
-                'name_first' => $validated['name_first'],
-                'name_last' => $validated['name_last'],
-                'email' => $validated['email'],
-            ];
+        $attributes = [
+            'name_first' => $validated['name_first'],
+            'name_last' => $validated['name_last'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'state' => $validated['state'],
+        ];
 
-            $role = $validated['role'];
+        $role = $validated['role'];
 
-            if ($role === 'customer') {
-                $infoAttributes = [
-                    'company' => $validated['company'],
-                    'coc_number' => $validated['coc_number'],
-                ];
-            }
+        $infoAttributes = [
+            'phone' => $validated['phone'] ?? '',
+        ];
 
-            if ($role === 'admin') {
-                $infoAttributes = [
-                    'company' => config('app.name'),
-                    'website' => config('app.corporate_url'),
-                    'country' => 'NL',
-                    'communication_language' => config('app.locale'),
-                ];
-            }
+        $user = $this->userRepository->create($role, $attributes, $infoAttributes ?? []);
 
-            $user = $this->userRepository->create($role, $attributes, $infoAttributes ?? []);
-
-            return (new UserResource($user))
-                ->response()
-                ->setStatusCode(201);
-        } catch (Exception $e) {
-            activity('error')
-                ->causedBy(auth()->user())
-                ->log("Error in " . __CLASS__ . " on line " . __LINE__ . " while creating a user. Exception: {$e->getMessage()}");
-            Log::error("Error in " . __CLASS__ . " on line " . __LINE__ . " while creating a user. Exception: {$e->getMessage()}");
-            return response()->json([
-                'error' => 'Something went wrong while creating the user. Please try again later.'
-            ], 500);
-        }
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -117,31 +81,11 @@ class UsersController extends Controller
      */
     public function show(string $uuid): JsonResponse
     {
-        try {
-            $this->authorize('view', auth()->user());
+        $user = $this->userRepository->getByUuidOrFail($uuid);
 
-            $user = $this->userRepository->getByUuidOrFail($uuid);
-
-            return (new UserResource($user))
-                ->response()
-                ->setStatusCode(200);
-        } catch (AuthorizationException $e) {
-            return response()->json([
-                'error' => 'You do not have the permissions to access this page.'
-            ], 403);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'error' => 'User not found.'
-            ], 404);
-        } catch (\Exception $e) {
-            activity('error')
-                ->causedBy(auth()->user())
-                ->log("Error in " . __CLASS__ . " on line " . __LINE__ . " while getting a user by uuid: {$uuid}. Exception: {$e->getMessage()}");
-            Log::warning("Error in " . __CLASS__ . " on line " . __LINE__ . " while getting a user by uuid: {$uuid}. Exception: {$e->getMessage()}");
-            return response()->json([
-                'error' => 'Something went wrong while creating the user. Please try again later.'
-            ], 500);
-        }
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -153,59 +97,42 @@ class UsersController extends Controller
      */
     public function update(UpdateUserAdminRequest $request, string $uuid): Response|JsonResponse
     {
-        try {
-            $this->authorize('update', auth()->user());
-            $user = $this->userRepository->getByUuidOrFail($uuid);
+        $user = $this->userRepository->getByUuidOrFail($uuid);
 
-            $validatedUserInput = $request->safe()->only([
-                'name_first',
-                'name_last',
-                'email',
-                'phone',
-                'yuki_access_key',
-                'bookkeeping_started_at',
-                'oss_registered_at',
-                'state'
-            ]);
+        $validatedUserInput = $request->safe()->only([
+            'name_first',
+            'name_last',
+            'email',
+            'password',
+            'state'
+        ]);
 
-            $validatedInfoInput = $request->safe()->only([
-                'company',
-                'coc_number',
-                'phone',
-                'website',
-                'communication_language'
-            ]);
+        $validatedInfoInput = $request->safe()->only([
+            'phone',
+        ]);
 
-            if (!empty($validatedUserInput['oss_registered_at'])) {
-                $validatedUserInput['oss_registered_at'] = Carbon::parse($validatedUserInput['oss_registered_at'])->format('Y-m-d H:i:s');
-            }
+        $this->userRepository->update($user, $validatedUserInput);
+        $this->userInfoRepository->update($user->info, $validatedInfoInput);
 
-            $this->userRepository->update($user, $validatedUserInput);
-            $this->userInfoRepository->update($user->info, $validatedInfoInput);
-
-            return (new UserResource($user))
-                ->response()
-                ->setStatusCode(200);
-        } catch (Exception $e) {
-            activity('error')
-                ->performedOn($user)
-                ->causedBy(auth()->user())
-                ->log("Error in " . __CLASS__ . " on line " . __LINE__ . " while updating a user. Exception: {$e->getMessage()}");
-            report($e);
-            return response()->json([
-                'error' => 'Something went wrong. Please try again later.'
-            ], 500);
-        }
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  string  $uuid
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete(string $uuid): JsonResponse
     {
-        //
+        $user = $this->userRepository->getByUuidOrFail($uuid);
+
+        $this->userRepository->delete($user);
+
+        return response()->json([
+            'message' => 'User deleted successfully',
+        ]);
     }
 }

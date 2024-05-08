@@ -27,13 +27,11 @@ class StoreUserRequest extends FormRequest
         return [
             'name_first' => 'required|string|max:255',
             'name_last' => 'required|string|max:255',
-            'company' => 'required_if:role,customer|string|max:255',
-//            'coc_number' => ['required','string','numeric'
-//            ,'unique:user_infos,coc_number',
-//            new CocNumberCheck()],
-            'coc_number' => 'required_if:role,customer|string|numeric',
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:admin,customer',
+            'password' => 'required|string|min:8',
+            'phone' => 'required|string|max:255',
+            'state' => 'required|string|in:active,inactive',
+            'role' => 'required|string|exists:roles,name',
         ];
     }
 }

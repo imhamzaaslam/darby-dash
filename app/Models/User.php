@@ -131,12 +131,8 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         'name_last',
         'email',
         'email_verified_at',
-        'api_token',
         'password',
         'state',
-        'yuki_access_key',
-        'bookkeeping_started_at',
-        'oss_registered_at',
     ];
 
     /**
@@ -157,77 +153,11 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'oss_registered_at' => 'datetime',
-        'bookkeeping_started_at' => 'datetime',
     ];
-
-    /**
-     * The events that should be logged.
-     *
-     * @var array<string, string>
-     */
-    protected static $recordEvents = ['created'];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly(['uuid', 'name_first', 'name_last']);
-    }
 
     public function info(): HasOne
     {
         return $this->hasOne(UserInfo::class);
-    }
-
-    public function shops(): HasMany
-    {
-        return $this->hasMany(Shop::class);
-    }
-
-    /**
-     * This is still supported for backward compatibility.
-     * It is favoured to retrieve this relation via the Shop relation.
-     * This method might be deprecated in the future.
-     *
-     * @return HasMany
-     */
-    public function invoices(): HasMany
-    {
-        return $this->hasMany(Invoice::class);
-    }
-
-    /**
-     * This is still supported for backward compatibility.
-     * It is favoured to retrieve this relation via the Shop relation.
-     * This method might be deprecated in the future.
-     *
-     * @return HasMany
-     */
-    public function journals(): HasMany
-    {
-        return $this->hasMany(Journal::class);
-    }
-
-    /**
-     * This is still supported for backward compatibility.
-     * It is favoured to retrieve this relation via the Shop relation.
-     * This method might be deprecated in the future.
-     *
-     * @return HasMany
-     */
-    public function orders(): HasMany
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    public function vatNumbers(): HasMany
-    {
-        return $this->hasMany(VatNumber::class);
-    }
-
-    public function products(): BelongsToMany
-    {
-        return $this->belongsToMany(Product::class)->withTimestamps();
     }
 
     public function files(): MorphMany
@@ -248,13 +178,7 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
 
         static::creating(function (User $user) {
             $user->uuid = str()->uuid();
-            $user->password = Hash::make(str()->random(10));
         });
-    }
-
-    public function getNameAttribute(): string
-    {
-        return "{$this->name_first} {$this->name_last}";
     }
 
     public function isActive(): bool
@@ -272,32 +196,6 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         return $this->email_verified_at;
     }
 
-    public function getStateForCredential(Platform $platform): string
-    {
-        return $this->credentials
-            ->where('user_id', $this->id)
-            ->where('platform_id', $platform->id)
-            ->first()->state ?? 'inactive';
-    }
-
-    public function getActiveCredentials(): Collection
-    {
-        return $this->credentials()
-            ->where('state', 'active')
-            ->get();
-    }
-
-    public function getCredentialsForPlatform(PlatformEnum $platform, bool $throw = false): ?Credential
-    {
-        $platform = app(PlatformRepositoryInterface::class)->getFirstBy('client', $platform->value);
-
-        if (!$throw) {
-            return $this->credentials->where('platform_id', $platform->id)->first();
-        }
-
-        return $this->credentials->where('platform_id', $platform->id)->firstOrFail();
-    }
-
     function scopeFiltered(Builder $query, ?string $keyword): Builder
     {
         $usersTable = (new User())->getTable();
@@ -309,10 +207,6 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
                 ->orWhere("$usersTable.name_last", 'like', '%' . $keyword . '%')
                 ->orWhere("$usersTable.email", 'like', '%' . $keyword . '%')
                 ->orWhere("$usersTable.state", 'like', '%' . $keyword . '%')
-                ->orWhereHas('info', function (Builder $query) use ($keyword, $userInfosTable) {
-                    $query->where("$userInfosTable.company", 'like', '%' . $keyword . '%');
-                    $query->orWhere("$userInfosTable.coc_number", 'like', '%' . $keyword . '%');
-                })
                 ->orWhereHas('roles', function (Builder $query) use ($keyword) {
                     $query->where('name', 'like', '%' . $keyword . '%');
                 });

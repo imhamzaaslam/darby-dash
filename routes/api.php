@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\TokenValidationController;
 use App\Http\Controllers\Api\Admin\RoleController;
+use App\Http\Controllers\Api\Admin\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +38,18 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::get('/projects', function (Request $request) {
         dd('working fine');
     });
+
     Route::get('/roles', [RoleController::class, 'index']);
+
+    Route::prefix('admin')->group(function () {
+        Route::prefix('users')->group(function () {
+            Route::get('/', [UsersController::class, 'index']);
+            Route::post('/', [UsersController::class, 'store']);
+            Route::prefix('{uuid}')->group(function () {
+                Route::get('/', [UsersController::class, 'show']);
+                Route::patch('/', [UsersController::class, 'update']);
+                Route::delete('/', [UsersController::class, 'delete']);
+            });
+        });
+    });
 });

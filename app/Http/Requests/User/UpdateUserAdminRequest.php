@@ -37,19 +37,13 @@ class UpdateUserAdminRequest extends FormRequest
         $user = $this->userRepository->getByUuidOrFail($this->uuid);
 
         return [
+            'name_first' => 'required|string|max:255',
+            'name_last' => 'required|string|max:255',
             'email' => ['sometimes', 'email', Rule::unique('users', 'email')->ignore($user->email, 'email')],
-            'name_first' => 'sometimes|required|string|max:255',
-            'name_last' => 'sometimes|required|string|max:255',
-            'email' => ['sometimes', 'email', Rule::unique('users', 'email')->ignore($user->email, 'email')],
-            'company' => ['sometimes', 'string', 'max:255', Rule::unique('user_infos', 'company')->ignore($user->info->id)],
-            'coc_number' => ['sometimes', 'string'],
-//            'coc_number' => ['required','string','numeric'
-//            ,'unique:user_infos,coc_number,'. $info->id,
-//            new CocNumberCheck()],
-            'phone' => 'sometimes|string|unique:user_infos,phone,'. $user->info->id,
-            'communication_language' => 'sometimes|string|in:nl,en',
-            'oss_registered_at' => 'sometimes|date',
-            'state' => 'sometimes|in:active,inactive',
+            'password' => 'required|string|min:8',
+            'phone' => 'required|string|max:255',
+            'state' => 'required|string|in:active,inactive',
+            'role' => 'required|string|exists:roles,name',
         ];
     }
 }
