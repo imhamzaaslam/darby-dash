@@ -18,29 +18,33 @@ class UserSeeder extends Seeder
      */
     public function run(Generator $faker): void
     {
-         $demoUser = User::create([
-             'uuid'              => $faker->uuid,
-             'name_first'        => $faker->firstName,
-             'name_last'         => $faker->lastName,
-             'email'             => 'demo@demo.com',
-             'password'          => Hash::make('password'),
-             'email_verified_at' => now(),
-             'state'             => 'active',
-         ]);
+        $demoUser = User::create([
+            'uuid'              => $faker->uuid,
+            'name_first'        => $faker->firstName,
+            'name_last'         => $faker->lastName,
+            'email'             => 'demo@demo.com',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'state'             => 'active',
+        ]);
 
-         $this->addDummyInfo($faker, $demoUser);
+        $this->addDummyInfo($faker, $demoUser);
 
-         $demoUser2 = User::create([
-             'uuid'              => $faker->uuid,
-             'name_first'        => $faker->firstName,
-             'name_last'         => $faker->lastName,
-             'email'             => 'admin@demo.com',
-             'password'          => Hash::make('password'),
-             'email_verified_at' => now(),
-             'state'             => 'active',
-         ]);
-         
-         $this->addDummyInfo($faker, $demoUser2);
+        $demoUser2 = User::create([
+            'uuid'              => $faker->uuid,
+            'name_first'        => $faker->firstName,
+            'name_last'         => $faker->lastName,
+            'email'             => 'admin@demo.com',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'state'             => 'active',
+        ]);
+
+        $this->addDummyInfo($faker, $demoUser2);
+
+        User::factory(20)->create()->each(function ($user) use ($faker) {
+            $this->addDummyInfo($faker, $user);
+        });
     }
 
     /**

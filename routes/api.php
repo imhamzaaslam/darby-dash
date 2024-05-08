@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\TokenValidationController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UsersController;
+use App\Http\Controllers\Api\Admin\ProjectTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +53,6 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             });
         });
     });
+
+    Route::get('/project-types', [ProjectTypeController::class, 'index']);
 });
