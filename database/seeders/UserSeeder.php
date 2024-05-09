@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Role;
 use Faker\Generator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -29,6 +30,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser);
+        $demoUser->assignRole(Role::where('name', 'viewer')->first());
 
         $demoUser2 = User::create([
             'uuid'              => $faker->uuid,
@@ -41,9 +43,12 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser2);
+        $demoUser2->assignRole(Role::where('name', 'admin')->first());
 
         User::factory(20)->create()->each(function ($user) use ($faker) {
             $this->addDummyInfo($faker, $user);
+            $role = $user->id % 2 === 0 ? Role::where('name', 'pm')->first() : Role::where('name', 'developer')->first();
+            $user->assignRole($role);
         });
     }
 

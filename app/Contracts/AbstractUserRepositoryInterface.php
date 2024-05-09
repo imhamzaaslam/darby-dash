@@ -20,5 +20,7 @@ interface AbstractUserRepositoryInterface
 
     public function hasInfo(): Builder;
 
+    public function getAllRecordsQuery(): Builder;
+
     public function withRelations(string|array $relations): Collection;
 }

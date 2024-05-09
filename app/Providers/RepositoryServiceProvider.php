@@ -6,14 +6,17 @@ use App\Contracts\RoleRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
 use App\Contracts\UserInfoRepositoryInterface;
 use App\Contracts\ProjectTypeRepositoryInterface;
+use App\Contracts\ProjectRepositoryInterface;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\ProjectType;
+use App\Models\Project;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
 use App\Repositories\ProjectTypeRepository;
+use App\Repositories\ProjectRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -43,6 +46,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ProjectTypeRepositoryInterface::class,
             fn() => new ProjectTypeRepository(new ProjectType)
+        );
+
+        $this->app->bind(
+            ProjectRepositoryInterface::class,
+            fn() => new ProjectRepository(new Project)
         );
     }
 

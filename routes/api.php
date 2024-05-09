@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\TokenValidationController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\ProjectTypeController;
+use App\Http\Controllers\Api\Admin\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,16 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::get('/', [UsersController::class, 'show']);
                 Route::patch('/', [UsersController::class, 'update']);
                 Route::delete('/', [UsersController::class, 'delete']);
+            });
+        });
+
+        Route::prefix('projects')->group(function () {
+            Route::get('/', [ProjectController::class, 'index']);
+            Route::post('/', [ProjectController::class, 'store']);
+            Route::prefix('{uuid}')->group(function () {
+                Route::get('/', [ProjectController::class, 'show']);
+                Route::patch('/', [ProjectController::class, 'update']);
+                Route::delete('/', [ProjectController::class, 'delete']);
             });
         });
     });

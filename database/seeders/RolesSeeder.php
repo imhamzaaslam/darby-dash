@@ -60,12 +60,6 @@ class RolesSeeder extends Seeder
             $role = Role::findByName('viewer');
             $role->givePermissionTo(['view']);
 
-            $user = User::where('email', 'admin@demo.com')->first();
-            $user->assignRole('admin');
-
-            $user = User::where('email', 'demo@demo.com')->first();
-            $user->assignRole('viewer');
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
