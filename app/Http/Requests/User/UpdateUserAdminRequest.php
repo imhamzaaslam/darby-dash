@@ -40,7 +40,6 @@ class UpdateUserAdminRequest extends FormRequest
             'name_first' => 'required|string|max:255',
             'name_last' => 'required|string|max:255',
             'email' => ['sometimes', 'email', Rule::unique('users', 'email')->ignore($user->email, 'email')],
-            'password' => 'required|string|min:8',
             'phone' => 'required|string|max:255',
             'state' => 'required|string|in:active,inactive',
             'role' => 'required|string|exists:roles,name',
