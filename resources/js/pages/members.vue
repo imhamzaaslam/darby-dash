@@ -204,7 +204,7 @@
               <!-- Role -->
               <VCol cols="6">
                 <AppSelect
-                  v-model="editMemberDetails.roles"
+                  v-model="editMemberDetails.role"
                   label="Select Role"
                   placeholder="Select Role"
                   :rules="[requiredValidator]"
@@ -439,10 +439,9 @@ onBeforeMount(async () => {
 
 const fetchMembers = async () => {
   try {
-    isLoading.value = true
     await userStore.getAll(options.value.page, options.value.itemsPerPage)
+    isLoading.value = true
   } catch (error) {
-    console.error('Error fetching members:', error)
     toast.error('Error fetching members:', error)
   }
   finally {
@@ -454,15 +453,20 @@ async function submitAddMemberForm() {
   addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-        isDialogVisible.value = false
-        isLoading.value = true
-
         const res = await userStore.create(newMemberDetails.value)
-
-        toast.success('Member added successfully', { timeout: 1000 })
-        await fetchMembers()
+        const errors = getErrors.value
+        if(errors)
+        {
+          toast.error('Something went wrong.')
+        }
+        else{
+          isDialogVisible.value = false
+          isLoading.value = true
+          toast.success('Member added successfully', { timeout: 1000 })
+          await fetchMembers()
+          isLoading.value = false
+        }
       } catch (error) {
-        console.error('Error adding member:', error)
         toast.error('Failed to add member:', error)
       }
     }
@@ -470,7 +474,9 @@ async function submitAddMemberForm() {
 }
 
 const editMember = member => {
-  editMemberDetails.value = { ...member }
+  const { roles, ...rest } = member
+
+  editMemberDetails.value = { ...rest, role: roles[0] }
   isEditDialogVisible.value = true
 }
 
@@ -479,15 +485,20 @@ async function submitEditMemberForm() {
     if(isValid){
       try {
 
-        isEditDialogVisible.value = false
-        isLoading.value = true
-
         const res = await userStore.update(editMemberDetails.value)
-
-        toast.success('Member updated successfully', { timeout: 1000 })
-        await fetchMembers()
+        const errors = getErrors.value
+        if(errors)
+        {
+          toast.error('Something went wrong.')
+        }
+        else{
+          isEditDialogVisible.value = false
+          isLoading.value = true
+          toast.success('Member updated successfully', { timeout: 1000 })
+          await fetchMembers()
+          isLoading.value = false
+        }
       } catch (error) {
-        console.error('Error updating member:', error)
         toast.error('Failed to update member:', error.message || error)
       }
     }
@@ -507,15 +518,21 @@ const deleteMember = async member => {
     })
 
     if (confirmDelete.isConfirmed) {
-      isLoading.value = true
 
       const res = await userStore.delete(member.uuid)
-
-      toast.success('Member deleted successfully', { timeout: 1000 })
-      await fetchMembers()
+      const errors = getErrors.value
+      if(errors)
+      {
+        toast.error('Something went wrong.')
+      }
+      else{
+        isLoading.value = true
+        toast.success('Member deleted successfully', { timeout: 1000 })
+        await fetchMembers()
+        isLoading.value = false
+      }
     }
   } catch (error) {
-    console.error('Error deleting member:', error)
     toast.error('Failed to delete member:', error.message || error)
   }
 }
@@ -526,7 +543,7 @@ const fetchRoles = async () => {
 
     await roleStore.getAll()
   } catch (error) {
-    console.error('Error fetching roles:', error)
+    toast.error('Failed to get roles:', error.message || error)
   }
   finally {
     isLoading.value = false
@@ -541,27 +558,15 @@ const getUsers = computed(() => {
   return userStore.getUsers
 })
 
+const getErrors = computed(() => {
+  return userStore.getErrors
+})
+
 const totalUsers = computed(() => {
   return userStore.usersCount
 })
 
-const generateRandomColor= () => {
-  let color = '#' + Math.floor(Math.random()*16777215).toString(16)
-  let rgb = parseInt(color.substring(1), 16)
-  let r = (rgb >> 16) & 0xff
-  let g = (rgb >>  8) & 0xff
-  let b = (rgb >>  0) & 0xff
-  let brightness = (r * 299 + g * 587 + b * 114) / 1000
-  if (brightness > 128) {
-    let ratio = 128 / brightness
-    r = Math.floor(r * ratio)
-    g = Math.floor(g * ratio)
-    b = Math.floor(b * ratio)
-    color = '#' + (r << 16 | g << 8 | b).toString(16)
-  }
-
-  return color
-}
+const generateRandomColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(-50, '0')
 
 const handlePageChange = async page => {
   options.value.page = page
