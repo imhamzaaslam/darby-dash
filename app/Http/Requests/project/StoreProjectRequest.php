@@ -24,17 +24,15 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             'project_type_id' => 'sometimes|exists:project_types,id',
-            'title' => 'sometimes|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'sometimes|string',
             'project_manager_id' => 'sometimes|exists:users,id',
-            'member_ids' => 'sometimes|string',
             'member_ids' => [
                 'sometimes',
-                'string',
+                'array',
                 function ($attribute, $value, $fail) {
-                    $member_ids = explode(',', $value);
-                    $members = User::whereIn('id', $member_ids)->get();
-                    if (count($member_ids) !== $members->count()) {
+                    $members = User::whereIn('id', $value)->get();
+                    if (count($value) !== $members->count()) {
                         $fail('One or more member ids are invalid.');
                     }
                 },

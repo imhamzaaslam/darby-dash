@@ -43,21 +43,10 @@ class ProjectController extends Controller
     {
         $validated = $request->validated();
 
-        $attributes = [
-            'project_type_id' => $validated['project_type_id'],
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'project_manager_id' => $validated['project_manager_id'],
-            'est_hours' => $validated['est_hours'],
-            'est_budget' => $validated['est_budget'],
-            'start_date' => $validated['start_date'],
-            'end_date' => $validated['end_date'],
-            'status' => $validated['status'],
-        ];
+        $member_ids = $validated['member_ids'];
+        unset($validated['member_ids']);
 
-        $member_ids = explode(',', $validated['member_ids']);
-
-        $project = $this->projectRepository->create($attributes);
+        $project = $this->projectRepository->create($validated);
         if (count($member_ids) > 0) {
             $this->projectRepository->storeProjectMembers($project, $member_ids);
         }
@@ -93,21 +82,10 @@ class ProjectController extends Controller
     {
         $validated = $request->validated();
 
-        $attributes = [
-            'project_type_id' => $validated['project_type_id'],
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'project_manager_id' => $validated['project_manager_id'],
-            'est_hours' => $validated['est_hours'],
-            'est_budget' => $validated['est_budget'],
-            'start_date' => $validated['start_date'],
-            'end_date' => $validated['end_date'],
-            'status' => $validated['status'],
-        ];
+        $member_ids = $validated['member_ids'];
+        unset($validated['member_ids']);
 
-        $member_ids = explode(',', $validated['member_ids']);
-
-        $project = $this->projectRepository->update($uuid, $attributes);
+        $project = $this->projectRepository->update($uuid, $validated);
         $this->projectRepository->updateProjectMembers($project, $member_ids);
 
         return (new ProjectResource($project))
