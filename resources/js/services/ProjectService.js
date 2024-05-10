@@ -2,31 +2,31 @@ import { apiClient, generateQueryString } from './api'
 
 export default {
   getProjects() {
-    return apiClient.get('/projects')
+    return apiClient.get('admin/projects')
   },
   getProject(id) {
-    return apiClient.get(`/projects/${id}`)
+    return apiClient.get(`admin/projects/${id}`)
   },
   createProject(project) {
-    return apiClient.post('/projects', project)
+    return apiClient.post('admin/projects', project)
   },
   updateProject(project) {
-    return apiClient.put(`/projects/${project.id}`, project)
+    return apiClient.patch(`admin/projects/${project.uuid}`, project)
   },
   deleteProject(id) {
-    return apiClient.delete(`/projects/${id}`)
+    return apiClient.delete(`admin/projects/${id}`)
   },
   getProjectTasks(projectId) {
-    return apiClient.get(`/projects/${projectId}/tasks`)
+    return apiClient.get(`admin/projects/${projectId}/tasks`)
   },
   createProjectTask(task) {
-    return apiClient.post(`/projects/${task.project_id}/tasks`, task)
+    return apiClient.post(`admin/projects/${task.project_id}/tasks`, task)
   },
   updateProjectTask(task) {
-    return apiClient.put(`/projects/${task.project_id}/tasks/${task.id}`, task)
+    return apiClient.put(`admin/projects/${task.project_id}/tasks/${task.id}`, task)
   },
   deleteProjectTask(task) {
-    return apiClient.delete(`/projects/${task.project_id}/tasks/${task.id}`)
+    return apiClient.delete(`admin/projects/${task.project_id}/tasks/${task.id}`)
   },
   getProjectTaskComments(taskId) {
     return apiClient.get(`/tasks/${taskId}/comments`)

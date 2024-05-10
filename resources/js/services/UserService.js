@@ -16,4 +16,7 @@ export default {
   deleteUser(id) {
     return apiClient.delete(`admin/users/${id}`)
   },
+  getUsersByRole(role) {
+    return apiClient.get(`admin/users/role/${role}`)
+  },
 }

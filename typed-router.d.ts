@@ -56,7 +56,7 @@ declare module 'vue-router/auto/routes' {
     'projects-tasks': RouteRecordInfo<'projects-tasks', '/projects/tasks', Record<never, never>, Record<never, never>>,
     'projects-team': RouteRecordInfo<'projects-team', '/projects/team', Record<never, never>, Record<never, never>>,
     'projects-web-designs': RouteRecordInfo<'projects-web-designs', '/projects/web-designs', Record<never, never>, Record<never, never>>,
-    'projects-web-designs-partials-add-project-drawer': RouteRecordInfo<'projects-web-designs-partials-add-project-drawer', '/projects/web-designs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
+    'projects-web-designs-partials-add-project-tasks': RouteRecordInfo<'projects-web-designs-partials-add-project-tasks', '/projects/web-designs/_partials/addProjectTasks', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-id': RouteRecordInfo<'projects-web-designs-partials-id', '/projects/web-designs/_partials/id', Record<never, never>, Record<never, never>>,
   }
 }

@@ -28,7 +28,7 @@ class ProjectController extends Controller
             ->filtered($request->keyword ?? '')
             ->ordered($request->orderBy ?? 'id', $request->order ?? 'asc')
             ->paginate($request->per_page ?? config('pagination.per_page', 10));
-        
+
 
         return ProjectResource::collection($projects);
     }
