@@ -98,4 +98,11 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
     {
         return $this->model->role('admin')->get();
     }
+
+    public function getByRole(string $role): Collection
+    {
+        return $this->model->whereHas('roles', function ($query) use ($role) {
+            $query->where('name', $role);
+        })->get();
+    }
 }

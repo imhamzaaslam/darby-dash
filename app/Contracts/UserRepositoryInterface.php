@@ -24,4 +24,6 @@ interface UserRepositoryInterface
     public function unsetMeta(User $user, string $key): bool;
 
     public function getAdmins(): Collection;
+
+    public function getByRole(string $role): Collection;
 }

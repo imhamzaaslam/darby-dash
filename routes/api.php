@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [UsersController::class, 'update']);
                 Route::delete('/', [UsersController::class, 'delete']);
             });
+            Route::get('/role/{role}', [UsersController::class, 'getByRole']);
         });
 
         Route::prefix('projects')->group(function () {

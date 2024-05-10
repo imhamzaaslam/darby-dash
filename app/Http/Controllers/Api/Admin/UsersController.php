@@ -73,6 +73,13 @@ class UsersController extends Controller
             ->setStatusCode(201);
     }
 
+    public function getByRole(string $role, Request $request): AnonymousResourceCollection|JsonResponse
+    {
+        $users = $this->userRepository->getByRole($role);
+
+        return UserResource::collection($users);
+    }
+
     /**
      * Display the specified resource.
      *
