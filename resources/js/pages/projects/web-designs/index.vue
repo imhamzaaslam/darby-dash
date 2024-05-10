@@ -428,10 +428,10 @@ async function submitAddProjectForm() {
           toast.success('Project added successfully', { timeout: 1000 })
           await fetchProjects()
 
-          const newProjectID = res.data.data.id
+          /* const newProjectID = res.data.data.id
 
           console.log("PROJECT ID", newProjectID)
-          router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } })
+          router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } }) */
           isLoading.value = false
         }
       } catch (error) {
