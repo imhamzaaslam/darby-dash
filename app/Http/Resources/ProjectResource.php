@@ -22,6 +22,8 @@ class ProjectResource extends JsonResource
             'project_type_id' => $this->projectType->name ?? 'N/A',
             'project_manager' => $this->projectManager ? $this->projectManager->name_first . ' ' . $this->projectManager->name_last : 'N/A',
             'project_members' => $this->members->count() > 0 ? $this->members->pluck('name_first')->implode(', ') : 'N/A',
+            'project_manager_id' => $this->project_manager_id,
+            'member_ids' => $this->members->pluck('id'),
             'est_hours' => $this->est_hours ?? 'N/A',
             'est_budget' => $this->est_budget ?? 'N/A',
             'status' => $this->status ?? 'N/A',
