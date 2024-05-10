@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\ProjectResource;
-use App\Http\Requests\Project\StoreProjectRequest;
+use App\Http\Requests\project\StoreProjectRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
