@@ -398,7 +398,7 @@ const editMemberDetails = ref({})
 const isLoading = ref(false)
 const search = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
-const formatDate = date => moment(date).format('Do MMMM YYYY')
+const formatDate = date => moment(date).format('MMM DD, YYYY');
 
 const headers = [
   {

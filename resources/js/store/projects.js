@@ -5,6 +5,7 @@ export const useProjectStore = defineStore('projects', {
   state: () => ({
     projects: [],
     project: null,
+    usersCount: 0,
     loadStatus: 0,
     error: null,
   }),
@@ -17,6 +18,7 @@ export const useProjectStore = defineStore('projects', {
         const response = await ProjectService.getProjects()
 
         this.projects = response.data.data
+        this.usersCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
         this.error = error

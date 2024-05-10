@@ -13,6 +13,7 @@ import Calendar from '../../../js/pages/projects/calendar.vue'
 import Files from '../../../js/pages/projects/files.vue'
 import Chat from '../../../js/pages/projects/chat.vue'
 import Tasks from '../../../js/pages/projects/tasks.vue'
+import AddProjectTasks from '../../pages/projects/web-designs/_partials/addProjectTasks.vue'
 
 function recursiveLayouts(route) {
   if (route.children) {
@@ -127,6 +128,15 @@ const router = createRouter({
         path: '/projects/:project/:id/chat',
         name: 'chat',
         component: Chat,
+        meta: { layout: 'default' },
+        props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/:project/:id/add/tasks',
+        name: 'add-project-tasks',
+        component: AddProjectTasks,
         meta: { layout: 'default' },
         props: true,
       },
