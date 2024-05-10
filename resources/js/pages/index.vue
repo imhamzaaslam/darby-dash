@@ -47,24 +47,24 @@
       </div>
     </VCol>
   </VRow>
-  <VBtn
+  <!-- <VBtn
     color="primary"
     class="mt-3"
     size="small"
     @click="checkApi"
   >
     Check API
-  </VBtn>
+  </VBtn> -->
 </template>
 
 <script setup>
 import { useProjectStore } from '../store/projects'
 
 const projectStore = useProjectStore()
-async function checkApi() {
-  let res = await projectStore.getAll()
-  console.log(res)
-}
+// async function checkApi() {
+//   let res = await projectStore.getAll()
+//   console.log(res)
+// }
 
 const dashboards = ref([
   {
