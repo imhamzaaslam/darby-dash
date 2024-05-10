@@ -37,7 +37,7 @@ class UsersController extends Controller
             ->hasInfo()
             ->filtered($request->keyword ?? '')
             ->ordered($request->orderBy ?? 'id', $request->order ?? 'asc')
-            ->paginate($request->per_page ?? config('pagination.per_page', 10));
+            ->paginate($request->perPage ?? config('pagination.perPage', 10));
 
         return UserResource::collection($users);
     }

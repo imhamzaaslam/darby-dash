@@ -264,7 +264,6 @@
 
     <VDivider />
     <VDataTable
-      v-model:page="options.page"
       :headers="headers"
       :items-per-page="options.itemsPerPage"
       :items="getUsers"
@@ -356,7 +355,8 @@
         <TablePagination
           v-model:page="options.page"
           :items-per-page="options.itemsPerPage"
-          :total-items="getUsers.length"
+          :total-items="totalRecords"
+          @update:page="handlePageChange"
         />
       </template>
     </VDataTable>
@@ -366,7 +366,7 @@
 <script setup>
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRoleStore } from "../store/roles"
 import { useUserStore } from "../store/users"
@@ -380,6 +380,7 @@ const isDialogVisible = ref(false)
 const isEditDialogVisible = ref(false)
 const isPasswordVisible = ref(false)
 const isConfirmPasswordVisible = ref(false)
+const totalRecords = ref(0)
 
 const newMemberDetails = ref({
   name_first: '',
@@ -396,7 +397,7 @@ const editMemberDetails = ref({})
 
 const isLoading = ref(false)
 const search = ref('')
-const options = ref({ page: 1, itemsPerPage: 5, sortBy: [''], sortDesc: [false] })
+const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
 const formatDate = date => moment(date).format('Do MMMM YYYY')
 
 const headers = [
@@ -430,9 +431,10 @@ const headers = [
   },
 ]
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await fetchRoles()
   await fetchMembers()
+  totalRecords.value = totalUsers.value
 })
 
 const fetchMembers = async () => {
@@ -539,6 +541,10 @@ const getUsers = computed(() => {
   return userStore.getUsers
 })
 
+const totalUsers = computed(() => {
+  return userStore.usersCount
+})
+
 const generateRandomColor= () => {
   let color = '#' + Math.floor(Math.random()*16777215).toString(16)
   let rgb = parseInt(color.substring(1), 16)
@@ -555,6 +561,11 @@ const generateRandomColor= () => {
   }
 
   return color
+}
+
+const handlePageChange = async page => {
+  options.value.page = page
+  await fetchMembers()
 }
 </script>
 

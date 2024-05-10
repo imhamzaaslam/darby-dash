@@ -5,6 +5,7 @@ export const useUserStore = defineStore('users', {
   state: () => ({
     users: [],
     user: null,
+    usersCount: 0,
     loadStatus: 0,
     error: null,
   }),
@@ -17,6 +18,7 @@ export const useUserStore = defineStore('users', {
         const response = await UserService.getUsers(page, perPage)
 
         this.users = response.data.data
+        this.usersCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
         this.error = error
