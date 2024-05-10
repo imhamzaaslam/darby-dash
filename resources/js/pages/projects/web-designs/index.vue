@@ -108,17 +108,17 @@
             </VCardText>
 
             <VCardText class="d-flex justify-end gap-3 flex-wrap">
-              <VBtn
+              <!-- <VBtn
                 color="secondary"
                 @click="isDialogVisible = false"
               >
                 Cancel
-              </VBtn>
+              </VBtn> -->
               <VBtn
                 type="submit"
                 @click="addProjectForm?.validate()"
               >
-                Add
+                Save & Add Task
               </VBtn>
             </VCardText>
           </VForm>
@@ -332,13 +332,11 @@ import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../store/projects"
 import { useProjectTypeStore } from "../../../store/project_types"
 import { useUserStore } from "../../../store/users"
-import { useRouter } from 'vue-router'
 
 const toast = useToast()
 const projectStore = useProjectStore()
 const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
-const router = useRouter()
 const addProjectForm = ref()
 const editProjectForm = ref()
 const isDialogVisible = ref(false)
@@ -428,19 +426,22 @@ async function submitAddProjectForm() {
           toast.success('Project added successfully', { timeout: 1000 })
           await fetchProjects()
 
-          /* const newProjectID = res.data.data.id
+          const newProjectID = res.data.data.id
 
-          console.log("PROJECT ID", newProjectID)
-          router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } }) */
           isLoading.value = false
-          newProjectDetails.value = {
-            title: '',
-            project_type_id: '',
-            project_manager_id: '',
-            member_ids: [],
-            est_hours: '',
-            est_budget: ''
-          }
+          // redirect to add-project-tasks
+          // router.push({ name: 'add-project-tasks', params: { project: 'website-design', id: newProjectID } })
+          $router.push('/')
+
+          // path: '/projects/:project/:id/add/tasks',
+          // newProjectDetails.value = {
+          //   title: '',
+          //   project_type_id: '',
+          //   project_manager_id: '',
+          //   member_ids: [],
+          //   est_hours: '',
+          //   est_budget: ''
+          // }
         }
       } catch (error) {
         toast.error('Failed to add project:', error)
