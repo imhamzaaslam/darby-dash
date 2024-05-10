@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\ProjectTypeController;
 use App\Http\Controllers\Api\Admin\ProjectController;
+use App\Http\Controllers\Api\Admin\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,16 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::get('/', [ProjectController::class, 'show']);
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
+            });
+        });
+
+        Route::prefix('project/{id}/tasks')->group(function () {
+            Route::get('/', [TaskController::class, 'index']);
+            Route::post('/', [TaskController::class, 'store']);
+            Route::prefix('{taskUuid}')->group(function () {
+                Route::get('/', [TaskController::class, 'show']);
+                Route::patch('/', [TaskController::class, 'update']);
+                Route::delete('/', [TaskController::class, 'delete']);
             });
         });
     });

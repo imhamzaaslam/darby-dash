@@ -58,4 +58,9 @@ class Project extends Base
                 });
         });
     }
+
+    function scopeOrdered(Builder $query, string $orderBy = 'id', string $order = 'asc'): Builder
+    {
+        return $query->orderBy($orderBy, $order);
+    }
 }
