@@ -85,7 +85,9 @@ class ProjectController extends Controller
         $member_ids = $validated['member_ids'];
         unset($validated['member_ids']);
 
-        $project = $this->projectRepository->update($uuid, $validated);
+        $project = $this->projectRepository->getByUuid($uuid);
+
+        $this->projectRepository->update($project, $validated);
         $this->projectRepository->updateProjectMembers($project, $member_ids);
 
         return (new ProjectResource($project))
