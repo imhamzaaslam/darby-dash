@@ -1,168 +1,521 @@
+<template>
+  <VRow>
+    <VCol
+      cols="12"
+      md="6"
+    />
+    <VCol
+      cols="12"
+      md="6"
+      class="mb-3"
+    >
+      <VDialog
+        v-model="isDialogVisible"
+        persistent
+        class="v-dialog-sm"
+      >
+        <!-- Dialog Activator -->
+        <template #activator="{ props }">
+          <VBtn
+            color="primary"
+            size="small"
+            rounded="pill"
+            class="float-right"
+            v-bind="props"
+          >
+            <VIcon
+              start
+              icon="tabler-plus"
+            />
+            New Member
+          </VBtn>
+        </template>
+
+        <!-- Dialog close btn -->
+        <DialogCloseBtn @click="isDialogVisible = !isDialogVisible" />
+
+        <!-- Dialog Content -->
+        <VCard title="Add Member Details">
+          <VForm
+            ref="addMemberForm"
+            @submit.prevent="submitAddMemberForm"
+          >
+            <VCardText>
+              <VRow>
+                <!-- First Name -->
+                <VCol cols="6">
+                  <AppTextField
+                    v-model="newMemberDetails.name_first"
+                    :rules="[requiredValidator]"
+                    label="First Name"
+                  />
+                </VCol>
+
+                <!-- Last Name -->
+                <VCol cols="6">
+                  <AppTextField
+                    v-model="newMemberDetails.name_last"
+                    :rules="[requiredValidator]"
+                    label="Last Name"
+                  />
+                </VCol>
+
+                <!-- Email -->
+                <VCol cols="6">
+                  <AppTextField
+                    v-model="newMemberDetails.email"
+                    :rules="[requiredValidator, emailValidator]"
+                    label="Email"
+                  />
+                </VCol>
+
+                <!-- Phone -->
+                <VCol cols="6">
+                  <AppTextField
+                    v-model="newMemberDetails.phone"
+                    type="number"
+                    :rules="[requiredValidator]"
+                    label="Phone"
+                  />
+                </VCol>
+
+                <!-- Role -->
+                <VCol cols="6">
+                  <AppSelect
+                    v-model="newMemberDetails.role"
+                    label="Select Role"
+                    placeholder="Select Role"
+                    :rules="[requiredValidator]"
+                    :items="getRoles"
+                    item-title="name"
+                    item-value="name"
+                  />
+                </VCol>
+
+                <!-- Password -->
+                <VCol cols="6">
+                  <AppTextField
+                    v-model="newMemberDetails.password"
+                    :rules="[requiredValidator]"
+                    label="Password"
+                    :type="isPasswordVisible ? 'text' : 'password'"
+                    :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                    @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                  />
+                </VCol>
+
+                <!-- Confirm Password -->
+                <VCol cols="6">
+                  <AppTextField
+                    v-model="newMemberDetails.confirmPassword"
+                    :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                    :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
+                    label="Confirm Password"
+                    :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                    @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+                  />
+                </VCol>
+
+                <!-- State -->
+                <VCol cols="6">
+                  <AppSelect
+                    v-model="newMemberDetails.state"
+                    label="Select Status"
+                    placeholder="Select Status"
+                    :rules="[requiredValidator]"
+                    :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
+                    item-title="title"
+                    item-value="value"
+                  />
+                </VCol>
+              </VRow>
+            </VCardText>
+
+            <VCardText class="d-flex justify-end gap-3 flex-wrap">
+              <VBtn
+                color="secondary"
+                @click="isDialogVisible = false"
+              >
+                Cancel
+              </VBtn>
+              <VBtn
+                type="submit"
+                @click="addMemberForm?.validate()"
+              >
+                Add
+              </VBtn>
+            </VCardText>
+          </VForm>
+        </VCard>
+      </VDialog>
+    </VCol>
+    <VDialog
+      v-model="isEditDialogVisible"
+      persistent
+      class="v-dialog-sm"
+    >
+      <!-- Dialog close btn -->
+      <DialogCloseBtn @click="isEditDialogVisible = !isEditDialogVisible" />
+
+      <!-- Dialog Content -->
+      <VCard title="Edit Member Details">
+        <VForm
+          ref="editMemberForm"
+          @submit.prevent="submitEditMemberForm"
+        >
+          <VCardText>
+            <VRow>
+              <!-- First Name -->
+              <VCol cols="6">
+                <AppTextField
+                  v-model="editMemberDetails.name_first"
+                  :rules="[requiredValidator]"
+                  label="First Name"
+                />
+              </VCol>
+
+              <!-- Last Name -->
+              <VCol cols="6">
+                <AppTextField
+                  v-model="editMemberDetails.name_last"
+                  :rules="[requiredValidator]"
+                  label="Last Name"
+                />
+              </VCol>
+
+              <!-- Email -->
+              <VCol cols="6">
+                <AppTextField
+                  v-model="editMemberDetails.email"
+                  :rules="[requiredValidator, emailValidator]"
+                  label="Email"
+                />
+              </VCol>
+
+              <!-- Phone -->
+              <VCol cols="6">
+                <AppTextField
+                  v-model="editMemberDetails.phone"
+                  :rules="[requiredValidator]"
+                  label="Phone"
+                />
+              </VCol>
+
+              <!-- Role -->
+              <VCol cols="6">
+                <AppSelect
+                  v-model="editMemberDetails.roles"
+                  label="Select Role"
+                  placeholder="Select Role"
+                  :rules="[requiredValidator]"
+                  :items="getRoles"
+                  item-title="name"
+                  item-value="name"
+                />
+              </VCol>
+
+              <!-- State -->
+              <VCol cols="6">
+                <AppSelect
+                  v-model="editMemberDetails.state"
+                  label="Select Status"
+                  placeholder="Select Status"
+                  :rules="[requiredValidator]"
+                  :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
+                  item-title="title"
+                  item-value="value"
+                />
+              </VCol>
+            </VRow>
+          </VCardText>
+
+          <VCardText class="d-flex justify-end gap-3 flex-wrap">
+            <VBtn
+              color="secondary"
+              @click="isEditDialogVisible = false"
+            >
+              Cancel
+            </VBtn>
+            <VBtn
+              type="submit"
+              @click="editMemberForm?.validate()"
+            >
+              Save
+            </VBtn>
+          </VCardText>
+        </VForm>
+      </VCard>
+    </VDialog>
+  </VRow>
+  <VCard>
+    <VCardText class="d-flex justify-space-between align-center flex-wrap gap-4">
+      <h5 class="text-h5">
+        Manage Members
+      </h5>
+      <div style="inline-size: 272px;">
+        <!--
+          <AppTextField
+          v-model="search"
+          placeholder="Search Member"
+          />
+        -->
+      </div>
+    </VCardText>
+
+    <VDivider />
+    <VDataTable
+      v-model:page="options.page"
+      :headers="headers"
+      :items-per-page="options.itemsPerPage"
+      :items="getUsers"
+      item-value="name"
+      hide-default-footer
+      :search="search"
+      class="text-no-wrap"
+      density="compact"
+    >
+      <template #item.name="{ item }">
+        <div class="d-flex align-center">
+          <VAvatar
+            size="36"
+            :color="item.avatar ? '' : generateRandomColor()"
+            :class="item.avatar ? '' : 'v-avatar-light-bg info--text'"
+            :variant="!item.avatar ? 'tonal' : generateRandomColor()"
+          >
+            <span>{{ avatarText(item.name_first + ' ' + item.name_last) }}</span>
+          </VAvatar>
+          <div class="d-flex flex-column ms-3">
+            <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ item.name_first }} {{ item.name_last }}</span>
+            <small class="mt-0">
+              {{ roleStore.capitalizeFirstLetter(item.roles[0]) }}
+            </small>
+          </div>
+        </div>
+      </template>
+      <template #item.email="{ item }">
+        <div class="d-flex gap-1">
+          <span class="text-sm text-truncate mb-0">{{ item.email }}</span>
+        </div>
+      </template>
+      <template #item.state="{ item }">
+        <div class="d-flex gap-1">
+          <VChip
+            v-if="item.state == 'active'"
+            color="success"
+            variant="outlined"
+            size="small"
+          >
+            Active
+          </VChip>
+          <VChip
+            v-else
+            color="error"
+            variant="outlined"
+            size="small"
+          >
+            Inactive
+          </VChip>
+        </div>
+      </template>
+      <template #item.created_at="{ item }">
+        <div class="d-flex gap-1">
+          <span class="text-sm text-truncate mb-0">{{ formatDate(item) }}</span>
+        </div>
+      </template>
+
+      <template #item.actions="{ item }">
+        <div class="d-flex">
+          <IconBtn @click="editMember(item)">
+            <VIcon
+              icon="tabler-edit"
+              color="info"
+            />
+          </IconBtn>
+          <IconBtn @click="deleteMember(item)">
+            <VIcon
+              icon="tabler-trash"
+              color="error"
+            />
+          </IconBtn>
+        </div>
+      </template>
+      <template #bottom>
+        <VCardText class="pt-2">
+          <div
+            v-if="isLoading"
+            class="text-center"
+          >
+            <VProgressCircular
+              :size="30"
+              width="3"
+              indeterminate
+              color="primary"
+            />
+          </div>
+        </VCardText>
+        <TablePagination
+          v-model:page="options.page"
+          :items-per-page="options.itemsPerPage"
+          :total-items="getUsers.length"
+        />
+      </template>
+    </VDataTable>
+  </VCard>
+</template>
+
 <script setup>
-import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue'
+import moment from 'moment'
+import Swal from 'sweetalert2'
+import { computed, onMounted, ref } from 'vue'
+import { useToast } from "vue-toastification"
 import { useRoleStore } from "../store/roles"
+import { useUserStore } from "../store/users"
 
+const toast = useToast()
 const roleStore = useRoleStore()
+const userStore = useUserStore()
+const addMemberForm = ref()
+const editMemberForm = ref()
+const isDialogVisible = ref(false)
+const isEditDialogVisible = ref(false)
+const isPasswordVisible = ref(false)
+const isConfirmPasswordVisible = ref(false)
 
-// 👉 Store
-const searchQuery = ref('')
-const selectedRole = ref()
-const selectedPlan = ref()
-const selectedStatus = ref()
-
-// Data table options
-const itemsPerPage = ref(10)
-const page = ref(1)
-const sortBy = ref()
-const orderBy = ref()
-const isLoading = ref(false)
-
-onMounted(async () => {
-  await fetchRoles()
+const newMemberDetails = ref({
+  name_first: '',
+  name_last: '',
+  email: '',
+  role: '',
+  phone: '',
+  password: '',
+  confirmPassword: '',
+  state: '',
 })
 
-const updateOptions = options => {
-  sortBy.value = options.sortBy[0]?.key
-  orderBy.value = options.sortBy[0]?.order
-}
+const editMemberDetails = ref({})
 
-// Headers
+const isLoading = ref(false)
+const search = ref('')
+const options = ref({ page: 1, itemsPerPage: 5, sortBy: [''], sortDesc: [false] })
+const formatDate = date => moment(date).format('Do MMMM YYYY')
+
 const headers = [
   {
-    title: 'Member',
-    key: 'user',
+    title: 'Name',
+    key: 'name',
+    sortable: false,
   },
   {
-    title: 'Role',
-    key: 'role',
+    title: 'Email',
+    key: 'email',
+    sortable: false,
   },
   {
     title: 'Status',
-    key: 'status',
+    key: 'state',
+    sortable: false,
+    width: '15%',
+  },
+  {
+    title: 'Created At',
+    key: 'created_at',
+    sortable: true,
+    width: '20%',
   },
   {
     title: 'Actions',
     key: 'actions',
     sortable: false,
+    width: '5%',
   },
 ]
 
-const {
-  data: usersData,
-  execute: fetchUsers,
-} = await useApi(createUrl('/apps/users', {
-  query: {
-    q: searchQuery,
-    status: selectedStatus,
-    plan: selectedPlan,
-    role: selectedRole,
-    itemsPerPage,
-    page,
-    sortBy,
-    orderBy,
-  },
-}))
+onMounted(async () => {
+  await fetchRoles()
+  await fetchMembers()
+})
 
-const users = computed(() => usersData.value.users)
-const totalUsers = computed(() => usersData.value.totalUsers)
-
-const plans = [
-  {
-    title: 'Basic',
-    value: 'basic',
-  },
-  {
-    title: 'Company',
-    value: 'company',
-  },
-  {
-    title: 'Enterprise',
-    value: 'enterprise',
-  },
-  {
-    title: 'Team',
-    value: 'team',
-  },
-]
-
-const status = [
-  {
-    title: 'Pending',
-    value: 'pending',
-  },
-  {
-    title: 'Active',
-    value: 'active',
-  },
-  {
-    title: 'Inactive',
-    value: 'inactive',
-  },
-]
-
-const resolveUserRoleVariant = role => {
-  const roleLowerCase = role.toLowerCase()
-  if (roleLowerCase === 'subscriber')
-    return {
-      color: 'success',
-      icon: 'tabler-user',
-    }
-  if (roleLowerCase === 'author')
-    return {
-      color: 'error',
-      icon: 'tabler-device-desktop',
-    }
-  if (roleLowerCase === 'maintainer')
-    return {
-      color: 'info',
-      icon: 'tabler-chart-pie',
-    }
-  if (roleLowerCase === 'editor')
-    return {
-      color: 'warning',
-      icon: 'tabler-edit',
-    }
-  if (roleLowerCase === 'admin')
-    return {
-      color: 'primary',
-      icon: 'tabler-crown',
-    }
-
-  return {
-    color: 'primary',
-    icon: 'tabler-user',
+const fetchMembers = async () => {
+  try {
+    isLoading.value = true
+    await userStore.getAll(options.value.page, options.value.itemsPerPage)
+  } catch (error) {
+    console.error('Error fetching members:', error)
+    toast.error('Error fetching members:', error)
+  }
+  finally {
+    isLoading.value = false
   }
 }
 
-const resolveUserStatusVariant = stat => {
-  const statLowerCase = stat.toLowerCase()
-  if (statLowerCase === 'pending')
-    return 'warning'
-  if (statLowerCase === 'active')
-    return 'success'
-  if (statLowerCase === 'inactive')
-    return 'secondary'
+async function submitAddMemberForm() {
+  addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
+        isDialogVisible.value = false
+        isLoading.value = true
 
-  return 'primary'
-}
+        const res = await userStore.create(newMemberDetails.value)
 
-const isAddNewUserDrawerVisible = ref(false)
-
-const addNewUser = async userData => {
-  await $api('/apps/users', {
-    method: 'POST',
-    body: userData,
+        toast.success('Member added successfully', { timeout: 1000 })
+        await fetchMembers()
+      } catch (error) {
+        console.error('Error adding member:', error)
+        toast.error('Failed to add member:', error)
+      }
+    }
   })
-
-  // refetch User
-  fetchUsers()
 }
 
-const deleteUser = async id => {
-  await $api(`/apps/users/${ id }`, { method: 'DELETE' })
+const editMember = member => {
+  editMemberDetails.value = { ...member }
+  isEditDialogVisible.value = true
+}
 
-  // refetch User
-  fetchUsers()
+async function submitEditMemberForm() {
+  editMemberForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
+
+        isEditDialogVisible.value = false
+        isLoading.value = true
+
+        const res = await userStore.update(editMemberDetails.value)
+
+        toast.success('Member updated successfully', { timeout: 1000 })
+        await fetchMembers()
+      } catch (error) {
+        console.error('Error updating member:', error)
+        toast.error('Failed to update member:', error.message || error)
+      }
+    }
+  })
+}
+
+const deleteMember = async member => {
+  try {
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to delete ${member.name_first} ${member.name_last}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    })
+
+    if (confirmDelete.isConfirmed) {
+      isLoading.value = true
+
+      const res = await userStore.delete(member.uuid)
+
+      toast.success('Member deleted successfully', { timeout: 1000 })
+      await fetchMembers()
+    }
+  } catch (error) {
+    console.error('Error deleting member:', error)
+    toast.error('Failed to delete member:', error.message || error)
+  }
 }
 
 const fetchRoles = async () => {
@@ -181,209 +534,34 @@ const fetchRoles = async () => {
 const getRoles = computed(() => {
   return roleStore.getRoles
 })
+
+const getUsers = computed(() => {
+  return userStore.getUsers
+})
+
+const generateRandomColor= () => {
+  let color = '#' + Math.floor(Math.random()*16777215).toString(16)
+  let rgb = parseInt(color.substring(1), 16)
+  let r = (rgb >> 16) & 0xff
+  let g = (rgb >>  8) & 0xff
+  let b = (rgb >>  0) & 0xff
+  let brightness = (r * 299 + g * 587 + b * 114) / 1000
+  if (brightness > 128) {
+    let ratio = 128 / brightness
+    r = Math.floor(r * ratio)
+    g = Math.floor(g * ratio)
+    b = Math.floor(b * ratio)
+    color = '#' + (r << 16 | g << 8 | b).toString(16)
+  }
+
+  return color
+}
 </script>
 
-<template>
-  <section>
-    <VCard class="mb-6">
-      <VCardItem class="pb-4">
-        <VCardTitle>Manage Members</VCardTitle>
-      </VCardItem>
 
-      <VCardText>
-        <VRow>
-          <!-- 👉 Select Role -->
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <AppSelect
-              v-model="selectedRole"
-              placeholder="Select Role"
-              :items="getRoles"
-              item-title="name"
-              item-value="id"
-              clearable
-              clear-icon="tabler-x"
-            />
-          </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <AppSelect
-              v-model="selectedStatus"
-              placeholder="Select Status"
-              :items="status"
-              clearable
-              clear-icon="tabler-x"
-            />
-          </VCol>
-        </VRow>
-      </VCardText>
-
-      <VDivider />
-
-      <VCardText class="d-flex flex-wrap gap-4">
-        <div class="me-3 d-flex gap-3">
-          <AppSelect
-            :model-value="itemsPerPage"
-            :items="[
-              { value: 10, title: '10' },
-              { value: 25, title: '25' },
-              { value: 50, title: '50' },
-              { value: 100, title: '100' },
-              { value: -1, title: 'All' },
-            ]"
-            style="inline-size: 6.25rem;"
-            @update:model-value="itemsPerPage = parseInt($event, 10)"
-          />
-        </div>
-        <VSpacer />
-
-        <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
-          <!-- 👉 Search  -->
-          <div style="inline-size: 15.625rem;">
-            <AppTextField
-              v-model="searchQuery"
-              placeholder="Search Member"
-            />
-          </div>
-
-          <!-- 👉 Add user button -->
-          <VBtn
-            prepend-icon="tabler-plus"
-            @click="isAddNewUserDrawerVisible = true"
-          >
-            Add New Member
-          </VBtn>
-        </div>
-      </VCardText>
-
-      <VDivider />
-
-      <!-- SECTION datatable -->
-      <VDataTableServer
-        v-model:items-per-page="itemsPerPage"
-        v-model:page="page"
-        :items="users"
-        :items-length="totalUsers"
-        :headers="headers"
-        class="text-no-wrap"
-        show-select
-        @update:options="updateOptions"
-      >
-        <!-- User -->
-        <template #item.user="{ item }">
-          <div class="d-flex align-center gap-x-4">
-            <VAvatar
-              size="34"
-              :variant="!item.avatar ? 'tonal' : undefined"
-              :color="!item.avatar ? resolveUserRoleVariant(item.role).color : undefined"
-            >
-              <VImg
-                v-if="item.avatar"
-                :src="item.avatar"
-              />
-              <span v-else>{{ avatarText(item.fullName) }}</span>
-            </VAvatar>
-            <div class="d-flex flex-column">
-              <h6 class="text-base">
-                {{ item.fullName }}
-              </h6>
-              <div class="text-sm">
-                {{ item.email }}
-              </div>
-            </div>
-          </div>
-        </template>
-
-        <!-- 👉 Role -->
-        <template #item.role="{ item }">
-          <div class="d-flex align-center gap-x-2">
-            <VIcon
-              :size="22"
-              :icon="resolveUserRoleVariant(item.role).icon"
-              :color="resolveUserRoleVariant(item.role).color"
-            />
-
-            <div class="text-capitalize text-high-emphasis text-body-1">
-              {{ item.role }}
-            </div>
-          </div>
-        </template>
-
-        <!-- Status -->
-        <template #item.status="{ item }">
-          <VChip
-            :color="resolveUserStatusVariant(item.status)"
-            size="small"
-            label
-            class="text-capitalize"
-          >
-            {{ item.status }}
-          </VChip>
-        </template>
-
-        <!-- Actions -->
-        <template #item.actions="{ item }">
-          <IconBtn @click="deleteUser(item.id)">
-            <VIcon icon="tabler-trash" />
-          </IconBtn>
-
-          <IconBtn>
-            <VIcon icon="tabler-eye" />
-          </IconBtn>
-
-          <VBtn
-            icon
-            variant="text"
-            color="medium-emphasis"
-          >
-            <VIcon icon="tabler-dots-vertical" />
-            <VMenu activator="parent">
-              <VList>
-                <VListItem :to="{ name: 'apps-user-view-id', params: { id: item.id } }">
-                  <template #prepend>
-                    <VIcon icon="tabler-eye" />
-                  </template>
-
-                  <VListItemTitle>View</VListItemTitle>
-                </VListItem>
-
-                <VListItem link>
-                  <template #prepend>
-                    <VIcon icon="tabler-pencil" />
-                  </template>
-                  <VListItemTitle>Edit</VListItemTitle>
-                </VListItem>
-
-                <VListItem @click="deleteUser(item.id)">
-                  <template #prepend>
-                    <VIcon icon="tabler-trash" />
-                  </template>
-                  <VListItemTitle>Delete</VListItemTitle>
-                </VListItem>
-              </VList>
-            </VMenu>
-          </VBtn>
-        </template>
-
-        <!-- pagination -->
-        <template #bottom>
-          <TablePagination
-            v-model:page="page"
-            :items-per-page="itemsPerPage"
-            :total-items="totalUsers"
-          />
-        </template>
-      </VDataTableServer>
-      <!-- SECTION -->
-    </VCard>
-    <!-- 👉 Add New User -->
-    <AddNewUserDrawer
-      v-model:isDrawerOpen="isAddNewUserDrawerVisible"
-      @user-data="addNewUser"
-    />
-  </section>
-</template>
+<style scoped>
+.table-wrapper {
+    inline-size: auto;
+    overflow-x: auto;
+}
+</style>
