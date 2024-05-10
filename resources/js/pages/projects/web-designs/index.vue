@@ -433,6 +433,14 @@ async function submitAddProjectForm() {
           console.log("PROJECT ID", newProjectID)
           router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } }) */
           isLoading.value = false
+          newProjectDetails.value = {
+            title: '',
+            project_type_id: '',
+            project_manager_id: '',
+            member_ids: [],
+            est_hours: '',
+            est_budget: ''
+          }
         }
       } catch (error) {
         toast.error('Failed to add project:', error)
