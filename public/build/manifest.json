@@ -1,0 +1,711 @@
+{
+  "_AppLoadingIndicator-C47xWq28.js": {
+    "file": "assets/AppLoadingIndicator-C47xWq28.js",
+    "imports": [
+      "resources/js/main.js"
+    ]
+  },
+  "_I18n-CTokD_6H.js": {
+    "file": "assets/I18n-CTokD_6H.js",
+    "imports": [
+      "resources/js/main.js"
+    ]
+  },
+  "_VTooltip-!~{00i}~.js": {
+    "file": "assets/VTooltip-BUfVb1dj.css",
+    "src": "_VTooltip-!~{00i}~.js"
+  },
+  "_VTooltip-RMUKGFTO.js": {
+    "file": "assets/VTooltip-RMUKGFTO.js",
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/VTooltip-BUfVb1dj.css"
+    ]
+  },
+  "_webfontloader-C3p_DvxB.js": {
+    "file": "assets/webfontloader-C3p_DvxB.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ]
+  },
+  "resources/images/avatars/avatar-1.png": {
+    "file": "assets/avatar-1-DMk2FF1-.png",
+    "src": "resources/images/avatars/avatar-1.png"
+  },
+  "resources/images/avatars/avatar-10.png": {
+    "file": "assets/avatar-10-D0dIAeHn.png",
+    "src": "resources/images/avatars/avatar-10.png"
+  },
+  "resources/images/avatars/avatar-11.png": {
+    "file": "assets/avatar-11-CexbSfPK.png",
+    "src": "resources/images/avatars/avatar-11.png"
+  },
+  "resources/images/avatars/avatar-12.png": {
+    "file": "assets/avatar-12-BAQHvJJk.png",
+    "src": "resources/images/avatars/avatar-12.png"
+  },
+  "resources/images/avatars/avatar-13.png": {
+    "file": "assets/avatar-13-B7PFIrh-.png",
+    "src": "resources/images/avatars/avatar-13.png"
+  },
+  "resources/images/avatars/avatar-14.png": {
+    "file": "assets/avatar-14-C1cFbbRW.png",
+    "src": "resources/images/avatars/avatar-14.png"
+  },
+  "resources/images/avatars/avatar-15.png": {
+    "file": "assets/avatar-15-BsGc6Ecl.png",
+    "src": "resources/images/avatars/avatar-15.png"
+  },
+  "resources/images/avatars/avatar-2.png": {
+    "file": "assets/avatar-2-D5OQ4OGs.png",
+    "src": "resources/images/avatars/avatar-2.png"
+  },
+  "resources/images/avatars/avatar-3.png": {
+    "file": "assets/avatar-3-BxDW4ia1.png",
+    "src": "resources/images/avatars/avatar-3.png"
+  },
+  "resources/images/avatars/avatar-4.png": {
+    "file": "assets/avatar-4-CtU30128.png",
+    "src": "resources/images/avatars/avatar-4.png"
+  },
+  "resources/images/avatars/avatar-5.png": {
+    "file": "assets/avatar-5-CmycerLe.png",
+    "src": "resources/images/avatars/avatar-5.png"
+  },
+  "resources/images/avatars/avatar-6.png": {
+    "file": "assets/avatar-6-B6-OBpiL.png",
+    "src": "resources/images/avatars/avatar-6.png"
+  },
+  "resources/images/avatars/avatar-7.png": {
+    "file": "assets/avatar-7-L2C9lfhq.png",
+    "src": "resources/images/avatars/avatar-7.png"
+  },
+  "resources/images/avatars/avatar-8.png": {
+    "file": "assets/avatar-8-BK_zJ7wP.png",
+    "src": "resources/images/avatars/avatar-8.png"
+  },
+  "resources/images/avatars/avatar-9.png": {
+    "file": "assets/avatar-9-DQF709tv.png",
+    "src": "resources/images/avatars/avatar-9.png"
+  },
+  "resources/images/cards/paypal-rounded.png": {
+    "file": "assets/paypal-rounded-DUgvboRY.png",
+    "src": "resources/images/cards/paypal-rounded.png"
+  },
+  "resources/images/eCommerce/10.png": {
+    "file": "assets/10-BSkQkhNh.png",
+    "src": "resources/images/eCommerce/10.png"
+  },
+  "resources/images/eCommerce/11.png": {
+    "file": "assets/11-C0GXUTQl.png",
+    "src": "resources/images/eCommerce/11.png"
+  },
+  "resources/images/eCommerce/13.png": {
+    "file": "assets/13-DChRaH3m.png",
+    "src": "resources/images/eCommerce/13.png"
+  },
+  "resources/images/eCommerce/14.png": {
+    "file": "assets/14-DSu3_vx8.png",
+    "src": "resources/images/eCommerce/14.png"
+  },
+  "resources/images/eCommerce/15.png": {
+    "file": "assets/15-DTHwHBZr.png",
+    "src": "resources/images/eCommerce/15.png"
+  },
+  "resources/images/eCommerce/16.png": {
+    "file": "assets/16-CtYCgrqz.png",
+    "src": "resources/images/eCommerce/16.png"
+  },
+  "resources/images/eCommerce/17.png": {
+    "file": "assets/17-VGKeRqlw.png",
+    "src": "resources/images/eCommerce/17.png"
+  },
+  "resources/images/eCommerce/18.png": {
+    "file": "assets/18-BElAYBmo.png",
+    "src": "resources/images/eCommerce/18.png"
+  },
+  "resources/images/eCommerce/19.png": {
+    "file": "assets/19-DN8byslC.png",
+    "src": "resources/images/eCommerce/19.png"
+  },
+  "resources/images/eCommerce/20.png": {
+    "file": "assets/20-GHedSxRd.png",
+    "src": "resources/images/eCommerce/20.png"
+  },
+  "resources/images/eCommerce/23.png": {
+    "file": "assets/23-DhXHsG8s.png",
+    "src": "resources/images/eCommerce/23.png"
+  },
+  "resources/images/eCommerce/24.png": {
+    "file": "assets/24-BgBw8U3G.png",
+    "src": "resources/images/eCommerce/24.png"
+  },
+  "resources/images/eCommerce/25.png": {
+    "file": "assets/25-BwgkBx_p.png",
+    "src": "resources/images/eCommerce/25.png"
+  },
+  "resources/images/eCommerce/26.png": {
+    "file": "assets/26-_iASYVNh.png",
+    "src": "resources/images/eCommerce/26.png"
+  },
+  "resources/images/eCommerce/3.png": {
+    "file": "assets/3-DWAhoqPB.png",
+    "src": "resources/images/eCommerce/3.png"
+  },
+  "resources/images/eCommerce/4.png": {
+    "file": "assets/4-rHyMhWdp.png",
+    "src": "resources/images/eCommerce/4.png"
+  },
+  "resources/images/eCommerce/5.png": {
+    "file": "assets/5-XGgxWLve.png",
+    "src": "resources/images/eCommerce/5.png"
+  },
+  "resources/images/eCommerce/6.png": {
+    "file": "assets/6-C3xtR9gd.png",
+    "src": "resources/images/eCommerce/6.png"
+  },
+  "resources/images/eCommerce/7.png": {
+    "file": "assets/7-BTtLNyyS.png",
+    "src": "resources/images/eCommerce/7.png"
+  },
+  "resources/images/eCommerce/8.png": {
+    "file": "assets/8-DH26cUjJ.png",
+    "src": "resources/images/eCommerce/8.png"
+  },
+  "resources/images/eCommerce/9.png": {
+    "file": "assets/9-yElqNC6G.png",
+    "src": "resources/images/eCommerce/9.png"
+  },
+  "resources/images/ecommerce-images/product-1.png": {
+    "file": "assets/product-1-CnD-btSp.png",
+    "src": "resources/images/ecommerce-images/product-1.png"
+  },
+  "resources/images/ecommerce-images/product-10.png": {
+    "file": "assets/product-10-0mxZ9k36.png",
+    "src": "resources/images/ecommerce-images/product-10.png"
+  },
+  "resources/images/ecommerce-images/product-11.png": {
+    "file": "assets/product-11-D3BwVZjL.png",
+    "src": "resources/images/ecommerce-images/product-11.png"
+  },
+  "resources/images/ecommerce-images/product-12.png": {
+    "file": "assets/product-12-B7bD5_Vt.png",
+    "src": "resources/images/ecommerce-images/product-12.png"
+  },
+  "resources/images/ecommerce-images/product-13.png": {
+    "file": "assets/product-13-uCWUA1DQ.png",
+    "src": "resources/images/ecommerce-images/product-13.png"
+  },
+  "resources/images/ecommerce-images/product-14.png": {
+    "file": "assets/product-14-BiQaJ4lB.png",
+    "src": "resources/images/ecommerce-images/product-14.png"
+  },
+  "resources/images/ecommerce-images/product-15.png": {
+    "file": "assets/product-15-JUiFxZt7.png",
+    "src": "resources/images/ecommerce-images/product-15.png"
+  },
+  "resources/images/ecommerce-images/product-16.png": {
+    "file": "assets/product-16-BuhBp9B9.png",
+    "src": "resources/images/ecommerce-images/product-16.png"
+  },
+  "resources/images/ecommerce-images/product-17.png": {
+    "file": "assets/product-17-DGVKaylX.png",
+    "src": "resources/images/ecommerce-images/product-17.png"
+  },
+  "resources/images/ecommerce-images/product-18.png": {
+    "file": "assets/product-18-B4DickTI.png",
+    "src": "resources/images/ecommerce-images/product-18.png"
+  },
+  "resources/images/ecommerce-images/product-19.png": {
+    "file": "assets/product-19-CSiIcA4A.png",
+    "src": "resources/images/ecommerce-images/product-19.png"
+  },
+  "resources/images/ecommerce-images/product-2.png": {
+    "file": "assets/product-2-Bf6a6Kgc.png",
+    "src": "resources/images/ecommerce-images/product-2.png"
+  },
+  "resources/images/ecommerce-images/product-20.png": {
+    "file": "assets/product-20-BpQUJyBO.png",
+    "src": "resources/images/ecommerce-images/product-20.png"
+  },
+  "resources/images/ecommerce-images/product-24.png": {
+    "file": "assets/product-24-P0bQTQjJ.png",
+    "src": "resources/images/ecommerce-images/product-24.png"
+  },
+  "resources/images/ecommerce-images/product-3.png": {
+    "file": "assets/product-3-yFb-Mnqo.png",
+    "src": "resources/images/ecommerce-images/product-3.png"
+  },
+  "resources/images/ecommerce-images/product-4.png": {
+    "file": "assets/product-4-yHm6IdJg.png",
+    "src": "resources/images/ecommerce-images/product-4.png"
+  },
+  "resources/images/ecommerce-images/product-5.png": {
+    "file": "assets/product-5-CsVtFw4Y.png",
+    "src": "resources/images/ecommerce-images/product-5.png"
+  },
+  "resources/images/ecommerce-images/product-6.png": {
+    "file": "assets/product-6-D_lICUdY.png",
+    "src": "resources/images/ecommerce-images/product-6.png"
+  },
+  "resources/images/ecommerce-images/product-7.png": {
+    "file": "assets/product-7-ImCCPITk.png",
+    "src": "resources/images/ecommerce-images/product-7.png"
+  },
+  "resources/images/ecommerce-images/product-8.png": {
+    "file": "assets/product-8-DHA1vSEx.png",
+    "src": "resources/images/ecommerce-images/product-8.png"
+  },
+  "resources/images/ecommerce-images/product-9.png": {
+    "file": "assets/product-9-DAIFkVRY.png",
+    "src": "resources/images/ecommerce-images/product-9.png"
+  },
+  "resources/images/front-pages/misc/checkout-image.png": {
+    "file": "assets/checkout-image-B9YaEIrN.png",
+    "src": "resources/images/front-pages/misc/checkout-image.png"
+  },
+  "resources/images/front-pages/misc/product-image.png": {
+    "file": "assets/product-image-CYNq9C1x.png",
+    "src": "resources/images/front-pages/misc/product-image.png"
+  },
+  "resources/images/icons/countries/au.png": {
+    "file": "assets/au-B0JQPdxV.png",
+    "src": "resources/images/icons/countries/au.png"
+  },
+  "resources/images/icons/countries/br.png": {
+    "file": "assets/br-CkUqAOvB.png",
+    "src": "resources/images/icons/countries/br.png"
+  },
+  "resources/images/icons/countries/cn.png": {
+    "file": "assets/cn-abDW3z-l.png",
+    "src": "resources/images/icons/countries/cn.png"
+  },
+  "resources/images/icons/countries/fr.png": {
+    "file": "assets/fr-M1pdRyRf.png",
+    "src": "resources/images/icons/countries/fr.png"
+  },
+  "resources/images/icons/countries/in.png": {
+    "file": "assets/in-6lVDmp7l.png",
+    "src": "resources/images/icons/countries/in.png"
+  },
+  "resources/images/icons/countries/us.png": {
+    "file": "assets/us-CX-5gDEE.png",
+    "src": "resources/images/icons/countries/us.png"
+  },
+  "resources/images/icons/file/txt.png": {
+    "file": "assets/txt-D130L64-.png",
+    "src": "resources/images/icons/file/txt.png"
+  },
+  "resources/images/icons/file/xls.png": {
+    "file": "assets/xls-BrstSTmp.png",
+    "src": "resources/images/icons/file/xls.png"
+  },
+  "resources/images/icons/payments/mastercard.png": {
+    "file": "assets/mastercard-Ch14HbpZ.png",
+    "src": "resources/images/icons/payments/mastercard.png"
+  },
+  "resources/images/icons/payments/visa.png": {
+    "file": "assets/visa-BU7FaUwx.png",
+    "src": "resources/images/icons/payments/visa.png"
+  },
+  "resources/images/icons/project-icons/event.png": {
+    "file": "assets/event-B9e7NeGJ.png",
+    "src": "resources/images/icons/project-icons/event.png"
+  },
+  "resources/images/icons/project-icons/figma.png": {
+    "file": "assets/figma-_YrwOGbs.png",
+    "src": "resources/images/icons/project-icons/figma.png"
+  },
+  "resources/images/icons/project-icons/html5.png": {
+    "file": "assets/html5-BefzX3Fa.png",
+    "src": "resources/images/icons/project-icons/html5.png"
+  },
+  "resources/images/icons/project-icons/python.png": {
+    "file": "assets/python-c0sYxL-T.png",
+    "src": "resources/images/icons/project-icons/python.png"
+  },
+  "resources/images/icons/project-icons/react.png": {
+    "file": "assets/react-BMeqCgM3.png",
+    "src": "resources/images/icons/project-icons/react.png"
+  },
+  "resources/images/icons/project-icons/sketch.png": {
+    "file": "assets/sketch-CICJO00h.png",
+    "src": "resources/images/icons/project-icons/sketch.png"
+  },
+  "resources/images/icons/project-icons/social.png": {
+    "file": "assets/social-Ch4LtR3X.png",
+    "src": "resources/images/icons/project-icons/social.png"
+  },
+  "resources/images/icons/project-icons/support.png": {
+    "file": "assets/support-BBzmQgkm.png",
+    "src": "resources/images/icons/project-icons/support.png"
+  },
+  "resources/images/icons/project-icons/twitter.png": {
+    "file": "assets/twitter-D_pvd7NB.png",
+    "src": "resources/images/icons/project-icons/twitter.png"
+  },
+  "resources/images/icons/project-icons/vue.png": {
+    "file": "assets/vue-Bsu32TRN.png",
+    "src": "resources/images/icons/project-icons/vue.png"
+  },
+  "resources/images/icons/project-icons/xamarin.png": {
+    "file": "assets/xamarin-BKkvq9Jr.png",
+    "src": "resources/images/icons/project-icons/xamarin.png"
+  },
+  "resources/images/icons/project-icons/xd.png": {
+    "file": "assets/xd-BUVs2RVn.png",
+    "src": "resources/images/icons/project-icons/xd.png"
+  },
+  "resources/images/illustrations/PM.png": {
+    "file": "assets/PM-Bvn2IvmY.png",
+    "src": "resources/images/illustrations/PM.png"
+  },
+  "resources/images/misc/3d-safe-box-with-golden-dollar-coins.png": {
+    "file": "assets/3d-safe-box-with-golden-dollar-coins-1l8l0kXJ.png",
+    "src": "resources/images/misc/3d-safe-box-with-golden-dollar-coins.png"
+  },
+  "resources/images/misc/3d-space-rocket-with-smoke.png": {
+    "file": "assets/3d-space-rocket-with-smoke-DR35GWyq.png",
+    "src": "resources/images/misc/3d-space-rocket-with-smoke.png"
+  },
+  "resources/images/misc/dollar-coins-flying-pink-piggy-bank.png": {
+    "file": "assets/dollar-coins-flying-pink-piggy-bank-C5fySPX-.png",
+    "src": "resources/images/misc/dollar-coins-flying-pink-piggy-bank.png"
+  },
+  "resources/images/pages/404.png": {
+    "file": "assets/404-CMId8yPf.png",
+    "src": "resources/images/pages/404.png"
+  },
+  "resources/images/pages/app-academy-tutor-1.png": {
+    "file": "assets/app-academy-tutor-1-B4ic_jYh.png",
+    "src": "resources/images/pages/app-academy-tutor-1.png"
+  },
+  "resources/images/pages/app-academy-tutor-2.png": {
+    "file": "assets/app-academy-tutor-2-CaiSfIAQ.png",
+    "src": "resources/images/pages/app-academy-tutor-2.png"
+  },
+  "resources/images/pages/app-academy-tutor-3.png": {
+    "file": "assets/app-academy-tutor-3-WKWXnZBa.png",
+    "src": "resources/images/pages/app-academy-tutor-3.png"
+  },
+  "resources/images/pages/app-academy-tutor-4.png": {
+    "file": "assets/app-academy-tutor-4-SM9W8Sx0.png",
+    "src": "resources/images/pages/app-academy-tutor-4.png"
+  },
+  "resources/images/pages/app-academy-tutor-5.png": {
+    "file": "assets/app-academy-tutor-5-D46Shs0k.png",
+    "src": "resources/images/pages/app-academy-tutor-5.png"
+  },
+  "resources/images/pages/app-academy-tutor-6.png": {
+    "file": "assets/app-academy-tutor-6-CJW3eBKz.png",
+    "src": "resources/images/pages/app-academy-tutor-6.png"
+  },
+  "resources/images/pages/misc-mask-dark.png": {
+    "file": "assets/misc-mask-dark-D4eSvDKH.png",
+    "src": "resources/images/pages/misc-mask-dark.png"
+  },
+  "resources/images/pages/misc-mask-light.png": {
+    "file": "assets/misc-mask-light-7GUBPWb3.png",
+    "src": "resources/images/pages/misc-mask-light.png"
+  },
+  "resources/images/pages/themeselection-qr.png": {
+    "file": "assets/themeselection-qr-Bv5F3_M6.png",
+    "src": "resources/images/pages/themeselection-qr.png"
+  },
+  "resources/images/pages/user-profile-header-bg.png": {
+    "file": "assets/user-profile-header-bg-WhVV0-Vp.png",
+    "src": "resources/images/pages/user-profile-header-bg.png"
+  },
+  "resources/js/@core/components/AppBarSearch.vue": {
+    "file": "assets/AppBarSearch-D83ZcUQ7.js",
+    "src": "resources/js/@core/components/AppBarSearch.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/AppBarSearch-UoiqehUd.css"
+    ]
+  },
+  "resources/js/layouts/blank.vue": {
+    "file": "assets/blank-XTBb6HvE.js",
+    "src": "resources/js/layouts/blank.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AppLoadingIndicator-C47xWq28.js",
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/blank-CQ59HnlN.css"
+    ]
+  },
+  "resources/js/layouts/components/DefaultLayoutWithHorizontalNav.vue": {
+    "file": "assets/DefaultLayoutWithHorizontalNav-BcpIEj_t.js",
+    "src": "resources/js/layouts/components/DefaultLayoutWithHorizontalNav.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AppLoadingIndicator-C47xWq28.js",
+      "resources/js/main.js",
+      "resources/js/layouts/components/Footer.vue",
+      "resources/js/layouts/components/NavbarThemeSwitcher.vue",
+      "resources/js/layouts/components/UserProfile.vue",
+      "_I18n-CTokD_6H.js",
+      "_VTooltip-RMUKGFTO.js"
+    ]
+  },
+  "resources/js/layouts/components/DefaultLayoutWithVerticalNav.vue": {
+    "file": "assets/DefaultLayoutWithVerticalNav-CWAG08P4.js",
+    "src": "resources/js/layouts/components/DefaultLayoutWithVerticalNav.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AppLoadingIndicator-C47xWq28.js",
+      "resources/js/main.js",
+      "resources/js/layouts/components/NavbarThemeSwitcher.vue",
+      "resources/js/layouts/components/NavBarNotifications.vue",
+      "resources/js/layouts/components/UserProfile.vue",
+      "_I18n-CTokD_6H.js",
+      "_VTooltip-RMUKGFTO.js"
+    ],
+    "css": [
+      "assets/DefaultLayoutWithVerticalNav-DOyP7YyZ.css"
+    ]
+  },
+  "resources/js/layouts/components/Footer.vue": {
+    "file": "assets/Footer-DjmcLWRH.js",
+    "src": "resources/js/layouts/components/Footer.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ]
+  },
+  "resources/js/layouts/components/NavBarNotifications.vue": {
+    "file": "assets/NavBarNotifications-vQ39lU-j.js",
+    "src": "resources/js/layouts/components/NavBarNotifications.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js",
+      "_VTooltip-RMUKGFTO.js"
+    ],
+    "css": [
+      "assets/NavBarNotifications-Crunzm9e.css"
+    ],
+    "assets": [
+      "assets/paypal-rounded-DUgvboRY.png"
+    ]
+  },
+  "resources/js/layouts/components/NavSearchBar.vue": {
+    "file": "assets/NavSearchBar-3SRJUheF.js",
+    "src": "resources/js/layouts/components/NavSearchBar.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "dynamicImports": [
+      "resources/js/@core/components/AppBarSearch.vue"
+    ],
+    "css": [
+      "assets/NavSearchBar-QkL9eJzX.css"
+    ]
+  },
+  "resources/js/layouts/components/NavbarShortcuts.vue": {
+    "file": "assets/NavbarShortcuts-BjtKPzXg.js",
+    "src": "resources/js/layouts/components/NavbarShortcuts.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/NavbarShortcuts-Chu90bbo.css"
+    ]
+  },
+  "resources/js/layouts/components/NavbarThemeSwitcher.vue": {
+    "file": "assets/NavbarThemeSwitcher-SUXnJgbt.js",
+    "src": "resources/js/layouts/components/NavbarThemeSwitcher.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js",
+      "_VTooltip-RMUKGFTO.js"
+    ]
+  },
+  "resources/js/layouts/components/UserProfile.vue": {
+    "file": "assets/UserProfile-BRz0IOjF.js",
+    "src": "resources/js/layouts/components/UserProfile.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ]
+  },
+  "resources/js/main.js": {
+    "file": "assets/main-CMckzcZJ.js",
+    "src": "resources/js/main.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/pages/index.vue",
+      "resources/js/pages/[...error].vue",
+      "resources/js/pages/account-setting.vue",
+      "resources/js/pages/members.vue",
+      "resources/js/layouts/components/DefaultLayoutWithHorizontalNav.vue",
+      "resources/js/layouts/components/DefaultLayoutWithVerticalNav.vue",
+      "resources/js/layouts/blank.vue",
+      "resources/js/layouts/components/DefaultLayoutWithHorizontalNav.vue",
+      "resources/js/layouts/components/DefaultLayoutWithVerticalNav.vue",
+      "resources/js/layouts/components/Footer.vue",
+      "resources/js/layouts/components/NavBarNotifications.vue",
+      "resources/js/layouts/components/NavbarShortcuts.vue",
+      "resources/js/layouts/components/NavbarThemeSwitcher.vue",
+      "resources/js/layouts/components/NavSearchBar.vue",
+      "resources/js/layouts/components/UserProfile.vue",
+      "_webfontloader-C3p_DvxB.js"
+    ],
+    "css": [
+      "assets/main-CIDnhWsf.css"
+    ],
+    "assets": [
+      "assets/avatar-1-DMk2FF1-.png",
+      "assets/PM-Bvn2IvmY.png",
+      "assets/avatar-2-D5OQ4OGs.png",
+      "assets/avatar-3-BxDW4ia1.png",
+      "assets/avatar-4-CtU30128.png",
+      "assets/avatar-5-CmycerLe.png",
+      "assets/avatar-6-B6-OBpiL.png",
+      "assets/avatar-7-L2C9lfhq.png",
+      "assets/avatar-8-BK_zJ7wP.png",
+      "assets/figma-_YrwOGbs.png",
+      "assets/html5-BefzX3Fa.png",
+      "assets/python-c0sYxL-T.png",
+      "assets/react-BMeqCgM3.png",
+      "assets/sketch-CICJO00h.png",
+      "assets/vue-Bsu32TRN.png",
+      "assets/xamarin-BKkvq9Jr.png",
+      "assets/avatar-12-BAQHvJJk.png",
+      "assets/avatar-13-B7PFIrh-.png",
+      "assets/avatar-14-C1cFbbRW.png",
+      "assets/avatar-15-BsGc6Ecl.png",
+      "assets/avatar-9-DQF709tv.png",
+      "assets/app-academy-tutor-1-B4ic_jYh.png",
+      "assets/app-academy-tutor-2-CaiSfIAQ.png",
+      "assets/app-academy-tutor-3-WKWXnZBa.png",
+      "assets/app-academy-tutor-4-SM9W8Sx0.png",
+      "assets/app-academy-tutor-5-D46Shs0k.png",
+      "assets/app-academy-tutor-6-CJW3eBKz.png",
+      "assets/au-B0JQPdxV.png",
+      "assets/br-CkUqAOvB.png",
+      "assets/cn-abDW3z-l.png",
+      "assets/fr-M1pdRyRf.png",
+      "assets/in-6lVDmp7l.png",
+      "assets/us-CX-5gDEE.png",
+      "assets/avatar-10-D0dIAeHn.png",
+      "assets/avatar-11-CexbSfPK.png",
+      "assets/product-1-CnD-btSp.png",
+      "assets/product-10-0mxZ9k36.png",
+      "assets/product-11-D3BwVZjL.png",
+      "assets/product-12-B7bD5_Vt.png",
+      "assets/product-13-uCWUA1DQ.png",
+      "assets/product-14-BiQaJ4lB.png",
+      "assets/product-15-JUiFxZt7.png",
+      "assets/product-16-BuhBp9B9.png",
+      "assets/product-17-DGVKaylX.png",
+      "assets/product-18-B4DickTI.png",
+      "assets/product-19-CSiIcA4A.png",
+      "assets/product-2-Bf6a6Kgc.png",
+      "assets/product-20-BpQUJyBO.png",
+      "assets/product-24-P0bQTQjJ.png",
+      "assets/product-3-yFb-Mnqo.png",
+      "assets/product-4-yHm6IdJg.png",
+      "assets/product-5-CsVtFw4Y.png",
+      "assets/product-6-D_lICUdY.png",
+      "assets/product-7-ImCCPITk.png",
+      "assets/product-8-DHA1vSEx.png",
+      "assets/product-9-DAIFkVRY.png",
+      "assets/txt-D130L64-.png",
+      "assets/xls-BrstSTmp.png",
+      "assets/10-BSkQkhNh.png",
+      "assets/11-C0GXUTQl.png",
+      "assets/13-DChRaH3m.png",
+      "assets/14-DSu3_vx8.png",
+      "assets/15-DTHwHBZr.png",
+      "assets/16-CtYCgrqz.png",
+      "assets/17-VGKeRqlw.png",
+      "assets/18-BElAYBmo.png",
+      "assets/19-DN8byslC.png",
+      "assets/20-GHedSxRd.png",
+      "assets/23-DhXHsG8s.png",
+      "assets/24-BgBw8U3G.png",
+      "assets/25-BwgkBx_p.png",
+      "assets/26-_iASYVNh.png",
+      "assets/3-DWAhoqPB.png",
+      "assets/4-rHyMhWdp.png",
+      "assets/5-XGgxWLve.png",
+      "assets/6-C3xtR9gd.png",
+      "assets/7-BTtLNyyS.png",
+      "assets/8-DH26cUjJ.png",
+      "assets/9-yElqNC6G.png",
+      "assets/checkout-image-B9YaEIrN.png",
+      "assets/product-image-CYNq9C1x.png",
+      "assets/event-B9e7NeGJ.png",
+      "assets/social-Ch4LtR3X.png",
+      "assets/support-BBzmQgkm.png",
+      "assets/twitter-D_pvd7NB.png",
+      "assets/xd-BUVs2RVn.png",
+      "assets/user-profile-header-bg-WhVV0-Vp.png"
+    ]
+  },
+  "resources/js/pages/[...error].vue": {
+    "file": "assets/_...error_-DXcTSmRL.js",
+    "src": "resources/js/pages/[...error].vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/_..-B633_xPA.css"
+    ],
+    "assets": [
+      "assets/404-CMId8yPf.png",
+      "assets/misc-mask-dark-D4eSvDKH.png",
+      "assets/misc-mask-light-7GUBPWb3.png"
+    ]
+  },
+  "resources/js/pages/account-setting.vue": {
+    "file": "assets/account-setting-WAfUdGUp.js",
+    "src": "resources/js/pages/account-setting.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/account-setting-DWFskWn4.css"
+    ],
+    "assets": [
+      "assets/3d-safe-box-with-golden-dollar-coins-1l8l0kXJ.png",
+      "assets/3d-space-rocket-with-smoke-DR35GWyq.png",
+      "assets/dollar-coins-flying-pink-piggy-bank-C5fySPX-.png",
+      "assets/themeselection-qr-Bv5F3_M6.png"
+    ]
+  },
+  "resources/js/pages/index.vue": {
+    "file": "assets/index-DitkNkwm.js",
+    "src": "resources/js/pages/index.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/index-mIQW5M5R.css"
+    ]
+  },
+  "resources/js/pages/members.vue": {
+    "file": "assets/members-Ds29BJ6Z.js",
+    "src": "resources/js/pages/members.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/main.js"
+    ],
+    "css": [
+      "assets/members-DANwDwuj.css"
+    ]
+  }
+}
