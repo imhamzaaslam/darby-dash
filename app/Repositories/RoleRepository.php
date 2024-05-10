@@ -6,6 +6,7 @@ use App\Contracts\AbstractEloquentRepository;
 use App\Contracts\RoleRepositoryInterface;
 use App\Models\Base;
 use App\Models\Role;
+use Illuminate\Support\Collection;
 
 class RoleRepository extends AbstractEloquentRepository implements RoleRepositoryInterface
 {
@@ -19,8 +20,8 @@ class RoleRepository extends AbstractEloquentRepository implements RoleRepositor
         parent::__construct($model);
     }
 
-    public function all(): Collection
+    public function get(): Collection
     {
-
+        return $this->model->where('name', '!=', 'admin')->get();
     }
 }

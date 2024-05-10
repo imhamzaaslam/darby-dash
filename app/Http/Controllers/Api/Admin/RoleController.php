@@ -15,7 +15,7 @@ class RoleController extends Controller
 
     public function index(Request $request)
     {
-        $roles = $this->roleRepository->getAll();
+        $roles = $this->roleRepository->get();
         return RoleResource::collection($roles);
     }
 }
