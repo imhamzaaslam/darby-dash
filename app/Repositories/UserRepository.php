@@ -37,9 +37,13 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
         return $user;
     }
 
-    public function update(User $user, array $attributes): bool
+    public function update(string $role, User $user, array $attributes): bool
     {
         $updated = $user->fill($attributes)->save();
+
+        if ($role !== $user->getRoleNames()->first()) {
+            $user->syncRoles($role);
+        }
 
         if ($user->oss_registered_at !== $user->getOriginal('oss_registered_at')) {
             OssRegistrationDateChanged::dispatch($user);

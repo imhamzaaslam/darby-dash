@@ -9,7 +9,7 @@ interface UserRepositoryInterface
 {
     public function create(string $role, array $attributes, array $infoAttributes): User;
 
-    public function update(User $user, array $attributes): bool;
+    public function update(string $role, User $user, array $attributes): bool;
 
     public function delete(User $user): bool;
 

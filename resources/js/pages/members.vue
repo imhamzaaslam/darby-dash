@@ -46,8 +46,9 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.name_first"
-                    :rules="[requiredValidator]"
                     label="First Name"
+                    :rules="[requiredValidator]"
+                    :error-messages="addingErrors.name_first"
                   />
                 </VCol>
 
@@ -55,8 +56,9 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.name_last"
-                    :rules="[requiredValidator]"
                     label="Last Name"
+                    :rules="[requiredValidator]"
+                    :error-messages="addingErrors.name_last"
                   />
                 </VCol>
 
@@ -64,8 +66,9 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.email"
-                    :rules="[requiredValidator, emailValidator]"
                     label="Email"
+                    :rules="[requiredValidator, emailValidator]"
+                    :error-messages="addingErrors.email"
                   />
                 </VCol>
 
@@ -74,8 +77,9 @@
                   <AppTextField
                     v-model="newMemberDetails.phone"
                     type="number"
-                    :rules="[requiredValidator]"
                     label="Phone"
+                    :rules="[requiredValidator]"
+                    :error-messages="addingErrors.phone"
                   />
                 </VCol>
 
@@ -85,10 +89,11 @@
                     v-model="newMemberDetails.role"
                     label="Select Role"
                     placeholder="Select Role"
-                    :rules="[requiredValidator]"
                     :items="getRoles"
                     item-title="name"
                     item-value="name"
+                    :rules="[requiredValidator]"
+                    :error-messages="addingErrors.role"
                   />
                 </VCol>
 
@@ -96,10 +101,11 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.password"
-                    :rules="[requiredValidator]"
                     label="Password"
                     :type="isPasswordVisible ? 'text' : 'password'"
                     :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                    :rules="[requiredValidator]"
+                    :error-messages="addingErrors.password"
                     @click:append-inner="isPasswordVisible = !isPasswordVisible"
                   />
                 </VCol>
@@ -109,9 +115,10 @@
                   <AppTextField
                     v-model="newMemberDetails.confirmPassword"
                     :type="isConfirmPasswordVisible ? 'text' : 'password'"
-                    :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
                     label="Confirm Password"
                     :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                    :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
+                    :error-messages="addingErrors.confirmPassword"
                     @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
                   />
                 </VCol>
@@ -122,10 +129,11 @@
                     v-model="newMemberDetails.state"
                     label="Select Status"
                     placeholder="Select Status"
-                    :rules="[requiredValidator]"
                     :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
                     item-title="title"
                     item-value="value"
+                    :rules="[requiredValidator]"
+                    :error-messages="addingErrors.state"
                   />
                 </VCol>
               </VRow>
@@ -140,9 +148,20 @@
               </VBtn>
               <VBtn
                 type="submit"
+                :disabled="getLoadStatus === 1"
                 @click="addMemberForm?.validate()"
               >
-                Add
+                <span v-if="getLoadStatus === 1">
+                  Loading...
+                  <VProgressCircular
+                    :size="20"
+                    width="3"
+                    indeterminate
+                  />
+                </span>
+                <span v-else>
+                  Add
+                </span>
               </VBtn>
             </VCardText>
           </VForm>
@@ -169,8 +188,9 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.name_first"
-                  :rules="[requiredValidator]"
                   label="First Name"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.name_first"
                 />
               </VCol>
 
@@ -178,8 +198,9 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.name_last"
-                  :rules="[requiredValidator]"
                   label="Last Name"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.name_last"
                 />
               </VCol>
 
@@ -187,8 +208,9 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.email"
-                  :rules="[requiredValidator, emailValidator]"
                   label="Email"
+                  :rules="[requiredValidator, emailValidator]"
+                  :error-messages="editErrors.email"
                 />
               </VCol>
 
@@ -196,8 +218,9 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.phone"
-                  :rules="[requiredValidator]"
                   label="Phone"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.phone"
                 />
               </VCol>
 
@@ -207,10 +230,11 @@
                   v-model="editMemberDetails.role"
                   label="Select Role"
                   placeholder="Select Role"
-                  :rules="[requiredValidator]"
                   :items="getRoles"
                   item-title="name"
                   item-value="name"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.role"
                 />
               </VCol>
 
@@ -220,10 +244,11 @@
                   v-model="editMemberDetails.state"
                   label="Select Status"
                   placeholder="Select Status"
-                  :rules="[requiredValidator]"
                   :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
                   item-title="title"
                   item-value="value"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.state"
                 />
               </VCol>
             </VRow>
@@ -238,9 +263,20 @@
             </VBtn>
             <VBtn
               type="submit"
+              :disabled="getLoadStatus === 1"
               @click="editMemberForm?.validate()"
             >
-              Save
+              <span v-if="getLoadStatus === 1">
+                Loading...
+                <VProgressCircular
+                  :size="20"
+                  width="3"
+                  indeterminate
+                />
+              </span>
+              <span v-else>
+                Save
+              </span>
             </VBtn>
           </VCardText>
         </VForm>
@@ -398,7 +434,7 @@ const editMemberDetails = ref({})
 const isLoading = ref(false)
 const search = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
-const formatDate = date => moment(date).format('MMM DD, YYYY');
+const formatDate = date => moment(date).format('MMM DD, YYYY')
 
 const headers = [
   {
@@ -437,6 +473,26 @@ onBeforeMount(async () => {
   totalRecords.value = totalUsers.value
 })
 
+const addingErrors = ref({
+  name_first: '',
+  name_last: '',
+  email: '',
+  role: '',
+  phone: '',
+  password: '',
+  confirmPassword: '',
+  state: '',
+})
+
+const editErrors = ref({
+  name_first: '',
+  name_last: '',
+  email: '',
+  role: '',
+  phone: '',
+  state: '',
+})
+
 const fetchMembers = async () => {
   try {
     await userStore.getAll(options.value.page, options.value.itemsPerPage)
@@ -453,17 +509,18 @@ async function submitAddMemberForm() {
   addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-        const res = await userStore.create(newMemberDetails.value)
-        const errors = getErrors.value
-        if(errors)
+        resetForm('addingErrors')
+        await userStore.create(newMemberDetails.value)
+        if(getErrors.value)
         {
-          toast.error('Something went wrong.')
+          showError('addingForm')
         }
         else{
           isDialogVisible.value = false
           isLoading.value = true
           toast.success('Member added successfully', { timeout: 1000 })
           await fetchMembers()
+          resetForm('addingForm')
           isLoading.value = false
         }
       } catch (error) {
@@ -484,12 +541,11 @@ async function submitEditMemberForm() {
   editMemberForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-
-        const res = await userStore.update(editMemberDetails.value)
-        const errors = getErrors.value
-        if(errors)
+        resetForm('editErrors')
+        await userStore.update(editMemberDetails.value)
+        if(getErrors.value)
         {
-          toast.error('Something went wrong.')
+          showError('editForm')
         }
         else{
           isEditDialogVisible.value = false
@@ -518,12 +574,10 @@ const deleteMember = async member => {
     })
 
     if (confirmDelete.isConfirmed) {
-
-      const res = await userStore.delete(member.uuid)
-      const errors = getErrors.value
-      if(errors)
+      await userStore.delete(member.uuid)
+      if(getErrors.value)
       {
-        toast.error('Something went wrong.')
+        toast.error('Something went wrong. Please try again later.')
       }
       else{
         isLoading.value = true
@@ -550,6 +604,31 @@ const fetchRoles = async () => {
   }
 }
 
+const showError = formType => {
+  if (getStatusCode.value === 500) {
+    toast.error('Something went wrong. Please try again later.')
+  } else {
+    if (formType === 'addingForm') {
+      addingErrors.value = getErrors.value
+    }
+    if(formType === 'editForm') {
+      editErrors.value = getErrors.value
+    }
+  }
+}
+
+const resetForm = formType => {
+  if(formType === 'addingErrors') {
+    addingErrors.value = Object.fromEntries(Object.keys(addingErrors.value).map(key => [key, '']))
+  }
+  if(formType === 'addingErrors') {
+    editErrors.value = Object.fromEntries(Object.keys(editErrors.value).map(key => [key, '']))
+  }
+  if(formType === 'addingForm') {
+    newMemberDetails.value = Object.fromEntries(Object.keys(newMemberDetails.value).map(key => [key, '']))
+  }
+}
+
 const getRoles = computed(() => {
   return roleStore.getRoles
 })
@@ -566,6 +645,14 @@ const totalUsers = computed(() => {
   return userStore.usersCount
 })
 
+const getStatusCode = computed(() => {
+  return userStore.getStatusCode
+})
+
+const getLoadStatus = computed(() => {
+  return userStore.getLoadStatus
+})
+
 const generateRandomColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(-50, '0')
 
 const handlePageChange = async page => {
@@ -573,7 +660,6 @@ const handlePageChange = async page => {
   await fetchMembers()
 }
 </script>
-
 
 <style scoped>
 .table-wrapper {

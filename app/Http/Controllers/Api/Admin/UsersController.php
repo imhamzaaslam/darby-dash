@@ -36,7 +36,7 @@ class UsersController extends Controller
         $users = $this->userRepository
             ->hasInfo()
             ->filtered($request->keyword ?? '')
-            ->ordered($request->orderBy ?? 'id', $request->order ?? 'asc')
+            ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
             ->paginate($request->perPage ?? config('pagination.perPage', 10));
 
         return UserResource::collection($users);
@@ -104,6 +104,7 @@ class UsersController extends Controller
      */
     public function update(UpdateUserAdminRequest $request, string $uuid): Response|JsonResponse
     {
+        $validated = $request->validated();
         $user = $this->userRepository->getByUuidOrFail($uuid);
 
         $validatedUserInput = $request->safe()->only([
@@ -111,14 +112,16 @@ class UsersController extends Controller
             'name_last',
             'email',
             'password',
-            'state'
+            'state',
         ]);
 
         $validatedInfoInput = $request->safe()->only([
             'phone',
         ]);
 
-        $this->userRepository->update($user, $validatedUserInput);
+        $role = $validated['role'];
+
+        $this->userRepository->update($role, $user, $validatedUserInput);
         $this->userInfoRepository->update($user->info, $validatedInfoInput);
 
         return (new UserResource($user))

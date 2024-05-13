@@ -120,6 +120,7 @@ export const useUserStore = defineStore('users', {
     getUser: state => state.user,
     getProjectManagersList: state => state.projectManagers,
     getMembersList: state => state.members,
-    getErrors: state => state.error,
+    getErrors: state => state?.error?.response?.data?.errors || state?.error?.response?.data?.message,
+    getStatusCode: state => state.error?.response?.status,
   },
 })
