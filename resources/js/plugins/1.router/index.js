@@ -134,7 +134,7 @@ const router = createRouter({
     ),
     recursiveLayouts(
       {
-        path: '/projects/:project/:id/add/tasks',
+        path: '/projects/:project/:id/tasks/add',
         name: 'add-project-tasks',
         component: AddProjectTasks,
         meta: { layout: 'default' },

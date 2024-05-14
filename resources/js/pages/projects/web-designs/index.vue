@@ -108,12 +108,12 @@
             </VCardText>
 
             <VCardText class="d-flex justify-end gap-3 flex-wrap">
-              <!-- <VBtn
+              <VBtn
                 color="secondary"
                 @click="isDialogVisible = false"
               >
                 Cancel
-              </VBtn> -->
+              </VBtn>
               <VBtn
                 type="submit"
                 @click="addProjectForm?.validate()"
@@ -276,6 +276,12 @@
           <VMenu activator="parent">
             <VList>
               <VListItem
+                value="add tasks"
+                :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: item.id } }"
+              >
+                Add Tasks
+              </VListItem>
+              <VListItem
                 value="view"
                 :to="{ name: 'web-design', params: { id: item.id } }"
               >
@@ -428,10 +434,10 @@ async function submitAddProjectForm() {
           toast.success('Project added successfully', { timeout: 1000 })
           await fetchProjects()
 
-          /* const newProjectID = res.data.data.id
+          const newProjectID = projectStore.getProject.id
 
-          console.log("PROJECT ID", newProjectID)
-          router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } }) */
+          router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } })
+
           isLoading.value = false
           newProjectDetails.value = {
             title: '',
@@ -439,7 +445,7 @@ async function submitAddProjectForm() {
             project_manager_id: '',
             member_ids: [],
             est_hours: '',
-            est_budget: ''
+            est_budget: '',
           }
         }
       } catch (error) {
