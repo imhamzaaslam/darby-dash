@@ -9,30 +9,30 @@
       sm="4"
     >
       <div>
-        <VCard
-          class="logistics-card-statistics cursor-pointer"
-          :style="data.isHover ? { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}))` } : { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}), var(--v-disabled-opacity))` }"
-          @mouseenter="data.isHover = true"
-          @mouseleave="data.isHover = false"
-        >
-          <VCardText>
-            <div class="d-flex align-center gap-x-4 mb-2">
-              <VAvatar
-                variant="tonal"
-                :color="data.color"
-                rounded
-              >
-                <VIcon
-                  :icon="data.icon"
-                  size="28"
-                />
-              </VAvatar>
-              <h5 class="text-h5 font-weight-medium text-center">
-                {{ data.title }}
-              </h5>
-            </div>
-            <div class="text-center">
-              <RouterLink :to="data.url">
+        <RouterLink :to="data.url">
+          <VCard
+            class="logistics-card-statistics cursor-pointer"
+            :style="data.isHover ? { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}))` } : { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}), var(--v-disabled-opacity))` }"
+            @mouseenter="data.isHover = true"
+            @mouseleave="data.isHover = false"
+          >
+            <VCardText>
+              <div class="d-flex align-center gap-x-4 mb-2">
+                <VAvatar
+                  variant="tonal"
+                  :color="data.color"
+                  rounded
+                >
+                  <VIcon
+                    :icon="data.icon"
+                    size="28"
+                  />
+                </VAvatar>
+                <h5 class="text-h5 font-weight-medium text-center">
+                  {{ data.title }}
+                </h5>
+              </div>
+              <div class="text-center">
                 <VBtn
                   size="small"
                   rounded="pill"
@@ -40,21 +40,31 @@
                 >
                   Access Projects
                 </VBtn>
-              </RouterLink>
-            </div>
-          </VCardText>
-        </VCard>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-8">
+                  <small><strong>Projects: 10 |</strong></small>
+                  <small><strong> Tasks: 6 |</strong></small>
+                  <small><strong> Team: 3 |</strong></small>
+                  <small><strong> File: 10 </strong></small>
+                </div>
+              </div>
+            </VCardText>
+          </VCard>
+        </RouterLink>
       </div>
     </VCol>
   </VRow>
-  <!-- <VBtn
+  <!--
+    <VBtn
     color="primary"
     class="mt-3"
     size="small"
     @click="checkApi"
-  >
+    >
     Check API
-  </VBtn> -->
+    </VBtn> 
+  -->
 </template>
 
 <script setup>
