@@ -52,7 +52,7 @@
                 </VCol>
 
                 <VCol cols="6">
-                  <AppSelect
+                  <AppAutocomplete
                     v-model="newProjectDetails.project_type_id"
                     label="Project Type*"
                     placeholder="Select Project Type"
@@ -64,7 +64,7 @@
                 </VCol>
 
                 <VCol cols="6">
-                  <AppSelect
+                  <AppAutocomplete
                     v-model="newProjectDetails.project_manager_id"
                     label="Project Manager*"
                     placeholder="Select Project Manager"
@@ -75,7 +75,7 @@
                   />
                 </VCol>
                 <VCol cols="12">
-                  <AppSelect
+                  <AppAutocomplete
                     v-model="newProjectDetails.member_ids"
                     :items="getMembers"
                     item-title="name"
@@ -151,7 +151,7 @@
               </VCol>
 
               <VCol cols="6">
-                <AppSelect
+                <AppAutocomplete
                   v-model="editProjectDetails.project_type"
                   label="Project Type*"
                   placeholder="Select Project Type"
@@ -163,7 +163,7 @@
               </VCol>
 
               <VCol cols="6">
-                <AppSelect
+                <AppAutocomplete
                   v-model="editProjectDetails.project_manager"
                   label="Project Manager*"
                   placeholder="Select Project Manager"
@@ -174,7 +174,7 @@
                 />
               </VCol>
               <VCol cols="12">
-                <AppSelect
+                <AppAutocomplete
                   v-model="editProjectDetails.member_ids"
                   :items="getMembers"
                   item-title="name"

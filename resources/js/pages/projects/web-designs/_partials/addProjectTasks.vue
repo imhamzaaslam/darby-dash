@@ -106,7 +106,7 @@
                   </VCol>
                   <VCol cols="auto">
                     <VChip
-                      color="primary"
+                      color="secondary"
                       size="small"
                       class="ms-2"
                     >

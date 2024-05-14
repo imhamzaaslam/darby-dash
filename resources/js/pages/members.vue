@@ -305,7 +305,6 @@
       item-value="name"
       hide-default-footer
       class="text-no-wrap"
-      density="compact"
       @update:options="updateOptions"
     >
       <template #item.name="{ item }">
