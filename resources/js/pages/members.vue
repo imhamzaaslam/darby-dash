@@ -46,7 +46,7 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.name_first"
-                    label="First Name"
+                    label="First Name *"
                     :rules="[requiredValidator]"
                     :error-messages="addingErrors.name_first"
                   />
@@ -56,7 +56,7 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.name_last"
-                    label="Last Name"
+                    label="Last Name *"
                     :rules="[requiredValidator]"
                     :error-messages="addingErrors.name_last"
                   />
@@ -66,7 +66,7 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.email"
-                    label="Email"
+                    label="Email *"
                     :rules="[requiredValidator, emailValidator]"
                     :error-messages="addingErrors.email"
                   />
@@ -77,7 +77,7 @@
                   <AppTextField
                     v-model="newMemberDetails.phone"
                     type="number"
-                    label="Phone"
+                    label="Phone *"
                     :rules="[requiredValidator]"
                     :error-messages="addingErrors.phone"
                   />
@@ -87,7 +87,7 @@
                 <VCol cols="6">
                   <AppSelect
                     v-model="newMemberDetails.role"
-                    label="Select Role"
+                    label="Select Role *"
                     placeholder="Select Role"
                     :items="getRoles"
                     item-title="name"
@@ -101,7 +101,7 @@
                 <VCol cols="6">
                   <AppSelect
                     v-model="newMemberDetails.state"
-                    label="Select Status"
+                    label="Select Status *"
                     placeholder="Select Status"
                     :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
                     item-title="title"
@@ -115,7 +115,7 @@
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.password"
-                    label="Password"
+                    label="Password *"
                     :type="isPasswordVisible ? 'text' : 'password'"
                     :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                     :rules="[requiredValidator]"
@@ -129,7 +129,7 @@
                   <AppTextField
                     v-model="newMemberDetails.confirmPassword"
                     :type="isConfirmPasswordVisible ? 'text' : 'password'"
-                    label="Confirm Password"
+                    label="Confirm Password *"
                     :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                     :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
                     :error-messages="addingErrors.confirmPassword"
@@ -188,7 +188,7 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.name_first"
-                  label="First Name"
+                  label="First Name *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.name_first"
                 />
@@ -198,7 +198,7 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.name_last"
-                  label="Last Name"
+                  label="Last Name *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.name_last"
                 />
@@ -208,7 +208,7 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.email"
-                  label="Email"
+                  label="Email *"
                   :rules="[requiredValidator, emailValidator]"
                   :error-messages="editErrors.email"
                 />
@@ -218,7 +218,7 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="editMemberDetails.phone"
-                  label="Phone"
+                  label="Phone *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.phone"
                 />
@@ -228,7 +228,7 @@
               <VCol cols="6">
                 <AppSelect
                   v-model="editMemberDetails.role"
-                  label="Select Role"
+                  label="Select Role *"
                   placeholder="Select Role"
                   :items="getRoles"
                   item-title="name"
@@ -242,7 +242,7 @@
               <VCol cols="6">
                 <AppSelect
                   v-model="editMemberDetails.state"
-                  label="Select Status"
+                  label="Select Status *"
                   placeholder="Select Status"
                   :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
                   item-title="title"
@@ -289,12 +289,11 @@
         Manage Members
       </h5>
       <div style="inline-size: 272px;">
-        <!--
-          <AppTextField
+        <AppTextField
           v-model="search"
           placeholder="Search Member"
-          />
-        -->
+          @input="onFilter($event.target.value)"
+        />
       </div>
     </VCardText>
 
@@ -305,9 +304,9 @@
       :items="getUsers"
       item-value="name"
       hide-default-footer
-      :search="search"
       class="text-no-wrap"
       density="compact"
+      @update:options="updateOptions"
     >
       <template #item.name="{ item }">
         <div class="d-flex align-center">
@@ -321,7 +320,7 @@
           </VAvatar>
           <div class="d-flex flex-column ms-3">
             <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ item.name_first }} {{ item.name_last }}</span>
-            <small class="mt-0">
+            <small class="mt-0 text-xs">
               {{ roleStore.capitalizeFirstLetter(item.role) }}
             </small>
           </div>
@@ -335,26 +334,17 @@
       <template #item.state="{ item }">
         <div class="d-flex gap-1">
           <VChip
-            v-if="item.state == 'active'"
-            color="success"
+            :color="getStatusColor(item.state)"
             variant="outlined"
             size="small"
           >
-            Active
-          </VChip>
-          <VChip
-            v-else
-            color="error"
-            variant="outlined"
-            size="small"
-          >
-            Inactive
+            {{ roleStore.capitalizeFirstLetter(item.state) }}
           </VChip>
         </div>
       </template>
       <template #item.created_at="{ item }">
         <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0">{{ formatDate(item) }}</span>
+          <span class="text-sm text-truncate mb-0">{{ item.created_at }}</span>
         </div>
       </template>
 
@@ -391,7 +381,7 @@
         <TablePagination
           v-model:page="options.page"
           :items-per-page="options.itemsPerPage"
-          :total-items="totalRecords"
+          :total-items="totalUsers"
           @update:page="handlePageChange"
         />
       </template>
@@ -418,7 +408,6 @@ const isDialogVisible = ref(false)
 const isEditDialogVisible = ref(false)
 const isPasswordVisible = ref(false)
 const isConfirmPasswordVisible = ref(false)
-const totalRecords = ref(0)
 
 const newMemberDetails = ref({
   name_first: '',
@@ -435,14 +424,14 @@ const editMemberDetails = ref({})
 
 const isLoading = ref(false)
 const search = ref('')
-const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
+const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 const formatDate = date => moment(date).format('MMM DD, YYYY')
 
 const headers = [
   {
     title: 'Name',
     key: 'name',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Email',
@@ -452,7 +441,7 @@ const headers = [
   {
     title: 'Status',
     key: 'state',
-    sortable: false,
+    sortable: true,
     width: '15%',
   },
   {
@@ -472,7 +461,6 @@ const headers = [
 onBeforeMount(async () => {
   await fetchRoles()
   await fetchMembers()
-  totalRecords.value = totalUsers.value
 })
 
 const addingErrors = ref({
@@ -497,7 +485,9 @@ const editErrors = ref({
 
 const fetchMembers = async () => {
   try {
-    await userStore.getAll(options.value.page, options.value.itemsPerPage)
+    if(getLoadStatus.value === 1) return
+
+    await userStore.getAll(options.value.page, options.value.itemsPerPage, search.value, options.value.orderBy, options.value.order)
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching members:', error)
@@ -631,6 +621,15 @@ const resetForm = formType => {
   }
 }
 
+const getStatusColor = role => {
+  const colors = {
+    'active': 'success',
+    'inactive': 'error',
+  }
+
+  return colors[role] ?? 'warning'
+}
+
 const getRoles = computed(() => {
   return roleStore.getRoles
 })
@@ -659,6 +658,20 @@ const generateRandomColor = () => '#' + Math.floor(Math.random() * 16777215).toS
 
 const handlePageChange = async page => {
   options.value.page = page
+  await fetchMembers()
+}
+
+const onFilter = async value => {
+  options.value.page = 1
+  search.value = value
+  await fetchMembers()
+}
+
+const updateOptions = async updateOptions => {
+  console.log('updateOptions calling')
+  options.value.orderBy = updateOptions.sortBy[0]?.key,
+  options.value.order = updateOptions.sortBy[0]?.order
+
   await fetchMembers()
 }
 </script>

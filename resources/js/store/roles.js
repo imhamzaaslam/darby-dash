@@ -24,8 +24,8 @@ export const useRoleStore = defineStore('roles', {
         console.error('getRoles error ', error)
       }
     },
-    capitalizeFirstLetter(role) {
-      return role.charAt(0).toUpperCase() + role.slice(1)
+    capitalizeFirstLetter(text) {
+      return text.charAt(0).toUpperCase() + text.slice(1)
     },
   },
   getters: {

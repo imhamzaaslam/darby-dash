@@ -1,9 +1,19 @@
 import { apiClient, generateQueryString } from './api'
 
 export default {
-  getUsers(page, perPage) {
-    return apiClient.get(`admin/users?page=${page}&perPage=${perPage}`)
+  getUsers: async (
+    page = 1,
+    perPage = 10,
+    search = null,
+    orderBy = null,
+    orderDirection = null,
+  ) => {
+    const baseUrl = `/admin/users?page=${page}&perPage=${perPage}`
+    const queryString = generateQueryString(search, orderBy, orderDirection)
+
+    return await apiClient.get(baseUrl + queryString)
   },
+  
   getUser(id) {
     return apiClient.get(`admin/users/${id}`)
   },

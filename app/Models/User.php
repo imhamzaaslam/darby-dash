@@ -207,14 +207,19 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
                 ->orWhere("$usersTable.name_last", 'like', '%' . $keyword . '%')
                 ->orWhere("$usersTable.email", 'like', '%' . $keyword . '%')
                 ->orWhere("$usersTable.state", 'like', '%' . $keyword . '%')
-                ->orWhereHas('roles', function (Builder $query) use ($keyword) {
-                    $query->where('name', 'like', '%' . $keyword . '%');
-                });
+                ->orWhere("$usersTable.created_at", 'like', '%' . $keyword . '%');
+
+                // ->orWhereHas('roles', function (Builder $query) use ($keyword) {
+                //     $query->where('name', 'like', '%' . $keyword . '%');
+                // });
         });
     }
 
     function scopeOrdered(Builder $query, string $orderBy = 'id', string $order = 'asc'): Builder
     {
+        if ($orderBy === 'name') {
+            $orderBy = 'name_first';
+        }
         return $query->orderBy($orderBy, $order);
     }
 }
