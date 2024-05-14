@@ -49,6 +49,7 @@
     "vue-draggable-next": "^2.2.1",
     "vue-flatpickr-component": "11.0.3",
     "vue-i18n": "9.10.1",
+    "vue-input-mask": "0.0.11",
     "vue-prism-component": "2.0.0",
     "vue-router": "4.3.0",
     "vue-toastification": "^2.0.0-rc.5",

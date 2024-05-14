@@ -72,7 +72,7 @@
                   />
                 </VCol>
 
-                <!-- Phone -->
+                <!-- Phone Mask Field -->
                 <VCol cols="6">
                   <AppTextField
                     v-model="newMemberDetails.phone"
@@ -94,6 +94,20 @@
                     item-value="name"
                     :rules="[requiredValidator]"
                     :error-messages="addingErrors.role"
+                  />
+                </VCol>
+
+                <!-- State -->
+                <VCol cols="6">
+                  <AppSelect
+                    v-model="newMemberDetails.state"
+                    label="Select Status"
+                    placeholder="Select Status"
+                    :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
+                    item-title="title"
+                    item-value="value"
+                    :rules="[requiredValidator]"
+                    :error-messages="addingErrors.state"
                   />
                 </VCol>
 
@@ -120,20 +134,6 @@
                     :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
                     :error-messages="addingErrors.confirmPassword"
                     @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
-                  />
-                </VCol>
-
-                <!-- State -->
-                <VCol cols="6">
-                  <AppSelect
-                    v-model="newMemberDetails.state"
-                    label="Select Status"
-                    placeholder="Select Status"
-                    :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
-                    item-title="title"
-                    item-value="value"
-                    :rules="[requiredValidator]"
-                    :error-messages="addingErrors.state"
                   />
                 </VCol>
               </VRow>
@@ -322,7 +322,7 @@
           <div class="d-flex flex-column ms-3">
             <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ item.name_first }} {{ item.name_last }}</span>
             <small class="mt-0">
-              {{ roleStore.capitalizeFirstLetter(item.roles[0]) }}
+              {{ roleStore.capitalizeFirstLetter(item.role) }}
             </small>
           </div>
         </div>
@@ -406,10 +406,12 @@ import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRoleStore } from "../store/roles"
 import { useUserStore } from "../store/users"
+import InputMask from 'vue-input-mask'
 
 const toast = useToast()
 const roleStore = useRoleStore()
 const userStore = useUserStore()
+const inputMask = InputMask
 const addMemberForm = ref()
 const editMemberForm = ref()
 const isDialogVisible = ref(false)
@@ -531,9 +533,9 @@ async function submitAddMemberForm() {
 }
 
 const editMember = member => {
-  const { roles, ...rest } = member
+  const { role, ...rest } = member
 
-  editMemberDetails.value = { ...rest, role: roles[0] }
+  editMemberDetails.value = { ...rest, role: role }
   isEditDialogVisible.value = true
 }
 
