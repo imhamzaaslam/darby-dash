@@ -102,7 +102,7 @@
                       color="info"
                     />
                     <!-- Task Name -->
-                    <span class="ms-2">{{ task.name }}</span>
+                    <span class="ms-2">{{ task.name.length > 100 ? task.name.substring(0, 100) + '...' : task.name }}</span>
                   </VCol>
                   <VCol cols="auto">
                     <VChip

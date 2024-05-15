@@ -254,89 +254,91 @@
         :key="project.id"
         cols="12"
       >
-        <VCard class="d-flex ps-4 py-1">
-          <VCol cols="3">
-            <span class="font-weight-medium text-high-emphasis">
-              <VIcon
-                size="28"
-                class="me-2"
-                color="info"
-                icon="tabler-chart-histogram"
-              />
-              {{ project.title }}
-            </span>
-          </VCol>
-          <VCol cols="3">
-            <div class="d-flex align-center">
-              <VAvatar
-                size="36"
-                color="primary"
-                variant="tonal"
-              >
-                <span>{{ avatarText(project.project_manager) }}</span>
-              </VAvatar>
-              <div class="d-flex flex-column ms-3">
-                <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
-                <small class="mt-0">Project Manager</small>
-              </div>
-            </div>
-          </VCol>
-          <VCol cols="3">
-            <span class="font-weight-medium text-high-emphasis">Team:</span>
-            <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
-          </VCol>
-          <VCol cols="2">
-            <div class="d-flex align-center gap-3">
-              <div class="flex-grow-1">
-                <VProgressLinear
-                  height="6"
-                  :value="project.progress"
-                  rounded
-                  color="primary"
+        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
+          <VCard class="d-flex ps-4 py-1">
+            <VCol cols="3">
+              <span class="font-weight-medium text-high-emphasis">
+                <VIcon
+                  size="28"
+                  class="me-2"
+                  color="info"
+                  icon="tabler-chart-histogram"
                 />
+                {{ project.title }}
+              </span>
+            </VCol>
+            <VCol cols="3">
+              <div class="d-flex align-center">
+                <VAvatar
+                  size="36"
+                  color="primary"
+                  variant="tonal"
+                >
+                  <span>{{ avatarText(project.project_manager) }}</span>
+                </VAvatar>
+                <div class="d-flex flex-column ms-3">
+                  <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
+                  <small class="mt-0">Project Manager</small>
+                </div>
               </div>
-              <span>0%</span>
-            </div>
-          </VCol>
-          <VCol
-            cols="1"
-            class="ms-8"
-          >
-            <IconBtn>
-              <VIcon icon="tabler-dots-vertical" />
-              <VMenu activator="parent">
-                <VList>
-                  <VListItem
-                    value="add tasks"
-                    :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
-                  >
-                    Add Tasks
-                  </VListItem>
-                  <VListItem
-                    value="view"
-                    :to="{ name: 'web-design', params: { id: project.id } }"
-                  >
-                    View
-                  </VListItem>
+            </VCol>
+            <VCol cols="3">
+              <span class="font-weight-medium text-high-emphasis">Team:</span>
+              <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
+            </VCol>
+            <VCol cols="2">
+              <div class="d-flex align-center gap-3">
+                <div class="flex-grow-1">
+                  <VProgressLinear
+                    height="6"
+                    :value="project.progress"
+                    rounded
+                    color="primary"
+                  />
+                </div>
+                <span>0%</span>
+              </div>
+            </VCol>
+            <VCol
+              cols="1"
+              class="ms-8"
+            >
+              <IconBtn @click.prevent>
+                <VIcon icon="tabler-dots-vertical" />
+                <VMenu activator="parent">
                   <VList>
                     <VListItem
-                      value="edit"
-                      @click="editProject(project)"
+                      value="add tasks"
+                      :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
                     >
-                      Edit
+                      Add Tasks
                     </VListItem>
                     <VListItem
-                      value="delete"
-                      @click="deleteProject(project)"
+                      value="view"
+                      :to="{ name: 'web-design', params: { id: project.id } }"
                     >
-                      Delete
+                      View
                     </VListItem>
+                    <VList>
+                      <VListItem
+                        value="edit"
+                        @click="editProject(project)"
+                      >
+                        Edit
+                      </VListItem>
+                      <VListItem
+                        value="delete"
+                        @click="deleteProject(project)"
+                      >
+                        Delete
+                      </VListItem>
+                    </VList>
                   </VList>
-                </VList>
-              </VMenu>
-            </IconBtn>
-          </VCol>
-        </VCard>
+                </VMenu>
+              </IconBtn>
+            </VCol>
+          </VCard>
+        </RouterLink>
       </VCol>
     </VRow>
 
@@ -348,91 +350,93 @@
         cols="12"
         md="4"
       >
-        <VCard class="pt-2">
-          <VCardTitle>
-            <VRow>
-              <VCol cols="10">
-                <VIcon
-                  size="28"
-                  project-card
-                  class="me-2"
-                  color="info"
-                  icon="tabler-chart-histogram"
-                />
-                {{ project.title }}
-              </VCol>
-              <VCol cols="2">
-                <IconBtn>
-                  <VIcon icon="tabler-dots-vertical" />
-                  <VMenu activator="parent">
-                    <VList>
-                      <VListItem
-                        value="add tasks"
-                        :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
-                      >
-                        Add Tasks
-                      </VListItem>
-                      <VListItem
-                        value="view"
-                        :to="{ name: 'web-design', params: { id: project.id } }"
-                      >
-                        View
-                      </VListItem>
+        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
+          <VCard class="pt-2">
+            <VCardTitle>
+              <VRow>
+                <VCol cols="10">
+                  <VIcon
+                    size="28"
+                    project-card
+                    class="me-2"
+                    color="info"
+                    icon="tabler-chart-histogram"
+                  />
+                  {{ project.title }}
+                </VCol>
+                <VCol cols="2">
+                  <IconBtn @click.prevent>
+                    <VIcon icon="tabler-dots-vertical" />
+                    <VMenu activator="parent">
                       <VList>
                         <VListItem
-                          value="edit"
-                          @click="editProject(project)"
+                          value="add tasks"
+                          :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
                         >
-                          Edit
+                          Add Tasks
                         </VListItem>
                         <VListItem
-                          value="delete"
-                          @click="deleteProject(project)"
+                          value="view"
+                          :to="{ name: 'web-design', params: { id: project.id } }"
                         >
-                          Delete
+                          View
                         </VListItem>
+                        <VList>
+                          <VListItem
+                            value="edit"
+                            @click="editProject(project)"
+                          >
+                            Edit
+                          </VListItem>
+                          <VListItem
+                            value="delete"
+                            @click="deleteProject(project)"
+                          >
+                            Delete
+                          </VListItem>
+                        </VList>
                       </VList>
-                    </VList>
-                  </VMenu>
-                </IconBtn>
-              </VCol>
-            </VRow>
-          </VCardTitle>
-          <VCardText class="px-3 pt-2">
-            <VRow>
-              <VCol cols="8">
-                <div class="d-flex align-center mt-1">
-                  <VAvatar
-                    size="36"
-                    color="primary"
-                    variant="tonal"
-                  >
-                    <span>{{ avatarText(project.project_manager) }}</span>
-                  </VAvatar>
-                  <div class="d-flex flex-column ms-3">
-                    <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
-                    <small class="mt-0">Project Manager</small>
+                    </VMenu>
+                  </IconBtn>
+                </VCol>
+              </VRow>
+            </VCardTitle>
+            <VCardText class="px-3 pt-2">
+              <VRow>
+                <VCol cols="8">
+                  <div class="d-flex align-center mt-1">
+                    <VAvatar
+                      size="36"
+                      color="primary"
+                      variant="tonal"
+                    >
+                      <span>{{ avatarText(project.project_manager) }}</span>
+                    </VAvatar>
+                    <div class="d-flex flex-column ms-3">
+                      <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
+                      <small class="mt-0">Project Manager</small>
+                    </div>
                   </div>
-                </div>
-                <span class="px-1 mt-3 d-block font-weight-medium text-high-emphasis">Team:</span>
-                <span class="px-1 d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
-              </VCol>
-              <VCol cols="4">
-                <div class="d-flex align-end justify-end">
-                  <VProgressCircular
-                    :rotate="360"
-                    :size="70"
-                    :width="6"
-                    :model-value="0"
-                    color="primary"
-                  >
-                    0%
-                  </VProgressCircular>
-                </div>
-              </VCol>
-            </VRow>
-          </VCardText>
-        </VCard>
+                  <span class="px-1 mt-3 d-block font-weight-medium text-high-emphasis">Team:</span>
+                  <span class="px-1 d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
+                </VCol>
+                <VCol cols="4">
+                  <div class="d-flex align-end justify-end">
+                    <VProgressCircular
+                      :rotate="360"
+                      :size="70"
+                      :width="6"
+                      :model-value="0"
+                      color="primary"
+                    >
+                      0%
+                    </VProgressCircular>
+                  </div>
+                </VCol>
+              </VRow>
+            </VCardText>
+          </VCard>
+        </RouterLink>
       </VCol>
     </VRow>
   </div>
