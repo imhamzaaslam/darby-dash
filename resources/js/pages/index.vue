@@ -32,23 +32,17 @@
                   {{ data.title }}
                 </h5>
               </div>
-              <div class="text-center">
-                <VBtn
-                  size="small"
-                  rounded="pill"
-                  color="primary"
+              <VRow>
+                <VCol
+                  cols="12"
+                  class="text-center"
                 >
-                  Access Projects
-                </VBtn>
-              </div>
-              <div class="row mt-2">
-                <div class="col-md-8">
-                  <small><strong>Projects: 10 |</strong></small>
-                  <small><strong> Tasks: 6 |</strong></small>
-                  <small><strong> Team: 3 |</strong></small>
-                  <small><strong> File: 10 </strong></small>
-                </div>
-              </div>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects:<strong> 10 | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks:<strong> 6 | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Team:<strong> 3 | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File:<strong> 10 </strong></small>
+                </VCol>
+              </VRow>
             </VCardText>
           </VCard>
         </RouterLink>
@@ -63,7 +57,7 @@
     @click="checkApi"
     >
     Check API
-    </VBtn> 
+    </VBtn>
   -->
 </template>
 
@@ -71,6 +65,7 @@
 import { useProjectStore } from '../store/projects'
 
 const projectStore = useProjectStore()
+
 // async function checkApi() {
 //   let res = await projectStore.getAll()
 //   console.log(res)
