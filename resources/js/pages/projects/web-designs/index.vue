@@ -1,130 +1,151 @@
 <template>
-  <VRow>
-    <VCol
-      cols="12"
-      md="6"
-    />
-    <VCol
-      cols="12"
-      md="6"
-      class="mb-3"
-    >
-      <VDialog
-        v-model="isDialogVisible"
-        persistent
-        class="v-dialog-sm"
+  <div>
+    <!-- Toggle -->
+    <VRow>
+      <VCol
+        cols="12"
+        md="6"
+        class="d-flex"
       >
-        <!-- Dialog Activator -->
-        <template #activator="{ props }">
-          <VBtn
-            color="primary"
-            size="small"
-            rounded="pill"
-            class="float-right"
-            v-bind="props"
-          >
-            <VIcon
-              start
-              icon="tabler-plus"
-            />
-            New Project
-          </VBtn>
-        </template>
+        <VBtnToggle
+          v-model="viewType"
+          class="d-toggle"
+          rounded="0"
+        >
+          <VIcon
+            icon="tabler-list"
+            class="me-1"
+            :class="{ 'bg-primary': viewType === 'list' }"
+            @click="viewType = 'list'"
+          />
+          <VIcon
+            icon="tabler-layout-grid"
+            :class="{ 'bg-primary': viewType === 'grid' }"
+            @click="viewType = 'grid'"
+          />
+        </VBtnToggle>
+      </VCol>
+      <VCol
+        cols="12"
+        md="6"
+      >
+        <VDialog
+          v-model="isDialogVisible"
+          persistent
+          class="v-dialog-sm"
+        >
+          <!-- Dialog Activator -->
+          <template #activator="{ props }">
+            <VBtn
+              color="primary"
+              size="small"
+              rounded="pill"
+              v-bind="props"
+              class="float-right"
+            >
+              <VIcon
+                start
+                icon="tabler-plus"
+              />
+              New Project
+            </VBtn>
+          </template>
 
-        <!-- Dialog close btn -->
-        <DialogCloseBtn @click="isDialogVisible = !isDialogVisible" />
+          <!-- Dialog close btn -->
+          <DialogCloseBtn @click="isDialogVisible = !isDialogVisible" />
 
-        <!-- Dialog Content -->
-        <VCard title="Add Project Details">
-          <VForm
-            ref="addProjectForm"
-            @submit.prevent="submitAddProjectForm"
-          >
-            <VCardText>
-              <VRow>
-                <VCol cols="12">
-                  <AppTextField
-                    v-model="newProjectDetails.title"
-                    label="Title*"
-                    :rules="[requiredValidator]"
-                    placeholder="Title"
-                  />
-                </VCol>
+          <!-- Dialog Content -->
+          <VCard title="Add Project Details">
+            <VForm
+              ref="addProjectForm"
+              @submit.prevent="submitAddProjectForm"
+            >
+              <VCardText>
+                <VRow>
+                  <VCol cols="12">
+                    <AppTextField
+                      v-model="newProjectDetails.title"
+                      label="Title*"
+                      :rules="[requiredValidator]"
+                      placeholder="Title"
+                    />
+                  </VCol>
 
-                <VCol cols="6">
-                  <AppSelect
-                    v-model="newProjectDetails.project_type_id"
-                    label="Project Type*"
-                    placeholder="Select Project Type"
-                    :rules="[requiredValidator]"
-                    :items="getProjectTypes"
-                    item-title="name"
-                    item-value="id"
-                  />
-                </VCol>
+                  <VCol cols="6">
+                    <AppSelect
+                      v-model="newProjectDetails.project_type_id"
+                      label="Project Type*"
+                      placeholder="Select Project Type"
+                      :rules="[requiredValidator]"
+                      :items="getProjectTypes"
+                      item-title="name"
+                      item-value="id"
+                    />
+                  </VCol>
 
-                <VCol cols="6">
-                  <AppSelect
-                    v-model="newProjectDetails.project_manager_id"
-                    label="Project Manager*"
-                    placeholder="Select Project Manager"
-                    :rules="[requiredValidator]"
-                    :items="getProjectManagers"
-                    item-title="name"
-                    item-value="id"
-                  />
-                </VCol>
-                <VCol cols="12">
-                  <AppSelect
-                    v-model="newProjectDetails.member_ids"
-                    :items="getMembers"
-                    item-title="name"
-                    item-value="id"
-                    label="Members*"
-                    placeholder="Select Members"
-                    multiple
-                    clearable
-                    clear-icon="tabler-x"
-                  />
-                </VCol>
-                <VCol cols="6">
-                  <AppTextField
-                    v-model="newProjectDetails.est_hours"
-                    label="Estimated Hours*"
-                    :rules="[requiredValidator]"
-                    placeholder="Estimated Hours"
-                  />
-                </VCol>
+                  <VCol cols="6">
+                    <AppSelect
+                      v-model="newProjectDetails.project_manager_id"
+                      label="Project Manager*"
+                      placeholder="Select Project Manager"
+                      :rules="[requiredValidator]"
+                      :items="getProjectManagers"
+                      item-title="name"
+                      item-value="id"
+                    />
+                  </VCol>
+                  <VCol cols="12">
+                    <AppSelect
+                      v-model="newProjectDetails.member_ids"
+                      :items="getMembers"
+                      item-title="name"
+                      item-value="id"
+                      label="Members*"
+                      placeholder="Select Members"
+                      multiple
+                      clearable
+                      clear-icon="tabler-x"
+                    />
+                  </VCol>
+                  <VCol cols="6">
+                    <AppTextField
+                      v-model="newProjectDetails.est_hours"
+                      label="Estimated Hours*"
+                      :rules="[requiredValidator]"
+                      placeholder="Estimated Hours"
+                    />
+                  </VCol>
 
-                <VCol cols="6">
-                  <AppTextField
-                    v-model="newProjectDetails.est_budget"
-                    label="Estimated Budget*"
-                    :rules="[requiredValidator]"
-                    placeholder="Estimated Budget"
-                  />
-                </VCol>
-              </VRow>
-            </VCardText>
+                  <VCol cols="6">
+                    <AppTextField
+                      v-model="newProjectDetails.est_budget"
+                      label="Estimated Budget*"
+                      :rules="[requiredValidator]"
+                      placeholder="Estimated Budget"
+                    />
+                  </VCol>
+                </VRow>
+              </VCardText>
 
-            <VCardText class="d-flex justify-end gap-3 flex-wrap">
-              <VBtn
-                color="secondary"
-                @click="isDialogVisible = false"
-              >
-                Cancel
-              </VBtn>
-              <VBtn
-                type="submit"
-                @click="addProjectForm?.validate()"
-              >
-                Save & Add Task
-              </VBtn>
-            </VCardText>
-          </VForm>
-        </VCard>
-      </VDialog>
-    </VCol>
+              <VCardText class="d-flex justify-end gap-3 flex-wrap">
+                <VBtn
+                  color="secondary"
+                  @click="isDialogVisible = false"
+                >
+                  Cancel
+                </VBtn>
+                <VBtn
+                  type="submit"
+                  @click="addProjectForm?.validate()"
+                >
+                  Save & Add Task
+                </VBtn>
+              </VCardText>
+            </VForm>
+          </VCard>
+        </VDialog>
+      </VCol>
+    </VRow>
     <VDialog
       v-model="isEditDialogVisible"
       persistent
@@ -223,111 +244,197 @@
         </VForm>
       </VCard>
     </VDialog>
-  </VRow>
-  <VCard>
-    <VCardText class="d-flex justify-space-between align-center flex-wrap gap-4">
-      <h5 class="text-h5">
-        Web Design Projects
-      </h5>
-      <div style="inline-size: 272px;">
-        <!--
-          <AppTextField
-          v-model="search"
-          placeholder="Search Member"
-          />
-        -->
-      </div>
-    </VCardText>
 
-    <VDivider />
-    <VDataTable
-      :headers="headers"
-      :items-per-page="options.itemsPerPage"
-      :items="getProjects"
-      item-value="name"
-      hide-default-footer
-      :search="search"
-      class="text-no-wrap"
-      density="compact"
+    <VRow
+      v-if="viewType === 'list'"
+      class="mb-4"
     >
-      <template #item.progress="{ item }">
-        <div class="d-flex align-center gap-3">
-          <div class="flex-grow-1">
-            <VProgressLinear
-              :height="6"
-              model-value="0"
-              color="primary"
-              rounded
-            />
-          </div>
-          <div class="text-body-1 text-high-emphasis">
-            {{ 0 }}%
-          </div>
-        </div>
-      </template>
-      <template #item.created_at="{ item }">
-        <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0">{{ formatDate(item) }}</span>
-        </div>
-      </template>
-      <template #item.Action="{ item }">
-        <IconBtn>
-          <VIcon icon="tabler-dots-vertical" />
-          <VMenu activator="parent">
-            <VList>
-              <VListItem
-                value="add tasks"
-                :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: item.id } }"
+      <VCol
+        v-for="project in getProjects"
+        :key="project.id"
+        cols="12"
+      >
+        <VCard class="d-flex ps-4 py-1">
+          <VCol cols="3">
+            <span class="font-weight-medium text-high-emphasis">
+              <VIcon
+                size="28"
+                class="me-2"
+                color="info"
+                icon="tabler-chart-histogram"
+              />
+              {{ project.title }}
+            </span>
+          </VCol>
+          <VCol cols="3">
+            <div class="d-flex align-center">
+              <VAvatar
+                size="36"
+                color="primary"
+                variant="tonal"
               >
-                Add Tasks
-              </VListItem>
-              <VListItem
-                value="view"
-                :to="{ name: 'web-design', params: { id: item.id } }"
-              >
-                View
-              </VListItem>
-              <VList>
-                <VListItem
-                  value="edit"
-                  @click="editProject(item)"
-                >
-                  Edit
-                </VListItem>
-                <VListItem
-                  value="delete"
-                  @click="deleteProject(item)"
-                >
-                  Delete
-                </VListItem>
-              </VList>
-            </VList>
-          </VMenu>
-        </IconBtn>
-      </template>
-      <template #bottom>
-        <VCardText class="pt-2">
-          <div
-            v-if="isLoading"
-            class="text-center"
+                <span>{{ avatarText(project.project_manager) }}</span>
+              </VAvatar>
+              <div class="d-flex flex-column ms-3">
+                <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
+                <small class="mt-0">Project Manager</small>
+              </div>
+            </div>
+          </VCol>
+          <VCol cols="3">
+            <span class="font-weight-medium text-high-emphasis">Team:</span>
+            <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
+          </VCol>
+          <VCol cols="2">
+            <div class="d-flex align-center gap-3">
+              <div class="flex-grow-1">
+                <VProgressLinear
+                  height="6"
+                  :value="project.progress"
+                  rounded
+                  color="primary"
+                />
+              </div>
+              <span>0%</span>
+            </div>
+          </VCol>
+          <VCol
+            cols="1"
+            class="ms-8"
           >
-            <VProgressCircular
-              :size="30"
-              width="3"
-              indeterminate
-              color="primary"
-            />
-          </div>
-        </VCardText>
-        <TablePagination
-          v-model:page="options.page"
-          :items-per-page="options.itemsPerPage"
-          :total-items="totalRecords"
-          @update:page="handlePageChange"
-        />
-      </template>
-    </VDataTable>
-  </VCard>
+            <IconBtn>
+              <VIcon icon="tabler-dots-vertical" />
+              <VMenu activator="parent">
+                <VList>
+                  <VListItem
+                    value="add tasks"
+                    :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
+                  >
+                    Add Tasks
+                  </VListItem>
+                  <VListItem
+                    value="view"
+                    :to="{ name: 'web-design', params: { id: project.id } }"
+                  >
+                    View
+                  </VListItem>
+                  <VList>
+                    <VListItem
+                      value="edit"
+                      @click="editProject(project)"
+                    >
+                      Edit
+                    </VListItem>
+                    <VListItem
+                      value="delete"
+                      @click="deleteProject(project)"
+                    >
+                      Delete
+                    </VListItem>
+                  </VList>
+                </VList>
+              </VMenu>
+            </IconBtn>
+          </VCol>
+        </VCard>
+      </VCol>
+    </VRow>
+
+    <!-- Grid View -->
+    <VRow v-else>
+      <VCol
+        v-for="project in getProjects"
+        :key="project.id"
+        cols="12"
+        md="4"
+      >
+        <VCard class="">
+          <VCardTitle>
+            <VRow>
+              <VCol cols="11">
+                <VIcon
+                  size="28"
+                  class="me-2"
+                  color="info"
+                  icon="tabler-chart-histogram"
+                />
+                {{ project.title }}
+              </VCol>
+              <VCol cols="1">
+                <IconBtn>
+                  <VIcon icon="tabler-dots-vertical" />
+                  <VMenu activator="parent">
+                    <VList>
+                      <VListItem
+                        value="add tasks"
+                        :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
+                      >
+                        Add Tasks
+                      </VListItem>
+                      <VListItem
+                        value="view"
+                        :to="{ name: 'web-design', params: { id: project.id } }"
+                      >
+                        View
+                      </VListItem>
+                      <VList>
+                        <VListItem
+                          value="edit"
+                          @click="editProject(project)"
+                        >
+                          Edit
+                        </VListItem>
+                        <VListItem
+                          value="delete"
+                          @click="deleteProject(project)"
+                        >
+                          Delete
+                        </VListItem>
+                      </VList>
+                    </VList>
+                  </VMenu>
+                </IconBtn>
+              </VCol>
+            </VRow>
+          </VCardTitle>
+          <VCardText class="px-3">
+            <VRow>
+              <VCol cols="8">
+                <div class="d-flex align-center mt-1">
+                  <VAvatar
+                    size="36"
+                    color="primary"
+                    variant="tonal"
+                  >
+                    <span>{{ avatarText(project.project_manager) }}</span>
+                  </VAvatar>
+                  <div class="d-flex flex-column ms-3">
+                    <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
+                    <small class="mt-0">Project Manager</small>
+                  </div>
+                </div>
+                <span class="px-1 mt-3 d-block font-weight-medium text-high-emphasis">Team:</span>
+                <span class="px-1 d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
+              </VCol>
+              <VCol cols="4">
+                <div class="d-flex align-end justify-end">
+                  <VProgressCircular
+                    :rotate="360"
+                    :size="70"
+                    :width="6"
+                    :model-value="0"
+                    color="primary"
+                  >
+                    0%
+                  </VProgressCircular>
+                </div>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
+  </div>
 </template>
 
 <script setup>
@@ -350,6 +457,7 @@ const editProjectForm = ref()
 const isDialogVisible = ref(false)
 const isEditDialogVisible = ref(false)
 const totalRecords = ref(0)
+const viewType = ref('list')
 
 const newProjectDetails = ref({
   title: '',
@@ -597,10 +705,11 @@ const handlePageChange = async page => {
 }
 </script>
 
-
-  <style scoped>
-  .table-wrapper {
-      inline-size: auto;
-      overflow-x: auto;
-  }
-  </style>
+<style scoped>
+.d-toggle{
+    border: unset !important;
+    padding: 0 !important;
+    align-items: unset !important;
+    block-size: unset !important;
+}
+</style>
