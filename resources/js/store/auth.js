@@ -68,5 +68,6 @@ export const useAuthStore = defineStore('auth', {
     isAdmin: state => state.user?.roles?.indexOf('admin') >= 0,
     isCustomer: state => state.user?.roles?.indexOf('customer') >= 0,
     getRole: state => state.user?.roles[0],
+    getUserFromLocalStorage: () => getUserFromLocalStorage(),
   },
 })

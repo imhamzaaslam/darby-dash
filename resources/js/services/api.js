@@ -38,7 +38,7 @@ apiClient.interceptors.response.use(
   function (error) {
     const store = useAuthStore()
 
-    if (error.response && [401, 419].includes(error.response.status) && store.user) {
+    if (error.response && [401, 419].includes(error.response.status) && store.getUserFromLocalStorage) {
       store.logout()
     }
 
