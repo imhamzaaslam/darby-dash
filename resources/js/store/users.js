@@ -13,11 +13,11 @@ export const useUserStore = defineStore('users', {
   }),
   persist: true,
   actions: {
-    async getAll(page, perPage) {
+    async getAll(page, perPage, search = null, orderBy = null, orderDirection = null) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.getUsers(page, perPage)
+        const response = await UserService.getUsers(page, perPage, search, orderBy, orderDirection)
 
         this.users = response.data.data
         this.usersCount = response.data.meta.total

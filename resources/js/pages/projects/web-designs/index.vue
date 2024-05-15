@@ -72,7 +72,7 @@
                   </VCol>
 
                   <VCol cols="6">
-                    <AppSelect
+                    <AppAutocomplete
                       v-model="newProjectDetails.project_type_id"
                       label="Project Type*"
                       placeholder="Select Project Type"
@@ -84,7 +84,7 @@
                   </VCol>
 
                   <VCol cols="6">
-                    <AppSelect
+                    <AppAutocomplete
                       v-model="newProjectDetails.project_manager_id"
                       label="Project Manager*"
                       placeholder="Select Project Manager"
@@ -95,7 +95,7 @@
                     />
                   </VCol>
                   <VCol cols="12">
-                    <AppSelect
+                    <AppAutocomplete
                       v-model="newProjectDetails.member_ids"
                       :items="getMembers"
                       item-title="name"
@@ -172,7 +172,7 @@
               </VCol>
 
               <VCol cols="6">
-                <AppSelect
+                <AppAutocomplete
                   v-model="editProjectDetails.project_type"
                   label="Project Type*"
                   placeholder="Select Project Type"
@@ -184,7 +184,7 @@
               </VCol>
 
               <VCol cols="6">
-                <AppSelect
+                <AppAutocomplete
                   v-model="editProjectDetails.project_manager"
                   label="Project Manager*"
                   placeholder="Select Project Manager"
@@ -195,7 +195,7 @@
                 />
               </VCol>
               <VCol cols="12">
-                <AppSelect
+                <AppAutocomplete
                   v-model="editProjectDetails.member_ids"
                   :items="getMembers"
                   item-title="name"
@@ -348,19 +348,20 @@
         cols="12"
         md="4"
       >
-        <VCard class="">
+        <VCard class="pt-2">
           <VCardTitle>
             <VRow>
-              <VCol cols="11">
+              <VCol cols="10">
                 <VIcon
                   size="28"
+                  project-card
                   class="me-2"
                   color="info"
                   icon="tabler-chart-histogram"
                 />
                 {{ project.title }}
               </VCol>
-              <VCol cols="1">
+              <VCol cols="2">
                 <IconBtn>
                   <VIcon icon="tabler-dots-vertical" />
                   <VMenu activator="parent">
@@ -397,7 +398,7 @@
               </VCol>
             </VRow>
           </VCardTitle>
-          <VCardText class="px-3">
+          <VCardText class="px-3 pt-2">
             <VRow>
               <VCol cols="8">
                 <div class="d-flex align-center mt-1">
