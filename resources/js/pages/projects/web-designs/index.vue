@@ -50,7 +50,7 @@
         :key="project.id"
         cols="12"
       >
-        <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
+        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
           <VCard class="d-flex ps-4 py-1">
             <VCol cols="3">
               <span class="font-weight-medium text-high-emphasis">
@@ -105,13 +105,13 @@
                   <VList>
                     <VListItem
                       value="add tasks"
-                      :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.uuid } }"
+                      :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
                     >
                       Add Tasks
                     </VListItem>
                     <VListItem
                       value="view"
-                      :to="{ name: 'web-design', params: { id: project.uuid } }"
+                      :to="{ name: 'web-design', params: { id: project.id } }"
                     >
                       View
                     </VListItem>
@@ -146,7 +146,7 @@
         cols="12"
         md="4"
       >
-        <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
+        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
           <VCard class="pt-2">
             <VCardTitle>
               <VRow>
@@ -167,13 +167,13 @@
                       <VList>
                         <VListItem
                           value="add tasks"
-                          :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.uuid } }"
+                          :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
                         >
                           Add Tasks
                         </VListItem>
                         <VListItem
                           value="view"
-                          :to="{ name: 'web-design', params: { id: project.uuid } }"
+                          :to="{ name: 'web-design', params: { id: project.id } }"
                         >
                           View
                         </VListItem>
@@ -316,7 +316,7 @@ const deleteProject = async project => {
 
     if (confirmDelete.isConfirmed) {
 
-      const res = await projectStore.delete(project.uuid)
+      const res = await projectStore.delete(project.id)
       const errors = getErrors.value
       if(errors)
       {
