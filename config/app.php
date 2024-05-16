@@ -223,4 +223,7 @@ return [
         'Vat' => \App\Facades\VatFacade::class,
     ])->toArray(),
 
+    'admin' => [
+        'email' => env('ADMIN_EMAIL', 'admin@demo.com'),
+    ],
 ];

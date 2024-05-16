@@ -36,6 +36,7 @@ class UsersController extends Controller
         $users = $this->userRepository
             ->hasInfo()
             ->filtered($request->keyword ?? '')
+            ->where('email', '!=', config('app.admin.email'))
             ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
             ->paginate($request->perPage ?? config('pagination.perPage', 10));
 
