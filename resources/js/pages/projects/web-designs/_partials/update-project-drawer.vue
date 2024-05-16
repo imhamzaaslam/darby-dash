@@ -8,7 +8,7 @@
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      title="Add Project Details"
+      title="Edit Project Details"
       @cancel="$emit('update:isEditDrawerOpen', false)"
     />
 

@@ -267,14 +267,15 @@ const toast = useToast()
 const projectStore = useProjectStore()
 const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
+
 const totalRecords = ref(0)
 const viewType = ref('list')
 const isAddProjectDrawerOpen = ref(false)
 const isEditProjectDrawerOpen = ref(false)
+const isLoading = ref(false)
 
 const editProjectDetails = ref({})
 
-const isLoading = ref(false)
 
 onBeforeMount(async () => {
   await fetchProjects()
