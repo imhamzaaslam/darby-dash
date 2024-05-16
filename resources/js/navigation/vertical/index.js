@@ -7,7 +7,7 @@ export default [
   {
     title: 'Members',
     icon: { icon: 'tabler-users' },
-    to: { name: 'members' },
+    to: { name: 'members-list' },
   },
   {
     title: 'Projects',

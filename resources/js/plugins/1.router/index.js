@@ -9,6 +9,7 @@ import SeoProgram from '../../../js/pages/projects/seo-programs/_partials/id.vue
 import GoogleAdsProgramsList from '../../../js/pages/projects/google-ads-programs/index.vue'
 import GoogleAdsProgram from '../../../js/pages/projects/google-ads-programs/_partials/id.vue'
 import Team from '../../../js/pages/projects/team.vue'
+import TeamList from '../../../js/pages/teams/index.vue'
 import Calendar from '../../../js/pages/projects/calendar.vue'
 import Files from '../../../js/pages/projects/files.vue'
 import Chat from '../../../js/pages/projects/chat.vue'
@@ -148,6 +149,14 @@ const router = createRouter({
         component: Tasks,
         meta: { layout: 'default' },
         props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/members',
+        name: 'members-list',
+        component: TeamList,
+        meta: { layout: 'default' },
       },
     ),
     ...pages.map(route => recursiveLayouts(route)),

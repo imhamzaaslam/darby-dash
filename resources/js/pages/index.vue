@@ -28,7 +28,7 @@
                     size="28"
                   />
                 </VAvatar>
-                <h5 class="text-h5 font-weight-medium text-center">
+                <h5 class="text-h6 text-center">
                   {{ data.title }}
                 </h5>
               </div>

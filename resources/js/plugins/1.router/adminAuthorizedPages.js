@@ -1,6 +1,6 @@
 let adminAuthorizedPages = [
   'root',
-  'members',
+  'members-list',
   'web-designs-list',
   'web-design',
   'seo-programs-list',
