@@ -101,7 +101,7 @@
                     variant="tonal"
                     @click="resetForm"
                   >
-                    Discard
+                    Reset
                   </VBtn>
                 </div>
               </VCol>

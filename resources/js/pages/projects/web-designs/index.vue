@@ -41,105 +41,6 @@
         </div>
       </VCol>
     </VRow>
-    <VDialog
-      v-model="isEditDialogVisible"
-      persistent
-      class="v-dialog-sm"
-    >
-      <!-- Dialog close btn -->
-      <DialogCloseBtn @click="isEditDialogVisible = !isEditDialogVisible" />
-
-      <!-- Dialog Content -->
-      <VCard title="Edit Project Details">
-        <VForm
-          ref="editProjectForm"
-          @submit.prevent="submitEditProjectForm"
-        >
-          <VCardText>
-            <VRow>
-              <VCol cols="12">
-                <AppTextField
-                  v-model="editProjectDetails.title"
-                  label="Title*"
-                  :rules="[requiredValidator]"
-                  placeholder="Title"
-                />
-              </VCol>
-
-              <VCol cols="6">
-                <AppAutocomplete
-                  v-model="editProjectDetails.project_type"
-                  label="Project Type*"
-                  placeholder="Select Project Type"
-                  :rules="[requiredValidator]"
-                  :items="getProjectTypes"
-                  item-title="name"
-                  item-value="id"
-                />
-              </VCol>
-
-              <VCol cols="6">
-                <AppAutocomplete
-                  v-model="editProjectDetails.project_manager"
-                  label="Project Manager*"
-                  placeholder="Select Project Manager"
-                  :rules="[requiredValidator]"
-                  :items="getProjectManagers"
-                  item-title="name"
-                  item-value="id"
-                />
-              </VCol>
-              <VCol cols="12">
-                <AppAutocomplete
-                  v-model="editProjectDetails.member_ids"
-                  :items="getMembers"
-                  item-title="name"
-                  item-value="id"
-                  label="Members*"
-                  placeholder="Select Member"
-                  multiple
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-              <VCol cols="6">
-                <AppTextField
-                  v-model="editProjectDetails.est_hours"
-                  label="Estimated Hours*"
-                  :rules="[requiredValidator]"
-                  placeholder="Estimated Hours"
-                />
-              </VCol>
-
-              <VCol cols="6">
-                <AppTextField
-                  v-model="editProjectDetails.est_budget"
-                  label="Estimated Budget*"
-                  :rules="[requiredValidator]"
-                  placeholder="Estimated Budget"
-                />
-              </VCol>
-            </VRow>
-          </VCardText>
-
-          <VCardText class="d-flex justify-end gap-3 flex-wrap">
-            <VBtn
-              color="secondary"
-              @click="isEditDialogVisible = false"
-            >
-              Cancel
-            </VBtn>
-            <VBtn
-              type="submit"
-              @click="editProjectForm?.validate()"
-            >
-              Save
-            </VBtn>
-          </VCardText>
-        </VForm>
-      </VCard>
-    </VDialog>
-
     <VRow
       v-if="viewType === 'list'"
       class="mb-4"
@@ -342,11 +243,20 @@
     :get-members="getMembers"
     :get-project-managers="getProjectManagers"
   />
+  <EditProjectDrawer
+    v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
+    :fetch-projects="fetchProjects"
+    :get-project-types="getProjectTypes"
+    :get-members="getMembers"
+    :get-project-managers="getProjectManagers"
+    :edit-project-details="editProjectDetails"
+  />
 </template>
 
 <script setup>
 import Swal from 'sweetalert2'
 import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project-drawer.vue'
+import EditProjectDrawer from '@/pages/projects/web-designs/_partials/update-project-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../store/projects"
@@ -357,10 +267,10 @@ const toast = useToast()
 const projectStore = useProjectStore()
 const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
-const editProjectForm = ref()
 const totalRecords = ref(0)
 const viewType = ref('list')
 const isAddProjectDrawerOpen = ref(false)
+const isEditProjectDrawerOpen = ref(false)
 
 const editProjectDetails = ref({})
 
@@ -388,43 +298,7 @@ const fetchProjects = async () => {
 
 const editProject = project => {
   editProjectDetails.value = { ...project }
-  isEditDialogVisible.value = true
-}
-
-async function submitEditProjectForm() {
-  editProjectForm.value?.validate().then(async ({ valid: isValid }) => {
-    if(isValid){
-      try {
-
-        const payload = {
-          id: editProjectDetails.value.id,
-          uuid: editProjectDetails.value.uuid,
-          title: editProjectDetails.value.title,
-          project_type_id: editProjectDetails.value.project_type_id,
-          project_manager_id: editProjectDetails.value.project_manager_id,
-          member_ids: editProjectDetails.value.member_ids,
-          est_hours: editProjectDetails.value.est_hours,
-          est_budget: editProjectDetails.value.est_budget,
-        }
-
-        const res = await projectStore.update(payload)
-        const errors = getErrors.value
-        if(errors)
-        {
-          toast.error('Something went wrong.')
-        }
-        else{
-          isEditDialogVisible.value = false
-          isLoading.value = true
-          toast.success('Project updated successfully', { timeout: 1000 })
-          await fetchProjects()
-          isLoading.value = false
-        }
-      } catch (error) {
-        toast.error('Failed to update project:', error.message || error)
-      }
-    }
-  })
+  isEditProjectDrawerOpen.value = true
 }
 
 const deleteProject = async project => {
