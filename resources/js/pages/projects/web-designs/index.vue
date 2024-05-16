@@ -29,121 +29,16 @@
         cols="12"
         md="6"
       >
-        <VDialog
-          v-model="isDialogVisible"
-          persistent
-          class="v-dialog-sm"
-        >
-          <!-- Dialog Activator -->
-          <template #activator="{ props }">
-            <VBtn
-              color="primary"
-              size="small"
-              rounded="pill"
-              v-bind="props"
-              class="float-right"
-            >
-              <VIcon
-                start
-                icon="tabler-plus"
-              />
-              New Project
-            </VBtn>
-          </template>
-
-          <!-- Dialog close btn -->
-          <DialogCloseBtn @click="isDialogVisible = !isDialogVisible" />
-
-          <!-- Dialog Content -->
-          <VCard title="Add Project Details">
-            <VForm
-              ref="addProjectForm"
-              @submit.prevent="submitAddProjectForm"
-            >
-              <VCardText>
-                <VRow>
-                  <VCol cols="12">
-                    <AppTextField
-                      v-model="newProjectDetails.title"
-                      label="Title*"
-                      :rules="[requiredValidator]"
-                      placeholder="Title"
-                    />
-                  </VCol>
-
-                  <VCol cols="6">
-                    <AppAutocomplete
-                      v-model="newProjectDetails.project_type_id"
-                      label="Project Type*"
-                      placeholder="Select Project Type"
-                      :rules="[requiredValidator]"
-                      :items="getProjectTypes"
-                      item-title="name"
-                      item-value="id"
-                    />
-                  </VCol>
-
-                  <VCol cols="6">
-                    <AppAutocomplete
-                      v-model="newProjectDetails.project_manager_id"
-                      label="Project Manager*"
-                      placeholder="Select Project Manager"
-                      :rules="[requiredValidator]"
-                      :items="getProjectManagers"
-                      item-title="name"
-                      item-value="id"
-                    />
-                  </VCol>
-                  <VCol cols="12">
-                    <AppAutocomplete
-                      v-model="newProjectDetails.member_ids"
-                      :items="getMembers"
-                      item-title="name"
-                      item-value="id"
-                      label="Members*"
-                      placeholder="Select Members"
-                      multiple
-                      clearable
-                      clear-icon="tabler-x"
-                    />
-                  </VCol>
-                  <VCol cols="6">
-                    <AppTextField
-                      v-model="newProjectDetails.est_hours"
-                      label="Estimated Hours*"
-                      :rules="[requiredValidator]"
-                      placeholder="Estimated Hours"
-                    />
-                  </VCol>
-
-                  <VCol cols="6">
-                    <AppTextField
-                      v-model="newProjectDetails.est_budget"
-                      label="Estimated Budget*"
-                      :rules="[requiredValidator]"
-                      placeholder="Estimated Budget"
-                    />
-                  </VCol>
-                </VRow>
-              </VCardText>
-
-              <VCardText class="d-flex justify-end gap-3 flex-wrap">
-                <VBtn
-                  color="secondary"
-                  @click="isDialogVisible = false"
-                >
-                  Cancel
-                </VBtn>
-                <VBtn
-                  type="submit"
-                  @click="addProjectForm?.validate()"
-                >
-                  Save & Add Task
-                </VBtn>
-              </VCardText>
-            </VForm>
-          </VCard>
-        </VDialog>
+        <div class="d-flex justify-end mb-5">
+          <VBtn
+            prepend-icon="tabler-plus"
+            size="small"
+            rounded="pill"
+            @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
+          >
+            New Project
+          </VBtn>
+        </div>
       </VCol>
     </VRow>
     <VDialog
@@ -254,7 +149,7 @@
         :key="project.id"
         cols="12"
       >
-        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
+        <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
           <VCard class="d-flex ps-4 py-1">
             <VCol cols="3">
               <span class="font-weight-medium text-high-emphasis">
@@ -309,13 +204,13 @@
                   <VList>
                     <VListItem
                       value="add tasks"
-                      :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
+                      :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.uuid } }"
                     >
                       Add Tasks
                     </VListItem>
                     <VListItem
                       value="view"
-                      :to="{ name: 'web-design', params: { id: project.id } }"
+                      :to="{ name: 'web-design', params: { id: project.uuid } }"
                     >
                       View
                     </VListItem>
@@ -350,7 +245,7 @@
         cols="12"
         md="4"
       >
-        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
+        <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
           <VCard class="pt-2">
             <VCardTitle>
               <VRow>
@@ -371,13 +266,13 @@
                       <VList>
                         <VListItem
                           value="add tasks"
-                          :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
+                          :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.uuid } }"
                         >
                           Add Tasks
                         </VListItem>
                         <VListItem
                           value="view"
-                          :to="{ name: 'web-design', params: { id: project.id } }"
+                          :to="{ name: 'web-design', params: { id: project.uuid } }"
                         >
                           View
                         </VListItem>
@@ -440,76 +335,36 @@
       </VCol>
     </VRow>
   </div>
+  <AddProjectDrawer
+    v-model:is-drawer-open="isAddProjectDrawerOpen"
+    :fetch-projects="fetchProjects"
+    :get-project-types="getProjectTypes"
+    :get-members="getMembers"
+    :get-project-managers="getProjectManagers"
+  />
 </template>
 
 <script setup>
-import moment from 'moment'
 import Swal from 'sweetalert2'
+import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../store/projects"
 import { useProjectTypeStore } from "../../../store/project_types"
 import { useUserStore } from "../../../store/users"
-import { useRouter } from 'vue-router'
 
 const toast = useToast()
 const projectStore = useProjectStore()
 const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
-const router = useRouter()
-const addProjectForm = ref()
 const editProjectForm = ref()
-const isDialogVisible = ref(false)
-const isEditDialogVisible = ref(false)
 const totalRecords = ref(0)
 const viewType = ref('list')
-
-const newProjectDetails = ref({
-  title: '',
-  project_type_id: '',
-  project_manager_id: '',
-  member_ids: [],
-  est_hours: '',
-  est_budget: '',
-})
+const isAddProjectDrawerOpen = ref(false)
 
 const editProjectDetails = ref({})
 
 const isLoading = ref(false)
-const search = ref('')
-const options = ref({ page: 1, itemsPerPage: 10, sortBy: [''], sortDesc: [false] })
-const formatDate = date => moment(date).format('MMM DD, YYYY')
-
-const headers = [
-  {
-    title: 'PROJECT',
-    key: 'title',
-  },
-  {
-    title: 'Project Manager',
-    key: 'project_manager',
-  },
-  {
-    title: 'Team',
-    key: 'project_members',
-  },
-  {
-    title: 'PROGRESS',
-    key: 'progress',
-  },
-  {
-    title: 'Created At',
-    key: 'created_at',
-    width: '15%',
-    sortable: false,
-  },
-  {
-    title: 'Action',
-    key: 'Action',
-    width: '5%',
-    sortable: false,
-  },
-]
 
 onBeforeMount(async () => {
   await fetchProjects()
@@ -521,7 +376,7 @@ onBeforeMount(async () => {
 
 const fetchProjects = async () => {
   try {
-    await projectStore.getAll(options.value.page, options.value.itemsPerPage)
+    await projectStore.getAll()
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching projects:', error)
@@ -529,43 +384,6 @@ const fetchProjects = async () => {
   finally {
     isLoading.value = false
   }
-}
-
-async function submitAddProjectForm() {
-  addProjectForm.value?.validate().then(async ({ valid: isValid }) => {
-    if(isValid){
-      try {
-        const res = await projectStore.create(newProjectDetails.value)
-        const errors = getErrors.value
-        if(errors)
-        {
-          toast.error('Something went wrong.')
-        }
-        else{
-          isDialogVisible.value = false
-          isLoading.value = true
-          toast.success('Project added successfully', { timeout: 1000 })
-          await fetchProjects()
-
-          const newProjectID = projectStore.getProject.id
-
-          router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } })
-
-          isLoading.value = false
-          newProjectDetails.value = {
-            title: '',
-            project_type_id: '',
-            project_manager_id: '',
-            member_ids: [],
-            est_hours: '',
-            est_budget: '',
-          }
-        }
-      } catch (error) {
-        toast.error('Failed to add project:', error)
-      }
-    }
-  })
 }
 
 const editProject = project => {
@@ -703,11 +521,6 @@ const getErrors = computed(() => {
 const totalProjects = computed(() => {
   return projectStore.projectsCount
 })
-
-const handlePageChange = async page => {
-  options.value.page = page
-  await fetchProjects()
-}
 </script>
 
 <style scoped>
