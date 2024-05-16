@@ -24,6 +24,11 @@
             @click="viewType = 'grid'"
           />
         </VBtnToggle>
+        <VIcon
+          icon="tabler-filter"
+          class="bg-primary ms-2"
+          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+        />
       </VCol>
       <VCol
         cols="12"
@@ -251,12 +256,19 @@
     :get-project-managers="getProjectManagers"
     :edit-project-details="editProjectDetails"
   />
+  <FilterDrawer
+    v-model:is-filter-drawer-open="isFilterDrawerOpen"
+    :fetch-projects="fetchProjects"
+    :get-members="getMembers"
+    :get-project-managers="getProjectManagers"
+  />
 </template>
 
 <script setup>
 import Swal from 'sweetalert2'
 import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project-drawer.vue'
 import EditProjectDrawer from '@/pages/projects/web-designs/_partials/update-project-drawer.vue'
+import FilterDrawer from '@/pages/projects/web-designs/_partials/filter-projects-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../store/projects"
@@ -272,6 +284,7 @@ const totalRecords = ref(0)
 const viewType = ref('list')
 const isAddProjectDrawerOpen = ref(false)
 const isEditProjectDrawerOpen = ref(false)
+const isFilterDrawerOpen = ref(false)
 const isLoading = ref(false)
 
 const editProjectDetails = ref({})
