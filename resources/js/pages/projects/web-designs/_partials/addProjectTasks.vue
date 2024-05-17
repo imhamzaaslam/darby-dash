@@ -92,11 +92,31 @@
                       {{ task.status }}
                     </VChip>
                     <VChip
+                      v-if="task.due_date"
+                      color="error"
+                      size="small"
+                      class="ms-2"
+                    >
+                      {{ formatDate(task.due_date) }}
+                      <VTooltip
+                        activator="parent"
+                        location="top"
+                      >
+                        <span>Task is due on {{ formatDate(task.due_date) }}</span>
+                      </VTooltip>
+                    </VChip>
+                    <VChip
                       color="info"
                       size="small"
                       class="ms-2"
                     >
                       {{ formatDate(task.created_at) }}
+                      <VTooltip
+                        activator="parent"
+                        location="top"
+                      >
+                        <span>Created on {{ formatDate(task.created_at) }}</span>
+                      </VTooltip>
                     </VChip>
                     <!--
                       <VChip
