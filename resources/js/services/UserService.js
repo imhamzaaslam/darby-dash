@@ -14,14 +14,19 @@ export default {
     return await apiClient.get(baseUrl + queryString)
   },
   
-  getUser(id) {
-    return apiClient.get(`admin/users/${id}`)
+  getUser(uuid) {
+    return apiClient.get(`admin/users/${uuid}`)
   },
   createUser(user) {
     return apiClient.post('admin/users', user)
   },
   updateUser(user) {
-    return apiClient.patch(`admin/users/${user.uuid}`, user)
+    // delete user avatar
+    let newUser = { ...user }
+    if (user.avatar) {
+      delete newUser.avatar
+    }
+    return apiClient.patch(`admin/users/${user.uuid}`, newUser)
   },
   deleteUser(id) {
     return apiClient.delete(`admin/users/${id}`)

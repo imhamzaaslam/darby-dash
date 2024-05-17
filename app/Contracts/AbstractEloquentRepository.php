@@ -6,6 +6,7 @@ use App\Enums\State;
 use App\Models\Base;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as Paginator;
 
 abstract class AbstractEloquentRepository implements AbstractEloquentRepositoryInterface
@@ -107,5 +108,10 @@ abstract class AbstractEloquentRepository implements AbstractEloquentRepositoryI
         }
 
         return $query->where('state', State::INACTIVE->value);
+    }
+
+    public function saveFile(UploadedFile $avatar, string $path): string
+    {
+        return $avatar->store($path, 'public');
     }
 }

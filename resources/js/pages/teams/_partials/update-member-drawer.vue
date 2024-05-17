@@ -102,15 +102,15 @@
                     @click="editMemberForm?.validate()"
                   >
                     <span v-if="getLoadStatus === 1">
+                      Loading...
                       <VProgressCircular
-                        :size="16"
+                        :size="20"
                         width="3"
                         indeterminate
                       />
-                      Loading...
                     </span>
                     <span v-else>
-                      Save
+                      Update
                     </span>
                   </VBtn>
                   <VBtn

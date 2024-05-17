@@ -5,6 +5,7 @@ namespace App\Contracts;
 use App\Models\Base;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Http\UploadedFile;
 
 interface AbstractEloquentRepositoryInterface
 {
@@ -83,4 +84,6 @@ interface AbstractEloquentRepositoryInterface
     public function active(\Illuminate\Database\Query\Builder $query = null): \Illuminate\Database\Query\Builder;
 
     public function inactive(\Illuminate\Database\Query\Builder $query = null): \Illuminate\Database\Query\Builder;
+
+    public function saveFile(UploadedFile $file, string $path): string;
 }

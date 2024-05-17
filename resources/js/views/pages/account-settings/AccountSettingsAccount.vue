@@ -1,104 +1,3 @@
-<script setup>
-import avatar1 from '@images/avatars/avatar-1.png'
-
-const accountData = {
-  avatarImg: avatar1,
-  firstName: 'Federico',
-  lastName: 'Arrizabalaga',
-  email: 'federico@keywordcaddy.com',
-  org: 'KeywordCaddy',
-  phone: '+1 (917) 543-9876',
-  address: '123 Main St, New York, NY 10001',
-  state: 'New York',
-  zip: '10001',
-  country: 'USA',
-  language: 'English',
-  timezone: '(GMT-11:00) International Date Line West',
-  currency: 'USD',
-}
-
-const refInputEl = ref()
-const accountDataLocal = ref(structuredClone(accountData))
-
-const resetForm = () => {
-  accountDataLocal.value = structuredClone(accountData)
-}
-
-const changeAvatar = file => {
-  const fileReader = new FileReader()
-  const { files } = file.target
-  if (files && files.length) {
-    fileReader.readAsDataURL(files[0])
-    fileReader.onload = () => {
-      if (typeof fileReader.result === 'string')
-        accountDataLocal.value.avatarImg = fileReader.result
-    }
-  }
-}
-
-// reset avatar image
-const resetAvatar = () => {
-  accountDataLocal.value.avatarImg = accountData.avatarImg
-}
-
-const timezones = [
-  '(GMT-11:00) International Date Line West',
-  '(GMT-11:00) Midway Island',
-  '(GMT-10:00) Hawaii',
-  '(GMT-09:00) Alaska',
-  '(GMT-08:00) Pacific Time (US & Canada)',
-  '(GMT-08:00) Tijuana',
-  '(GMT-07:00) Arizona',
-  '(GMT-07:00) Chihuahua',
-  '(GMT-07:00) La Paz',
-  '(GMT-07:00) Mazatlan',
-  '(GMT-07:00) Mountain Time (US & Canada)',
-  '(GMT-06:00) Central America',
-  '(GMT-06:00) Central Time (US & Canada)',
-  '(GMT-06:00) Guadalajara',
-  '(GMT-06:00) Mexico City',
-  '(GMT-06:00) Monterrey',
-  '(GMT-06:00) Saskatchewan',
-  '(GMT-05:00) Bogota',
-  '(GMT-05:00) Eastern Time (US & Canada)',
-  '(GMT-05:00) Indiana (East)',
-  '(GMT-05:00) Lima',
-  '(GMT-05:00) Quito',
-  '(GMT-04:00) Atlantic Time (Canada)',
-  '(GMT-04:00) Caracas',
-  '(GMT-04:00) La Paz',
-  '(GMT-04:00) Santiago',
-  '(GMT-03:30) Newfoundland',
-  '(GMT-03:00) Brasilia',
-  '(GMT-03:00) Buenos Aires',
-  '(GMT-03:00) Georgetown',
-  '(GMT-03:00) Greenland',
-  '(GMT-02:00) Mid-Atlantic',
-  '(GMT-01:00) Azores',
-  '(GMT-01:00) Cape Verde Is.',
-  '(GMT+00:00) Casablanca',
-  '(GMT+00:00) Dublin',
-  '(GMT+00:00) Edinburgh',
-  '(GMT+00:00) Lisbon',
-  '(GMT+00:00) London',
-]
-
-const currencies = [
-  'USD',
-  'EUR',
-  'GBP',
-  'AUD',
-  'BRL',
-  'CAD',
-  'CNY',
-  'CZK',
-  'DKK',
-  'HKD',
-  'HUF',
-  'INR',
-]
-</script>
-
 <template>
   <VRow>
     <VCol cols="12">
@@ -109,7 +8,7 @@ const currencies = [
             rounded
             size="100"
             class="me-6"
-            :image="accountDataLocal.avatarImg"
+            :image="accountData.avatar"
           />
 
           <!-- 👉 Upload Photo -->
@@ -150,7 +49,7 @@ const currencies = [
             </div>
 
             <p class="text-body-1 mb-0">
-              Allowed JPG, GIF or PNG. Max size of 800K
+              Allowed JPG, JPEG, GIF or PNG. Max size of 1MB
             </p>
           </form>
         </VCardText>
@@ -159,18 +58,24 @@ const currencies = [
 
         <VCardText class="pt-2">
           <!-- 👉 Form -->
-          <VForm class="mt-6">
+          <VForm 
+            ref="updateMemberForm"
+            class="mt-6"
+            @submit.prevent="submitUpdateMemberForm"
+          >
             <VRow>
               <!-- 👉 First Name -->
               <VCol
                 md="6"
                 cols="12"
               >
-                <VTextField
-                  v-model="accountDataLocal.firstName"
+                <AppTextField
+                  v-model="accountData.name_first"
                   placeholder="John"
                   variant="outlined"
                   label="First Name"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.name_first"
                 />
               </VCol>
 
@@ -179,11 +84,13 @@ const currencies = [
                 md="6"
                 cols="12"
               >
-                <VTextField
-                  v-model="accountDataLocal.lastName"
+                <AppTextField
+                  v-model="accountData.name_last"
                   placeholder="Doe"
                   label="Last Name"
                   variant="outlined"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.name_last"
                 />
               </VCol>
 
@@ -192,25 +99,14 @@ const currencies = [
                 cols="12"
                 md="6"
               >
-                <VTextField
-                  v-model="accountDataLocal.email"
+                <AppTextField
+                  v-model="accountData.email"
                   label="E-mail"
                   placeholder="johndoe@gmail.com"
                   type="email"
                   variant="outlined"
-                />
-              </VCol>
-
-              <!-- 👉 Organization -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  v-model="accountDataLocal.org"
-                  label="Organization"
-                  placeholder="ThemeSelection"
-                  variant="outlined"
+                  :rules="[requiredValidator, emailValidator]"
+                  :error-messages="editErrors.email"
                 />
               </VCol>
 
@@ -219,11 +115,14 @@ const currencies = [
                 cols="12"
                 md="6"
               >
-                <VTextField
-                  v-model="accountDataLocal.phone"
+                <AppTextField
+                  v-model="accountData.phone"
                   label="Phone Number"
+                  type="number"
                   placeholder="+1 (917) 543-9876"
                   variant="outlined"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.phone"
                 />
               </VCol>
 
@@ -232,24 +131,27 @@ const currencies = [
                 cols="12"
                 md="6"
               >
-                <VTextField
-                  v-model="accountDataLocal.address"
+                <AppTextField
+                  v-model="accountData.address"
                   label="Address"
                   placeholder="123 Main St, New York, NY 10001"
                   variant="outlined"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.address"
                 />
               </VCol>
 
-              <!-- 👉 State -->
+              <!-- 👉 City -->
               <VCol
                 cols="12"
                 md="6"
               >
-                <VTextField
-                  v-model="accountDataLocal.state"
-                  label="State"
+                <AppTextField
+                  v-model="accountData.city"
+                  label="City"
                   placeholder="New York"
-                  variant="outlined"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.city"
                 />
               </VCol>
 
@@ -258,69 +160,13 @@ const currencies = [
                 cols="12"
                 md="6"
               >
-                <VTextField
-                  v-model="accountDataLocal.zip"
+                <AppTextField
+                  v-model="accountData.zip"
                   label="Zip Code"
                   placeholder="10001"
                   variant="outlined"
-                />
-              </VCol>
-
-              <!-- 👉 Country -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VSelect
-                  v-model="accountDataLocal.country"
-                  label="Country"
-                  :items="['USA', 'Canada', 'UK', 'India', 'Australia']"
-                  placeholder="Select Country"
-                  variant="outlined"
-                />
-              </VCol>
-
-              <!-- 👉 Language -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VSelect
-                  v-model="accountDataLocal.language"
-                  label="Language"
-                  placeholder="Select Language"
-                  variant="outlined"
-                  :items="['English', 'Spanish', 'Arabic', 'Hindi', 'Urdu']"
-                />
-              </VCol>
-
-              <!-- 👉 Timezone -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VSelect
-                  v-model="accountDataLocal.timezone"
-                  label="Timezone"
-                  placeholder="Select Timezone"
-                  variant="outlined"
-                  :items="timezones"
-                  :menu-props="{ maxHeight: 200 }"
-                />
-              </VCol>
-
-              <!-- 👉 Currency -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VSelect
-                  v-model="accountDataLocal.currency"
-                  label="Currency"
-                  placeholder="Select Currency"
-                  :items="currencies"
-                  :menu-props="{ maxHeight: 200 }"
-                  variant="outlined"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.zip"
                 />
               </VCol>
 
@@ -329,16 +175,32 @@ const currencies = [
                 cols="12"
                 class="d-flex flex-wrap gap-4"
               >
-                <VBtn>Save changes</VBtn>
-
                 <VBtn
+                  type="submit"
+                  :disabled="getLoadStatus === 1"
+                  @click="editMemberForm?.validate()"
+                >
+                  <span v-if="getLoadStatus === 1">
+                    Loading...
+                    <VProgressCircular
+                      :size="20"
+                      width="3"
+                      indeterminate
+                    />
+                  </span>
+                  <span v-else>
+                    Save
+                  </span>
+                </VBtn>
+
+                <!-- <VBtn
                   color="secondary"
                   variant="tonal"
                   type="reset"
                   @click.prevent="resetForm"
                 >
                   Reset
-                </VBtn>
+                </VBtn> -->
               </VCol>
             </VRow>
           </VForm>
@@ -347,3 +209,121 @@ const currencies = [
     </VCol>
   </VRow>
 </template>
+
+<script setup>
+import avatar1 from '@images/avatars/avatar-1.png'
+import { useUserStore } from "@/store/users"
+import { useToast } from "vue-toastification"
+import { computed, onMounted, ref } from 'vue'
+
+onMounted(() => {
+  setUserDetails()
+})
+
+const userStore = useUserStore()
+const toast = useToast()
+
+const accountData = ref({
+  avatar: avatar1,
+  name_first: '',
+  name_last: '',
+  email: 'm',
+  phone: '',
+  city: '',
+  address: '',
+  zip: '',
+})
+
+const editErrors = ref({
+  name_first: '',
+  name_last: '',
+  email: '',
+  phone: '',
+  city: '',
+  address: '',
+  zip: '',
+})
+
+const refInputEl = ref()
+const updateMemberForm = ref()
+
+const changeAvatar = file => {
+  const fileReader = new FileReader()
+  const { files } = file.target
+  if (files && files.length) {
+    fileReader.readAsDataURL(files[0])
+    fileReader.onload = () => {
+      if (typeof fileReader.result === 'string')
+        accountData.value.avatar = fileReader.result
+    }
+  }
+}
+
+// reset avatar image
+const resetAvatar = () => {
+  accountData.value.avatar = avatar1
+}
+
+async function submitUpdateMemberForm() {
+  updateMemberForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
+        const userUuid = userStore.getUser?.uuid
+        const userRole = userStore.getUser?.role
+        const userState = userStore.getUser?.state
+
+        await userStore.update({ ...accountData.value, uuid: userUuid, role: userRole, state: userState })
+        if(getErrors.value)
+        {
+          showError()
+        }
+        else{
+          toast.success('Record updated successfully', { timeout: 1000 })
+        }
+      } catch (error) {
+        toast.error('Failed to add member:', error)
+      }
+    }
+  })
+}
+
+// const resetForm = () => {
+//   accountData.value = Object.fromEntries(Object.keys(accountData.value).map(key => [key, '']))
+// }
+
+const showError = () => {
+  if(getStatusCode.value == 500 || getStatusCode.value == 404){
+    toast.error('Something went wrong. Please try again later.')
+  }
+  else{
+    editErrors.value = getErrors.value
+  }
+}
+
+const setUserDetails = async () => {
+  const userDetails = await userStore.getUser
+
+  accountData.value = {
+    ...accountData.value,
+    name_first: userDetails?.name_first,
+    name_last: userDetails?.name_last,
+    email: userDetails?.email,
+    phone: userDetails?.info?.phone,
+    city: userDetails?.info?.city,
+    address: userDetails?.info?.address,
+    zip: userDetails?.info?.zip,
+  }
+}
+
+const getLoadStatus = computed(() => {
+  return userStore.getLoadStatus
+})
+
+const getStatusCode = computed(() => {
+  return userStore.getStatusCode
+})
+
+const getErrors = computed(() => {
+  return userStore.getErrors
+})
+</script>

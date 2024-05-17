@@ -65,6 +65,11 @@ class UsersController extends Controller
 
         $infoAttributes = [
             'phone' => $validated['phone'] ?? '',
+            'avatar' => $validated['avatar'] ?? null,
+            'address' => $validated['address'] ?? '',
+            'city' => $validated['city'] ?? '',
+            'state' => $validated['state'] ?? '',
+            'zip' => $validated['zip'] ?? '',
         ];
 
         $user = $this->userRepository->create($role, $attributes, $infoAttributes ?? []);
@@ -117,7 +122,11 @@ class UsersController extends Controller
         ]);
 
         $validatedInfoInput = $request->safe()->only([
-            'phone',
+            'phone' => $validated['phone'] ?? '',
+            'avatar' => $validated['avatar'] ?? null,
+            'address' => $validated['address'] ?? '',
+            'city' => $validated['city'] ?? '',
+            'zip' => $validated['zip'] ?? '',
         ]);
 
         $role = $validated['role'];

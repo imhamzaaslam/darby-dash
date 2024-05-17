@@ -26,7 +26,14 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'role' => ucwords($this->getRoleNames()->first() ?? ''),
             'state' => $this->state,
-            'phone' => $this->info->phone ?? '',
+            'phone' => $this->info->phone,
+            'info' => [
+                'phone' => $this->info->phone,
+                'address' => $this->info->address,
+                'city' => $this->info->city,
+                'state' => $this->info->state,
+                'zip' => $this->info->zip,
+            ],
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y h:i:s A'),
             // 'avatar' => $this->avatar,
         ];

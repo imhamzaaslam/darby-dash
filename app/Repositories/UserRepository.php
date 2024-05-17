@@ -32,7 +32,13 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
         // $user->notify(new SendSetPasswordNotification());
 
+        if (isset($infoAttributes['avatar'])) {
+            $avatarPath = $this->saveFile($infoAttributes['avatar'], 'images/avatars');
+            $infoAttributes['avatar'] = $avatarPath;
+        }
+
         $this->userInfoRepository->create($user, $infoAttributes);
+
 
         return $user;
     }
@@ -43,10 +49,6 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
         if ($role !== $user->getRoleNames()->first()) {
             $user->syncRoles($role);
-        }
-
-        if ($user->oss_registered_at !== $user->getOriginal('oss_registered_at')) {
-            OssRegistrationDateChanged::dispatch($user);
         }
 
         return $updated;
