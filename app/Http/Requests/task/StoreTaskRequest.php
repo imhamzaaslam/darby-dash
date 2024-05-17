@@ -24,7 +24,7 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'description' => 'sometimes|string',
+            'description' => 'sometimes|nullable|string',
             'status' => 'sometimes|in:todo,in_progress,completed',
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
