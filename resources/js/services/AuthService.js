@@ -51,27 +51,26 @@ export default {
   },
 
   logout: token => {
-    try {
-      return authClient.post('/api/auth/logout', {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    } catch (error) {
-        console.log(error);
-      if(error.response.status === 401) {
-        localStorage.removeItem('user')
-        window.location.href = '/login'
-      } else {
-        console.log(error)
-      }
-    }
-
-    // return authClient.post('/api/auth/logout', {}, {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
+    return authClient.post('/api/auth/logout', {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    // try {
+    //   return authClient.post('/api/auth/logout', {}, {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    // } catch (error) {
+    //     console.log(error);
+    //   if(error.response.status === 401) {
+    //     localStorage.removeItem('user')
+    //     window.location.href = '/login'
+    //   } else {
+    //     console.log(error)
+    //   }
+    // }
   },
 
   forgotPassword: async email => {
