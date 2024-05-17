@@ -37,8 +37,6 @@
         <div class="d-flex justify-end mb-5">
           <VBtn
             prepend-icon="tabler-plus"
-            size="small"
-            rounded="pill"
             @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
           >
             New Project
@@ -58,15 +56,17 @@
         <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
           <VCard class="d-flex ps-4 py-1">
             <VCol cols="3">
-              <span class="font-weight-medium text-high-emphasis">
-                <VIcon
-                  size="28"
-                  class="me-2"
-                  color="info"
-                  icon="tabler-chart-histogram"
+              <div class="d-flex align-center gap-x-3">
+                <VAvatar
+                  :size="34"
+                  :image="sketch"
                 />
-                {{ project.title }}
-              </span>
+                <div>
+                  <h6 class="text-h6 text-no-wrap">
+                    {{ project.title }}
+                  </h6>
+                </div>
+              </div>
             </VCol>
             <VCol cols="3">
               <div class="d-flex align-center">
@@ -84,20 +84,24 @@
               </div>
             </VCol>
             <VCol cols="3">
-              <span class="font-weight-medium text-high-emphasis">Team:</span>
-              <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
+              <div class="d-flex flex-column ms-3">
+                <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team</span>
+                <small class="mt-0">{{ project.project_members }}</small>
+              </div>
             </VCol>
             <VCol cols="2">
               <div class="d-flex align-center gap-3">
                 <div class="flex-grow-1">
                   <VProgressLinear
-                    height="6"
-                    :value="project.progress"
-                    rounded
+                    :height="6"
+                    :model-value="25"
                     color="primary"
+                    rounded
                   />
                 </div>
-                <span>0%</span>
+                <div class="text-body-1 text-high-emphasis">
+                  {{ 25 }}%
+                </div>
               </div>
             </VCol>
             <VCol
@@ -109,10 +113,10 @@
                 <VMenu activator="parent">
                   <VList>
                     <VListItem
-                      value="add tasks"
-                      :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
+                      value="tasks"
+                      :to="{ name: 'add-project-tasks', params: { project: project.project_type_id, id: project.id } }"
                     >
-                      Add Tasks
+                      Tasks
                     </VListItem>
                     <VListItem
                       value="view"
@@ -156,14 +160,17 @@
             <VCardTitle>
               <VRow>
                 <VCol cols="10">
-                  <VIcon
-                    size="28"
-                    project-card
-                    class="me-2"
-                    color="info"
-                    icon="tabler-chart-histogram"
-                  />
-                  {{ project.title }}
+                  <div class="d-flex align-center gap-x-3">
+                    <VAvatar
+                      :size="34"
+                      :image="sketch"
+                    />
+                    <div>
+                      <h6 class="text-h6 text-no-wrap">
+                        {{ project.title }}
+                      </h6>
+                    </div>
+                  </div>
                 </VCol>
                 <VCol cols="2">
                   <IconBtn @click.prevent>
@@ -171,10 +178,10 @@
                     <VMenu activator="parent">
                       <VList>
                         <VListItem
-                          value="add tasks"
-                          :to="{ name: 'add-project-tasks', params: { project: 'web-designs', id: project.id } }"
+                          value="tasks"
+                          :to="{ name: 'add-project-tasks', params: { project: project.project_type_id, id: project.id } }"
                         >
-                          Add Tasks
+                          Tasks
                         </VListItem>
                         <VListItem
                           value="view"
@@ -205,7 +212,7 @@
             <VCardText class="px-3 pt-2">
               <VRow>
                 <VCol cols="8">
-                  <div class="d-flex align-center mt-1">
+                  <div class="d-flex align-center mt-1 ms-1">
                     <VAvatar
                       size="36"
                       color="primary"
@@ -218,8 +225,10 @@
                       <small class="mt-0">Project Manager</small>
                     </div>
                   </div>
-                  <span class="px-1 mt-3 d-block font-weight-medium text-high-emphasis">Team:</span>
-                  <span class="px-1 d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_members }}</span>
+                  <div class="d-flex flex-column mt-1 ms-2">
+                    <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team:</span>
+                    <small class="mt-0">{{ project.project_members }}</small>
+                  </div>
                 </VCol>
                 <VCol cols="4">
                   <div class="d-flex align-end justify-end">
@@ -227,10 +236,10 @@
                       :rotate="360"
                       :size="70"
                       :width="6"
-                      :model-value="0"
+                      :model-value="25"
                       color="primary"
                     >
-                      0%
+                      25%
                     </VProgressCircular>
                   </div>
                 </VCol>
@@ -269,6 +278,7 @@
 
 <script setup>
 import Swal from 'sweetalert2'
+import sketch from '@images/icons/project-icons/sketch.png'
 import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project-drawer.vue'
 import EditProjectDrawer from '@/pages/projects/web-designs/_partials/update-project-drawer.vue'
 import FilterDrawer from '@/pages/projects/web-designs/_partials/filter-projects-drawer.vue'
