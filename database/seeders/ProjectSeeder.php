@@ -14,11 +14,12 @@ class ProjectSeeder extends Seeder
      */
     public function run(): void
     {
+        $project_manager_id = 2;
         $firstProject = Project::create([
             'title' => 'Darby',
             'description' => 'Darby is a project management system.',
             'project_type_id' => 1,
-            'project_manager_id' => 1,
+            'project_manager_id' => $project_manager_id,
             'est_hours' => 100,
             'est_budget' => 1000,
         ]);
@@ -34,7 +35,7 @@ class ProjectSeeder extends Seeder
             'title' => 'Proborrower',
             'description' => 'Proborrower is a loan management system.',
             'project_type_id' => 1,
-            'project_manager_id' => 1,
+            'project_manager_id' => $project_manager_id,
             'est_hours' => 200,
             'est_budget' => 2000,
         ]);
@@ -50,7 +51,7 @@ class ProjectSeeder extends Seeder
             'title' => 'Testing',
             'description' => 'This is a testing project.',
             'project_type_id' => 1,
-            'project_manager_id' => 1,
+            'project_manager_id' => $project_manager_id,
             'est_hours' => 300,
             'est_budget' => 3000,
         ]);
@@ -66,7 +67,7 @@ class ProjectSeeder extends Seeder
             'title' => 'Happy Nest Media',
             'description' => 'Happy Nest Media is a media company.',
             'project_type_id' => 2,
-            'project_manager_id' => 1,
+            'project_manager_id' => $project_manager_id,
             'est_hours' => 400,
             'est_budget' => 4000,
         ]);
@@ -82,7 +83,7 @@ class ProjectSeeder extends Seeder
             'title' => 'Bigberry',
             'description' => 'Bigberry is a software company.',
             'project_type_id' => 2,
-            'project_manager_id' => 1,
+            'project_manager_id' => $project_manager_id,
             'est_hours' => 500,
             'est_budget' => 5000,
         ]);
@@ -98,7 +99,7 @@ class ProjectSeeder extends Seeder
             'title' => 'IdeaAffix',
             'description' => 'IdeaAffix is a project management system.',
             'project_type_id' => 3,
-            'project_manager_id' => 1,
+            'project_manager_id' => $project_manager_id,
             'est_hours' => 600,
             'est_budget' => 6000,
         ]);

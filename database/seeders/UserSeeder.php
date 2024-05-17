@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser);
-        $demoUser->assignRole(Role::where('name', 'project manager')->first());
+        $demoUser->assignRole(Role::where('name', 'admin')->first());
 
         $demoUser2 = User::create([
             'uuid'              => $faker->uuid,
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser2);
-        $demoUser2->assignRole(Role::where('name', 'admin')->first());
+        $demoUser2->assignRole(Role::where('name', 'project manager')->first());
 
         $demoUser3 = User::create([
             'uuid'              => $faker->uuid,
