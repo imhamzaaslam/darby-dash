@@ -45,11 +45,11 @@ class UserSeeder extends Seeder
         $this->addDummyInfo($faker, $demoUser2);
         $demoUser2->assignRole(Role::where('name', 'admin')->first());
 
-        User::factory(20)->create()->each(function ($user) use ($faker) {
-            $this->addDummyInfo($faker, $user);
-            $role = $user->id % 2 === 0 ? Role::where('name', 'project manager')->first() : Role::where('name', 'developer')->first();
-            $user->assignRole($role);
-        });
+        // User::factory(20)->create()->each(function ($user) use ($faker) {
+        //     $this->addDummyInfo($faker, $user);
+        //     $role = $user->id % 2 === 0 ? Role::where('name', 'project manager')->first() : Role::where('name', 'developer')->first();
+        //     $user->assignRole($role);
+        // });
     }
 
     /**
