@@ -73,7 +73,7 @@
                   v-model="accountData.name_first"
                   placeholder="John"
                   variant="outlined"
-                  label="First Name"
+                  label="First Name *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.name_first"
                 />
@@ -87,7 +87,7 @@
                 <AppTextField
                   v-model="accountData.name_last"
                   placeholder="Doe"
-                  label="Last Name"
+                  label="Last Name *"
                   variant="outlined"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.name_last"
@@ -103,7 +103,7 @@
                   v-model="accountData.email"
                   label="E-mail"
                   placeholder="johndoe@gmail.com"
-                  type="email"
+                  type="email *"
                   variant="outlined"
                   :rules="[requiredValidator, emailValidator]"
                   :error-messages="editErrors.email"
@@ -117,8 +117,7 @@
               >
                 <AppTextField
                   v-model="accountData.phone"
-                  label="Phone Number"
-                  type="number"
+                  label="Phone Number *"
                   placeholder="+1 (917) 543-9876"
                   variant="outlined"
                   :rules="[requiredValidator]"
@@ -133,7 +132,7 @@
               >
                 <AppTextField
                   v-model="accountData.address"
-                  label="Address"
+                  label="Address *"
                   placeholder="123 Main St, New York, NY 10001"
                   variant="outlined"
                   :rules="[requiredValidator]"
@@ -148,7 +147,7 @@
               >
                 <AppTextField
                   v-model="accountData.city"
-                  label="City"
+                  label="City *"
                   placeholder="New York"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.city"
@@ -162,7 +161,7 @@
               >
                 <AppTextField
                   v-model="accountData.zip"
-                  label="Zip Code"
+                  label="Zip Code *"
                   placeholder="10001"
                   variant="outlined"
                   :rules="[requiredValidator]"
@@ -301,7 +300,12 @@ const showError = () => {
 }
 
 const setUserDetails = async () => {
-  const userDetails = await userStore.getUser
+  const user = JSON.parse(localStorage.getItem('user'))
+  const loggedInUserUuid = user.user.uuid
+
+  const users = userStore.getUsers
+  const userIndex = users.findIndex(user => user.uuid === loggedInUserUuid)
+  const userDetails = users[userIndex]
 
   accountData.value = {
     ...accountData.value,

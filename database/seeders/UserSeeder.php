@@ -71,7 +71,6 @@ class UserSeeder extends Seeder
         $this->addDummyInfo($faker, $demoUser4);
         $demoUser4->assignRole(Role::where('name', 'developer')->first());
 
-        // umer developer
         $demoUser5 = User::create([
             'uuid'              => $faker->uuid,
             'name_first'        => 'Umer',
@@ -84,6 +83,19 @@ class UserSeeder extends Seeder
 
         $this->addDummyInfo($faker, $demoUser5);
         $demoUser5->assignRole(Role::where('name', 'developer')->first());
+
+        $demoUser6 = User::create([
+            'uuid'              => $faker->uuid,
+            'name_first'        => 'Awais',
+            'name_last'         => 'Ali',
+            'email'             => 'awais@gmail.com',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'state'             => 'active',
+        ]);
+
+        $this->addDummyInfo($faker, $demoUser6);
+        $demoUser6->assignRole(Role::where('name', 'developer')->first());
 
         // User::factory(20)->create()->each(function ($user) use ($faker) {
         //     $this->addDummyInfo($faker, $user);
