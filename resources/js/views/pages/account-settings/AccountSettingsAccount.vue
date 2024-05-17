@@ -245,6 +245,7 @@ const editErrors = ref({
 
 const refInputEl = ref()
 const updateMemberForm = ref()
+const loggedInUserUuid = ref()
 
 const changeAvatar = file => {
   const fileReader = new FileReader()
@@ -267,7 +268,7 @@ async function submitUpdateMemberForm() {
   updateMemberForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-        const userUuid = userStore.getUser?.uuid
+        const userUuid = loggedInUserUuid.value
         const userRole = userStore.getUser?.role
         const userState = userStore.getUser?.state
 
@@ -301,10 +302,10 @@ const showError = () => {
 
 const setUserDetails = async () => {
   const user = JSON.parse(localStorage.getItem('user'))
-  const loggedInUserUuid = user.user.uuid
+  loggedInUserUuid.value = user.user.uuid
 
   const users = userStore.getUsers
-  const userIndex = users.findIndex(user => user.uuid === loggedInUserUuid)
+  const userIndex = users.findIndex(user => user.uuid === loggedInUserUuid.value)
   const userDetails = users[userIndex]
 
   accountData.value = {
