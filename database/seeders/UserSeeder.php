@@ -21,22 +21,22 @@ class UserSeeder extends Seeder
     {
         $demoUser = User::create([
             'uuid'              => $faker->uuid,
-            'name_first'        => $faker->firstName,
-            'name_last'         => $faker->lastName,
-            'email'             => 'demo@demo.com',
+            'name_first'        => 'Eric',
+            'name_last'         => 'Wing',
+            'email'             => 'eric@darby.com',
             'password'          => Hash::make('password'),
             'email_verified_at' => now(),
             'state'             => 'active',
         ]);
 
         $this->addDummyInfo($faker, $demoUser);
-        $demoUser->assignRole(Role::where('name', 'viewer')->first());
+        $demoUser->assignRole(Role::where('name', 'project manager')->first());
 
         $demoUser2 = User::create([
             'uuid'              => $faker->uuid,
-            'name_first'        => $faker->firstName,
-            'name_last'         => $faker->lastName,
-            'email'             => 'admin@demo.com',
+            'name_first'        => 'Hamza',
+            'name_last'         => 'Aslam',
+            'email'             => 'hamza@gmail.com',
             'password'          => Hash::make('password'),
             'email_verified_at' => now(),
             'state'             => 'active',
@@ -44,6 +44,46 @@ class UserSeeder extends Seeder
 
         $this->addDummyInfo($faker, $demoUser2);
         $demoUser2->assignRole(Role::where('name', 'admin')->first());
+
+        $demoUser3 = User::create([
+            'uuid'              => $faker->uuid,
+            'name_first'        => 'Noman',
+            'name_last'         => 'Javeed',
+            'email'             => 'noman@gmail.com',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'state'             => 'active',
+        ]);
+
+        $this->addDummyInfo($faker, $demoUser3);
+        $demoUser3->assignRole(Role::where('name', 'viewer')->first());
+
+        $demoUser4 = User::create([
+            'uuid'              => $faker->uuid,
+            'name_first'        => 'Muzammil',
+            'name_last'         => 'Shahzad',
+            'email'             => 'muzammil@gmail.com',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'state'             => 'active',
+        ]);
+
+        $this->addDummyInfo($faker, $demoUser4);
+        $demoUser4->assignRole(Role::where('name', 'developer')->first());
+
+        // umer developer
+        $demoUser5 = User::create([
+            'uuid'              => $faker->uuid,
+            'name_first'        => 'Umer',
+            'name_last'         => 'Khan',
+            'email'             => 'developer',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'state'             => 'active',
+        ]);
+
+        $this->addDummyInfo($faker, $demoUser5);
+        $demoUser5->assignRole(Role::where('name', 'developer')->first());
 
         // User::factory(20)->create()->each(function ($user) use ($faker) {
         //     $this->addDummyInfo($faker, $user);

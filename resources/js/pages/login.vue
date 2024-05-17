@@ -106,7 +106,7 @@ import { useRouter } from 'vue-router'
 definePage({ meta: { layout: 'blank' } })
 
 const form = ref({
-  email: 'admin@demo.com',
+  email: 'eric@darby.com',
   password: 'password',
   remember: false,
 })
