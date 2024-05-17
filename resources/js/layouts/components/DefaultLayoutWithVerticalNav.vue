@@ -83,13 +83,16 @@ const showNavigation = computed(() => {
           </RouterLink>
           <RouterLink :to="`/projects/${projectType}/${projectId}/tasks/add`">
             <span class="text-h6 me-8">
-              <VBadge
+              Tasks
+              <!--
+                <VBadge
                 class="new-badge"
                 color="error"
                 content="390"
-              >
+                >
                 <span class="inner-badge-text">Tasks</span>
-              </VBadge>
+                </VBadge>
+              -->
             </span>
           </RouterLink>
           <a
