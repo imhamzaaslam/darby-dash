@@ -309,11 +309,13 @@ import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../store/projects"
 import { useProjectTypeStore } from "../../../store/project_types"
 import { useUserStore } from "../../../store/users"
+import { useRoute } from 'vue-router'
 
 const toast = useToast()
 const projectStore = useProjectStore()
 const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
+const route = useRoute()
 
 const totalRecords = ref(0)
 const viewType = ref('list')
@@ -324,6 +326,16 @@ const isLoading = ref(false)
 const selectedProjectType = ref(1)
 const editProjectDetails = ref({})
 
+watch(
+  () => route.query.type,
+  async newType => {
+    if (newType) {
+      selectedProjectType.value = parseInt(newType)
+      await fetchProjects()
+    }
+  },
+  { immediate: true },
+)
 
 onBeforeMount(async () => {
   await fetchProjects()

@@ -12,8 +12,6 @@
       <div class="d-flex justify-end mb-5">
         <VBtn
           prepend-icon="tabler-plus"
-          size="small"
-          rounded="pill"
           @click="isAddMemberDrawerOpen = !isAddMemberDrawerOpen"
         >
           New Member
