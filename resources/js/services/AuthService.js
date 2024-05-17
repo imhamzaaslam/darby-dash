@@ -51,11 +51,26 @@ export default {
   },
 
   logout: token => {
-    return authClient.post('/api/auth/logout', {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    try {
+      return authClient.post('/api/auth/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    } catch (error) {
+      if(error.response.status === 401) {
+        localStorage.removeItem('user')
+        window.location.href = '/login'
+      } else {
+        console.log(error)
+      }
+    }
+
+    // return authClient.post('/api/auth/logout', {}, {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // })
   },
 
   forgotPassword: async email => {
