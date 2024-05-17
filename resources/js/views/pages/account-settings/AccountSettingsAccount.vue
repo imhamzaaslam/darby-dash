@@ -269,7 +269,7 @@ async function submitUpdateMemberForm() {
     if(isValid){
       try {
         const userUuid = loggedInUserUuid.value
-        const userRole = userStore.getUser?.role
+        const userRole = 'Admin'
         const userState = userStore.getUser?.state
 
         await userStore.update({ ...accountData.value, uuid: userUuid, role: userRole, state: userState })
