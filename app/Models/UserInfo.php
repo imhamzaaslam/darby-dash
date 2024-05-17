@@ -57,13 +57,12 @@ class UserInfo extends Base
 
     protected $fillable = [
         'user_id',
-        'company',
-        'coc_number',
-        'phone',
         'avatar',
-        'website',
-        'country',
-        'communication_language',
+        'phone',
+        'address',
+        'city',
+        'state',
+        'zip',
     ];
 
     protected $hidden = ['date_deleted'];

@@ -33,6 +33,11 @@ class StoreUserRequest extends FormRequest
             'phone' => 'required|string|max:255',
             'state' => 'required|string|in:active,inactive',
             'role' => 'required|string|exists:roles,name',
+            'avatar' => 'sometimes|image|mimes:jpg,jpeg,gif,png|max:1024',
+            'address' => 'sometimes|string|max:255',
+            'city' => 'sometimes|string|max:255',
+            'state' => 'sometimes|string|max:255',
+            'zip' => 'sometimes|string|max:255',
         ];
     }
 }

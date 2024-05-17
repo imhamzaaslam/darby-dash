@@ -28,11 +28,11 @@ export const useUserStore = defineStore('users', {
         console.error('getUsers error ', error)
       }
     },
-    async show(id) {
+    async show(uuid) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.getUser(id)
+        const response = await UserService.getUser(uuid)
 
         this.user = response.data.data
         this.loadStatus = 2
@@ -61,10 +61,12 @@ export const useUserStore = defineStore('users', {
       this.loadStatus = 1
       try {
         const response = await UserService.updateUser(user)
+        console.log('response is', response)
 
         this.user = response.data.data
         this.loadStatus = 2
       } catch (error) {
+        console.log('error is', error)
         this.error = error
         this.loadStatus = 3
         console.error('updateUser error ', error)

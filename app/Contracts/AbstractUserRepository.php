@@ -5,6 +5,7 @@ namespace App\Contracts;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Http\UploadedFile;
 
 abstract class AbstractUserRepository implements AbstractUserRepositoryInterface
 {
@@ -54,5 +55,10 @@ abstract class AbstractUserRepository implements AbstractUserRepositoryInterface
     public function withRelations(string|array $relations): Collection
     {
         return $this->model->with($relations)->get();
+    }
+
+    public function saveFile(UploadedFile $avatar, string $path): string
+    {
+        return $avatar->store($path, 'public');
     }
 }

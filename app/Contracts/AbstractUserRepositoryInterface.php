@@ -5,6 +5,7 @@ namespace App\Contracts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 
 interface AbstractUserRepositoryInterface
 {
@@ -21,4 +22,6 @@ interface AbstractUserRepositoryInterface
     public function hasInfo(): Builder;
 
     public function withRelations(string|array $relations): Collection;
+
+    public function saveFile(UploadedFile $avatar, string $path): string;
 }

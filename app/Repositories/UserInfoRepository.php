@@ -30,6 +30,11 @@ class UserInfoRepository extends AbstractEloquentRepository implements UserInfoR
 
     public function update(UserInfo $userInfo, array $attributes): bool
     {
+        if (isset($infoAttributes['avatar'])) {
+            $avatarPath = $this->saveFile($infoAttributes['avatar'], 'images/avatars');
+            $infoAttributes['avatar'] = $avatarPath;
+        }
+
         return $userInfo->fill($attributes)->save();
     }
 

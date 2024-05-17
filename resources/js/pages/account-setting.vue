@@ -24,11 +24,12 @@ const tabs = [
     icon: 'tabler-file-text',
     tab: 'billing-plans',
   },
-  {
-    title: 'Danger Zone',
-    icon: 'tabler-alert-triangle',
-    tab: 'danger-zone',
-  },
+
+  // {
+  //   title: 'Danger Zone',
+  //   icon: 'tabler-alert-triangle',
+  //   tab: 'danger-zone',
+  // },
 ]
 
 function setActiveTab(tab) {
@@ -80,9 +81,11 @@ definePage({ meta: { navActiveLink: 'account-setting' } })
       </VWindowItem>
 
       <!-- Danger Zone -->
-      <VWindowItem value="danger-zone">
+      <!--
+        <VWindowItem value="danger-zone">
         <AccountSettingsDangerZone />
-      </VWindowItem>
+        </VWindowItem> 
+      -->
     </VWindow>
   </div>
 </template>
