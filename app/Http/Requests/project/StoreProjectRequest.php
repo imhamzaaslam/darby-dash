@@ -23,7 +23,7 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_type_id' => 'sometimes|exists:project_types,id',
+            'project_type_id' => 'required|exists:project_types,id',
             'title' => 'required|string|max:255',
             'description' => 'sometimes|string',
             'project_manager_id' => 'sometimes|exists:users,id',

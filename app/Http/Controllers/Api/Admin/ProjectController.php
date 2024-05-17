@@ -34,6 +34,19 @@ class ProjectController extends Controller
     }
 
     /**
+     * Display a listing of the resource by project type.
+     *
+     * @param string $prjectTypId
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function getByType(string $prjectTypId): AnonymousResourceCollection|JsonResponse
+    {
+        $projects = $this->projectRepository->getBy('project_type_id', $prjectTypId);
+
+        return ProjectResource::collection($projects);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param StoreProjectRequest  $request

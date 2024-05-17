@@ -57,6 +57,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         });
 
         Route::prefix('projects')->group(function () {
+            Route::get('/type/{projectTypeId}', [ProjectController::class, 'getByType']);
+
             Route::get('/', [ProjectController::class, 'index']);
             Route::post('/', [ProjectController::class, 'store']);
             Route::prefix('{uuid}')->group(function () {
