@@ -16,8 +16,8 @@ class Task extends Base
         'description',
         'status',
         'project_id',
+        'start_date',
         'due_date',
-        'completed_at',
         'time_spent',
     ];
 }
