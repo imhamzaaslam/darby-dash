@@ -20,16 +20,15 @@ const $route = useRoute()
 const projectId = ref(null)
 const projectType = ref(null)
 
-const fetchProjectParams = () => {
+onBeforeMount(() => {
   projectId.value = $route.params.id
   projectType.value = $route.params.project
-}
+})
 
 watch([
   isFallbackStateActive,
   refLoadingIndicator,
 ], () => {
-  fetchProjectParams()
 
   if (isFallbackStateActive.value && refLoadingIndicator.value)
     refLoadingIndicator.value.fallbackHandle()
