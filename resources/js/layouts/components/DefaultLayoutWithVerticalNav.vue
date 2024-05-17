@@ -20,16 +20,15 @@ const $route = useRoute()
 const projectId = ref(null)
 const projectType = ref(null)
 
-const fetchProjectParams = () => {
+onBeforeMount(() => {
   projectId.value = $route.params.id
   projectType.value = $route.params.project
-}
+})
 
 watch([
   isFallbackStateActive,
   refLoadingIndicator,
 ], () => {
-  fetchProjectParams()
 
   if (isFallbackStateActive.value && refLoadingIndicator.value)
     refLoadingIndicator.value.fallbackHandle()
@@ -84,13 +83,16 @@ const showNavigation = computed(() => {
           </RouterLink>
           <RouterLink :to="`/projects/${projectType}/${projectId}/tasks/add`">
             <span class="text-h6 me-8">
-              <VBadge
+              Tasks
+              <!--
+                <VBadge
                 class="new-badge"
                 color="error"
                 content="390"
-              >
+                >
                 <span class="inner-badge-text">Tasks</span>
-              </VBadge>
+                </VBadge>
+              -->
             </span>
           </RouterLink>
           <a
