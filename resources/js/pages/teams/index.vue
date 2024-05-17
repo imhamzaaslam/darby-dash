@@ -87,18 +87,20 @@
 
       <template #item.actions="{ item }">
         <div class="d-flex">
-          <IconBtn @click="editMember(item)">
-            <VIcon
-              icon="tabler-edit"
-              color="info"
-            />
-          </IconBtn>
-          <IconBtn @click="deleteMember(item)">
-            <VIcon
-              icon="tabler-trash"
-              color="error"
-            />
-          </IconBtn>
+          <template v-if="item.email !== 'admin@demo.com'">  
+            <IconBtn @click="editMember(item)">
+              <VIcon
+                icon="tabler-edit"
+                color="info"
+              />
+            </IconBtn>
+            <IconBtn @click="deleteMember(item)">
+              <VIcon
+                icon="tabler-trash"
+                color="error"
+              />
+            </IconBtn>
+          </template>
         </div>
       </template>
       <template #bottom>
