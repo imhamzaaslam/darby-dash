@@ -98,6 +98,7 @@
                   <VBtn
                     type="submit"
                     class="me-2"
+                    :disabled="getLoadStatus === 1"
                     @click="editMemberForm?.validate()"
                   >
                     <span v-if="getLoadStatus === 1">
