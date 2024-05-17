@@ -12,8 +12,6 @@
       <div class="d-flex justify-end mb-5">
         <VBtn
           prepend-icon="tabler-plus"
-          size="small"
-          rounded="pill"
           @click="isAddMemberDrawerOpen = !isAddMemberDrawerOpen"
         >
           New Member
@@ -87,7 +85,7 @@
 
       <template #item.actions="{ item }">
         <div class="d-flex">
-          <template v-if="item.email !== 'admin@demo.com'">  
+          <template v-if="item.email !== 'admin@demo.com'">
             <IconBtn @click="editMember(item)">
               <VIcon
                 icon="tabler-edit"

@@ -9,7 +9,7 @@
       sm="4"
     >
       <div>
-        <RouterLink :to="data.url">
+        <RouterLink :to="{ path: data.url, query: { type: data.type } }">
           <VCard
             class="logistics-card-statistics cursor-pointer"
             :style="data.isHover ? { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}))` } : { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}), var(--v-disabled-opacity))` }"
@@ -77,20 +77,23 @@ const dashboards = ref([
     color: 'primary',
     title: 'Website Design Project',
     url: '/projects/web-designs',
+    type: 1,
     isHover: false,
   },
   {
     icon: 'tabler-military-rank',
     color: 'primary',
     title: 'SEO Program',
-    url: '/projects/seo-programs',
+    url: '/projects/web-designs',
+    type: 2,
     isHover: false,
   },
   {
     icon: 'tabler-brand-google',
     color: 'primary',
     title: 'Google Ads Program',
-    url: '/projects/google-ads-programs',
+    url: '/projects/web-designs',
+    type: 3,
     isHover: false,
   },
 ])
