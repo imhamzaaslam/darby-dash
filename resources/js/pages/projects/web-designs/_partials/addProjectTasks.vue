@@ -3,7 +3,6 @@
     <VRow>
       <VCol cols="12">
         <AppTextField
-          v-if="!editingTask"
           v-model="taskName"
           label="Add Task"
           clearable
@@ -29,51 +28,6 @@
             </VBtn>
           </template>
         </AppTextField>
-        <AppTextField
-          v-else
-          ref="editTaskFieldRef"
-          v-model="editingTask.name"
-          label="Edit Task"
-          clearable
-          placeholder="Edit Task"
-          class="textfield-demo-icon-slot"
-          @keydown.enter="saveTask(editingTask)"
-        >
-          <!-- Append -->
-          <template #append>
-            <VBtn
-              :icon="$vuetify.display.smAndDown"
-              @click="saveTask(editingTask)"
-            >
-              <VIcon
-                icon="tabler-pencil"
-                color="#fff"
-                size="22"
-              />
-              <span
-                v-if="$vuetify.display.mdAndUp"
-                class="ms-1"
-              >Update</span>
-            </VBtn>
-
-            <VBtn
-              :icon="$vuetify.display.smAndDown"
-              color="error"
-              class="ms-1"
-              @click="resetEditingTask"
-            >
-              <VIcon
-                icon="tabler-refresh"
-                color="#fff"
-                size="22"
-              />
-              <span
-                v-if="$vuetify.display.mdAndUp"
-                class="me-1"
-              >Reset</span>
-            </VBtn>
-          </template>
-        </AppTextField>
       </VCol>
     </VRow>
     <VRow>
@@ -89,6 +43,7 @@
             <VListItem
               v-for="(task, index) in getProjectTasks"
               :key="index"
+              @click="startEditing(task)"
             >
               <VListItemContent>
                 <VRow
@@ -102,7 +57,7 @@
                       color="info"
                     />
                     <!-- Task Name -->
-                    <span class="ms-2">{{ task.name.length > 100 ? task.name.substring(0, 100) + '...' : task.name }}</span>
+                    <span class="ms-2">{{ task.name.length > 60 ? task.name.substring(0, 60) + '...' : task.name }}</span>
                   </VCol>
                   <VCol cols="auto">
                     <VChip
@@ -119,13 +74,15 @@
                     >
                       {{ formatDate(task.created_at) }}
                     </VChip>
-                    <!-- <VChip
+                    <!--
+                      <VChip
                       color="secondary"
                       size="small"
                       class="ms-2"
-                    >
+                      >
                       <VIcon class="tabler-message-circle" /> 8
-                    </VChip> -->
+                      </VChip>
+                    -->
                     <!-- Actions Menu -->
                     <IconBtn class="ms-2">
                       <VIcon icon="tabler-dots-vertical" />
@@ -155,10 +112,17 @@
       </VCol>
     </VRow>
   </VContainer>
+  <EditTaskDrawer
+    v-model:is-edit-task-drawer-open="isEditTaskDrawerOpen"
+    :fetch-project-tasks="fetchProjectTasks"
+    :editing-task="editingTask"
+    :get-load-status="getLoadStatus"
+  />
 </template>
 
 <script setup="js">
 import moment from 'moment'
+import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-project-task-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useTaskStore } from "../../../../store/tasks"
@@ -169,8 +133,8 @@ const taskStore = useTaskStore()
 const router = useRouter()
 
 const taskName = ref('')
-const editingTask = ref(null)
-const editTaskFieldRef = ref(null)
+const editingTask = ref({})
+const isEditTaskDrawerOpen = ref(false)
 
 const isLoading = ref(false)
 
@@ -219,28 +183,8 @@ async function addTask() {
 
 function startEditing(task) {
   editingTask.value = { ...task }
-  if (editTaskFieldRef.value) {
-    editTaskFieldRef.value.focus()
-  }
+  isEditTaskDrawerOpen.value = true
 }
-
-async function saveTask(task) {
-  try {
-    const editTaskDetails = {
-      uuid: task.uuid,
-      name: task.name,
-      project_id: task.project_id,
-    }
-
-    await taskStore.update(editTaskDetails)
-    toast.success('Task updated successfully', { timeout: 1000 })
-    editingTask.value = null
-    fetchProjectTasks()
-  } catch (error) {
-    toast.error('Failed to update task:', error)
-  }
-}
-
 
 async function deleteTask(task) {
   try {
@@ -254,12 +198,11 @@ async function deleteTask(task) {
   }
 }
 
-const resetEditingTask = () => {
-  editingTask.value = null
-  taskName.value = ''
-}
-
 const getProjectTasks = computed(() => taskStore.getProjectTasks)
+
+const getLoadStatus = computed(() => {
+  return taskStore.getLoadStatus
+})
 </script>
 
 <style scoped>

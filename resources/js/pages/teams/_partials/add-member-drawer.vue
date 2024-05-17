@@ -128,12 +128,12 @@
                     @click="addMemberForm?.validate()"
                   >
                     <span v-if="getLoadStatus === 1">
-                      Loading...
                       <VProgressCircular
-                        :size="20"
+                        :size="16"
                         width="3"
                         indeterminate
                       />
+                      Loading...
                     </span>
                     <span v-else>
                       Save

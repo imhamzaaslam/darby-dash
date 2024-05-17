@@ -247,6 +247,7 @@
     :get-project-types="getProjectTypes"
     :get-members="getMembers"
     :get-project-managers="getProjectManagers"
+    :get-load-status="getLoadStatus"
   />
   <EditProjectDrawer
     v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
@@ -255,12 +256,14 @@
     :get-members="getMembers"
     :get-project-managers="getProjectManagers"
     :edit-project-details="editProjectDetails"
+    :get-load-status="getLoadStatus"
   />
   <FilterDrawer
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-members="getMembers"
     :get-project-managers="getProjectManagers"
+    :get-load-status="getLoadStatus"
   />
 </template>
 
@@ -404,6 +407,10 @@ const getMembers = computed(() => {
 
 const getErrors = computed(() => {
   return projectStore.getErrors
+})
+
+const getLoadStatus = computed(() => {
+  return projectStore.getLoadStatus
 })
 
 const totalProjects = computed(() => {

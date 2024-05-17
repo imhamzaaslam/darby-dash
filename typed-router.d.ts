@@ -43,7 +43,6 @@ declare module 'vue-router/auto/routes' {
     '$error': RouteRecordInfo<'$error', '/:error(.*)', { error: ParamValue<true> }, { error: ParamValue<false> }>,
     'account-setting': RouteRecordInfo<'account-setting', '/account-setting', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
-    'members': RouteRecordInfo<'members', '/members', Record<never, never>, Record<never, never>>,
     'projects-calendar': RouteRecordInfo<'projects-calendar', '/projects/calendar', Record<never, never>, Record<never, never>>,
     'projects-chat': RouteRecordInfo<'projects-chat', '/projects/chat', Record<never, never>, Record<never, never>>,
     'projects-files': RouteRecordInfo<'projects-files', '/projects/files', Record<never, never>, Record<never, never>>,
@@ -56,8 +55,15 @@ declare module 'vue-router/auto/routes' {
     'projects-tasks': RouteRecordInfo<'projects-tasks', '/projects/tasks', Record<never, never>, Record<never, never>>,
     'projects-team': RouteRecordInfo<'projects-team', '/projects/team', Record<never, never>, Record<never, never>>,
     'projects-web-designs': RouteRecordInfo<'projects-web-designs', '/projects/web-designs', Record<never, never>, Record<never, never>>,
+    'projects-web-designs-partials-add-project-drawer': RouteRecordInfo<'projects-web-designs-partials-add-project-drawer', '/projects/web-designs/_partials/add-project-drawer', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-add-project-tasks': RouteRecordInfo<'projects-web-designs-partials-add-project-tasks', '/projects/web-designs/_partials/addProjectTasks', Record<never, never>, Record<never, never>>,
+    'projects-web-designs-partials-filter-projects-drawer': RouteRecordInfo<'projects-web-designs-partials-filter-projects-drawer', '/projects/web-designs/_partials/filter-projects-drawer', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-id': RouteRecordInfo<'projects-web-designs-partials-id', '/projects/web-designs/_partials/id', Record<never, never>, Record<never, never>>,
+    'projects-web-designs-partials-update-project-drawer': RouteRecordInfo<'projects-web-designs-partials-update-project-drawer', '/projects/web-designs/_partials/update-project-drawer', Record<never, never>, Record<never, never>>,
+    'projects-web-designs-partials-update-project-task-drawer': RouteRecordInfo<'projects-web-designs-partials-update-project-task-drawer', '/projects/web-designs/_partials/update-project-task-drawer', Record<never, never>, Record<never, never>>,
+    'teams': RouteRecordInfo<'teams', '/teams', Record<never, never>, Record<never, never>>,
+    'teams-partials-add-member-drawer': RouteRecordInfo<'teams-partials-add-member-drawer', '/teams/_partials/add-member-drawer', Record<never, never>, Record<never, never>>,
+    'teams-partials-update-member-drawer': RouteRecordInfo<'teams-partials-update-member-drawer', '/teams/_partials/update-member-drawer', Record<never, never>, Record<never, never>>,
   }
 }
 
