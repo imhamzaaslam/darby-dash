@@ -4,7 +4,7 @@
     <VRow>
       <VCol
         cols="12"
-        md="6"
+        md="7"
         class="d-flex"
       >
         <VBtnToggle
@@ -32,7 +32,22 @@
       </VCol>
       <VCol
         cols="12"
-        md="6"
+        md="3"
+      >
+        <div class="d-flex justify-end mb-5">
+          <AppAutocomplete
+            v-model="selectedProjectType"
+            placeholder="Select Project Type"
+            :items="getProjectTypes"
+            item-title="name"
+            item-value="id"
+            @update:model-value="fetchProjects"
+          />
+        </div>
+      </VCol>
+      <VCol
+        cols="12"
+        md="2"
       >
         <div class="d-flex justify-end mb-5">
           <VBtn
@@ -44,8 +59,15 @@
         </div>
       </VCol>
     </VRow>
+    <VRow v-if="getProjects.length === 0">
+      <VCol cols="12">
+        <VCard class="px-3 py-3 text-center">
+          <span>No projects found</span>
+        </VCard>
+      </VCol>
+    </VRow>
     <VRow
-      v-if="viewType === 'list'"
+      v-else-if="viewType === 'list'"
       class="mb-4"
     >
       <VCol
@@ -299,7 +321,7 @@ const isAddProjectDrawerOpen = ref(false)
 const isEditProjectDrawerOpen = ref(false)
 const isFilterDrawerOpen = ref(false)
 const isLoading = ref(false)
-
+const selectedProjectType = ref(1)
 const editProjectDetails = ref({})
 
 
@@ -313,7 +335,8 @@ onBeforeMount(async () => {
 
 const fetchProjects = async () => {
   try {
-    await projectStore.getAll()
+    console.log("SELECTED VALUE TYPE", selectedProjectType.value)
+    await projectStore.getByType(selectedProjectType.value)
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching projects:', error)
@@ -400,7 +423,7 @@ const fetchMembers = async () => {
 }
 
 const getProjects = computed(() => {
-  return projectStore.getProjects
+  return projectStore.getProjectsByType
 })
 
 const getProjectTypes = computed(() => {

@@ -4,6 +4,7 @@ import ProjectService from '../services/ProjectService'
 export const useProjectStore = defineStore('projects', {
   state: () => ({
     projects: [],
+    projectsByType: [],
     project: null,
     usersCount: 0,
     loadStatus: 0,
@@ -24,6 +25,21 @@ export const useProjectStore = defineStore('projects', {
         this.error = error
         this.loadStatus = 3
         console.error('getProjects error ', error)
+      }
+    },
+    async getByType(id) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectService.getProjectsByType(id)
+
+        this.projectsByType = response.data.data
+        this.usersCount = response.data.meta.total
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getProjectsByType error ', error)
       }
     },
     async show(id) {
@@ -86,6 +102,7 @@ export const useProjectStore = defineStore('projects', {
   getters: {
     getLoadStatus: state => state.loadStatus,
     getProjects: state => state.projects,
+    getProjectsByType: state => state.projectsByType,
     getProject: state => state.project,
     getErrors: state => state.error,
   },

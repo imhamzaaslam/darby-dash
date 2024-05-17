@@ -64,6 +64,7 @@
                   item-title="name"
                   item-value="id"
                   label="Members*"
+                  :rules="[requiredValidator]"
                   placeholder="Select Members"
                   multiple
                   clearable
