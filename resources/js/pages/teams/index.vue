@@ -85,7 +85,7 @@
 
       <template #item.actions="{ item }">
         <div class="d-flex">
-          <template v-if="item.email !== 'admin@demo.com'">
+          <template v-if="item.email !== 'eric@darby.com'">  
             <IconBtn @click="editMember(item)">
               <VIcon
                 icon="tabler-edit"
