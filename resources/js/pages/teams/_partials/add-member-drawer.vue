@@ -124,9 +124,20 @@
                   <VBtn
                     type="submit"
                     class="me-2"
+                    :disabled="getLoadStatus === 1"
                     @click="addMemberForm?.validate()"
                   >
-                    Save
+                    <span v-if="getLoadStatus === 1">
+                      Loading...
+                      <VProgressCircular
+                        :size="20"
+                        width="3"
+                        indeterminate
+                      />
+                    </span>
+                    <span v-else>
+                      Save
+                    </span>
                   </VBtn>
                   <VBtn
                     color="error"
@@ -161,6 +172,7 @@ const props = defineProps({
   getRoles: Object,
   getErrors: Object,
   getStatusCode: Object,
+  getLoadStatus: Boolean,
 })
 
 const emit = defineEmits(['update:isDrawerOpen'])

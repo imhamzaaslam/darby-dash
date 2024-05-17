@@ -130,6 +130,7 @@
     :get-roles="getRoles"
     :get-errors="getErrors"
     :get-status-code="getStatusCode"
+    :get-load-status="getLoadStatus"
   />
   <EditMemberDrawer
     v-model:is-edit-drawer-open="isEditMemberDrawerOpen"
@@ -138,6 +139,7 @@
     :get-errors="getErrors"
     :get-status-code="getStatusCode"
     :edit-member-details="editMemberDetails"
+    :get-load-status="getLoadStatus"
   />
 </template>
 

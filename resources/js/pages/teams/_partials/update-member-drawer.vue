@@ -100,7 +100,17 @@
                     class="me-2"
                     @click="editMemberForm?.validate()"
                   >
-                    Save
+                    <span v-if="getLoadStatus === 1">
+                      Loading...
+                      <VProgressCircular
+                        :size="20"
+                        width="3"
+                        indeterminate
+                      />
+                    </span>
+                    <span v-else>
+                      Update
+                    </span>
                   </VBtn>
                   <VBtn
                     color="error"
@@ -136,6 +146,7 @@ const props = defineProps({
   getErrors: Object,
   getStatusCode: Object,
   editMemberDetails: Object,
+  getLoadStatus: Boolean,
 })
 
 const emit = defineEmits(['update:isEditDrawerOpen'])

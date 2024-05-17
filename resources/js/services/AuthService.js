@@ -18,7 +18,7 @@ authClient.interceptors.response.use(
 
     // If it's a bad response from the user or the session is no longer active,
     // we log out the user.
-    if (error.response && [401, 419].includes(error.response.status) && authStore.user) {
+    if (error.response && [401, 419].includes(error.response.status) && authStore.getUserFromLocalStorage) {
       authStore.logout()
     }
 
