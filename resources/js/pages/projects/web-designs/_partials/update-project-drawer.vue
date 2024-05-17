@@ -36,25 +36,27 @@
 
               <VCol cols="6">
                 <AppAutocomplete
-                  v-model="props.editProjectDetails.project_type"
+                  v-model="selectedType"
                   label="Project Type*"
                   placeholder="Select Project Type"
                   :rules="[requiredValidator]"
                   :items="props.getProjectTypes"
                   item-title="name"
                   item-value="id"
+                  @update:model-value="onProjectTypeChange"
                 />
               </VCol>
 
               <VCol cols="6">
                 <AppAutocomplete
-                  v-model="props.editProjectDetails.project_manager"
+                  v-model="selectedProjectManager"
                   label="Project Manager*"
                   placeholder="Select Project Manager"
                   :rules="[requiredValidator]"
                   :items="props.getProjectManagers"
                   item-title="name"
                   item-value="id"
+                  @update:model-value="onProjectManagerChange"
                 />
               </VCol>
               <VCol cols="12">
@@ -159,6 +161,22 @@ const resetForm = () => {
   editProjectForm.value?.reset()
   emit('update:isEditDrawerOpen', false)
 }
+
+function onProjectTypeChange(newValue) {
+  props.editProjectDetails.project_type_id = newValue
+}
+
+function onProjectManagerChange(newValue) {
+  props.editProjectDetails.project_manager_id = newValue
+}
+
+const selectedType = computed(() => {
+  return { id: props.editProjectDetails.project_type_id, name: props.editProjectDetails.project_type }
+})
+
+const selectedProjectManager = computed(() => {
+  return { id: props.editProjectDetails.project_manager_id, name: props.editProjectDetails.project_manager }
+})
 
 async function submitEditProjectForm() {
   editProjectForm.value?.validate().then(async ({ valid: isValid }) => {
