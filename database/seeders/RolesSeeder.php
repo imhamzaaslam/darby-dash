@@ -20,7 +20,7 @@ class RolesSeeder extends Seeder
         try {
             $roles = [
                 'admin',
-                'pm',
+                'project manager',
                 'developer',
                 'editor',
                 'viewer'
@@ -48,7 +48,7 @@ class RolesSeeder extends Seeder
             $role = Role::findByName('admin');
             $role->givePermissionTo(Permission::all());
 
-            $role = Role::findByName('pm');
+            $role = Role::findByName('project manager');
             $role->givePermissionTo(['add', 'view', 'update']);
 
             $role = Role::findByName('developer');

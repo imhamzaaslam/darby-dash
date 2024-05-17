@@ -88,7 +88,7 @@ export const useUserStore = defineStore('users', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.getUsersByRole('pm')
+        const response = await UserService.getUsersByRole('project manager')
 
         this.projectManagers = response.data.data.map(manager => ({ id: manager.id, name: manager.name_first+ " " + manager.name_last }))
         this.loadStatus = 2
