@@ -18,7 +18,8 @@ authClient.interceptors.response.use(
 
     // If it's a bad response from the user or the session is no longer active,
     // we log out the user.
-    if (error.response && [401, 419].includes(error.response.status) && authStore.getUserFromLocalStorage) {
+    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+    if (error.response && [401, 419].includes(error.response.status) && user) {
       authStore.logout()
     }
 
@@ -50,27 +51,20 @@ export default {
     return await authClient.post('/api/auth/login', payload)
   },
 
-  logout: token => {
-    return authClient.post('/api/auth/logout', {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    // try {
-    //   return authClient.post('/api/auth/logout', {}, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   })
-    // } catch (error) {
-    //     console.log(error);
-    //   if(error.response.status === 401) {
-    //     localStorage.removeItem('user')
-    //     window.location.href = '/login'
-    //   } else {
-    //     console.log(error)
-    //   }
-    // }
+  logout: async token => {
+    try {
+      await authClient.post('/api/auth/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      localStorage.removeItem('user')
+
+      return { success: true }
+    } catch (error) {
+      console.error('Error during logout:', error)
+      throw error
+    }
   },
 
   forgotPassword: async email => {

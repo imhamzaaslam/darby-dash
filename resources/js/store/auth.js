@@ -24,13 +24,13 @@ export const useAuthStore = defineStore('auth', {
         this.loadStatus = 2
         this.authenticated = true
         this.token = res.data.accessToken
-        
+
         return res
       } catch (error) {
         this.error = error.response
         this.loadStatus = 3
         this.authenticated = false
-        
+
         return error.response
       }
     },
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
       this.loadStatus = 0
       localStorage.removeItem('user')
-      
+
       return await AuthService.logout(this.token).then(this.token=null)
     },
     async getAuthUser()  {
