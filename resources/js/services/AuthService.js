@@ -52,19 +52,11 @@ export default {
   },
 
   logout: async token => {
-    try {
-      await authClient.post('/api/auth/logout', {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      localStorage.removeItem('user')
-
-      return { success: true }
-    } catch (error) {
-      console.error('Error during logout:', error)
-      throw error
-    }
+    return await authClient.post('/api/auth/logout', {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
   },
 
   forgotPassword: async email => {

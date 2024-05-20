@@ -40,7 +40,14 @@ export const useAuthStore = defineStore('auth', {
       this.loadStatus = 0
       localStorage.removeItem('user')
 
-      return await AuthService.logout(this.token).then(this.token=null)
+      return await AuthService.logout(this.token).then(() => {
+        this.token=null
+        window.location.href = '/'
+      }).catch(error => {
+        console.error('Error during logout:', error)
+        this.token=null
+        window.location.href = '/'
+      })
     },
     async getAuthUser()  {
       this.error = null
