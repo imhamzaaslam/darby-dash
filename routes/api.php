@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\ProjectTypeController;
 use App\Http\Controllers\Api\Admin\ProjectController;
+use App\Http\Controllers\Api\Admin\ProjectPhaseController;
 use App\Http\Controllers\Api\Admin\TaskController;
 
 /*
@@ -65,18 +66,34 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::get('/', [ProjectController::class, 'show']);
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
+
+                Route::get('/phases', [ProjectPhaseController::class, 'index']);
+                Route::post('/phase', [ProjectPhaseController::class, 'store']);
+                Route::prefix('phase/{phaseUuid}')->group(function () {
+                    Route::patch('/', [ProjectPhaseController::class, 'update']);
+                    Route::delete('/', [ProjectPhaseController::class, 'delete']);
+                });
             });
         });
 
-        Route::prefix('project/{id}/tasks')->group(function () {
-            Route::get('/', [TaskController::class, 'index']);
-            Route::post('/', [TaskController::class, 'store']);
-            Route::prefix('{taskUuid}')->group(function () {
-                Route::get('/', [TaskController::class, 'show']);
+        Route::prefix('phase/{phaseUuid}')->group(function () {
+            Route::get('/tasks', [TaskController::class, 'index']);
+            Route::post('/task', [TaskController::class, 'store']);
+            Route::prefix('task/{taskUuid}')->group(function () {
                 Route::patch('/', [TaskController::class, 'update']);
                 Route::delete('/', [TaskController::class, 'delete']);
             });
         });
+
+        // Route::prefix('project/{id}/tasks')->group(function () {
+        //     Route::get('/', [TaskController::class, 'index']);
+        //     Route::post('/', [TaskController::class, 'store']);
+        //     Route::prefix('{taskUuid}')->group(function () {
+        //         Route::get('/', [TaskController::class, 'show']);
+        //         Route::patch('/', [TaskController::class, 'update']);
+        //         Route::delete('/', [TaskController::class, 'delete']);
+        //     });
+        // });
     });
 
     Route::get('/project-types', [ProjectTypeController::class, 'index']);

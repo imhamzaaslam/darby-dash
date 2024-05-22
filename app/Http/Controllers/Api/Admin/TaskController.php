@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\TaskRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
+use App\Contracts\ProjectPhaseRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\task\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
@@ -15,19 +16,20 @@ class TaskController extends Controller
 {
     public function __construct(
         protected TaskRepositoryInterface $taskRepository,
-        protected ProjectRepositoryInterface $projectRepository
+        protected ProjectRepositoryInterface $projectRepository,
+        protected ProjectPhaseRepositoryInterface $projectPhaseRepository
     ) {}
 
     /**
      * Display a listing of the resource.
      *
-     * @param string $projecId
-     * @param Request $request
+     * @param string $phaseUuid
      * @return AnonymousResourceCollection|JsonResponse
      */
-    public function index(string $projecId, Request $request): AnonymousResourceCollection|JsonResponse
+    public function index(string $phaseUuid): AnonymousResourceCollection|JsonResponse
     {
-        $tasks = $this->taskRepository->get($projecId);
+        $projectPhase = $this->projectPhaseRepository->getByUuidOrFail($phaseUuid);
+        $tasks = $this->projectPhaseRepository->getPhaseTasks($projectPhase);
 
         return TaskResource::collection($tasks);
     }
@@ -36,19 +38,28 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTaskRequest  $request
-     * @param string $projectId
+     * @param string $phaseUuid
      * @return JsonResponse
      */
-    public function store(StoreTaskRequest $request, string $projectId): JsonResponse
+    public function store(StoreTaskRequest $request, string $phaseUuid): JsonResponse
     {
+        $phase = $this->projectPhaseRepository->getByUuidOrFail($phaseUuid);
         $validated = $request->validated();
-        $project = $this->projectRepository->getFirstBy('id', $projectId);
 
-        $task = $this->taskRepository->create($project, $validated);
+        $task = $this->taskRepository->create($phase, $validated);
 
         return (new TaskResource($task))
             ->response()
             ->setStatusCode(201);
+
+        // $validated = $request->validated();
+        // $project = $this->projectRepository->getFirstBy('id', $projectId);
+
+        // $task = $this->taskRepository->create($project, $validated);
+
+        // return (new TaskResource($task))
+        //     ->response()
+        //     ->setStatusCode(201);
     }
 
     /**

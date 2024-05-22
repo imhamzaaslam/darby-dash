@@ -8,18 +8,21 @@ use App\Contracts\UserInfoRepositoryInterface;
 use App\Contracts\ProjectTypeRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\TaskRepositoryInterface;
+use App\Contracts\ProjectPhaseRepositoryInterface;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\ProjectType;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\ProjectPhase;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
 use App\Repositories\ProjectTypeRepository;
 use App\Repositories\ProjectRepository;
 use App\Repositories\TaskRepository;
+use App\Repositories\ProjectPhaseRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -59,6 +62,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             TaskRepositoryInterface::class,
             fn() => new TaskRepository(new Task)
+        );
+
+        $this->app->bind(
+            ProjectPhaseRepositoryInterface::class,
+            fn() => new ProjectPhaseRepository(new ProjectPhase)
         );
     }
 

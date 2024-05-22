@@ -28,6 +28,11 @@ abstract class AbstractEloquentRepository implements AbstractEloquentRepositoryI
         return $this->model->where('uuid', $uuid)->first();
     }
 
+    public function getAllByUuid(string $uuid): Collection
+    {
+        return $this->model->where('uuid', $uuid)->get();
+    }
+
     public function getFirstByOrFail(string $key, $value): ?Base
     {
         return $this->model->where($key, $value)->firstOrFail();

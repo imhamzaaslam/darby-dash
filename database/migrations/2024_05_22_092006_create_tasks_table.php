@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('phase_id')->constrained('project_phases')->onDelete('cascade');
-            $table->foreignId('board_id')->constrained('project_boards')->onDelete('cascade');
+            $table->foreignId('board_id')->default(1)->constrained('project_boards')->onDelete('cascade');
             $table->foreignId('parent_id')->nullable()->constrained('tasks')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();

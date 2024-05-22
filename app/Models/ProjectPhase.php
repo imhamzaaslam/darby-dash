@@ -15,6 +15,10 @@ class ProjectPhase extends Base
         'project_id',
         'name',
         'display_order',
-        
     ];
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'phase_id');
+    }
 }

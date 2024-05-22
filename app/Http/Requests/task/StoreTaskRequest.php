@@ -24,11 +24,12 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'board_id' => 'required|exists:boards,id',
             'description' => 'sometimes|nullable|string',
-            'status' => 'sometimes|in:todo,in_progress,completed',
+            'status' => 'sometimes|nullable|in:todo,in_progress,completed',
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
-            'time_spent' => 'sometimes|integer',
+            'time_spent' => 'sometimes|nullable|integer',
         ];
     }
 }

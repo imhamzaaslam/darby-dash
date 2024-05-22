@@ -14,6 +14,7 @@ class ProjectBoard extends Base
         'uuid',
         'project_id',
         'name',
+        'initial_name',
         'display_order',
     ];
 }
