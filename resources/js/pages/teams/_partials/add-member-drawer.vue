@@ -53,6 +53,7 @@
                   label="Email *"
                   :rules="[requiredValidator, emailValidator]"
                   :error-messages="addingErrors.email"
+                  placeholder="Email"
                 />
               </VCol>
 
