@@ -31,6 +31,7 @@
                   label="First Name *"
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.name_first"
+                  placeholder="First Name"
                 />
               </VCol>
 
@@ -41,6 +42,7 @@
                   label="Last Name *"
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.name_last"
+                  placeholder="Last Name"
                 />
               </VCol>
 
@@ -62,6 +64,7 @@
                   label="Phone *"
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.phone"
+                  placeholder="Phone"
                 />
               </VCol>
 
@@ -103,6 +106,7 @@
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.password"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                  placeholder="Password"
                 />
               </VCol>
 
@@ -116,6 +120,7 @@
                   :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
                   :error-messages="addingErrors.confirmPassword"
                   @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+                  placeholder="Confirm Password"
                 />
               </VCol>
 
@@ -188,11 +193,11 @@ const newMemberDetails = ref({
   name_first: '',
   name_last: '',
   email: '',
-  role: '',
+  role: null,
   phone: '',
   password: '',
   confirmPassword: '',
-  state: '',
+  state: null,
 })
 
 const addingErrors = ref({

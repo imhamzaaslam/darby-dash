@@ -155,8 +155,8 @@ const isLoading= ref(false)
 
 const newProjectDetails = ref({
   title: '',
-  project_type_id: '',
-  project_manager_id: '',
+  project_type_id: null,
+  project_manager_id: null,
   member_ids: [],
   est_hours: '',
   est_budget: '',

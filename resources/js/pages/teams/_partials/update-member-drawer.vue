@@ -32,6 +32,7 @@
                   label="First Name *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.name_first"
+                  placeholder="First Name"
                 />
               </VCol>
 
@@ -42,6 +43,7 @@
                   label="Last Name *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.name_last"
+                  placeholder="Last Name"
                 />
               </VCol>
 
@@ -52,6 +54,7 @@
                   label="Email *"
                   :rules="[requiredValidator, emailValidator]"
                   :error-messages="editErrors.email"
+                  placeholder="Email"
                 />
               </VCol>
 
@@ -62,6 +65,7 @@
                   label="Phone *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.phone"
+                  placeholder="Phone"
                 />
               </VCol>
 
