@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Project;
 use App\Models\ProjectMember;
+use App\Models\ProjectBoard;
 
 class ProjectSeeder extends Seeder
 {

@@ -29,6 +29,23 @@ class Base extends Model implements BaseInterface
                 //check if model has uuid column then save uuid for it.
                 $model->uuid = str()->uuid();
             }
+
+            if (auth()->check() && Schema::hasColumn($model->getTable(), 'created_by')) {
+                $model->created_by = auth()->id();
+            }
+        });
+
+        static::updating(function (self $model) {
+            if (auth()->check() && Schema::hasColumn($model->getTable(), 'updated_by')) {
+                $model->updated_by = auth()->id();
+            }
+        });
+
+        static::deleting(function (self $model) {
+            if (auth()->check() && Schema::hasColumn($model->getTable(), 'deleted_by')) {
+                $model->deleted_by = auth()->id();
+                $model->save();
+            }
         });
     }
 

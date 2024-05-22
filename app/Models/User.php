@@ -33,6 +33,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Kodeine\Metable\Metable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * App\Models\User
@@ -178,6 +179,23 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
 
         static::creating(function (User $user) {
             $user->uuid = str()->uuid();
+
+            if (auth()->check() && Schema::hasColumn($user->getTable(), 'created_by')) {
+                $user->created_by = auth()->id();
+            }
+        });
+
+        static::updating(function (self $model) {
+            if (auth()->check() && Schema::hasColumn($model->getTable(), 'updated_by')) {
+                $model->updated_by = auth()->id();
+            }
+        });
+
+        static::deleting(function (self $model) {
+            if (auth()->check() && Schema::hasColumn($model->getTable(), 'deleted_by')) {
+                $model->deleted_by = auth()->id();
+                $model->save();
+            }
         });
     }
 

@@ -11,6 +11,8 @@ interface ProjectRepositoryInterface
 
     public function storeProjectMembers(Project $project, array $members): void;
 
+    public function createProjectBoards(Project $project): void;
+
     public function update(Project $project, array $attributes): bool;
 
     public function delete(Project $project): bool;

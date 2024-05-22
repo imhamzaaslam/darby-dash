@@ -64,6 +64,8 @@ class ProjectController extends Controller
             $this->projectRepository->storeProjectMembers($project, $member_ids);
         }
 
+        $this->projectRepository->createProjectBoards($project);
+
         return (new ProjectResource($project))
             ->response()
             ->setStatusCode(201);
