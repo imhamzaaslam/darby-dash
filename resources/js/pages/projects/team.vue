@@ -1,386 +1,437 @@
-<script setup>
-import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue'
+<template>
+  <div>
+    <!-- Toggle -->
+    <VRow>
+      <VCol
+        cols="12"
+        md="7"
+        class="d-flex"
+      >
+        <VBtnToggle
+          v-model="viewType"
+          class="d-toggle"
+          rounded="0"
+        >
+          <VIcon
+            icon="tabler-list"
+            class="me-1"
+            :class="{ 'bg-primary': viewType === 'list' }"
+            @click="viewType = 'list'"
+          />
+          <VIcon
+            icon="tabler-layout-grid"
+            :class="{ 'bg-primary': viewType === 'grid' }"
+            @click="viewType = 'grid'"
+          />
+        </VBtnToggle>
+        <VIcon
+          icon="tabler-filter"
+          class="bg-primary ms-2"
+          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+        />
+      </VCol>
+      <VCol
+        cols="12"
+        md="5"
+      >
+        <div class="d-flex justify-end mb-5">
+          <VBtn
+            prepend-icon="tabler-plus"
+            @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
+          >
+            New Project
+          </VBtn>
+        </div>
+      </VCol>
+    </VRow>
+    <VRow
+      v-if="viewType === 'list'"
+      class="mb-4"
+    >
+      <VCol
+        v-for="project in getProjects"
+        :key="project.id"
+        cols="12"
+      > 
+        <VCard class="d-flex ps-4 py-1">
+          <VCol cols="3">
+            <div class="d-flex align-center">
+              <VAvatar
+                size="36"
+                color="primary"
+                variant="tonal"
+              >
+                <span>{{ avatarText(project.project_manager) }}</span>
+              </VAvatar>
+              <div class="d-flex flex-column ms-3">
+                <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
+                <small class="mt-0">hamza@gmail.com</small>
+              </div>
+            </div>
+          </VCol>
+          <VCol cols="3">
+            <span>
+              Project Manager
+            </span>
+          </VCol>
+          <VCol cols="2">
+            <VChip variant="outlined" color="success" size="small">
+              Active
+            </VChip>
+          </VCol>
+          <VCol cols="3">
+            <div class="d-flex align-center gap-3">
+              <div class="flex-grow-1">
+                <VProgressLinear
+                  :height="6"
+                  :model-value="25"
+                  color="primary"
+                  rounded
+                />
+              </div>
+              <div class="text-body-1 text-high-emphasis">
+                {{ 25 }}%
+              </div>
+            </div>
+          </VCol>
+          <VCol
+            cols="1"
+            class="ms-8"
+          >
+            <IconBtn @click.prevent>
+              <VIcon icon="tabler-dots-vertical" />
+              <VMenu activator="parent">
+                <VList>
+                  <VListItem
+                    value="tasks"
+                    :to="{ name: 'add-project-tasks', params: { project: project.project_type_id, id: project.id } }"
+                  >
+                    Tasks
+                  </VListItem>
+                  <VListItem
+                    value="view"
+                    :to="{ name: 'web-design', params: { id: project.id } }"
+                  >
+                    View
+                  </VListItem>
+                  <VList>
+                    <VListItem
+                      value="edit"
+                      @click="editProject(project)"
+                    >
+                      Edit
+                    </VListItem>
+                    <VListItem
+                      value="delete"
+                      @click="deleteProject(project)"
+                    >
+                      Delete
+                    </VListItem>
+                  </VList>
+                </VList>
+              </VMenu>
+            </IconBtn>
+          </VCol>
+        </VCard>
+      </VCol>
+    </VRow>
 
-// 👉 Store
-const searchQuery = ref('')
-const selectedRole = ref()
-const selectedPlan = ref()
-const selectedStatus = ref()
-
-// Data table options
-const itemsPerPage = ref(10)
-const page = ref(1)
-const sortBy = ref()
-const orderBy = ref()
-
-const updateOptions = options => {
-  sortBy.value = options.sortBy[0]?.key
-  orderBy.value = options.sortBy[0]?.order
-}
-
-// Headers
-const headers = [
-  {
-    title: 'User',
-    key: 'user',
-  },
-  {
-    title: 'Role',
-    key: 'role',
-  },
-  {
-    title: 'Status',
-    key: 'status',
-  },
-  {
-    title: 'Actions',
-    key: 'actions',
-    sortable: false,
-  },
-]
-
-const {
-  data: usersData,
-  execute: fetchUsers,
-} = await useApi(createUrl('/apps/users', {
-  query: {
-    q: searchQuery,
-    status: selectedStatus,
-    plan: selectedPlan,
-    role: selectedRole,
-    itemsPerPage,
-    page,
-    sortBy,
-    orderBy,
-  },
-}))
-
-const users = computed(() => usersData.value.users)
-const totalUsers = computed(() => usersData.value.totalUsers)
-
-// 👉 search filters
-const roles = [
-  {
-    title: 'Admin',
-    value: 'admin',
-  },
-  {
-    title: 'Author',
-    value: 'author',
-  },
-  {
-    title: 'Editor',
-    value: 'editor',
-  },
-  {
-    title: 'Maintainer',
-    value: 'maintainer',
-  },
-  {
-    title: 'Subscriber',
-    value: 'subscriber',
-  },
-]
-
-const plans = [
-  {
-    title: 'Basic',
-    value: 'basic',
-  },
-  {
-    title: 'Company',
-    value: 'company',
-  },
-  {
-    title: 'Enterprise',
-    value: 'enterprise',
-  },
-  {
-    title: 'Team',
-    value: 'team',
-  },
-]
-
-const status = [
-  {
-    title: 'Pending',
-    value: 'pending',
-  },
-  {
-    title: 'Active',
-    value: 'active',
-  },
-  {
-    title: 'Inactive',
-    value: 'inactive',
-  },
-]
-
-const resolveUserRoleVariant = role => {
-  const roleLowerCase = role.toLowerCase()
-  if (roleLowerCase === 'subscriber')
-    return {
-      color: 'success',
-      icon: 'tabler-user',
-    }
-  if (roleLowerCase === 'author')
-    return {
-      color: 'error',
-      icon: 'tabler-device-desktop',
-    }
-  if (roleLowerCase === 'maintainer')
-    return {
-      color: 'info',
-      icon: 'tabler-chart-pie',
-    }
-  if (roleLowerCase === 'editor')
-    return {
-      color: 'warning',
-      icon: 'tabler-edit',
-    }
-  if (roleLowerCase === 'admin')
-    return {
-      color: 'primary',
-      icon: 'tabler-crown',
-    }
+    <!-- Grid View -->
+    <VRow v-else>
+      <VCol
+        v-for="project in getProjects"
+        :key="project.id"
+        cols="12"
+        md="4"
+      >
+        <VCard>
+          <div class="image-container">
+            <VImg :src="Page2" />
+            <IconBtn class="dots-icon" @click.prevent>
+              <VIcon icon="tabler-dots-vertical" />
+              <VMenu activator="parent">
+                <VList>
+                  <VListItem
+                    value="tasks"
+                    :to="{ name: 'add-project-tasks', params: { project: project.project_type_id, id: project.id } }"
+                  >
+                    Tasks
+                  </VListItem>
+                  <VListItem
+                    value="view"
+                    :to="{ name: 'web-design', params: { id: project.id } }"
+                  >
+                    View
+                  </VListItem>
+                  <VList>
+                    <VListItem
+                      value="edit"
+                      @click="editProject(project)"
+                    >
+                      Edit
+                    </VListItem>
+                    <VListItem
+                      value="delete"
+                      @click="deleteProject(project)"
+                    >
+                      Delete
+                    </VListItem>
+                  </VList>
+                </VList>
+              </VMenu>
+            </IconBtn>
+          </div>
+          <VCardText class="position-relative">
+            <!-- User Avatar -->
+            <VAvatar
+              size="75"
+              class="avatar-center"
+              color="primary"
+            >
+              <span>{{ avatarText(project.project_manager) }}</span>
+            </VAvatar> 
   
-  return {
-    color: 'primary',
-    icon: 'tabler-user',
+            <VRow class="mt-5">
+              <VCol cols="8">
+                <div class="d-flex align-center mt-1 ms-1">
+                  <div class="d-flex flex-column ms-3">
+                    <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
+                    <small class="mt-0">Project Manager</small>
+                  </div>
+                </div>
+              </VCol>
+              <VCol cols="4">
+                <div class="d-flex align-end justify-end">
+                  <VProgressCircular
+                    :rotate="360"
+                    :size="70"
+                    :width="6"
+                    :model-value="25"
+                    color="primary"
+                  >
+                    25%
+                  </VProgressCircular>
+                </div>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
+  </div>
+  <AddProjectDrawer
+    v-model:is-drawer-open="isAddProjectDrawerOpen"
+    :fetch-projects="fetchProjects"
+    :get-project-types="getProjectTypes"
+    :get-members="getMembers"
+    :get-project-managers="getProjectManagers"
+    :get-load-status="getLoadStatus"
+  />
+  <EditProjectDrawer
+    v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
+    :fetch-projects="fetchProjects"
+    :get-project-types="getProjectTypes"
+    :get-members="getMembers"
+    :get-project-managers="getProjectManagers"
+    :edit-project-details="editProjectDetails"
+    :get-load-status="getLoadStatus"
+  />
+  <FilterDrawer
+    v-model:is-filter-drawer-open="isFilterDrawerOpen"
+    :fetch-projects="fetchProjects"
+    :get-members="getMembers"
+    :get-project-managers="getProjectManagers"
+    :get-load-status="getLoadStatus"
+  />
+</template>
+
+<script setup>
+import Swal from 'sweetalert2'
+import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project-drawer.vue'
+import EditProjectDrawer from '@/pages/projects/web-designs/_partials/update-project-drawer.vue'
+import FilterDrawer from '@/pages/projects/web-designs/_partials/filter-projects-drawer.vue'
+import Page2 from '../../../images/pages/2.png'
+import { computed, onBeforeMount, ref } from 'vue'
+import { useToast } from "vue-toastification"
+import { useProjectStore } from "../../store/projects"
+import { useProjectTypeStore } from "../../store/project_types"
+import { useUserStore } from "../../store/users"
+import { useRoute } from 'vue-router'
+
+const toast = useToast()
+const projectStore = useProjectStore()
+const projectTypeStore = useProjectTypeStore()
+const userStore = useUserStore()
+const route = useRoute()
+
+const totalRecords = ref(0)
+const viewType = ref('list')
+const isAddProjectDrawerOpen = ref(false)
+const isEditProjectDrawerOpen = ref(false)
+const isFilterDrawerOpen = ref(false)
+const isLoading = ref(false)
+const selectedProjectType = ref(1)
+const editProjectDetails = ref({})
+
+watch(
+  () => route.query.type,
+  async newType => {
+    if (newType) {
+      selectedProjectType.value = parseInt(newType)
+      await fetchProjects()
+    }
+  },
+  { immediate: true },
+)
+
+onBeforeMount(async () => {
+  await fetchProjects()
+  await fetchProjectTypes()
+  await fetchProjectManagers()
+  await fetchMembers()
+  totalRecords.value = totalProjects.value
+})
+
+const fetchProjects = async () => {
+  try {
+    console.log("SELECTED VALUE TYPE", selectedProjectType.value)
+    await projectStore.getByType(selectedProjectType.value)
+    isLoading.value = true
+  } catch (error) {
+    toast.error('Error fetching projects:', error)
+  }
+  finally {
+    isLoading.value = false
   }
 }
 
-const resolveUserStatusVariant = stat => {
-  const statLowerCase = stat.toLowerCase()
-  if (statLowerCase === 'pending')
-    return 'warning'
-  if (statLowerCase === 'active')
-    return 'success'
-  if (statLowerCase === 'inactive')
-    return 'secondary'
-  
-  return 'primary'
+const editProject = project => {
+  editProjectDetails.value = { ...project }
+  isEditProjectDrawerOpen.value = true
 }
 
-const isAddNewUserDrawerVisible = ref(false)
+const deleteProject = async project => {
+  try {
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to delete ${project.title}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    })
 
-const addNewUser = async userData => {
-  await $api('/apps/users', {
-    method: 'POST',
-    body: userData,
-  })
+    if (confirmDelete.isConfirmed) {
 
-  // refetch User
-  fetchUsers()
+      const res = await projectStore.delete(project.id)
+      const errors = getErrors.value
+      if(errors)
+      {
+        toast.error('Something went wrong.')
+      }
+      else{
+        isLoading.value = true
+        toast.success('Project deleted successfully', { timeout: 1000 })
+        await fetchProjects()
+        isLoading.value = false
+      }
+    }
+  } catch (error) {
+    toast.error('Failed to delete project:', error.message || error)
+  }
 }
 
-const deleteUser = async id => {
-  await $api(`/apps/users/${ id }`, { method: 'DELETE' })
+const fetchProjectTypes = async () => {
+  try {
+    isLoading.value = true
 
-  // refetch User
-  fetchUsers()
+    await projectTypeStore.getAll()
+  } catch (error) {
+    toast.error('Failed to get project types:', error.message || error)
+  }
+  finally {
+    isLoading.value = false
+  }
 }
+
+const fetchProjectManagers = async () => {
+  try {
+    isLoading.value = true
+
+    await userStore.getProjectManagers()
+  } catch (error) {
+    toast.error('Failed to get project managers:', error.message || error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
+const fetchMembers = async () => {
+  try {
+    isLoading.value = true
+
+    await userStore.getMembers()
+  } catch (error) {
+    toast.error('Failed to get members:', error.message || error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
+const getProjects = computed(() => {
+  return projectStore.getProjectsByType
+})
+
+const getProjectTypes = computed(() => {
+  return projectTypeStore.getProjectTypes
+})
+
+const getProjectManagers = computed(() => {
+  return userStore.getProjectManagersList
+})
+
+const getMembers = computed(() => {
+  return userStore.getMembersList
+})
+
+const getErrors = computed(() => {
+  return projectStore.getErrors
+})
+
+const getLoadStatus = computed(() => {
+  return projectStore.getLoadStatus
+})
+
+const totalProjects = computed(() => {
+  return projectStore.projectsCount
+})
 </script>
 
-<template>
-  <section>
-    <VCard class="mb-6">
-      <VCardItem class="pb-4">
-        <VCardTitle>Manage Team</VCardTitle>
-      </VCardItem>
+<style scoped>
+.d-toggle{
+  border: unset !important;
+  padding: 0 !important;
+  align-items: unset !important;
+  block-size: unset !important;
+}
 
-      <VCardText>
-        <VRow>
-          <!-- 👉 Select Role -->
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <AppSelect
-              v-model="selectedRole"
-              placeholder="Select Role"
-              :items="roles"
-              clearable
-              clear-icon="tabler-x"
-            />
-          </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <AppSelect
-              v-model="selectedStatus"
-              placeholder="Select Status"
-              :items="status"
-              clearable
-              clear-icon="tabler-x"
-            />
-          </VCol>
-        </VRow>
-      </VCardText>
+.avatar-center {
+  position: absolute;
+  border: 3px solid rgb(var(--v-theme-surface));
+  inset-block-start: -2rem;
+  inset-inline-start: 1rem;
+}
 
-      <VDivider />
+.image-container {
+  position: relative;
+}
 
-      <VCardText class="d-flex flex-wrap gap-4">
-        <div class="me-3 d-flex gap-3">
-          <AppSelect
-            :model-value="itemsPerPage"
-            :items="[
-              { value: 10, title: '10' },
-              { value: 25, title: '25' },
-              { value: 50, title: '50' },
-              { value: 100, title: '100' },
-              { value: -1, title: 'All' },
-            ]"
-            style="inline-size: 6.25rem;"
-            @update:model-value="itemsPerPage = parseInt($event, 10)"
-          />
-        </div>
-        <VSpacer />
-
-        <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
-          <!-- 👉 Search  -->
-          <div style="inline-size: 15.625rem;">
-            <AppTextField
-              v-model="searchQuery"
-              placeholder="Search User"
-            />
-          </div>
-
-          <!-- 👉 Add user button -->
-          <VBtn
-            prepend-icon="tabler-plus"
-            @click="isAddNewUserDrawerVisible = true"
-          >
-            Add New User
-          </VBtn>
-        </div>
-      </VCardText>
-
-      <VDivider />
-
-      <!-- SECTION datatable -->
-      <VDataTableServer
-        v-model:items-per-page="itemsPerPage"
-        v-model:page="page"
-        :items="users"
-        :items-length="totalUsers"
-        :headers="headers"
-        class="text-no-wrap"
-        show-select
-        @update:options="updateOptions"
-      >
-        <!-- User -->
-        <template #item.user="{ item }">
-          <div class="d-flex align-center gap-x-4">
-            <VAvatar
-              size="34"
-              :variant="!item.avatar ? 'tonal' : undefined"
-              :color="!item.avatar ? resolveUserRoleVariant(item.role).color : undefined"
-            >
-              <VImg
-                v-if="item.avatar"
-                :src="item.avatar"
-              />
-              <span v-else>{{ avatarText(item.fullName) }}</span>
-            </VAvatar>
-            <div class="d-flex flex-column">
-              <h6 class="text-base">
-                {{ item.fullName }}
-              </h6>
-              <div class="text-sm">
-                {{ item.email }}
-              </div>
-            </div>
-          </div>
-        </template>
-
-        <!-- 👉 Role -->
-        <template #item.role="{ item }">
-          <div class="d-flex align-center gap-x-2">
-            <VIcon
-              :size="22"
-              :icon="resolveUserRoleVariant(item.role).icon"
-              :color="resolveUserRoleVariant(item.role).color"
-            />
-
-            <div class="text-capitalize text-high-emphasis text-body-1">
-              {{ item.role }}
-            </div>
-          </div>
-        </template>
-
-        <!-- Status -->
-        <template #item.status="{ item }">
-          <VChip
-            :color="resolveUserStatusVariant(item.status)"
-            size="small"
-            label
-            class="text-capitalize"
-          >
-            {{ item.status }}
-          </VChip>
-        </template>
-
-        <!-- Actions -->
-        <template #item.actions="{ item }">
-          <IconBtn @click="deleteUser(item.id)">
-            <VIcon icon="tabler-trash" />
-          </IconBtn>
-
-          <IconBtn>
-            <VIcon icon="tabler-eye" />
-          </IconBtn>
-
-          <VBtn
-            icon
-            variant="text"
-            color="medium-emphasis"
-          >
-            <VIcon icon="tabler-dots-vertical" />
-            <VMenu activator="parent">
-              <VList>
-                <VListItem :to="{ name: 'apps-user-view-id', params: { id: item.id } }">
-                  <template #prepend>
-                    <VIcon icon="tabler-eye" />
-                  </template>
-
-                  <VListItemTitle>View</VListItemTitle>
-                </VListItem>
-
-                <VListItem link>
-                  <template #prepend>
-                    <VIcon icon="tabler-pencil" />
-                  </template>
-                  <VListItemTitle>Edit</VListItemTitle>
-                </VListItem>
-
-                <VListItem @click="deleteUser(item.id)">
-                  <template #prepend>
-                    <VIcon icon="tabler-trash" />
-                  </template>
-                  <VListItemTitle>Delete</VListItemTitle>
-                </VListItem>
-              </VList>
-            </VMenu>
-          </VBtn>
-        </template>
-
-        <!-- pagination -->
-        <template #bottom>
-          <TablePagination
-            v-model:page="page"
-            :items-per-page="itemsPerPage"
-            :total-items="totalUsers"
-          />
-        </template>
-      </VDataTableServer>
-      <!-- SECTION -->
-    </VCard>
-    <!-- 👉 Add New User -->
-    <AddNewUserDrawer
-      v-model:isDrawerOpen="isAddNewUserDrawerVisible"
-      @user-data="addNewUser"
-    />
-  </section>
-</template>
+.dots-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+</style>
