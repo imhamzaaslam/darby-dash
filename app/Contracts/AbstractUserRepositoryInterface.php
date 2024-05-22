@@ -13,8 +13,6 @@ interface AbstractUserRepositoryInterface
 
     public function getByUuid(string $uuid): ?Model;
 
-    public function getAllByUuid(string $uuid): Collection;
-
     public function getFirstByOrFail(string $key, $value): ?Model;
 
     public function getByUuidOrFail(string $uuid): ?Model;

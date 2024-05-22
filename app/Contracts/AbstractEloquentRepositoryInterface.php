@@ -81,6 +81,8 @@ interface AbstractEloquentRepositoryInterface
 
     public function getModel(): Base;
 
+    public function getAllByUuid(string $uuid): Collection;
+
     public function active(\Illuminate\Database\Query\Builder $query = null): \Illuminate\Database\Query\Builder;
 
     public function inactive(\Illuminate\Database\Query\Builder $query = null): \Illuminate\Database\Query\Builder;
