@@ -51,47 +51,20 @@ class TaskController extends Controller
         return (new TaskResource($task))
             ->response()
             ->setStatusCode(201);
-
-        // $validated = $request->validated();
-        // $project = $this->projectRepository->getFirstBy('id', $projectId);
-
-        // $task = $this->taskRepository->create($project, $validated);
-
-        // return (new TaskResource($task))
-        //     ->response()
-        //     ->setStatusCode(201);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param string $projecId
-     * @param string $id
-     * @return TaskResource
-     */
-    public function show(string $projecId, string $id): TaskResource
-    {
-        $task = $this->taskRepository->getByUuidOrFail($id);
-
-        return (new TaskResource($task))
-            ->response()
-            ->setStatusCode(200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param StoreTaskRequest $request
-     * @param string $projectId
+     * @param string $phaseUuid
      * @param string $taskUuid
      * @return Response|JsonResponse
      */
-    public function update(StoreTaskRequest $request, string $projectId, string $taskUuid): Response|JsonResponse
+    public function update(StoreTaskRequest $request, string $phaseUuid, string $taskUuid): Response|JsonResponse
     {
-        $validated = $request->validated();
-
-        $project = $this->projectRepository->getFirstBy('id', $projectId);
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $validated = $request->validated();
 
         $this->taskRepository->update($task, $validated);
 
@@ -103,18 +76,16 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $projectId
+     * @param string $phaseUuid
      * @param string $taskUuid
      * @return JsonResponse
      */
-    public function delete(string $projectId, string $taskUuid): JsonResponse
+    public function delete(string $phaseUuid, string $taskUuid): JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
 
         $this->taskRepository->delete($task);
 
-        return response()->json([
-            'message' => 'Task deleted successfully'
-        ]);
+        return response()->json(['message' => 'Task deleted successfully']);
     }
 }

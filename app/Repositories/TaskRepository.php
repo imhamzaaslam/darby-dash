@@ -33,7 +33,6 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         $project_id = $phase->project_id;
 
         $data = array_merge($attributes, ['phase_id' => $phase_id, 'project_id' => $project_id]);
-        dd($data);
         return $this->model->create($data);
     }
 
