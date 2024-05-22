@@ -136,7 +136,7 @@
                   <VList>
                     <VListItem
                       value="tasks"
-                      :to="{ name: 'add-project-tasks', params: { project: project.project_type_id, id: project.id } }"
+                      :to="{ name: 'add-project-tasks', params: { id: project.id } }"
                     >
                       Tasks
                     </VListItem>
@@ -201,7 +201,7 @@
                       <VList>
                         <VListItem
                           value="tasks"
-                          :to="{ name: 'add-project-tasks', params: { project: project.project_type_id, id: project.id } }"
+                          :to="{ name: 'add-project-tasks', params: { id: project.id } }"
                         >
                           Tasks
                         </VListItem>
@@ -347,7 +347,6 @@ onBeforeMount(async () => {
 
 const fetchProjects = async () => {
   try {
-    console.log("SELECTED VALUE TYPE", selectedProjectType.value)
     await projectStore.getByType(selectedProjectType.value)
     isLoading.value = true
   } catch (error) {
@@ -377,7 +376,7 @@ const deleteProject = async project => {
 
     if (confirmDelete.isConfirmed) {
 
-      const res = await projectStore.delete(project.id)
+      const res = await projectStore.delete(project.uuid)
       const errors = getErrors.value
       if(errors)
       {

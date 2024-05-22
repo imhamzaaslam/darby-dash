@@ -20,9 +20,8 @@ const $route = useRoute()
 const projectId = ref(null)
 const projectType = ref(null)
 
-onBeforeMount(() => {
+watchEffect(() => {
   projectId.value = $route.params.id
-  projectType.value = $route.params.project
 })
 
 watch([
@@ -67,7 +66,7 @@ const showNavigation = computed(() => {
             href="#"
             class="text-h6 ms-3 me-5 text-primary"
           >Overview</a>
-          <RouterLink :to="`/projects/${projectType}/${projectId}/chat`">
+          <RouterLink :to="`/projects/${projectId}/chat`">
             <span class="text-h6 me-5">
               <VBadge
                 class="new-badge"
@@ -78,10 +77,10 @@ const showNavigation = computed(() => {
               </VBadge>
             </span>
           </RouterLink>
-          <RouterLink :to="`/projects/${projectType}/${projectId}/files`">
+          <RouterLink :to="`/projects/${projectId}/files`">
             <span class="text-h6 me-8 inner-badge-text">Files</span>
           </RouterLink>
-          <RouterLink :to="`/projects/${projectType}/${projectId}/tasks/add`">
+          <RouterLink :to="`/projects/${projectId}/tasks/add`">
             <span class="text-h6 me-8">
               Tasks
               <!--
@@ -103,10 +102,10 @@ const showNavigation = computed(() => {
             href="#"
             class="text-h6 me-8 inner-badge-text"
           >Milestones</a>
-          <RouterLink :to="`/projects/${projectType}/${projectId}/calendar`">
+          <RouterLink :to="`/projects/${projectId}/calendar`">
             <span class="text-h6 me-8 inner-badge-text">Calendar</span>
           </RouterLink>
-          <RouterLink :to="`/projects/${projectType}/${projectId}/team`">
+          <RouterLink :to="`/projects/${projectId}/team`">
             <span class="text-h6 me-8 inner-badge-text">Your Team</span>
           </RouterLink>
         </div>

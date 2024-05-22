@@ -28,254 +28,263 @@
     </VRow>
     <VRow v-if="viewType === 'list'">
       <VCol cols="12">
-        <AppTextField
-          v-model="taskName"
-          label="Add Task"
-          clearable
-          placeholder="Add Task"
-          class="textfield-demo-icon-slot"
-          @keydown.enter="addTask"
-        >
-          <!-- Append -->
-          <template #append>
-            <VBtn
-              :icon="$vuetify.display.smAndDown"
-              @click="addTask"
-            >
-              <VIcon
-                icon="tabler-circle-plus"
-                color="#fff"
-                size="22"
-              />
-              <span
-                v-if="$vuetify.display.mdAndUp"
-                class="ms-1"
-              >Add</span>
-            </VBtn>
-          </template>
-        </AppTextField>
-      </VCol>
-      <VCol cols="12">
-        <template v-if="isLoading">
-          <VProgressLinear
-            indeterminate
-            color="primary"
-          />
-        </template>
-        <template v-else>
-          <VList v-if="getProjectTasks.length > 0">
-            <VListItem
-              v-for="(task, index) in getProjectTasks"
-              :key="index"
-              @click="startEditing(task)"
-            >
-              <VListItemContent>
-                <VRow
-                  align="center"
-                  justify="space-between"
-                >
-                  <VCol cols="auto">
-                    <!-- Drag Icon -->
-                    <VIcon
-                      class="tabler-brand-asana"
-                      color="info"
-                    />
-                    <!-- Task Name -->
-                    <span class="ms-2">{{ task.name.length > 60 ? task.name.substring(0, 60) + '...' : task.name }}</span>
-                  </VCol>
-                  <VCol cols="auto">
-                    <VChip
-                      color="secondary"
-                      size="small"
-                      class="ms-2"
-                    >
-                      {{ task.status }}
-                    </VChip>
-                    <VChip
-                      v-if="task.due_date"
-                      color="error"
-                      size="small"
-                      class="ms-2"
-                    >
-                      {{ formatDate(task.due_date) }}
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span>Task is due on {{ formatDate(task.due_date) }}</span>
-                      </VTooltip>
-                    </VChip>
-                    <VChip
-                      color="info"
-                      size="small"
-                      class="ms-2"
-                    >
-                      {{ formatDate(task.created_at) }}
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span>Created on {{ formatDate(task.created_at) }}</span>
-                      </VTooltip>
-                    </VChip>
-                    <!--
-                      <VChip
-                      color="secondary"
-                      size="small"
-                      class="ms-2"
-                      >
-                      <VIcon class="tabler-message-circle" /> 8
-                      </VChip>
-                    -->
-                    <!-- Actions Menu -->
-                    <IconBtn class="ms-2">
-                      <VIcon icon="tabler-dots-vertical" />
-                      <VMenu activator="parent">
-                        <VList>
-                          <VListItem @click="startEditing(task)">
-                            Edit
-                          </VListItem>
-                          <VListItem @click="deleteTask(task)">
-                            Delete
-                          </VListItem>
-                        </VList>
-                      </VMenu>
-                    </IconBtn>
-                  </VCol>
-                </VRow>
-              </VListItemContent>
-            </VListItem>
-          </VList>
-          <div
-            v-else
-            class="text-center"
+        <div v-if="getProjectTasks.length > 0">
+          <VCard
+            v-for="(task, index) in getProjectTasks"
+            :key="index"
+            class="px-2 py-1 mt-2"
+            @click="startEditing(task)"
           >
-            No tasks added yet.
-          </div>
-        </template>
+            <VRow>
+              <VCol
+                cols="6"
+                class="mt-2"
+              >
+                <!-- Drag Icon -->
+                <VIcon
+                  class="tabler-playstation-circle"
+                  color="info"
+                />
+                <!-- Task Name -->
+                <span class="ms-2">{{ task.name.length > 50 ? task.name.substring(0, 50) + '...' : task.name }}</span>
+              </VCol>
+              <VCol
+                cols="5"
+                class="mt-2"
+              >
+                <div class="float-right">
+                  <VChip
+                    color="secondary"
+                    size="small"
+                    class="ms-2"
+                  >
+                    {{ task.status }}
+                  </VChip>
+                  <VChip
+                    v-if="task.due_date"
+                    color="error"
+                    size="small"
+                    class="ms-2"
+                  >
+                    {{ formatDate(task.due_date) }}
+                    <VTooltip
+                      activator="parent"
+                      location="top"
+                    >
+                      <span>Task is due on {{ formatDate(task.due_date) }}</span>
+                    </VTooltip>
+                  </VChip>
+                  <VChip
+                    color="info"
+                    size="small"
+                    class="ms-2"
+                  >
+                    {{ formatDate(task.created_at) }}
+                    <VTooltip
+                      activator="parent"
+                      location="top"
+                    >
+                      <span>Created on {{ formatDate(task.created_at) }}</span>
+                    </VTooltip>
+                  </VChip>
+                  <!--
+                    <VChip
+                    color="secondary"
+                    size="small"
+                    class="ms-2"
+                    >
+                    <VIcon class="tabler-message-circle" /> 8
+                    </VChip>
+                  -->
+                </div>
+              </VCol>
+              <VCol cols="1">
+                <!-- Actions Menu -->
+                <IconBtn class="ms-2">
+                  <VIcon icon="tabler-dots-vertical" />
+                  <VMenu activator="parent">
+                    <VList>
+                      <VListItem @click="startEditing(task)">
+                        Edit
+                      </VListItem>
+                      <VListItem @click="deleteTask(task)">
+                        Delete
+                      </VListItem>
+                    </VList>
+                  </VMenu>
+                </IconBtn>
+              </VCol>
+            </VRow>
+          </VCard>
+        </div>
+        <div
+          v-else
+          class="text-center"
+        >
+          <span v-if="!showAddTaskField">No tasks added yet.</span>
+        </div>
+        <VBtn
+          v-if="!showAddTaskField"
+          color="primary"
+          variant="plain"
+          size="small"
+          @click="activateQuickAdd"
+        >
+          <VIcon icon="tabler-plus" />
+          Add Task
+        </VBtn>
+        <VCard
+          v-if="showAddTaskField"
+          class="px-2 py-2 mt-2"
+        >
+          <VRow>
+            <VCol cols="8">
+              <!-- Drag Icon -->
+              <div class="d-flex align-center">
+                <VIcon
+                  class="tabler-playstation-circle me-2"
+                  color="info"
+                />
+                <VTextField
+                  ref="quickTaskInput"
+                  v-model="quickTaskName"
+                  style="margin-top: -7px;"
+                  variant="plain"
+                  hide-details
+                  dense
+                  @keydown.enter="addQuickTask"
+                />
+              </div>
+            </VCol>
+            <VCol cols="4">
+              <div class="float-right">
+                <VIcon
+                  class="tabler-calendar me-1"
+                  color="info"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Select Due Date</span>
+                  </VTooltip>
+                  <AppDateTimePicker v-model="dueDate" />
+                </VIcon>
+                <VIcon
+                  class="tabler-circle-check me-1"
+                  color="info"
+                  @click="addQuickTask"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Save</span>
+                  </VTooltip>
+                </VIcon>
+                <VIcon
+                  class="tabler-x"
+                  color="info"
+                  @click="cancelQuickTask"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Cancel</span>
+                  </VTooltip>
+                </VIcon>
+              </div>
+            </VCol>
+          </VRow>
+        </VCard>
       </VCol>
     </VRow>
+    <!-- Kanban View -->
     <VRow
       v-else
-      class="kanban-scroll"
+      class="kanban-columns mt-8"
+      no-gutters
     >
-      <VCol cols="12">
-        <VRow
-          class="kanban-columns"
-          no-gutters
-        >
-          <VCol
-            v-for="(column, index) in columns"
-            :key="index"
-            cols="4"
-            class="kanban-column"
-          >
-            <VCard class="mb-3">
-              <div
-                class="kanban-column-header"
-                @click="editTitle(index)"
-              >
-                <template v-if="!column.isEditing">
-                  <span class="kanban-column-title">{{ column.title }}</span>
-                </template>
-                <template v-else>
-                  <VTextField
-                    ref="titleInput"
-                    v-model="column.title"
-                    dense
-                    hide-details
-                    single-line
-                    autofocus
-                    @blur="saveTitle(index)"
-                  />
-                </template>
-              </div>
-              <VDivider />
-              <VueDraggableNext
-                class="kanban-dropzone"
-                :list="column.tasks"
-                group="tasks"
-                @change="onDrop(index, $event)"
-              >
-                <template
-                  v-for="(task, taskIndex) in column.tasks"
-                  :key="task.id"
-                >
-                  <VListItem
-                    class="task-card"
-                    :draggable="isDraggable"
-                    @dragstart="onDragStart"
-                    @click="editTask(index, taskIndex)"
-                  >
-                    <VListItemContent>
-                      <VListItemTitle>{{ task.name }}</VListItemTitle>
-                      <small v-html="task.description" />
-                    </VListItemContent>
-                  </VListItem>
-                </template>
-              </VueDraggableNext>
-              <VDivider />
-              <VCardActions class="justify-center">
-                <VBtn
-                  color="primary"
-                  variant="plain"
-                  @click="addNewTask(index)"
-                >
-                  Add Task
-                </VBtn>
-              </VCardActions>
-            </VCard>
-          </VCol>
-          <!-- Add column button -->
-          <VCol cols="4">
-            <VCard class="mb-3">
-              <VCardActions class="justify-center">
-                <VBtn
-                  color="primary"
-                  variant="plain"
-                  @click="addColumn"
-                >
-                  Add Column
-                </VBtn>
-              </VCardActions>
-            </VCard>
-          </VCol>
-        </VRow>
-      </VCol>
-      <VDialog
-        v-model="dialog"
-        max-width="500"
+      <VCol
+        v-for="(list, index) in lists"
+        :key="index"
+        cols="4"
+        class="kanban-column"
       >
-        <VCard>
-          <VCardTitle>Edit Task</VCardTitle>
-          <VCardText>
-            <VTextField
-              v-model="editedTask.title"
-              label="Title"
-              class="mb-4"
-              autofocus
-            />
-            <VTextField
-              v-model="editedTask.description"
-              label="Description"
-            />
-          </VCardText>
-          <VCardActions>
+        <VCard class="mb-3">
+          <div
+            class="text-h6 px-3 py-2"
+            @click="editTitle(index)"
+          >
+            <template v-if="!list.isEditing">
+              <span class="text-h6 px-3 py-2">{{ list.title }}</span>
+            </template>
+            <template v-else>
+              <VTextField
+                ref="titleInput"
+                v-model="list.title"
+                dense
+                hide-details
+                single-line
+                autofocus
+                @blur="saveTitle(index)"
+              />
+            </template>
+          </div>
+          <VDivider />
+          <VueDraggableNext
+            class="kanban-dropzone"
+            :list="list.tasks"
+            group="tasks"
+            @change="onDrop(index, $event)"
+          >
+            <template
+              v-for="(task) in list.tasks"
+              :key="task.id"
+            >
+              <VListItem
+                class="task-card"
+                style="cursor: pointer;"
+                :draggable="isDraggable"
+                @dragstart="onDragStart"
+              >
+                <VListItemContent @click="startEditing(task)">
+                  {{ task.name }}
+                </VListItemContent>
+              </VListItem>
+            </template>
+          </VueDraggableNext>
+          <VDivider />
+          <VCardActions class="justify-center">
             <VBtn
+              v-if="!showKanbanAddTaskField"
               color="primary"
-              @click="saveTask"
+              variant="plain"
+              size="small"
+              @click="activateQuickKanbanAdd"
             >
-              Save
-            </VBtn>
-            <VBtn
-              color="error"
-              @click="cancelEdit"
-            >
-              Cancel
+              <VIcon icon="tabler-plus" />
+              Add Task
             </VBtn>
           </VCardActions>
         </VCard>
-      </VDialog>
+      </VCol>
+      <!-- Add column button -->
+      <VCol cols="4">
+        <VCard class="mb-3">
+          <VCardActions class="justify-center">
+            <VBtn
+              color="primary"
+              variant="plain"
+              @click="addList"
+            >
+              <VIcon icon="tabler-plus" />
+              Another List
+            </VBtn>
+          </VCardActions>
+        </VCard>
+      </VCol>
     </VRow>
   </VContainer>
   <EditTaskDrawer
@@ -303,6 +312,11 @@ const taskName = ref('')
 const viewType = ref('list')
 const editingTask = ref({})
 const isEditTaskDrawerOpen = ref(false)
+const showAddTaskField = ref(false)
+const showKanbanAddTaskField = ref(false)
+const quickTaskName = ref('')
+const quickTaskInput = ref(null)
+const dueDate = ref(null)
 
 const isLoading = ref(false)
 
@@ -326,7 +340,84 @@ const fetchProjectTasks = async () => {
   }
 }
 
+function activateQuickAdd() {
+  showAddTaskField.value = true
+  nextTick(() => {
+    quickTaskInput.value.focus()
+  })
+}
+
+function activateQuickKanbanAdd() {
+  showKanbanAddTaskField.value = true
+  nextTick(() => {
+    quickTaskInput.value.focus()
+  })
+}
+
+async function addQuickTask() {
+  if (quickTaskName.value.trim() === '') {
+    toast.error('Task name cannot be empty.')
+
+    return
+  }
+
+  try {
+    activateQuickAdd()
+    activateQuickKanbanAdd()
+
+    const newTaskDetails = {
+      name: quickTaskName.value.trim(),
+      due_date: dueDate.value,
+      project_id: projectId.value,
+    }
+
+    await taskStore.create(newTaskDetails)
+    quickTaskName.value = ''
+    dueDate.value = null
+    toast.success('Task added successfully', { timeout: 1000 })
+    fetchProjectTasks()
+  } catch (error) {
+    toast.error('Failed to add task:', error)
+  }
+}
+
+function cancelQuickTask() {
+  showAddTaskField.value = false
+  quickTaskName.value = ''
+}
+
+function cancelKanbanQuickTask() {
+  showKanbanAddTaskField.value = false
+  quickTaskName.value = ''
+}
+
 async function addTask() {
+  if (taskName.value.trim() === '') {
+    toast.error('Task name cannot be empty.')
+
+    return
+  }
+
+  try {
+    const newTaskDetails = {
+      name: taskName.value.trim(),
+      project_id: projectId.value,
+    }
+
+    await taskStore.create(newTaskDetails)
+
+    taskName.value = ''
+    toast.success('Task added successfully', { timeout: 1000 })
+    fetchProjectTasks()
+  } catch (error) {
+    toast.error('Failed to add task:', error)
+  }
+}
+
+const addNewTask = listIndex => {
+}
+
+async function addTaskFromKanban() {
   if (taskName.value.trim() === '') {
     toast.error('Task name cannot be empty.')
 
@@ -372,152 +463,93 @@ const getLoadStatus = computed(() => {
   return taskStore.getLoadStatus
 })
 
-///TAKSKSKSKS
 const isDraggable = true
 
 const onDragStart = event => {
   event.dataTransfer.setData("text/plain", "This text may be dragged")
 }
 
-// Define the columns array with initial tasks
-const columns = ref([
+const lists = ref([
   { title: 'To Do', tasks: getProjectTasks, isEditing: false },
   { title: 'In Progress', tasks: [], isEditing: false },
   { title: 'Done', tasks: [], isEditing: false },
 ])
 
-// Define the dialog state for editing tasks
-const dialog = ref(false)
-
-// Define the editedTask object for editing
-const editedTask = ref({})
-
-// Method to edit the column title
 const editTitle = index => {
-  columns.value[index].isEditing = true
+  lists.value[index].isEditing = true
 
-  // Focus on the title input field when editing starts
   const titleInput = $refs.titleInput[index]
 
   titleInput && titleInput.focus()
 }
 
-// Method to save the edited column title
 const saveTitle = index => {
-  columns.value[index].isEditing = false
+  lists.value[index].isEditing = false
 }
 
-// Method to edit a task
-const editTask = (columnIndex, taskIndex) => {
-  // Copy the task details to editedTask
-  editedTask.value = { columnIndex, taskIndex, ...columns.value[columnIndex].tasks[taskIndex] }
-
-  // Open the dialog
-  dialog.value = true
-}
-
-// Method to save the edited task
-const saveTask = () => {
-  // Extract column index and task index from editedTask
-  const { columnIndex, taskIndex } = editedTask.value
-
-  // Update the task in the columns array
-  columns.value[columnIndex].tasks.splice(taskIndex, 1, editedTask.value)
-
-  // Close the dialog
-  dialog.value = false
-}
-
-// Method to cancel editing a task
-const cancelEdit = () => {
-  // Close the dialog
-  dialog.value = false
-}
-
-// Method to add a new task
-const addNewTask = columnIndex => {
-  // Generate a unique ID for the new task
+const addList = () => {
   const id = Date.now()
+  const newList = { id, title: 'New List', tasks: [] }
 
-  // Create a new task object
-  const newTask = { id, title: 'New Task', description: 'Description of New Task' }
-
-  // Add the new task to the specified column
-  columns.value[columnIndex].tasks.push(newTask)
+  lists.value.push(newList)
 }
 
-// Method to add a new column
-const addColumn = () => {
-  // Generate a unique ID for the new column
-  const id = Date.now()
-
-  // Create a new column object
-  const newColumn = { id, title: 'New Column', tasks: [] }
-
-  // Add the new column to the columns array
-  columns.value.push(newColumn)
-}
-
-// Method to handle drop event
-const onDrop = (targetColumnIndex, event) => {
-  // Retrieve the task being dragged
-  const sourceColumnIndex = event.dragged.sourceIndex
+const onDrop = (targetListIndex, event) => {
+  const sourceListIndex = event.dragged.sourceIndex
   const sourceTaskIndex = event.dragged.sourceModel.index
-  const taskToMove = columns.value[sourceColumnIndex].tasks.splice(sourceTaskIndex, 1)[0]
+  const taskToMove = lists.value[sourceListIndex].tasks.splice(sourceTaskIndex, 1)[0]
 
-  // Move the task to the new column
-  columns.value[targetColumnIndex].tasks.push(taskToMove)
+  lists.value[targetListIndex].tasks.push(taskToMove)
 }
 </script>
 
-<style scoped>
-.task-row {
-  border-bottom: 1px solid #ccc;
-}
-.d-toggle{
-    border: unset !important;
-    padding: 0 !important;
-    align-items: unset !important;
-    block-size: unset !important;
-}
-.kanban-scroll {
-    overflow-x: auto;
-    white-space: nowrap;
-    margin-bottom: 20px;
-  }
-
+  <style scoped>
   .kanban-columns {
-    flex-wrap: nowrap !important;
-  }
-
-  .kanban-column-header {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #f5f5f5;
-  }
-
-  .kanban-column-title {
-    font-size: 18px;
-    font-weight: bold;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 1rem;
   }
 
   .kanban-column {
-    margin-right: 20px;
+    flex: 1;
+    min-width: 300px;
+    margin-right: 1rem;
   }
 
-  .v-card {
-    margin-bottom: 20px;
+  .kanban-scroll {
+    overflow-x: auto;
+  }
+
+  .kanban-dropzone {
+    padding: 1rem;
+    min-height: 25vh;
+    overflow-y: auto!important;
+    background: #f0f0f0;
   }
 
   .task-card {
-    margin-bottom: 10px;
-  }
+  margin-bottom: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
-  .v-list-item {
-    cursor: pointer;
-  }
+.task-card:hover {
+  background-color: #f7f9ff;
+  transform: translateY(-2px);
+}
 
-  .v-list-item:hover {
-    background-color: #f0f0f0;
+
+  .d-toggle{
+      border: unset !important;
+      padding: 0 !important;
+      align-items: unset !important;
+      block-size: unset !important;
   }
-</style>
+  .task-row {
+    border-bottom: 1px solid #ccc;
+  }
+  </style>

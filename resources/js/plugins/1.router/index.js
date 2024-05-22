@@ -99,7 +99,7 @@ const router = createRouter({
     ),
     recursiveLayouts(
       {
-        path: '/projects/:project/:id/team',
+        path: '/projects/:id/team',
         name: 'team',
         component: Team,
         meta: { layout: 'default' },
@@ -108,7 +108,7 @@ const router = createRouter({
     ),
     recursiveLayouts(
       {
-        path: '/projects/:project/:id/calendar',
+        path: '/projects/:id/calendar',
         name: 'calendar',
         component: Calendar,
         meta: { layout: 'default' },
@@ -117,7 +117,7 @@ const router = createRouter({
     ),
     recursiveLayouts(
       {
-        path: '/projects/:project/:id/files',
+        path: '/projects/:id/files',
         name: 'files',
         component: Files,
         meta: { layout: 'default' },
@@ -126,7 +126,7 @@ const router = createRouter({
     ),
     recursiveLayouts(
       {
-        path: '/projects/:project/:id/chat',
+        path: '/projects/:id/chat',
         name: 'chat',
         component: Chat,
         meta: { layout: 'default' },
@@ -135,7 +135,7 @@ const router = createRouter({
     ),
     recursiveLayouts(
       {
-        path: '/projects/:project/:id/tasks/add',
+        path: '/projects/:id/tasks/add',
         name: 'add-project-tasks',
         component: AddProjectTasks,
         meta: { layout: 'default' },
@@ -144,7 +144,7 @@ const router = createRouter({
     ),
     recursiveLayouts(
       {
-        path: '/projects/:project/:id/tasks',
+        path: '/projects/:id/tasks',
         name: 'tasks',
         component: Tasks,
         meta: { layout: 'default' },

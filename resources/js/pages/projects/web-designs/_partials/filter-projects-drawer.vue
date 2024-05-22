@@ -29,8 +29,8 @@
               <VCol cols="12">
                 <AppTextField
                   v-model="filterDetails.query"
-                  label="Search"
-                  placeholder="Enter search query..."
+                  label="Name"
+                  placeholder="Project Name"
                 />
               </VCol>
 
@@ -85,7 +85,7 @@
                     variant="tonal"
                     @click="resetFilters"
                   >
-                    resetFilters
+                    Reset
                   </VBtn>
                 </div>
               </VCol>

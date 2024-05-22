@@ -124,10 +124,10 @@
                   <VBtn
                     type="submit"
                     class="me-2"
-                    :disabled="getLoadStatus === 1"
+                    :disabled="getLoadStatus === 0"
                     @click="addMemberForm?.validate()"
                   >
-                    <span v-if="getLoadStatus === 1">
+                    <span v-if="getLoadStatus === 0">
                       <VProgressCircular
                         :size="16"
                         width="3"
