@@ -15,6 +15,7 @@ import Files from '../../../js/pages/projects/files.vue'
 import Chat from '../../../js/pages/projects/chat.vue'
 import Tasks from '../../../js/pages/projects/tasks.vue'
 import AddProjectTasks from '../../pages/projects/web-designs/_partials/addProjectTasks.vue'
+import AddProjectPhases from '../../pages/projects/web-designs/_partials/addProjectPhases.vue'
 
 function recursiveLayouts(route) {
   if (route.children) {
@@ -138,6 +139,15 @@ const router = createRouter({
         path: '/projects/:id/tasks/add',
         name: 'add-project-tasks',
         component: AddProjectTasks,
+        meta: { layout: 'default' },
+        props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/:id/phases/add',
+        name: 'add-project-phases',
+        component: AddProjectPhases,
         meta: { layout: 'default' },
         props: true,
       },

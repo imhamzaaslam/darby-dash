@@ -75,7 +75,7 @@
         :key="project.id"
         cols="12"
       >
-        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
+        <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
           <VCard class="d-flex ps-4 py-1">
             <VCol cols="3">
               <div class="d-flex align-center gap-x-3">
@@ -135,14 +135,14 @@
                 <VMenu activator="parent">
                   <VList>
                     <VListItem
-                      value="tasks"
-                      :to="{ name: 'add-project-tasks', params: { id: project.id } }"
+                      value="phases"
+                      :to="{ name: 'add-project-phases', params: { id: project.uuid } }"
                     >
-                      Tasks
+                      Phases
                     </VListItem>
                     <VListItem
                       value="view"
-                      :to="{ name: 'web-design', params: { id: project.id } }"
+                      :to="{ name: 'web-design', params: { id: project.uuid } }"
                     >
                       View
                     </VListItem>
@@ -177,7 +177,7 @@
         cols="12"
         md="4"
       >
-        <RouterLink :to="{ name: 'web-design', params: { id: project.id } }">
+        <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
           <VCard class="pt-2">
             <VCardTitle>
               <VRow>
@@ -200,14 +200,14 @@
                     <VMenu activator="parent">
                       <VList>
                         <VListItem
-                          value="tasks"
-                          :to="{ name: 'add-project-tasks', params: { id: project.id } }"
+                          value="phases"
+                          :to="{ name: 'add-project-phases', params: { id: project.uuid } }"
                         >
-                          Tasks
+                          Phases
                         </VListItem>
                         <VListItem
                           value="view"
-                          :to="{ name: 'web-design', params: { id: project.id } }"
+                          :to="{ name: 'web-design', params: { id: project.uuid } }"
                         >
                           View
                         </VListItem>

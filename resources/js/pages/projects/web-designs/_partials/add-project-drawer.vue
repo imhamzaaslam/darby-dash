@@ -105,7 +105,7 @@
                       Loading...
                     </span>
                     <span v-else>
-                      Save & Add Task
+                      Save & Add Phase
                     </span>
                   </VBtn>
                   <VBtn
@@ -184,7 +184,7 @@ async function submitAddProjectForm() {
 
         const newProjectID = projectStore.getProject.id
 
-        router.push({ name: 'add-project-tasks', params: { project: 'web-designs', id: newProjectID } })
+        router.push({ name: 'add-project-phases', params: { id: newProjectID } })
 
         isLoading.value = false
         newProjectDetails.value = {
