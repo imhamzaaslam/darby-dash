@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->string('name');
+            $table->enum('initial_name', ['todo', 'in_progress', 'completed'])->default('todo');
             $table->integer('display_order')->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');

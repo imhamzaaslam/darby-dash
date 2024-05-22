@@ -15,6 +15,11 @@ class ProjectSeeder extends Seeder
      */
     public function run(): void
     {
+        $boards = [
+            ['name' => 'To Do', 'initial_name' => 'todo', 'display_order' => 1],
+            ['name' => 'In Progress', 'initial_name' => 'in_progress', 'display_order' => 2],
+            ['name' => 'Completed', 'initial_name' => 'completed', 'display_order' => 3],
+        ];
         $project_manager_id = 2;
         $firstProject = Project::create([
             'title' => 'Darby',
@@ -29,6 +34,14 @@ class ProjectSeeder extends Seeder
             ProjectMember::create([
                 'project_id' => $firstProject->id,
                 'user_id' => $memberId,
+            ]);
+        }
+        foreach ($boards as $board) {
+            ProjectBoard::create([
+                'project_id' => $firstProject->id,
+                'name' => $board['name'],
+                'initial_name' => $board['initial_name'],
+                'display_order' => $board['display_order'],
             ]);
         }
 
@@ -47,6 +60,14 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
+        foreach ($boards as $board) {
+            ProjectBoard::create([
+                'project_id' => $secondProject->id,
+                'name' => $board['name'],
+                'initial_name' => $board['initial_name'],
+                'display_order' => $board['display_order'],
+            ]);
+        }
 
         $thirdProject = Project::create([
             'title' => 'Testing',
@@ -61,6 +82,14 @@ class ProjectSeeder extends Seeder
             ProjectMember::create([
                 'project_id' => $thirdProject->id,
                 'user_id' => $memberId,
+            ]);
+        }
+        foreach ($boards as $board) {
+            ProjectBoard::create([
+                'project_id' => $thirdProject->id,
+                'name' => $board['name'],
+                'initial_name' => $board['initial_name'],
+                'display_order' => $board['display_order'],
             ]);
         }
 
@@ -79,6 +108,14 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
+        foreach ($boards as $board) {
+            ProjectBoard::create([
+                'project_id' => $fourthProject->id,
+                'name' => $board['name'],
+                'initial_name' => $board['initial_name'],
+                'display_order' => $board['display_order'],
+            ]);
+        }
 
         $fifthProject = Project::create([
             'title' => 'Bigberry',
@@ -95,6 +132,14 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
+        foreach ($boards as $board) {
+            ProjectBoard::create([
+                'project_id' => $fifthProject->id,
+                'name' => $board['name'],
+                'initial_name' => $board['initial_name'],
+                'display_order' => $board['display_order'],
+            ]);
+        }
 
         $sixthProject = Project::create([
             'title' => 'IdeaAffix',
@@ -109,6 +154,14 @@ class ProjectSeeder extends Seeder
             ProjectMember::create([
                 'project_id' => $sixthProject->id,
                 'user_id' => $memberId,
+            ]);
+        }
+        foreach ($boards as $board) {
+            ProjectBoard::create([
+                'project_id' => $sixthProject->id,
+                'name' => $board['name'],
+                'initial_name' => $board['initial_name'],
+                'display_order' => $board['display_order'],
             ]);
         }
     }
