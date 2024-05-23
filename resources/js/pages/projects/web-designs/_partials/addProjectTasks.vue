@@ -38,6 +38,7 @@
         <div class="float-right">
           <VDialog
             v-model="isAddListDialogVisible"
+            v-if="viewType === 'list'"
             persistent
             class="v-dialog-sm"
           >
@@ -85,7 +86,7 @@
             </VCard>
           </VDialog>
           <VBtn
-            v-if="!showAddTaskField"
+            v-if="!showAddTaskField && viewType === 'list'"
             color="primary"
             @click="activateQuickAdd"
           >
