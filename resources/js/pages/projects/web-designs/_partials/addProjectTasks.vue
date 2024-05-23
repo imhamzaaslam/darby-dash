@@ -37,8 +37,8 @@
       >
         <div class="float-right">
           <VDialog
-            v-model="isAddListDialogVisible"
             v-if="viewType === 'list'"
+            v-model="isAddListDialogVisible"
             persistent
             class="v-dialog-sm"
           >
@@ -105,16 +105,59 @@
             :key="index"
             class="px-4 py-4 mt-2"
           >
-            <VRow>
+            <VRow @click="toggleRow(index)">
               <VCol cols="6">
                 <h6 class="text-h6 text-high-emphasize">
                   <VIcon
                     color="primary"
-                    icon="tabler-clipboard-list"
+                    :icon="expandedRows[index] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
                   />
                   <span class="mt-2">{{ list.name }} (0)</span>
                 </h6>
               </VCol>
+            </VRow>
+            <VRow v-if="expandedRows[index]">
+              <!-- // show sub tasks in table format -->
+              <VDataTable
+                :headers="headers"
+                :items="dummyTasks"
+                density="compact"
+                class="ms-10 px-2"
+              >
+                <template #item.name="{ item }">
+                  <!-- // show this tabler-playstation-circle -->
+                  <VIcon
+                    class="tabler-playstation-circle"
+                    color="primary mr-2"
+                  />
+                  <span>{{ item.name }}</span>
+                </template>
+                <template #item.status="{ item }">
+                  <VChip
+                    color="secondary"
+                    size="small"
+                  >
+                    {{ item.status }}
+                  </VChip>
+                </template>
+                <template #item.due_date="{ item }">
+                  <VChip
+                    color="error"
+                    size="small"
+                  >
+                    {{ formatDate(item.due_date) }}
+                  </VChip>
+                </template>
+                <template #item.created_at="{ item }">
+                  <VChip
+                    color="primary"
+                    size="small"
+                  >
+                    {{ formatDate(item.created_at) }}
+                  </VChip>
+                </template>
+                <template #bottom></template>
+              </VDataTable>
             </VRow>
           </VCard>
         </div>
@@ -590,6 +633,20 @@ const lists = ref([
   { title: 'Done', tasks: [], isEditing: false },
 ])
 
+const headers = [
+  { title: 'Task Name', key: 'name', sortable: false, class: 'p-0' },
+  { title: 'Status', key: 'status',  sortable: false },
+  { title: 'Due Date', key: 'due_date', sortable: false },
+  { title: 'Created Date', key: 'created_at', sortable: false },
+]
+
+const dummyTasks = [
+  { id: 1, name: 'Task 1', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
+  { id: 2, name: 'Task 2', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
+  { id: 3, name: 'Task 3', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
+  { id: 4, name: 'Task 4', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
+]
+
 const editTitle = index => {
   lists.value[index].isEditing = true
 
@@ -615,6 +672,12 @@ const onDrop = (targetListIndex, event) => {
   const taskToMove = lists.value[sourceListIndex].tasks.splice(sourceTaskIndex, 1)[0]
 
   lists.value[targetListIndex].tasks.push(taskToMove)
+}
+
+const expandedRows = ref([])
+
+const toggleRow = index => {
+  expandedRows.value[index] = !expandedRows.value[index]
 }
 </script>
 
