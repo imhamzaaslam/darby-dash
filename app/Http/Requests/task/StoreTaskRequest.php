@@ -24,7 +24,7 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'board_id' => 'required|exists:project_boards,id',
+            'board_id' => 'sometimes|exists:project_boards,id',
             'description' => 'sometimes|nullable|string',
             'status' => 'sometimes|nullable|in:todo,in_progress,completed',
             'start_date' => 'sometimes|nullable|date',
