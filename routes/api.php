@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\ProjectTypeController;
 use App\Http\Controllers\Api\Admin\ProjectController;
-use App\Http\Controllers\Api\Admin\ProjectPhaseController;
+use App\Http\Controllers\Api\Admin\ProjectListController;
 use App\Http\Controllers\Api\Admin\TaskController;
 
 /*
@@ -67,16 +67,16 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
 
-                Route::get('/phases', [ProjectPhaseController::class, 'index']);
-                Route::post('/phase', [ProjectPhaseController::class, 'store']);
-                Route::prefix('phase/{phaseUuid}')->group(function () {
-                    Route::patch('/', [ProjectPhaseController::class, 'update']);
-                    Route::delete('/', [ProjectPhaseController::class, 'delete']);
+                Route::get('/lists', [ProjectListController::class, 'index']);
+                Route::post('/list', [ProjectListController::class, 'store']);
+                Route::prefix('list/{listUuid}')->group(function () {
+                    Route::patch('/', [ProjectListController::class, 'update']);
+                    Route::delete('/', [ProjectListController::class, 'delete']);
                 });
             });
         });
 
-        Route::prefix('phase/{phaseUuid}')->group(function () {
+        Route::prefix('list/{listUuid}')->group(function () {
             Route::get('/tasks', [TaskController::class, 'index']);
             Route::post('/task', [TaskController::class, 'store']);
             Route::prefix('task/{taskUuid}')->group(function () {

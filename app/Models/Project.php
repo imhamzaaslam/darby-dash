@@ -39,9 +39,9 @@ class Project extends Base
         return $this->belongsToMany(User::class, 'project_members');
     }
 
-    public function phases()
+    public function lists()
     {
-        return $this->hasMany(ProjectPhase::class);
+        return $this->hasMany(ProjectList::class);
     }
 
     function scopeFiltered(Builder $query, ?string $keyword): Builder

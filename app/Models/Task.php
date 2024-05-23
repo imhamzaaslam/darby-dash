@@ -16,7 +16,7 @@ class Task extends Base
         'description',
         'status',
         'project_id',
-        'phase_id',
+        'list_id',
         'start_date',
         'due_date',
         'time_spent',

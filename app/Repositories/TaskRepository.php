@@ -7,7 +7,7 @@ use App\Contracts\TaskRepositoryInterface;
 use App\Models\Base;
 use App\Models\Task;
 use App\Models\Project;
-use App\Models\ProjectPhase;
+use App\Models\ProjectList;
 use Illuminate\Support\Collection;
 
 class TaskRepository extends AbstractEloquentRepository implements TaskRepositoryInterface
@@ -27,12 +27,12 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         return $this->model->where('project_id', $projecId)->get();
     }
 
-    public function create(ProjectPhase $phase, array $attributes): Task
+    public function create(ProjectList $list, array $attributes): Task
     {
-        $phase_id = $phase->id;
-        $project_id = $phase->project_id;
+        $list_id = $list->id;
+        $project_id = $list->project_id;
 
-        $data = array_merge($attributes, ['phase_id' => $phase_id, 'project_id' => $project_id]);
+        $data = array_merge($attributes, ['list_id' => $list_id, 'project_id' => $project_id]);
         return $this->model->create($data);
     }
 

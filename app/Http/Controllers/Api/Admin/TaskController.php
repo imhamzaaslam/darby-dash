@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\TaskRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
-use App\Contracts\ProjectPhaseRepositoryInterface;
+use App\Contracts\ProjectListRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\task\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
@@ -17,19 +17,19 @@ class TaskController extends Controller
     public function __construct(
         protected TaskRepositoryInterface $taskRepository,
         protected ProjectRepositoryInterface $projectRepository,
-        protected ProjectPhaseRepositoryInterface $projectPhaseRepository
+        protected ProjectListRepositoryInterface $projectListRepository
     ) {}
 
     /**
      * Display a listing of the resource.
      *
-     * @param string $phaseUuid
+     * @param string $listUuid
      * @return AnonymousResourceCollection|JsonResponse
      */
-    public function index(string $phaseUuid): AnonymousResourceCollection|JsonResponse
+    public function index(string $listUuid): AnonymousResourceCollection|JsonResponse
     {
-        $projectPhase = $this->projectPhaseRepository->getByUuidOrFail($phaseUuid);
-        $tasks = $this->projectPhaseRepository->getPhaseTasks($projectPhase);
+        $projectList = $this->projectListRepository->getByUuidOrFail($listUuid);
+        $tasks = $this->projectListRepository->getListTasks($projectList);
 
         return TaskResource::collection($tasks);
     }
@@ -38,15 +38,15 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTaskRequest  $request
-     * @param string $phaseUuid
+     * @param string $listUuid
      * @return JsonResponse
      */
-    public function store(StoreTaskRequest $request, string $phaseUuid): JsonResponse
+    public function store(StoreTaskRequest $request, string $listUuid): JsonResponse
     {
-        $phase = $this->projectPhaseRepository->getByUuidOrFail($phaseUuid);
+        $list = $this->projectListRepository->getByUuidOrFail($listUuid);
         $validated = $request->validated();
 
-        $task = $this->taskRepository->create($phase, $validated);
+        $task = $this->taskRepository->create($list, $validated);
 
         return (new TaskResource($task))
             ->response()
@@ -57,11 +57,11 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param StoreTaskRequest $request
-     * @param string $phaseUuid
+     * @param string $listUuid
      * @param string $taskUuid
      * @return Response|JsonResponse
      */
-    public function update(StoreTaskRequest $request, string $phaseUuid, string $taskUuid): Response|JsonResponse
+    public function update(StoreTaskRequest $request, string $listUuid, string $taskUuid): Response|JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
         $validated = $request->validated();
@@ -76,11 +76,11 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $phaseUuid
+     * @param string $listUuid
      * @param string $taskUuid
      * @return JsonResponse
      */
-    public function delete(string $phaseUuid, string $taskUuid): JsonResponse
+    public function delete(string $listUuid, string $taskUuid): JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
 

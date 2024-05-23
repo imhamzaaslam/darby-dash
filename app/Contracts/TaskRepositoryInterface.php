@@ -3,14 +3,14 @@
 namespace App\Contracts;
 
 use App\Models\Task;
-use App\Models\ProjectPhase;
+use App\Models\ProjectList;
 use Illuminate\Support\Collection;
 
 interface TaskRepositoryInterface
 {
     public function get(string $projecId): Collection;
     
-    public function create(ProjectPhase $phase, array $attributes): Task;
+    public function create(ProjectList $list, array $attributes): Task;
 
     public function update(Task $task, array $attributes): bool;
 

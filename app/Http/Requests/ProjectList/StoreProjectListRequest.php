@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\ProjectPhase;
+namespace App\Http\Requests\ProjectList;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\User;
 
-class StoreProjectPhaseRequest extends FormRequest
+class StoreProjectListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

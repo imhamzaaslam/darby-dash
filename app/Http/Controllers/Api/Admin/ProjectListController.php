@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Contracts\ProjectPhaseRepositoryInterface;
+use App\Contracts\ProjectListRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
-use App\Http\Resources\ProjectPhaseResource;
-use App\Http\Requests\ProjectPhase\StoreProjectPhaseRequest;
+use App\Http\Resources\ProjectListResource;
+use App\Http\Requests\ProjectList\StoreProjectListRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class ProjectPhaseController extends Controller
+class ProjectListController extends Controller
 {
     public function __construct(
-        protected ProjectPhaseRepositoryInterface $projectPhaseRepository,
+        protected ProjectListRepositoryInterface $projectListRepository,
         protected ProjectRepositoryInterface $projectRepository
     ) {}
 
@@ -27,9 +27,9 @@ class ProjectPhaseController extends Controller
     public function index(string $uuid): AnonymousResourceCollection
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
-        $projectPhases  = $this->projectPhaseRepository->getProjectPhases($project);
+        $projectLists  = $this->projectListRepository->getProjectLists($project);
         
-        return ProjectPhaseResource::collection($projectPhases);
+        return ProjectListResource::collection($projectLists);
     }
 
     /**
@@ -39,7 +39,7 @@ class ProjectPhaseController extends Controller
      * @param string $uuid
      * @return JsonResponse
      */
-    public function store(StoreProjectPhaseRequest $request, string $uuid): JsonResponse
+    public function store(StoreProjectListRequest $request, string $uuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
         $validated = $request->validated();
@@ -49,9 +49,9 @@ class ProjectPhaseController extends Controller
             'project_id' => $project->id,
         ];
 
-        $projectPhase = $this->projectPhaseRepository->create($attributes);
+        $projectList = $this->projectListRepository->create($attributes);
 
-        return (new ProjectPhaseResource($projectPhase))
+        return (new ProjectListResource($projectList))
             ->response()
             ->setStatusCode(200);
     }
@@ -61,13 +61,13 @@ class ProjectPhaseController extends Controller
      *
      * @param Request $request
      * @param string $uuid
-     * @param string $phaseUuid
+     * @param string $listUuid
      * @return JsonResponse
      */
-    public function update(StoreProjectPhaseRequest $request, string $uuid, string $phaseUuid): JsonResponse
+    public function update(StoreProjectListRequest $request, string $uuid, string $listUuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
-        $projectPhase = $this->projectPhaseRepository->getByUuidOrFail($phaseUuid);
+        $projectList = $this->projectListRepository->getByUuidOrFail($listUuid);
 
         $validated = $request->validated();
 
@@ -76,9 +76,9 @@ class ProjectPhaseController extends Controller
             'project_id' => $project->id,
         ];
 
-        $this->projectPhaseRepository->update($projectPhase, $attributes);
+        $this->projectListRepository->update($projectList, $attributes);
 
-        return (new ProjectPhaseResource($projectPhase))
+        return (new ProjectListResource($projectList))
             ->response()
             ->setStatusCode(200);
     }
@@ -87,14 +87,14 @@ class ProjectPhaseController extends Controller
      * Remove the specified resource from storage.
      *
      * @param string $uuid
-     * @param string $phaseUuid
+     * @param string $ListUuid
      * @return JsonResponse
      */
-    public function delete(string $uuid, string $phaseUuid): JsonResponse
+    public function delete(string $uuid, string $ListUuid): JsonResponse
     {
-        $projectPhase = $this->projectPhaseRepository->getByUuidOrFail($phaseUuid);
-        $this->projectPhaseRepository->delete($projectPhase);
+        $projectList = $this->projectListRepository->getByUuidOrFail($ListUuid);
+        $this->projectListRepository->delete($projectList);
 
-        return response()->json(['message' => 'Project phase deleted successfully']);
+        return response()->json(['message' => 'Project List deleted successfully']);
     }
 }
