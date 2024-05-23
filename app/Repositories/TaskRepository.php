@@ -45,4 +45,10 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
     {
         return $task->delete();
     }
+
+    public function createByProject(Project $project, array $attributes): Task
+    {
+        $data = array_merge($attributes, ['project_id' => $project->id]);
+        return $this->model->create($data);
+    }
 }

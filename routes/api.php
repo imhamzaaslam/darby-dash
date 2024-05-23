@@ -73,6 +73,13 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::patch('/', [ProjectListController::class, 'update']);
                     Route::delete('/', [ProjectListController::class, 'delete']);
                 });
+
+                Route::get('/tasks', [TaskController::class, 'getByProject']);
+                Route::post('/task', [TaskController::class, 'storeByProject']);
+                Route::prefix('task/{taskUuid}')->group(function () {
+                    Route::patch('/', [TaskController::class, 'updateByProject']);
+                    Route::delete('/', [TaskController::class, 'deleteByProject']);
+                });
             });
         });
 

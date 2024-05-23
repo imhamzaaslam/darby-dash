@@ -4,6 +4,7 @@ namespace App\Contracts;
 
 use App\Models\Task;
 use App\Models\ProjectList;
+use App\Models\Project;
 use Illuminate\Support\Collection;
 
 interface TaskRepositoryInterface
@@ -15,4 +16,6 @@ interface TaskRepositoryInterface
     public function update(Task $task, array $attributes): bool;
 
     public function delete(Task $task): bool;
+
+    public function createByProject(Project $project, array $attributes): Task;
 }

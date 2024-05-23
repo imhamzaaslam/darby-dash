@@ -8,6 +8,7 @@ use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\ProjectListRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\task\StoreTaskRequest;
+use App\Http\Requests\task\StoreTaskByProjectRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -87,5 +88,74 @@ class TaskController extends Controller
         $this->taskRepository->delete($task);
 
         return response()->json(['message' => 'Task deleted successfully']);
+    }
+
+    /**
+     * Get tasks by project.
+     *
+     * @param string $projectUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function getByProject(string $projectUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $tasks = $this->taskRepository->getBy('project_id', $project->id);
+
+        return TaskResource::collection($tasks);
+    }
+
+    /**
+     * Store task by project.
+     *
+     * @param StoreTaskByProjectRequest $request
+     * @param string $projectUuid
+     * @return JsonResponse
+     */
+    public function storeByProject(StoreTaskByProjectRequest $request, string $projectUuid): JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $validated = $request->validated();
+
+        $task = $this->taskRepository->createByProject($project, $validated);
+
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(201);
+    }
+
+    /**
+     * Update task by project.
+     *
+     * @param StoreTaskByProjectRequest $request
+     * @param string $projectUuid
+     * @param string $taskUuid
+     * @return Response|JsonResponse
+     */
+    public function updateByProject(StoreTaskByProjectRequest $request, string $projectUuid, string $taskUuid): Response|JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $validated = $request->validated();
+
+        $this->taskRepository->update($task, $validated);
+
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    /**
+     * Delete task by project.
+     *
+     * @param string $projectUuid
+     * @param string $taskUuid
+     * @return JsonResponse
+     */
+    public function deleteByProject(string $projectUuid, string $taskUuid): JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+
+        $this->taskRepository->delete($task);
+
+        return response()->json(['message' => 'Task deleted successfully']);   
     }
 }
