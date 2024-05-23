@@ -174,7 +174,7 @@ import NoPhaseInList from '@images/darby/tasks_list.svg?raw'
 import EditPhaseDrawer from '@/pages/projects/web-designs/_partials/update-project-phase-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
-import { usePhaseStore } from "../../../../store/lists"
+import { usePhaseStore } from "../../../../store/project_lists"
 import { useRouter } from 'vue-router'
 
 const toast = useToast()

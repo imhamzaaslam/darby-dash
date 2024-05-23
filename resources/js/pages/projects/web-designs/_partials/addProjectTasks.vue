@@ -23,6 +23,12 @@
             :class="{ 'bg-primary': viewType === 'grid' }"
             @click="viewType = 'grid'"
           />
+          <h5
+            class="text-h5 ms-4 text-grey-700"
+            style="margin-top: -2px;"
+          >
+            {{ project.title }}
+          </h5>
         </VBtnToggle>
       </VCol>
       <VCol
@@ -96,9 +102,20 @@
           <VCard
             v-for="(list, index) in getProjectLists"
             :key="index"
-            class="px-2 py-1 mt-2"
-            :title="list.name"
-          />
+            class="px-4 py-4 mt-2"
+          >
+            <VRow>
+              <VCol cols="6">
+                <h6 class="text-h6 text-high-emphasize">
+                  <VIcon
+                    color="primary"
+                    icon="tabler-clipboard-list"
+                  />
+                  <span class="mt-2">{{ list.name }} (0)</span>
+                </h6>
+              </VCol>
+            </VRow>
+          </VCard>
         </div>
       </VCol>
       <VCol cols="12">
@@ -402,24 +419,29 @@ import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-project-task-drawer.vue'
 import { computed, onBeforeMount, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
+import { useProjectStore } from "../../../../store/projects"
 import { useProjectTaskStore } from "../../../../store/project_tasks"
 import { useListTaskStore } from "../../../../store/list_tasks"
-import { useListStore } from "../../../../store/lists"
+import { useProjectListStore } from "../../../../store/project_lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
 
 const toast = useToast()
+const projectStore = useProjectStore()
 const projectTaskStore = useProjectTaskStore()
 const listTaskStore = useListTaskStore()
-const listStore = useListStore()
+const projectListStore = useProjectListStore()
 const router = useRouter()
 
 const viewType = ref('list')
+
 const editingTask = ref({})
 const isEditTaskDrawerOpen = ref(false)
+
 const isAddListDialogVisible = ref(false)
 const addListForm = ref()
 const listTitle = ref(null)
+
 const showAddTaskField = ref(false)
 const quickTaskName = ref('')
 const quickTaskInput = ref(null)
@@ -434,7 +456,20 @@ const formatDate = date => moment(date).format('MMM DD, YYYY')
 onBeforeMount(async () => {
   await fetchProjectTasks()
   await fetchProjectLists()
+  await fetchProjectDetails()
 })
+
+const fetchProjectDetails = async () => {
+  try {
+    isLoading.value = true
+    await projectStore.show(projectId.value)
+  } catch (error) {
+    toast.error('Error fetching project details:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
 
 const fetchProjectTasks = async () => {
   try {
@@ -451,7 +486,7 @@ const fetchProjectTasks = async () => {
 const fetchProjectLists = async () => {
   try {
     isLoading.value = true
-    await listStore.getAll(projectId.value)
+    await projectListStore.getAll(projectId.value)
   } catch (error) {
     toast.error('Error fetching project lists:', error)
   }
@@ -476,7 +511,7 @@ async function submitListForm() {
           project_uuid: projectId.value,
         }
 
-        await listStore.create(newListDetails)
+        await projectListStore.create(newListDetails)
         listTitle.value = ''
         isAddListDialogVisible.value = false
         toast.success('List added successfully', { timeout: 1000 })
@@ -541,7 +576,8 @@ async function deleteTask(task) {
 }
 
 const getProjectTasks = computed(() => projectTaskStore.getProjectTasks)
-const getProjectLists = computed(() => listStore.getProjectLists)
+const getProjectLists = computed(() => projectListStore.getProjectLists)
+const project = computed(() => projectStore.getProject)
 
 const getLoadStatus = computed(() => {
   return projectTaskStore.getLoadStatus
