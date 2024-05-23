@@ -34,17 +34,15 @@
                 />
               </VCol>
 
+              <!-- Project Type filter -->
               <VCol cols="12">
                 <AppAutocomplete
-                  v-model="filterDetails.member_ids"
-                  :items="props.getMembers"
+                  v-model="filterDetails.project_type_id"
+                  label="Project Type"
+                  placeholder="Select Project Type"
+                  :items="props.getProjectTypes"
                   item-title="name"
                   item-value="id"
-                  label="Members"
-                  placeholder="Select Members"
-                  multiple
-                  clearable
-                  clear-icon="tabler-x"
                 />
               </VCol>
 
@@ -60,17 +58,6 @@
                 />
               </VCol>
 
-              <!-- Date filter -->
-              <VCol cols="12">
-                <AppDateTimePicker
-                  v-model="filterDetails.date"
-                  label="Created At"
-                  placeholder="Select Date"
-                  :config="{ inline: true }"
-                  locale="en-US"
-                  clearable
-                />
-              </VCol>
               <VCol cols="12">
                 <div class="d-flex justify-start">
                   <VBtn
@@ -111,7 +98,7 @@ const props = defineProps({
     required: true,
   },
   fetchProjects: Function,
-  getMembers: Object,
+  getProjectTypes: Object,
   getProjectManagers: Object,
 })
 
@@ -119,14 +106,11 @@ const emit = defineEmits(['update:isFilterDrawerOpen'])
 
 const filterDetails = ref({
   query: '',
-  member_ids: null,
+  project_type_id: null,
   project_manager_id: null,
-  date: null,
 })
 
 const projectStore = useProjectStore()
-
-const dateRule = v => !!v || 'Date is required'
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isFilterDrawerOpen', val)
@@ -135,18 +119,16 @@ const handleDrawerModelValueUpdate = val => {
 const applyFilters = () => {
   const payload = {
     query: filterDetails.value.query,
-    member_ids: filterDetails.value.member_ids,
+    project_type_id: filterDetails.value.project_type_id,
     project_manager_id: filterDetails.value.project_manager_id,
-    date: filterDetails.value.date ? filterDetails.value.date.toISOString() : null,
   }
 }
 
 const resetFilters = () => {
   filterDetails.value = {
     query: '',
-    member_ids: null,
+    project_type_id: null,
     project_manager_id: null,
-    date: null,
   }
 }
 </script>

@@ -292,7 +292,7 @@
   <FilterDrawer
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
     :fetch-projects="fetchProjects"
-    :get-members="getMembers"
+    :get-project-types="getProjectTypes"
     :get-project-managers="getProjectManagers"
     :get-load-status="getLoadStatus"
   />
