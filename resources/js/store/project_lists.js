@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import ListService from '../services/ListService'
+import ProjectListService from '../services/ProjectListService'
 
-export const useListStore = defineStore('lists', {
+export const useProjectListStore = defineStore('project_lists', {
   state: () => ({
-    lists: [],
-    list: null,
-    listsCount: 0,
+    projectLists: [],
+    projectList: null,
+    projectListsCount: 0,
     loadStatus: 0,
     error: null,
   }),
@@ -15,9 +15,9 @@ export const useListStore = defineStore('lists', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ListService.getProjectLists(projectId)
+        const response = await ProjectListService.getProjectLists(projectId)
 
-        this.lists = response.data.data
+        this.projectLists = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -26,13 +26,12 @@ export const useListStore = defineStore('lists', {
       }
     },
     async create(list) {
-        console.log('here inside create list')
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ListService.createProjectList(list)
+        const response = await ProjectListService.createProjectList(list)
 
-        this.list = response.data.data
+        this.projectList = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -44,9 +43,9 @@ export const useListStore = defineStore('lists', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ListService.updateProjectList(list)
+        const response = await ProjectListService.updateProjectList(list)
 
-        this.list = response.data.data
+        this.projectList = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -58,9 +57,9 @@ export const useListStore = defineStore('lists', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ListService.deleteProjectList(list)
+        const response = await ProjectListService.deleteProjectList(list)
 
-        this.list = response.data.data
+        this.projectList = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -71,8 +70,8 @@ export const useListStore = defineStore('lists', {
   },
   getters: {
     getLoadStatus: state => state.loadStatus,
-    getProjectLists: state => state.lists,
-    getProjectList: state => state.list,
+    getProjectLists: state => state.projectLists,
+    getProjectList: state => state.projectList,
     getErrors: state => state.error,
   },
 })
