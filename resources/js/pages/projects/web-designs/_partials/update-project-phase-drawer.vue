@@ -75,7 +75,7 @@ import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { ref } from 'vue'
 import { useToast } from "vue-toastification"
-import { usePhaseStore } from "../../../../store/phases"
+import { usePhaseStore } from "../../../../store/lists"
 
 const props = defineProps({
   isEditPhaseDrawerOpen: {

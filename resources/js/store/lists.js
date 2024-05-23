@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import TaskService from '../services/TaskService'
+import ListService from '../services/ListService'
 
-export const useTaskStore = defineStore('tasks', {
+export const useListStore = defineStore('lists', {
   state: () => ({
-    tasks: [],
-    task: null,
-    tasksCount: 0,
+    lists: [],
+    list: null,
+    listsCount: 0,
     loadStatus: 0,
     error: null,
   }),
@@ -15,63 +15,64 @@ export const useTaskStore = defineStore('tasks', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await TaskService.getProjectTasks(projectId)
+        const response = await ListService.getProjectLists(projectId)
 
-        this.tasks = response.data.data
+        this.lists = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
         this.loadStatus = 3
-        console.error('getTasks error ', error)
+        console.error('getLists error ', error)
       }
     },
-    async create(task) {
+    async create(list) {
+        console.log('here inside create list')
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await TaskService.createProjectTask(task)
+        const response = await ListService.createProjectList(list)
 
-        this.task = response.data.data
+        this.list = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
         this.loadStatus = 3
-        console.error('createTask error ', error)
+        console.error('createList error ', error)
       }
     },
-    async update(task) {
+    async update(list) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await TaskService.updateProjectTask(task)
+        const response = await ListService.updateProjectList(list)
 
-        this.task = response.data.data
+        this.list = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
         this.loadStatus = 3
-        console.error('updateTask error ', error)
+        console.error('updateList error ', error)
       }
     },
-    async delete(task) {
+    async delete(list) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await TaskService.deleteProjectTask(task)
+        const response = await ListService.deleteProjectList(list)
 
-        this.task = response.data.data
+        this.list = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
         this.loadStatus = 3
-        console.error('deleteTask error ', error)
+        console.error('deleteList error ', error)
       }
     },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,
-    getProjectTasks: state => state.tasks,
-    getProjectTask: state => state.task,
+    getProjectLists: state => state.lists,
+    getProjectList: state => state.list,
     getErrors: state => state.error,
   },
 })

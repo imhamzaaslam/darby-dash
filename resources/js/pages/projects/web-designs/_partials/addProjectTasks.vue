@@ -30,10 +30,57 @@
         md="6"
       >
         <div class="float-right">
+          <VDialog
+            v-model="isAddListDialogVisible"
+            persistent
+            class="v-dialog-sm"
+          >
+            <template #activator="{ props }">
+              <VBtn
+                class="me-3"
+                v-bind="props"
+              >
+                <VIcon icon="tabler-plus" />
+                Add List
+              </VBtn>
+            </template>
+
+            <!-- Dialog close btn -->
+            <DialogCloseBtn @click="isAddListDialogVisible = !isAddListDialogVisible" />
+
+            <!-- Dialog Content -->
+            <VCard title="Add List">
+              <VForm
+                ref="addListForm"
+                @submit.prevent="submitListForm"
+              >
+                <VCardText>
+                  <AppTextField
+                    v-model="listTitle"
+                    label="Title *"
+                    :rules="[requiredValidator]"
+                  />
+                </VCardText>
+                <VCardText class="d-flex justify-end gap-3 flex-wrap">
+                  <VBtn
+                    color="secondary"
+                    @click="isAddListDialogVisible = false"
+                  >
+                    Cancel
+                  </VBtn>
+                  <VBtn
+                    type="submit"
+                    @click="addListForm?.validate()"
+                  >
+                    Add
+                  </VBtn>
+                </VCardText>
+              </VForm>
+            </VCard>
+          </VDialog>
           <VBtn
-            v-if="!showAddTaskField && viewType === 'list'"
+            v-if="!showAddTaskField"
             color="primary"
-            size="small"
             @click="activateQuickAdd"
           >
             <VIcon icon="tabler-plus" />
@@ -42,9 +89,20 @@
         </div>
       </VCol>
     </VRow>
+    <!-- List View -->
     <VRow v-if="viewType === 'list'">
       <VCol cols="12">
-        <div v-if="getProjectTasks.length > 0">
+        <div v-if="getProjectLists? getProjectLists.length > 0 : 0">
+          <VCard
+            v-for="(list, index) in getProjectLists"
+            :key="index"
+            class="px-2 py-1 mt-2"
+            :title="list.name"
+          />
+        </div>
+      </VCol>
+      <VCol cols="12">
+        <div v-if="getProjectTasks? getProjectTasks.length > 0 : 0">
           <VCard
             v-for="(task, index) in getProjectTasks"
             :key="index"
@@ -134,7 +192,7 @@
           <span v-if="!showAddTaskField">No tasks added yet.</span>
         </div>
         <VBtn
-          v-if="!showAddTaskField && getProjectTasks.length > 0"
+          v-if="!showAddTaskField && getProjectTasks? getProjectTasks.length > 0 : 0"
           color="primary"
           variant="plain"
           size="small"
@@ -212,7 +270,7 @@
     </VRow>
     <!-- Kanban View -->
     <VRow
-      v-else
+      v-if="viewType === 'grid'"
       class="kanban-columns mt-8"
       no-gutters
     >
@@ -295,7 +353,6 @@
                 icon
                 size="x-small"
                 color="success"
-                @click="markAsComplete(task)"
               >
                 <VIcon>
                   tabler-check
@@ -306,11 +363,9 @@
         </VueDraggableNext>
         <div class="justify-center mt-2">
           <VBtn
-            v-if="!showKanbanAddTaskField"
             color="primary"
             variant="plain"
             size="small"
-            @click="activateQuickKanbanAdd"
           >
             <VIcon icon="tabler-plus" />
             Add Task
@@ -336,6 +391,7 @@
     v-model:is-edit-task-drawer-open="isEditTaskDrawerOpen"
     :fetch-project-tasks="fetchProjectTasks"
     :editing-task="editingTask"
+    :project-id="projectId"
     :get-load-status="getLoadStatus"
   />
 </template>
@@ -344,22 +400,27 @@
 import moment from 'moment'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-project-task-drawer.vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
-import { useTaskStore } from "../../../../store/tasks"
+import { useProjectTaskStore } from "../../../../store/project_tasks"
+import { useListTaskStore } from "../../../../store/list_tasks"
+import { useListStore } from "../../../../store/lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
 
 const toast = useToast()
-const taskStore = useTaskStore()
+const projectTaskStore = useProjectTaskStore()
+const listTaskStore = useListTaskStore()
+const listStore = useListStore()
 const router = useRouter()
 
-const taskName = ref('')
 const viewType = ref('list')
 const editingTask = ref({})
 const isEditTaskDrawerOpen = ref(false)
+const isAddListDialogVisible = ref(false)
+const addListForm = ref()
+const listTitle = ref(null)
 const showAddTaskField = ref(false)
-const showKanbanAddTaskField = ref(false)
 const quickTaskName = ref('')
 const quickTaskInput = ref(null)
 const dueDate = ref(null)
@@ -372,14 +433,27 @@ const formatDate = date => moment(date).format('MMM DD, YYYY')
 
 onBeforeMount(async () => {
   await fetchProjectTasks()
+  await fetchProjectLists()
 })
 
 const fetchProjectTasks = async () => {
   try {
     isLoading.value = true
-    await taskStore.getAll(projectId.value)
+    await projectTaskStore.getAll(projectId.value)
   } catch (error) {
     toast.error('Error fetching project tasks:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
+const fetchProjectLists = async () => {
+  try {
+    isLoading.value = true
+    await listStore.getAll(projectId.value)
+  } catch (error) {
+    toast.error('Error fetching project lists:', error)
   }
   finally {
     isLoading.value = false
@@ -393,10 +467,25 @@ function activateQuickAdd() {
   })
 }
 
-function activateQuickKanbanAdd() {
-  showKanbanAddTaskField.value = true
-  nextTick(() => {
-    quickTaskInput.value.focus()
+async function submitListForm() {
+  addListForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
+        const newListDetails = {
+          name: listTitle.value.trim(),
+          project_uuid: projectId.value,
+        }
+
+        await listStore.create(newListDetails)
+        listTitle.value = ''
+        isAddListDialogVisible.value = false
+        toast.success('List added successfully', { timeout: 1000 })
+        await fetchProjectLists()
+      } catch (error) {
+        console.error('Error adding/updating list:', error)
+        toast.error('Failed to add/update list:', error)
+      }
+    }
   })
 }
 
@@ -409,15 +498,14 @@ async function addQuickTask() {
 
   try {
     activateQuickAdd()
-    activateQuickKanbanAdd()
 
     const newTaskDetails = {
       name: quickTaskName.value.trim(),
       due_date: dueDate.value,
-      project_id: projectId.value,
+      project_uuid: projectId.value,
     }
 
-    await taskStore.create(newTaskDetails)
+    await projectTaskStore.create(newTaskDetails)
     quickTaskName.value = ''
     dueDate.value = null
     toast.success('Task added successfully', { timeout: 1000 })
@@ -432,20 +520,18 @@ function cancelQuickTask() {
   quickTaskName.value = ''
 }
 
-function cancelKanbanQuickTask() {
-  showKanbanAddTaskField.value = false
-  quickTaskName.value = ''
-}
-
 function startEditing(task) {
-  editingTask.value = { ...task }
+  editingTask.value = { ...task, project_uuid: projectId.value }
   isEditTaskDrawerOpen.value = true
 }
 
 async function deleteTask(task) {
   try {
     task.isDeleting = true
-    await taskStore.delete(task)
+
+    const taskWithProjectId = { ...task, project_uuid: projectId.value }
+
+    await projectTaskStore.delete(taskWithProjectId)
     toast.success('Task deleted successfully', { timeout: 1000 })
     task.isDeleting = false
     fetchProjectTasks()
@@ -454,10 +540,11 @@ async function deleteTask(task) {
   }
 }
 
-const getProjectTasks = computed(() => taskStore.getProjectTasks)
+const getProjectTasks = computed(() => projectTaskStore.getProjectTasks)
+const getProjectLists = computed(() => listStore.getProjectLists)
 
 const getLoadStatus = computed(() => {
-  return taskStore.getLoadStatus
+  return projectTaskStore.getLoadStatus
 })
 
 const lists = ref([

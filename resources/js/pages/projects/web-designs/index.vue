@@ -136,9 +136,9 @@
                   <VList>
                     <VListItem
                       value="phases"
-                      :to="{ name: 'add-project-phases', params: { id: project.uuid } }"
+                      :to="{ name: 'add-project-tasks', params: { id: project.uuid } }"
                     >
-                      Phases
+                      Tasks
                     </VListItem>
                     <VListItem
                       value="view"
@@ -201,9 +201,9 @@
                       <VList>
                         <VListItem
                           value="phases"
-                          :to="{ name: 'add-project-phases', params: { id: project.uuid } }"
+                          :to="{ name: 'add-project-tasks', params: { id: project.uuid } }"
                         >
-                          Phases
+                          Tasks
                         </VListItem>
                         <VListItem
                           value="view"

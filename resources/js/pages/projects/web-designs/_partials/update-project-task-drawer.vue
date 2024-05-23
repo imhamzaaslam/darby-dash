@@ -99,7 +99,7 @@ import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { ref } from 'vue'
 import { useToast } from "vue-toastification"
-import { useTaskStore } from "../../../../store/tasks"
+import { useProjectTaskStore } from "../../../../store/project_tasks"
 
 const props = defineProps({
   isEditTaskDrawerOpen: {
@@ -113,7 +113,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:isEditTaskDrawerOpen'])
 const toast = useToast()
-const taskStore = useTaskStore()
+const projectTaskStore = useProjectTaskStore()
 
 const editTaskForm = ref()
 const isLoading= ref(false)
@@ -135,13 +135,13 @@ async function submitEditTaskForm() {
         const payload = {
           uuid: props.editingTask.uuid,
           name: props.editingTask.name,
-          project_id: props.editingTask.project_id,
+          project_uuid: props.editingTask.project_uuid,
           description: props.editingTask.description,
           start_date: props.editingTask.start_date,
           due_date: props.editingTask.due_date,
         }
 
-        const res = await taskStore.update(payload)
+        const res = await projectTaskStore.update(payload)
 
         isLoading.value = true
         emit('update:isEditTaskDrawerOpen', false)

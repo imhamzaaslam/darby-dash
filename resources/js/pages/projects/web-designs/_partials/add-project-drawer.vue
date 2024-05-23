@@ -184,7 +184,7 @@ async function submitAddProjectForm() {
 
         const newProjectID = projectStore.getProject.id
 
-        router.push({ name: 'add-project-phases', params: { id: newProjectID } })
+        router.push({ name: 'add-project-tasks', params: { id: newProjectID } })
 
         isLoading.value = false
         newProjectDetails.value = {
