@@ -185,7 +185,7 @@
                                 {{ formatDate(subtask.created_at) }}
                               </VChip>
                             </td>
-                            <td style="padding: 0!important;">
+                            <!-- <td style="padding: 0!important;">
                               <IconBtn @click.prevent>
                                 <VIcon icon="tabler-dots" />
                                 <VMenu activator="parent">
@@ -207,7 +207,7 @@
                                   </VList>
                                 </VMenu>
                               </IconBtn>
-                            </td>
+                            </td> -->
                           </tr>
                         </tbody>
                       </VTable>
@@ -892,7 +892,8 @@ const headers = [
   { title: 'Status', key: 'status',  sortable: false },
   { title: 'Due Date', key: 'due_date', sortable: false },
   { title: 'Created Date', key: 'created_at', sortable: false },
-  { title: 'Action', key: 'action', sortable: false },
+
+  // { title: 'Action', key: 'action', sortable: false },
 ]
 
 const dummyTasks = [
