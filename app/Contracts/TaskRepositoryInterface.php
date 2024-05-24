@@ -17,5 +17,7 @@ interface TaskRepositoryInterface
 
     public function delete(Task $task): bool;
 
+    public function getByProject(Project $project): Collection;
+
     public function createByProject(Project $project, array $attributes): Task;
 }
