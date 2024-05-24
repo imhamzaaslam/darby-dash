@@ -354,11 +354,11 @@
           class="text-center"
         >
           <div
-            v-if="!showAddTaskField"
+            v-if="!showAddTaskField && !(getProjectLists ? getProjectLists.length > 0 : 0)"
             class="mt-12"
             v-html="NoTaskInList"
           />
-          <span v-if="!showAddTaskField">No tasks added yet.</span>
+          <span v-if="!showAddTaskField && !(getProjectLists ? getProjectLists.length > 0 : 0)">No tasks added yet.</span>
         </div>
         <VBtn
           v-if="!showAddTaskField && getProjectTasks? getProjectTasks.length > 0 : 0"
