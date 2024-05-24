@@ -112,7 +112,7 @@
                     color="primary"
                     :icon="expandedRows[index] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
                   />
-                  <span class="mt-2">{{ list.name }} (0)</span>
+                  <span class="mt-2">{{ list.name }} ({{ dummyTasks.length }})</span>
                 </h6>
               </VCol>
             </VRow>
@@ -789,6 +789,8 @@ const onDrop = (targetListIndex, event) => {
 }
 
 const expandedRows = ref([])
+
+expandedRows.value[0] = true
 
 const toggleRow = index => {
   expandedRows.value[index] = !expandedRows.value[index]
