@@ -1,156 +1,58 @@
 <script setup>
-const files = ref([
-  {
-    location: 'assets/files/file-1.pdf',
-    name: 'File 1',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 19, 2024',
-    isHover: false,
-    isFavourite: true,
-  },
-  {
-    location: 'assets/files/file-2.pdf',
-    name: 'File 2',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 20, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-3.pdf',
-    name: 'File 3',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 21, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-4.pdf',
-    name: 'File 4',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 22, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-5.pdf',
-    name: 'File 5',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 23, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-6.pdf',
-    name: 'File 6',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 24, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-7.pdf',
-    name: 'File 7',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 25, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-8.pdf',
-    name: 'File 8',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'June 5, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-9.pdf',
-    name: 'File 9',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 26, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-10.pdf',
-    name: 'File 10',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 27, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-11.pdf',
-    name: 'File 11',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 28, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-12.pdf',
-    name: 'File 12',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'Apr 29, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-13.pdf',
-    name: 'File 13',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'June 01, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-14.pdf',
-    name: 'File 14',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'June 01, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-15.pdf',
-    name: 'File 15',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'June 02, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-  {
-    location: 'assets/files/file-16.pdf',
-    name: 'File 16',
-    icon: 'tabler-file',
-    color: 'primary',
-    uploadedAt: 'June 02, 2024',
-    isHover: false,
-    isFavourite: false,
-  },
-])
+import { ref } from 'vue'
 
-function deleteFile(index) {
-  files.value.splice(index, 1)
+const fileInputRef = ref(null)
+const images = ref([])
+const uploadProgress = ref([])
+
+const chooseFile = () => {
+  fileInputRef.value.click()
 }
-function toggleFavourite(index) {
-  files.value[index].isFavourite = !files.value[index].isFavourite
+
+const filePicked = event => {
+  const files = event.target.files
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const fileReader = new FileReader()
+
+    // Initialize upload progress for the file
+    uploadProgress.value.push({ name: file.name, progress: 0 })
+
+    fileReader.onload = () => {
+      images.value.push({
+        url: fileReader.result,
+        name: file.name,
+      })
+    }
+    fileReader.readAsDataURL(file)
+
+    // Simulate upload progress
+    simulateUploadProgress(file.name)
+  }
+
+  // Reset the file input value
+  event.target.value = ''
+}
+
+const simulateUploadProgress = fileName => {
+  const progressIndex = uploadProgress.value.findIndex(f => f.name === fileName)
+  if (progressIndex !== -1) {
+    let progress = 0
+
+    const interval = setInterval(() => {
+      if (progress < 100) {
+        progress += 10
+        uploadProgress.value[progressIndex].progress = progress
+      } else {
+        clearInterval(interval)
+      }
+    }, 500)
+  }
+}
+
+const deleteImage = index => {
+  images.value.splice(index, 1)
+  uploadProgress.value.splice(index, 1)
 }
 </script>
 
@@ -161,12 +63,21 @@ function toggleFavourite(index) {
       class="d-flex justify-space-between align-center"
     >
       <h5 class="text-h5">
-        Media
+        Files
       </h5>
+      <input
+        ref="fileInputRef"
+        type="file"
+        hidden
+        accept=".jpeg, .jpg, .png, .pdf"
+        multiple
+        @change="filePicked"
+      >
       <VBtn
         prepend-icon="tabler-upload"
         color="primary"
         size="small"
+        @click="chooseFile"
       >
         Upload File
       </VBtn>
@@ -174,80 +85,91 @@ function toggleFavourite(index) {
   </VRow>
   <VRow class="mt-3">
     <VCol
-      v-for="(file, index) in files"
+      v-for="(image, index) in images"
       :key="index"
       cols="12"
       md="3"
       sm="3"
     >
-      <div class="position-relative">
-        <VCard
-          class="logistics-card-statistics cursor-pointer"
-          :style="file.isHover ? { 'border-block-end': `2px solid rgba(var(--v-theme-${file.color}))` } : { 'border-block-end': `2px solid rgba(var(--v-theme-${file.color}), var(--v-disabled-opacity))` }"
-          @mouseenter="file.isHover = true"
-          @mouseleave="file.isHover = false"
+      <div class="image-container">
+        <img
+          :src="image.url"
+          :alt="image.name"
+          class="uploaded-image"
         >
-          <VCardText>
-            <h5 class="text-h5 font-weight-medium mb-2 me-3">
-              <p class="mb-0">
-                {{ file.name }}
-              </p>
-              <p class="mb-0 text-xs">
-                {{ file.location.substring(0, 15) }}...
-              </p>
-            </h5>
-            <div class="d-flex justify-between align-center">
-              <div>
-                <p class="mb-0 text-xs">
-                  {{ file.uploadedAt }}
-                </p>
-              </div>
-              <div class="ps-14">
-                <VIcon
-                  icon="tabler-download"
-                  color="info"
-                  size="small"
-                  class="me-1"
-                />
-                <VIcon
-                  icon="tabler-eye"
-                  color="info"
-                  class="me-1"
-                  size="small"
-                />
-                <VIcon
-                  icon="tabler-trash"
-                  color="error"
-                  size="small"
-                  @click="deleteFile(index)"
-                />
-              </div>
-            </div>
-          </VCardText>
-        </VCard>
-        <VIcon
-          :icon="file.isFavourite ? 'tabler-star-filled' : 'tabler-star'"
-          color="warning"
-          size="small"
-          class="isFavourite"
-          @click="toggleFavourite(index)"
-        />
+        <div class="progress" v-if="uploadProgress[index]">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            :style="{ width: uploadProgress[index].progress + '%' }"
+            :aria-valuenow="uploadProgress[index].progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+          <span class="progress-text">{{ uploadProgress[index].progress }}%</span>
+        </div>
+        <span class="delete-icon" @click="deleteImage(index)">
+          <i class="tabler-square-x-filled"></i>
+        </span>
       </div>
     </VCol>
   </VRow>
 </template>
 
-<style lang="scss" scoped>
-@use "@core-scss/base/mixins" as mixins;
-
-.logistics-card-statistics:hover {
-  @include mixins.elevation(12);
-
-  transition: all 0.1s ease-out;
+<style scoped>
+.image-container {
+  position: relative;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  padding: 5px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
-.isFavourite{
-    position: absolute !important;
-    top: 5px;
-    right: 8px;
+
+.image-container:hover {
+  transform: scale(1.05);
+}
+
+.uploaded-image {
+  max-width: 100%;
+  max-height: 80px;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
+}
+
+.progress {
+  height: 20px;
+  margin-top: 10px;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: rgb(246 150 54);
+  transition: width 0.6s ease;
+  position: relative;
+}
+
+.progress-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: red;
 }
 </style>
