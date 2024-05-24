@@ -117,20 +117,105 @@
               </VCol>
             </VRow>
             <VRow v-if="expandedRows[index]">
-              <!-- // show sub tasks in table format -->
               <VDataTable
                 :headers="headers"
                 :items="dummyTasks"
                 density="compact"
-                class="ms-10 px-2"
+                expand-on-click
+                class="ms-3 py-3"
               >
+                <template #expanded-row="{ item }">
+                  <tr v-if="item.subtasks && item.subtasks.length">
+                    <td :colspan="headers.length">
+                      <VTable
+                        density="compact"
+                        class="text-no-wrap ms-5"
+                      >
+                        <tbody>
+                          <tr
+                            v-for="subtask in item.subtasks"
+                            :key="subtask.id"
+                          >
+                            <td
+                              width="59.5%"
+                              style="padding: 0!important;"
+                            >
+                              <VIcon
+                                class="tabler-playstation-circle"
+                                size="small"
+                                color="primary ms-2 me-2"
+                              />
+                              <span class="text-grey-600">{{ subtask.name }}</span>
+                            </td>
+                            <td style="padding: 0!important;">
+                              <VChip
+                                color="secondary"
+                                size="small"
+                              >
+                                {{ subtask.status }}
+                              </VChip>
+                            </td>
+                            <td style="padding: 0!important;">
+                              <VChip
+                                color="error"
+                                size="small"
+                              >
+                                {{ formatDate(subtask.due_date) }}
+                              </VChip>
+                            </td>
+                            <td style="padding: 0!important;">
+                              <VChip
+                                color="primary"
+                                size="small"
+                              >
+                                {{ formatDate(subtask.created_at) }}
+                              </VChip>
+                            </td>
+                            <td style="padding: 0!important;">
+                              <IconBtn @click.prevent>
+                                <VIcon icon="tabler-dots" />
+                                <VMenu activator="parent">
+                                  <VList>
+                                    <VList>
+                                      <VListItem
+                                        value="edit"
+                                        @click="startEditing(subtask)"
+                                      >
+                                        Edit
+                                      </VListItem>
+                                      <VListItem
+                                        value="delete"
+                                        @click="deleteTask(subtask)"
+                                      >
+                                        Delete
+                                      </VListItem>
+                                    </VList>
+                                  </VList>
+                                </VMenu>
+                              </IconBtn>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </VTable>
+                    </td>
+                  </tr>
+                </template>
                 <template #item.name="{ item }">
-                  <!-- // show this tabler-playstation-circle -->
                   <VIcon
                     class="tabler-playstation-circle"
                     color="primary mr-2"
                   />
                   <span>{{ item.name }}</span>
+                  <span
+                    v-if="item.subtasks && item.subtasks.length"
+                    class="text-caption"
+                  >
+                    <VIcon
+                      class="tabler-subtask ms-1"
+                      size="small"
+                    />
+                    <span>2</span>
+                  </span>
                 </template>
                 <template #item.status="{ item }">
                   <VChip
@@ -156,7 +241,30 @@
                     {{ formatDate(item.created_at) }}
                   </VChip>
                 </template>
-                <template #bottom></template>
+                <template #item.action="{ item }">
+                  <IconBtn @click.prevent>
+                    <VIcon icon="tabler-dots" />
+                    <VMenu activator="parent">
+                      <VList>
+                        <VList>
+                          <VListItem
+                            value="edit"
+                            @click="startEditing(item)"
+                          >
+                            Edit
+                          </VListItem>
+                          <VListItem
+                            value="delete"
+                            @click="deleteTask(item)"
+                          >
+                            Delete
+                          </VListItem>
+                        </VList>
+                      </VList>
+                    </VMenu>
+                  </IconBtn>
+                </template>
+                <template #bottom />
               </VDataTable>
             </VRow>
           </VCard>
@@ -225,7 +333,7 @@
               <VCol cols="1">
                 <!-- Actions Menu -->
                 <IconBtn class="ms-2">
-                  <VIcon icon="tabler-dots-vertical" />
+                  <VIcon icon="tabler-dots" />
                   <VMenu activator="parent">
                     <VList>
                       <VListItem @click="startEditing(task)">
@@ -634,14 +742,20 @@ const lists = ref([
 ])
 
 const headers = [
-  { title: 'Task Name', key: 'name', sortable: false, class: 'p-0' },
+  { title: 'Task Name', key: 'name', sortable: false, width: '60%' },
   { title: 'Status', key: 'status',  sortable: false },
   { title: 'Due Date', key: 'due_date', sortable: false },
   { title: 'Created Date', key: 'created_at', sortable: false },
+  { title: 'Action', key: 'action', sortable: false },
 ]
 
 const dummyTasks = [
-  { id: 1, name: 'Task 1', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
+  { id: 1, name: 'Task 1', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12',
+    subtasks: [
+      { id: 101, name: 'Subtask 1.1', status: 'In Progress', due_date: '2022-12-15', created_at: '2022-12-13' },
+      { id: 102, name: 'Subtask 1.2', status: 'In Progress', due_date: '2022-12-16', created_at: '2022-12-14' },
+    ],
+  },
   { id: 2, name: 'Task 2', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
   { id: 3, name: 'Task 3', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
   { id: 4, name: 'Task 4', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
@@ -717,5 +831,8 @@ const toggleRow = index => {
 .task-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15) !important;
+}
+.expanded-row, .expanded-td{
+    padding: 0 !important;
 }
 </style>

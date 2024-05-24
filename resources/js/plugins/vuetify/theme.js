@@ -19,6 +19,7 @@ export const themes = {
       'warning': '#FF9F43',
       'on-warning': '#fff',
       'warning-darken-1': '#E68F3C',
+      'warning-light': '#fdeedf',
       'error': '#FF4C51',
       'on-error': '#fff',
       'error-darken-1': '#E64449',

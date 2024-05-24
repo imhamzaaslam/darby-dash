@@ -113,7 +113,7 @@
             </VCol>
             <VCol cols="2">
               <div class="d-flex align-center gap-3">
-                <div class="flex-grow-1">
+                <div class="flex-grow-1 mt-2">
                   <VProgressLinear
                     :height="6"
                     :model-value="25"
@@ -121,7 +121,7 @@
                     rounded
                   />
                 </div>
-                <div class="text-body-1 text-high-emphasis">
+                <div class="text-body-1 text-high-emphasis mt-2">
                   {{ 25 }}%
                 </div>
               </div>
@@ -131,7 +131,7 @@
               class="ms-8"
             >
               <IconBtn @click.prevent>
-                <VIcon icon="tabler-dots-vertical" />
+                <VIcon icon="tabler-dots" />
                 <VMenu activator="parent">
                   <VList>
                     <VListItem
