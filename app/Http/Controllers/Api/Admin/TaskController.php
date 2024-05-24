@@ -99,7 +99,7 @@ class TaskController extends Controller
     public function getByProject(string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
-        $tasks = $this->taskRepository->getBy('project_id', $project->id);
+        $tasks = $this->taskRepository->getByProject($project);
 
         return TaskResource::collection($tasks);
     }

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import ListTaskService from '../services/ListTaskService'
 
-export const useListTaskStore = defineStore('lists', {
+export const useListTaskStore = defineStore('list_tasks', {
   state: () => ({
     listTasks: [],
     listTask: null,

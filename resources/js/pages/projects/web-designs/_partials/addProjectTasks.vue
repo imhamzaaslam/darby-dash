@@ -105,14 +105,28 @@
             :key="index"
             class="px-4 py-4 mt-2"
           >
-            <VRow @click="toggleRow(index)">
+            <VRow>
               <VCol cols="6">
                 <h6 class="text-h6 text-high-emphasize">
                   <VIcon
                     color="primary"
                     :icon="expandedRows[index] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
+                    @click="toggleRow(index)"
                   />
-                  <span class="mt-2">{{ list.name }} ({{ dummyTasks.length }})</span>
+                  <span
+                    class="mt-2 cursor-pointer"
+                    @click="toggleRow(index)"
+                  >{{ list.name }} ({{ dummyTasks.length }})</span>
+                  <VBtn
+                    v-if="!showAddListTaskField"
+                    color="primary"
+                    variant="plain"
+                    size="small"
+                    @click="activateQuickListTask"
+                  >
+                    <VIcon icon="tabler-plus" />
+                    Add Task
+                  </VBtn>
                 </h6>
               </VCol>
             </VRow>
@@ -264,7 +278,84 @@
                     </VMenu>
                   </IconBtn>
                 </template>
-                <template #bottom />
+                <template #bottom>
+                  <VRow
+                    v-if="showAddListTaskField"
+                    class="px-6 py-2"
+                  >
+                    <VCol cols="8">
+                      <div class="d-flex align-center">
+                        <VIcon
+                          class="tabler-playstation-circle me-2"
+                          color="primary"
+                        />
+                        <VTextField
+                          ref="quickListTaskInput"
+                          v-model="quickListTaskName"
+                          placeholder="Task Name"
+                          style="margin-top: -7px;"
+                          variant="plain"
+                          hide-details
+                          dense
+                          @keydown.enter="addQuickListTask"
+                        />
+                      </div>
+                    </VCol>
+                    <VCol cols="4">
+                      <div class="float-right">
+                        <VIcon
+                          class="tabler-calendar me-1"
+                          color="primary"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span>Select Due Date</span>
+                          </VTooltip>
+                          <AppDateTimePicker v-model="dueDate" />
+                        </VIcon>
+                        <VIcon
+                          class="tabler-circle-check me-1"
+                          color="primary"
+                          @click="addQuickTask"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span>Save</span>
+                          </VTooltip>
+                        </VIcon>
+                        <VIcon
+                          class="tabler-x"
+                          color="primary"
+                          @click="cancelQuickListTask"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span>Cancel</span>
+                          </VTooltip>
+                        </VIcon>
+                      </div>
+                    </VCol>
+                  </VRow>
+                  <div class="float-left">
+                    <VBtn
+                      v-if="!showAddListTaskField"
+                      color="primary"
+                      class="ms-1 mt-2"
+                      variant="plain"
+                      size="small"
+                      @click="activateQuickListTask"
+                    >
+                      <VIcon icon="tabler-plus" />
+                      Add Task
+                    </VBtn>
+                  </div>
+                </template>
               </VDataTable>
             </VRow>
           </VCard>
@@ -385,6 +476,7 @@
                 <VTextField
                   ref="quickTaskInput"
                   v-model="quickTaskName"
+                  placeholder="Task Name"
                   style="margin-top: -7px;"
                   variant="plain"
                   hide-details
@@ -573,7 +665,7 @@ import { computed, onBeforeMount, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../../store/projects"
 import { useProjectTaskStore } from "../../../../store/project_tasks"
-import { useListTaskStore } from "../../../../store/list_tasks"
+import { useListTaskStore } from "@/store/list_tasks"
 import { useProjectListStore } from "../../../../store/project_lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
@@ -595,8 +687,11 @@ const addListForm = ref()
 const listTitle = ref(null)
 
 const showAddTaskField = ref(false)
+const showAddListTaskField = ref(false)
 const quickTaskName = ref('')
+const quickListTaskName = ref('')
 const quickTaskInput = ref(null)
+const quickListTaskInput = ref(null)
 const dueDate = ref(null)
 
 const isLoading = ref(false)
@@ -654,6 +749,16 @@ function activateQuickAdd() {
   })
 }
 
+function activateQuickListTask() {
+  showAddListTaskField.value = true
+  nextTick(() => {
+    const inputElement = quickListTaskInput.value[0].$el.querySelector('input')
+    if (inputElement) {
+      inputElement.focus()
+    }
+  })
+}
+
 async function submitListForm() {
   addListForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
@@ -702,9 +807,43 @@ async function addQuickTask() {
   }
 }
 
+async function addQuickListTask() {
+  if (quickListTaskName.value.trim() === '') {
+    toast.error('Task name cannot be empty.')
+
+    return
+  }
+
+  try {
+    activateQuickListTask()
+
+    const newTaskListkDetails = {
+      name: quickListTaskName.value.trim(),
+      due_date: dueDate.value,
+      project_uuid: projectId.value,
+    }
+    alert('here');
+
+    console.log('listTaskStore', listTaskStore)
+
+    await listTaskStore.create(newTaskListkDetails)
+    quickListTaskName.value = ''
+    dueDate.value = null
+    toast.success('Task added successfully', { timeout: 1000 })
+    fetchProjectTasks()
+  } catch (error) {
+    toast.error('Failed to add task:', error)
+  }
+}
+
 function cancelQuickTask() {
   showAddTaskField.value = false
   quickTaskName.value = ''
+}
+
+function cancelQuickListTask() {
+  showAddListTaskField.value = false
+  quickListTaskName.value = ''
 }
 
 function startEditing(task) {
