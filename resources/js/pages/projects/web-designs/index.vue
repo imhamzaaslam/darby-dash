@@ -85,7 +85,8 @@
                 />
                 <div>
                   <h6 class="text-h6 text-no-wrap">
-                    {{ project.title }}
+                    <span class="d-block">{{ project.title }}</span>
+                    <small class="mt-0">{{ project.project_type }}</small>
                   </h6>
                 </div>
               </div>
