@@ -108,6 +108,7 @@
                   :error-messages="addingErrors.password"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                   placeholder="Password"
+                  autocomplete="new-password"
                 />
               </VCol>
 

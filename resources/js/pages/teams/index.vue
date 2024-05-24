@@ -21,9 +21,9 @@
   </VRow>
   <VCard>
     <VCardText class="d-flex justify-space-between align-center flex-wrap gap-4">
-      <h5 class="text-h5">
+      <h3>
         Manage Members
-      </h5>
+      </h3>
       <div style="inline-size: 272px;">
         <AppTextField
           v-model="search"

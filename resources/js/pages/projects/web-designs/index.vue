@@ -86,8 +86,8 @@
                 <div>
                   <h6 class="text-h6 text-no-wrap">
                     <span class="d-block">{{ project.title }}</span>
-                    <small class="mt-0">{{ project.project_type }}</small>
                   </h6>
+                  <small>{{ project.project_type }}</small>
                 </div>
               </div>
             </VCol>

@@ -13,29 +13,31 @@ const filePicked = event => {
   const files = event.target.files
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
+    const uniqueId = `${file.name}-${Date.now()}`
     const fileReader = new FileReader()
 
-    // Initialize upload progress for the file
-    uploadProgress.value.push({ name: file.name, progress: 0 })
+    // Initialize upload progress for the file with a unique id
+    uploadProgress.value.push({ id: uniqueId, name: file.name, progress: 0 })
 
     fileReader.onload = () => {
       images.value.push({
         url: fileReader.result,
         name: file.name,
+        id: uniqueId,
       })
     }
     fileReader.readAsDataURL(file)
 
     // Simulate upload progress
-    simulateUploadProgress(file.name)
+    simulateUploadProgress(uniqueId)
   }
 
   // Reset the file input value
   event.target.value = ''
 }
 
-const simulateUploadProgress = fileName => {
-  const progressIndex = uploadProgress.value.findIndex(f => f.name === fileName)
+const simulateUploadProgress = uniqueId => {
+  const progressIndex = uploadProgress.value.findIndex(f => f.id === uniqueId)
   if (progressIndex !== -1) {
     let progress = 0
 
@@ -62,9 +64,9 @@ const deleteImage = index => {
       cols="12"
       class="d-flex justify-space-between align-center"
     >
-      <h5 class="text-h5">
-        Files
-      </h5>
+      <h3>
+        Media Files
+      </h3>
       <input
         ref="fileInputRef"
         type="file"
@@ -76,20 +78,18 @@ const deleteImage = index => {
       <VBtn
         prepend-icon="tabler-upload"
         color="primary"
-        size="small"
         @click="chooseFile"
       >
         Upload File
       </VBtn>
     </VCol>
   </VRow>
-  <VRow class="mt-3">
+  <VRow class="mt-2">
     <VCol
       v-for="(image, index) in images"
-      :key="index"
+      :key="image.id"
       cols="12"
-      md="3"
-      sm="3"
+      md="2"
     >
       <div class="image-container">
         <img
@@ -97,7 +97,10 @@ const deleteImage = index => {
           :alt="image.name"
           class="uploaded-image"
         >
-        <div class="progress" v-if="uploadProgress[index]">
+        <div
+          v-if="uploadProgress[index]"
+          class="progress"
+        >
           <div
             class="progress-bar"
             role="progressbar"
@@ -105,11 +108,14 @@ const deleteImage = index => {
             :aria-valuenow="uploadProgress[index].progress"
             aria-valuemin="0"
             aria-valuemax="100"
-          ></div>
+          />
           <span class="progress-text">{{ uploadProgress[index].progress }}%</span>
         </div>
-        <span class="delete-icon" @click="deleteImage(index)">
-          <i class="tabler-square-x-filled"></i>
+        <span
+          class="delete-icon"
+          @click="deleteImage(index)"
+        >
+          <i class="tabler-square-x-filled" />
         </span>
       </div>
     </VCol>
@@ -122,9 +128,10 @@ const deleteImage = index => {
   border: 2px solid #007bff;
   border-radius: 10px;
   padding: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 10px; /* Reduced margin */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  max-width: 150px; /* Reduced size */
 }
 
 .image-container:hover {
@@ -132,16 +139,17 @@ const deleteImage = index => {
 }
 
 .uploaded-image {
-  max-width: 100%;
-  max-height: 80px;
+  height: 100px;
+  width: 100%;
+  object-fit: contain; 
   border-radius: 8px;
   display: block;
   margin: 0 auto;
 }
 
 .progress {
-  height: 20px;
-  margin-top: 10px;
+  height: 15px; 
+  margin-top: 5px; 
   background-color: #e9ecef;
   border-radius: 0.25rem;
   position: relative;
@@ -150,7 +158,7 @@ const deleteImage = index => {
 
 .progress-bar {
   height: 100%;
-  background-color: rgb(246 150 54);
+  background-color: #f48d27;
   transition: width 0.6s ease;
   position: relative;
 }
@@ -161,15 +169,18 @@ const deleteImage = index => {
   top: 50%;
   transform: translate(-50%, -50%);
   color: white;
-  font-size: 12px;
+  font-size: 10px; 
   font-weight: bold;
 }
 
 .delete-icon {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0;
+  right: 0;
+  transform: translate(45%, -53%);
   cursor: pointer;
   color: red;
+  border-radius: 50%;
+  padding: 5px;
 }
 </style>
