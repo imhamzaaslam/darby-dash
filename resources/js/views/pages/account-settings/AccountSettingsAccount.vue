@@ -192,14 +192,16 @@
                   </span>
                 </VBtn>
 
-                <!-- <VBtn
+                <!--
+                  <VBtn
                   color="secondary"
                   variant="tonal"
                   type="reset"
                   @click.prevent="resetForm"
-                >
+                  >
                   Reset
-                </VBtn> -->
+                  </VBtn> 
+                -->
               </VCol>
             </VRow>
           </VForm>
@@ -216,6 +218,7 @@ import { useToast } from "vue-toastification"
 import { computed, onMounted, ref } from 'vue'
 
 onMounted(() => {
+  getUser()
   setUserDetails()
 })
 
@@ -226,7 +229,7 @@ const accountData = ref({
   avatar: avatar1,
   name_first: '',
   name_last: '',
-  email: 'm',
+  email: '',
   phone: '',
   city: '',
   address: '',
@@ -268,8 +271,8 @@ async function submitUpdateMemberForm() {
   updateMemberForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-        const userUuid = loggedInUserUuid.value
-        const userRole = 'Admin'
+        const userUuid = userStore.getUser?.uuid
+        const userRole = userStore.getUser?.role
         const userState = userStore.getUser?.state
 
         await userStore.update({ ...accountData.value, uuid: userUuid, role: userRole, state: userState })
@@ -291,32 +294,30 @@ async function submitUpdateMemberForm() {
 //   accountData.value = Object.fromEntries(Object.keys(accountData.value).map(key => [key, '']))
 // }
 
+const getUser = async () => {
+  let user = JSON.parse(localStorage.getItem('user'))
+  const uuid = user.user?.uuid
+
+  await userStore.show(uuid)
+}
+
+const setUserDetails = async () => {
+  let userDetails = userStore.getUser
+  accountData.value.name_first = userDetails?.name_first
+  accountData.value.name_last = userDetails?.name_last
+  accountData.value.email = userDetails?.email
+  accountData.value.phone = userDetails?.info?.phone
+  accountData.value.city = userDetails?.info?.city
+  accountData.value.address = userDetails?.info?.address
+  accountData.value.zip = userDetails?.info?.zip
+}
+
 const showError = () => {
   if(getStatusCode.value == 500 || getStatusCode.value == 404){
     toast.error('Something went wrong. Please try again later.')
   }
   else{
     editErrors.value = getErrors.value
-  }
-}
-
-const setUserDetails = async () => {
-  const user = JSON.parse(localStorage.getItem('user'))
-  loggedInUserUuid.value = user.user.uuid
-
-  const users = userStore.getUsers
-  const userIndex = users.findIndex(user => user.uuid === loggedInUserUuid.value)
-  const userDetails = users[userIndex]
-
-  accountData.value = {
-    ...accountData.value,
-    name_first: userDetails?.name_first,
-    name_last: userDetails?.name_last,
-    email: userDetails?.email,
-    phone: userDetails?.info?.phone,
-    city: userDetails?.info?.city,
-    address: userDetails?.info?.address,
-    zip: userDetails?.info?.zip,
   }
 }
 

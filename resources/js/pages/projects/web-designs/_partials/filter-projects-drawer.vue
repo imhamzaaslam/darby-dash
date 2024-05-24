@@ -20,15 +20,12 @@
         class="h-100"
       >
         <VCardText style="block-size: calc(100vh - 5rem);">
-          <VForm
-            ref="filterProjectsForm"
-            @submit.prevent="applyFilters"
-          >
+          <VForm @submit.prevent="filter">
             <VRow>
               <!-- Search filter -->
               <VCol cols="12">
                 <AppTextField
-                  v-model="filterDetails.query"
+                  v-model="filterDetails.searchQuery"
                   label="Name"
                   placeholder="Project Name"
                 />
@@ -63,9 +60,19 @@
                   <VBtn
                     type="submit"
                     class="me-2"
-                    @click="filterProjectsForm?.validate()"
+                    :disabled="props.getLoadStatus === 1"
                   >
-                    Apply
+                    <span v-if="props.getLoadStatus === 1">
+                      <VProgressCircular
+                        :size="16"
+                        width="3"
+                        indeterminate
+                      />
+                      Loading...
+                    </span>
+                    <span v-else>
+                      Apply
+                    </span>
                   </VBtn>
                   <VBtn
                     color="error"
@@ -88,45 +95,44 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { ref } from 'vue'
-import { useToast } from "vue-toastification"
-import { useRouter } from 'vue-router'
-import { useProjectStore } from "../../../../store/projects"
 
 const props = defineProps({
   isFilterDrawerOpen: {
     type: Boolean,
     required: true,
   },
-  fetchProjects: Function,
+  applyFilters: Function,
   getProjectTypes: Object,
+  selectedProjectType: Number,
   getProjectManagers: Object,
+  getLoadStatus: Number,
 })
 
 const emit = defineEmits(['update:isFilterDrawerOpen'])
 
+watch(() => props.selectedProjectType, (val) => {
+  filterDetails.value.project_type_id = val
+})
+
 const filterDetails = ref({
-  query: '',
+  searchQuery: '',
   project_type_id: null,
   project_manager_id: null,
 })
-
-const projectStore = useProjectStore()
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isFilterDrawerOpen', val)
 }
 
-const applyFilters = () => {
-  const payload = {
-    query: filterDetails.value.query,
-    project_type_id: filterDetails.value.project_type_id,
-    project_manager_id: filterDetails.value.project_manager_id,
-  }
+const filter = () => {
+  props.selectedProjectType = filterDetails.value.project_type_id
+  props.applyFilters(filterDetails.value.searchQuery, filterDetails.value.project_type_id, filterDetails.value.project_manager_id)
+  emit('update:isFilterDrawerOpen', false)
 }
 
 const resetFilters = () => {
   filterDetails.value = {
-    query: '',
+    searchQuery: '',
     project_type_id: null,
     project_manager_id: null,
   }
