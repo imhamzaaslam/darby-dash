@@ -291,8 +291,9 @@
   />
   <FilterDrawer
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
-    :fetch-projects="fetchProjects"
+    :apply-filters="applyFilters"
     :get-project-types="getProjectTypes"
+    :selected-project-type="selectedProjectType"
     :get-project-managers="getProjectManagers"
     :get-load-status="getLoadStatus"
   />
@@ -323,8 +324,10 @@ const isAddProjectDrawerOpen = ref(false)
 const isEditProjectDrawerOpen = ref(false)
 const isFilterDrawerOpen = ref(false)
 const isLoading = ref(false)
-const selectedProjectType = ref(1)
+const selectedProjectType = ref(null)
 const editProjectDetails = ref({})
+const search = ref('')
+const selectedProjectManagerId = ref(null)
 
 watch(
   () => route.query.type,
@@ -347,7 +350,7 @@ onBeforeMount(async () => {
 
 const fetchProjects = async () => {
   try {
-    await projectStore.getByType(selectedProjectType.value)
+    await projectStore.getAll(search.value, selectedProjectType.value, selectedProjectManagerId.value)
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching projects:', error)
@@ -355,6 +358,13 @@ const fetchProjects = async () => {
   finally {
     isLoading.value = false
   }
+}
+
+const applyFilters = async (searchQuery = '', selectedProject = null, selectedProjectManager = null) => {
+  search.value = searchQuery
+  selectedProjectType.value = selectedProject
+  selectedProjectManagerId.value = selectedProjectManager
+  await fetchProjects()
 }
 
 const editProject = project => {
@@ -434,10 +444,12 @@ const fetchMembers = async () => {
 }
 
 const getProjects = computed(() => {
-  return projectStore.getProjectsByType
+  return projectStore.getProjects
 })
 
 const getProjectTypes = computed(() => {
+  console.log('getting types')
+
   return projectTypeStore.getProjectTypes
 })
 

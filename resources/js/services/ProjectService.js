@@ -1,8 +1,16 @@
-import { apiClient, generateQueryString } from './api'
+import { apiClient } from './api'
 
 export default {
-  getProjects() {
-    return apiClient.get('admin/projects')
+  getProjects(search = null, projectTypeId = null, projectManagerId = null) {
+    const queryParams = [
+      search && `keyword=${search}`,
+      projectTypeId && `projectTypeId=${projectTypeId}`,
+      projectManagerId && `projectManagerId=${projectManagerId}`,
+    ].filter(Boolean)
+  
+    const queryString = queryParams.length ? `?${queryParams.join('&')}` : ''
+
+    return apiClient.get(`admin/projects${queryString}`)
   },
   getProjectsByType(id) {
     return apiClient.get(`admin/projects/type/${id}`)

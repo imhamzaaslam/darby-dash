@@ -12,11 +12,11 @@ export const useProjectStore = defineStore('projects', {
   }),
   persist: true,
   actions: {
-    async getAll() {
+    async getAll(search = null, projectTypeId = null, projectManagerId = null) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ProjectService.getProjects()
+        const response = await ProjectService.getProjects(search, projectTypeId, projectManagerId)
 
         this.projects = response.data.data
         this.usersCount = response.data.meta.total

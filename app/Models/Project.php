@@ -44,23 +44,18 @@ class Project extends Base
         return $this->hasMany(ProjectList::class);
     }
 
-    function scopeFiltered(Builder $query, ?string $keyword): Builder
+    function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder
     {
         $projectsTable = (new Project())->getTable();
-        $projectTypesTable = (new ProjectType())->getTable();
 
-        return $query->when($keyword, function(Builder $query) use ($keyword, $projectsTable, $projectTypesTable) {
-            return $query->where("$projectsTable.id", 'like', '%' . $keyword . '%')
-                ->orWhere("$projectsTable.title", 'like', '%' . $keyword . '%')
-                ->orWhere("$projectsTable.description", 'like', '%' . $keyword . '%')
-                ->orWhere("$projectsTable.est_hours", 'like', '%' . $keyword . '%')
-                ->orWhere("$projectsTable.est_budget", 'like', '%' . $keyword . '%')
-                ->orWhere("$projectsTable.start_date", 'like', '%' . $keyword . '%')
-                ->orWhere("$projectsTable.end_date", 'like', '%' . $keyword . '%')
-                ->orWhere("$projectsTable.status", 'like', '%' . $keyword . '%')
-                ->orWhereHas('projectType', function (Builder $query) use ($keyword) {
-                    $query->where('name', 'like', '%' . $keyword . '%');
-                });
+        return $query->when($keyword, function ($query, $keyword) use ($projectsTable) {
+            return $query->where(function ($query) use ($projectsTable, $keyword) {
+                $query->where($projectsTable . '.title', 'like', '%' . $keyword . '%');
+            });
+        })->when($projectTypeId, function ($query, $projectTypeId) use ($projectsTable) {
+            return $query->where($projectsTable . '.project_type_id', $projectTypeId);
+        })->when($projectManagerId, function ($query, $projectManagerId) use ($projectsTable) {
+            return $query->where($projectsTable . '.project_manager_id', $projectManagerId);
         });
     }
 

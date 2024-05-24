@@ -25,10 +25,9 @@ class ProjectController extends Controller
     {
         $projects = $this->projectRepository
             ->getAllRecordsQuery()
-            ->filtered($request->keyword ?? '')
+            ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)
             ->ordered($request->orderBy ?? 'id', $request->order ?? 'asc')
             ->paginate($request->per_page ?? config('pagination.per_page', 10));
-
 
         return ProjectResource::collection($projects);
     }
