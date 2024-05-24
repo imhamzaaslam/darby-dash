@@ -99,7 +99,7 @@
             class="ms-8"
           >
             <IconBtn @click.prevent>
-              <VIcon icon="tabler-dots-vertical" />
+              <VIcon icon="tabler-dots" />
               <VMenu activator="parent">
                 <VList>
                   <VListItem
