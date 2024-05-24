@@ -316,7 +316,7 @@
                           </VTooltip>
                           <AppDateTimePicker v-model="dueDate" />
                         </VIcon>
-                        <VIcon
+                        <!-- <VIcon
                           class="tabler-circle-check me-1"
                           color="primary"
                           @click="addQuickTask"
@@ -327,7 +327,7 @@
                           >
                             <span>Save</span>
                           </VTooltip>
-                        </VIcon>
+                        </VIcon> -->
                         <VIcon
                           class="tabler-x"
                           color="primary"
