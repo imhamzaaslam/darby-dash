@@ -16,7 +16,7 @@ export const useProjectTypeStore = defineStore('project_types', {
         const response = await ProjectTypeService.getProjectTypes()
 
         this.projectTypes = [
-          { id: null, name: "Select Project Type" },
+          { id: null, name: "All" },
           ...response.data.data.map(type => ({ id: type.id, name: type.name })),
         ]
 
