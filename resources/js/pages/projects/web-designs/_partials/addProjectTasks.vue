@@ -116,24 +116,24 @@
                   <span
                     class="mt-2 cursor-pointer"
                     @click="toggleRow(index)"
-                  >{{ list.name }} ({{ dummyTasks.length }})</span>
-                  <VBtn
-                    v-if="!showAddListTaskField"
+                  >{{ list.name }} ({{ list.tasks.length }})</span>
+                  <!-- <VBtn
+                    v-if="!showAddListTaskField[index]"
                     color="primary"
                     variant="plain"
                     size="small"
-                    @click="activateQuickListTask"
+                    @click="activateQuickListTask(index)"
                   >
                     <VIcon icon="tabler-plus" />
                     Add Task
-                  </VBtn>
+                  </VBtn> -->
                 </h6>
               </VCol>
             </VRow>
             <VRow v-if="expandedRows[index]">
               <VDataTable
                 :headers="headers"
-                :items="dummyTasks"
+                :items="list.tasks"
                 density="compact"
                 expand-on-click
                 class="ms-3 py-3"
@@ -241,6 +241,7 @@
                 </template>
                 <template #item.due_date="{ item }">
                   <VChip
+                    v-if="item.due_date"
                     color="error"
                     size="small"
                   >
@@ -280,7 +281,7 @@
                 </template>
                 <template #bottom>
                   <VRow
-                    v-if="showAddListTaskField"
+                    v-if="showAddListTaskField[index]"
                     class="px-6 py-2"
                   >
                     <VCol cols="8">
@@ -290,14 +291,14 @@
                           color="primary"
                         />
                         <VTextField
-                          ref="quickListTaskInput"
-                          v-model="quickListTaskName"
+                          ref="`quickListTaskInput_${index}`"
+                          v-model="quickListTaskName[index]"
                           placeholder="Task Name"
                           style="margin-top: -7px;"
                           variant="plain"
                           hide-details
                           dense
-                          @keydown.enter="addQuickListTask"
+                          @keydown.enter="addQuickListTask(list.uuid, index)"
                         />
                       </div>
                     </VCol>
@@ -330,7 +331,7 @@
                         <VIcon
                           class="tabler-x"
                           color="primary"
-                          @click="cancelQuickListTask"
+                          @click="cancelQuickListTask(index)"
                         >
                           <VTooltip
                             activator="parent"
@@ -344,12 +345,12 @@
                   </VRow>
                   <div class="float-left">
                     <VBtn
-                      v-if="!showAddListTaskField"
+                      v-if="!showAddListTaskField[index]"
                       color="primary"
                       class="ms-1 mt-2"
                       variant="plain"
                       size="small"
-                      @click="activateQuickListTask"
+                      @click="activateQuickListTask(index)"
                     >
                       <VIcon icon="tabler-plus" />
                       Add Task
@@ -687,11 +688,11 @@ const addListForm = ref()
 const listTitle = ref(null)
 
 const showAddTaskField = ref(false)
-const showAddListTaskField = ref(false)
+const showAddListTaskField = ref([])
+const quickListTaskInput = ref([])
+const quickListTaskName = ref([])
 const quickTaskName = ref('')
-const quickListTaskName = ref('')
 const quickTaskInput = ref(null)
-const quickListTaskInput = ref(null)
 const dueDate = ref(null)
 
 const isLoading = ref(false)
@@ -749,10 +750,10 @@ function activateQuickAdd() {
   })
 }
 
-function activateQuickListTask() {
-  showAddListTaskField.value = true
+function activateQuickListTask(index) {
+  showAddListTaskField.value[index] = true
   nextTick(() => {
-    const inputElement = quickListTaskInput.value[0].$el.querySelector('input')
+    const inputElement = quickListTaskInput.value[index].$el.querySelector('input')
     if (inputElement) {
       inputElement.focus()
     }
@@ -807,43 +808,43 @@ async function addQuickTask() {
   }
 }
 
-async function addQuickListTask() {
-  if (quickListTaskName.value.trim() === '') {
+async function addQuickListTask(list_uuid, index) {
+  const taskName = quickListTaskName.value[index]
+
+  if (taskName.trim() === '') {
     toast.error('Task name cannot be empty.')
 
     return
   }
 
   try {
-    activateQuickListTask()
+    activateQuickListTask(index)
 
-    const newTaskListkDetails = {
-      name: quickListTaskName.value.trim(),
+    const newTaskListDetails = {
+      name: taskName.trim(),
       due_date: dueDate.value,
-      project_uuid: projectId.value,
+      list_uuid: list_uuid,
     }
-    alert('here');
 
-    console.log('listTaskStore', listTaskStore)
-
-    await listTaskStore.create(newTaskListkDetails)
-    quickListTaskName.value = ''
+    await listTaskStore.create(newTaskListDetails)
+    quickListTaskName.value[index] = ''
     dueDate.value = null
     toast.success('Task added successfully', { timeout: 1000 })
-    fetchProjectTasks()
+    fetchProjectLists()
   } catch (error) {
     toast.error('Failed to add task:', error)
   }
 }
+
 
 function cancelQuickTask() {
   showAddTaskField.value = false
   quickTaskName.value = ''
 }
 
-function cancelQuickListTask() {
-  showAddListTaskField.value = false
-  quickListTaskName.value = ''
+function cancelQuickListTask(index) {
+  showAddListTaskField[index].value = false
+  quickListTaskName[index].value = ''
 }
 
 function startEditing(task) {
@@ -869,6 +870,12 @@ async function deleteTask(task) {
 const getProjectTasks = computed(() => projectTaskStore.getProjectTasks)
 const getProjectLists = computed(() => projectListStore.getProjectLists)
 const project = computed(() => projectStore.getProject)
+
+getProjectLists.value.forEach(() => {
+  showAddListTaskField.value.push(false)
+  quickListTaskInput.value.push(null)
+  quickListTaskName.value.push('')
+})
 
 const getLoadStatus = computed(() => {
   return projectTaskStore.getLoadStatus
