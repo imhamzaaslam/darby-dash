@@ -1,21 +1,3 @@
-<script setup>
-import avatar1 from '@images/avatars/avatar-1.png'
-import { useAuthStore } from "@/store/auth"
-
-const authStore = useAuthStore()
-const router = useRouter()
-
-async function logout() {
-  let token = authStore.token
-  let res = await authStore.logout(token)
-  if(res.success) {
-    router.push({ name: 'login' })
-  } else {
-    alert(res.data.error)
-  }
-}
-</script>
-
 <template>
   <VBadge
     dot
@@ -62,9 +44,9 @@ async function logout() {
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{ userDetails?.name_first + ' ' + userDetails?.name_last }}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle>{{ userDetails?.role }}</VListItemSubtitle>
           </VListItem>
 
           <VDivider class="my-2" />
@@ -100,3 +82,41 @@ async function logout() {
     </VAvatar>
   </VBadge>
 </template>
+
+<script setup>
+import avatar1 from '@images/avatars/avatar-1.png'
+import { useAuthStore } from "@/store/auth"
+import { useUserStore } from "@/store/users"
+
+onMounted(() => {
+  getUser()
+})
+
+const userStore = useUserStore()
+
+const authStore = useAuthStore()
+const router = useRouter()
+
+async function logout() {
+  let token = authStore.token
+  let res = await authStore.logout(token)
+  if(res.success) {
+    router.push({ name: 'login' })
+  } else {
+    alert(res.data.error)
+  }
+}
+
+const getUser = async () => {
+  let user = JSON.parse(localStorage.getItem('user'))
+  const uuid = user.user?.uuid
+
+  await userStore.show(uuid)
+}
+
+const userDetails = computed(() => {
+  console.log('user is', userStore.getUser?.name_first + ' ' + userStore.getUser?.name_last)
+  
+  return userStore.getUser
+})
+</script>
