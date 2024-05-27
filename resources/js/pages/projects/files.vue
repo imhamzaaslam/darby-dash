@@ -1,77 +1,15 @@
-<script setup>
-import { ref } from 'vue'
-
-const fileInputRef = ref(null)
-const images = ref([])
-const uploadProgress = ref([])
-
-const chooseFile = () => {
-  fileInputRef.value.click()
-}
-
-const filePicked = event => {
-  const files = event.target.files
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i]
-    const uniqueId = `${file.name}-${Date.now()}`
-    const fileReader = new FileReader()
-
-    // Initialize upload progress for the file with a unique id
-    uploadProgress.value.push({ id: uniqueId, name: file.name, progress: 0 })
-
-    fileReader.onload = () => {
-      images.value.push({
-        url: fileReader.result,
-        name: file.name,
-        id: uniqueId,
-      })
-    }
-    fileReader.readAsDataURL(file)
-
-    // Simulate upload progress
-    simulateUploadProgress(uniqueId)
-  }
-
-  // Reset the file input value
-  event.target.value = ''
-}
-
-const simulateUploadProgress = uniqueId => {
-  const progressIndex = uploadProgress.value.findIndex(f => f.id === uniqueId)
-  if (progressIndex !== -1) {
-    let progress = 0
-
-    const interval = setInterval(() => {
-      if (progress < 100) {
-        progress += 10
-        uploadProgress.value[progressIndex].progress = progress
-      } else {
-        clearInterval(interval)
-      }
-    }, 500)
-  }
-}
-
-const deleteImage = index => {
-  images.value.splice(index, 1)
-  uploadProgress.value.splice(index, 1)
-}
-</script>
-
 <template>
   <VRow>
     <VCol
       cols="12"
       class="d-flex justify-space-between align-center"
     >
-      <h3>
-        Media Files
-      </h3>
+      <h3>Media Files</h3>
       <input
         ref="fileInputRef"
         type="file"
         hidden
-        accept=".jpeg, .jpg, .png, .pdf"
+        accept=".jpeg, .jpg, .png, .pdf, .docx, .txt"
         multiple
         @change="filePicked"
       >
@@ -91,14 +29,29 @@ const deleteImage = index => {
       cols="12"
       md="2"
     >
-      <div class="image-container">
+      <div
+        class="image-container"
+        @click="openFileViewer(image)"
+      >
         <img
+          v-if="image.type.startsWith('image/')"
           :src="image.url"
           :alt="image.name"
           class="uploaded-image"
         >
         <div
-          v-if="uploadProgress[index]"
+          v-else
+          class="file-placeholder"
+        >
+          <img
+            src="../../../images/logos/document.png"
+            alt=""
+            class="default-image"
+          >
+          <span class="file-type">.{{ image.name.split('.').pop().toLowerCase() }}</span>
+        </div>
+        <div
+          v-if="uploadProgress[index] && !uploadProgress[index].isCompleted"
           class="progress"
         >
           <div
@@ -111,27 +64,120 @@ const deleteImage = index => {
           />
           <span class="progress-text">{{ uploadProgress[index].progress }}%</span>
         </div>
+        <div v-else>
+          <small>2 secs ago</small>
+        </div>
         <span
           class="delete-icon"
-          @click="deleteImage(index)"
+          @click.stop="deleteImage(index)"
         >
-          <i class="tabler-square-x-filled" />
+          <VIcon class="tabler-square-x-filled" size="large" />
         </span>
       </div>
     </VCol>
   </VRow>
+
+  <FileViewer
+    :show="isViewerOpen"
+    :file="selectedFile"
+    @update:show="isViewerOpen = $event"
+  />
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import FileViewer from './web-designs/_partials/file-viewer.vue'
+
+const fileInputRef = ref(null)
+const images = ref([])
+const uploadProgress = ref([])
+const isViewerOpen = ref(false)
+const selectedFile = ref(null)
+
+const chooseFile = () => {
+  fileInputRef.value.click()
+}
+
+const filePicked = event => {
+  const files = event.target.files
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const uniqueId = `${file.name}-${Date.now()}`
+    const fileReader = new FileReader()
+
+    // Initialize upload progress for the file with a unique id
+    uploadProgress.value.push({ id: uniqueId, name: file.name, progress: 0, isCompleted: false })
+
+    if (file.type.startsWith('image/')) {
+      fileReader.onload = () => {
+        images.value.push({
+          url: fileReader.result,
+          name: file.name,
+          id: uniqueId,
+          type: file.type,
+        })
+      }
+      fileReader.readAsDataURL(file)
+    } else {
+      // For non-image files, add a placeholder with file type
+      const fileURL = URL.createObjectURL(file)
+
+      images.value.push({
+        url: fileURL,
+        name: file.name,
+        id: uniqueId,
+        type: file.type,
+      })
+    }
+
+    // Simulate upload progress
+    simulateUploadProgress(uniqueId)
+  }
+
+  // Reset the file input value
+  event.target.value = ''
+}
+
+const simulateUploadProgress = uniqueId => {
+  const progressIndex = uploadProgress.value.findIndex(f => f.id === uniqueId)
+  if (progressIndex !== -1) {
+    let progress = 0
+
+    const interval = setInterval(() => {
+      if (progress < 100) {
+        progress += 10
+        uploadProgress.value[progressIndex].progress = progress
+      } else {
+        uploadProgress.value[progressIndex].progress = 100
+        uploadProgress.value[progressIndex].isCompleted = true
+        clearInterval(interval)
+      }
+    }, 500)
+  }
+}
+
+const openFileViewer = file => {
+  selectedFile.value = file
+  isViewerOpen.value = true
+}
+
+const deleteImage = index => {
+  images.value.splice(index, 1)
+  uploadProgress.value.splice(index, 1)
+}
+</script>
 
 <style scoped>
 .image-container {
   position: relative;
-  border: 2px solid #007bff;
+  border: 2px solid rgb(243 140 39);
   border-radius: 10px;
   padding: 5px;
   margin-bottom: 10px; /* Reduced margin */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   max-width: 150px; /* Reduced size */
+  cursor: pointer;
 }
 
 .image-container:hover {
@@ -145,6 +191,35 @@ const deleteImage = index => {
   border-radius: 8px;
   display: block;
   margin: 0 auto;
+}
+
+.file-placeholder {
+  position: relative;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+.default-image {
+  max-height: 80px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.file-type {
+  position: absolute;
+  bottom: 33px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 14px;
+  color: black;
 }
 
 .progress {
