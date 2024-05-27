@@ -5,6 +5,7 @@ export const useUserStore = defineStore('users', {
   state: () => ({
     users: [],
     user: null,
+    usersByProject: [],
     usersCount: 0,
     projectManagers: null,
     members: null,
@@ -13,7 +14,7 @@ export const useUserStore = defineStore('users', {
   }),
   persist: true,
   actions: {
-    async getAll(page, perPage, search = null, orderBy = null, orderDirection = null) {
+    async getAll(page = 1, perPage = 10, search = null, orderBy = null, orderDirection = null) {
       this.error = null
       this.loadStatus = 1
       try {
@@ -26,6 +27,20 @@ export const useUserStore = defineStore('users', {
         this.error = error
         this.loadStatus = 3
         console.error('getUsers error ', error)
+      }
+    },
+    async getByProjects(projectUuid) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await UserService.getByProjects(projectUuid)
+
+        this.usersByProject = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getByProjects error ', error)
       }
     },
     async show(uuid) {
@@ -123,6 +138,7 @@ export const useUserStore = defineStore('users', {
     getLoadStatus: state => state.loadStatus,
     getUsers: state => state.users,
     getUser: state => state.user,
+    getUsersByProjects: state => state.usersByProject,
     getProjectManagersList: state => state.projectManagers,
     getMembersList: state => state.members,
     getErrors: state => state?.error?.response?.data?.errors || state?.error?.response?.data?.message,

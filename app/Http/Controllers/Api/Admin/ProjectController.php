@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\UserResource;
 use App\Http\Requests\project\StoreProjectRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -123,5 +124,18 @@ class ProjectController extends Controller
         $this->projectRepository->delete($project);
 
         return response()->json(['message' => 'Project deleted successfully']);
+    }
+
+    /**
+     * Get project users.
+     *
+     * @param string $uuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function users(string $uuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuid($uuid);
+ 
+        return UserResource::collection($project->users);
     }
 }

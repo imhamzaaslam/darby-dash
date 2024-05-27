@@ -44,6 +44,11 @@ class Project extends Base
         return $this->hasMany(ProjectList::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'project_members');
+    }
+
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder
     {
         $projectsTable = (new Project())->getTable();

@@ -13,6 +13,10 @@ export default {
 
     return await apiClient.get(baseUrl + queryString)
   },
+
+  getByProjects: async projectUuid => {
+    return await apiClient.get(`admin/projects/${projectUuid}/users`)
+  },
   
   getUser(uuid) {
     return apiClient.get(`admin/users/${uuid}`)
@@ -26,6 +30,7 @@ export default {
     if (user.avatar) {
       delete newUser.avatar
     }
+    
     return apiClient.patch(`admin/users/${user.uuid}`, newUser)
   },
   deleteUser(id) {
