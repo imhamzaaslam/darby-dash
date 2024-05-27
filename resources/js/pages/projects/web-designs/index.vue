@@ -38,7 +38,7 @@
           <AppAutocomplete
             v-model="selectedProjectType"
             placeholder="Select Project Type"
-            :items="getProjectTypes"
+            :items="projectTypesWithFirstOption('All')"
             item-title="name"
             item-value="id"
             @update:model-value="fetchProjects"
@@ -293,9 +293,9 @@
   <FilterDrawer
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
     :apply-filters="applyFilters"
-    :get-project-types="getProjectTypes"
+    :get-project-types="projectTypesWithFirstOption('All')"
     :selected-project-type="selectedProjectType"
-    :get-project-managers="getProjectManagers"
+    :get-project-managers="projectManagersWithFirstOption('-- Select --')"
     :get-load-status="getLoadStatus"
   />
 </template>
@@ -449,14 +449,38 @@ const getProjects = computed(() => {
 })
 
 const getProjectTypes = computed(() => {
-  console.log('getting types')
-
   return projectTypeStore.getProjectTypes
 })
+
+const projectTypesWithFirstOption = (firstOption = null) => {
+  const projectTypes = computed(() => {
+    let types = [...projectTypeStore.getProjectTypes]
+    if (firstOption) {
+      types.unshift({ id: null, name: firstOption })
+    }
+    
+    return types
+  })
+
+  return projectTypes.value
+}
 
 const getProjectManagers = computed(() => {
   return userStore.getProjectManagersList
 })
+
+const projectManagersWithFirstOption = (firstOption = null) => {
+  const projectManagers = computed(() => {
+    let managers = [...userStore.getProjectManagersList]
+    if (firstOption) {
+      managers.unshift({ id: null, name: firstOption })
+    }
+    
+    return managers
+  })
+
+  return projectManagers.value
+}
 
 const getMembers = computed(() => {
   return userStore.getMembersList
