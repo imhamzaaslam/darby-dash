@@ -47,9 +47,8 @@
         <div class="d-flex align-center">
           <VAvatar
             size="36"
-            :color="item.avatar ? '' : generateRandomColor()"
-            :class="item.avatar ? '' : 'v-avatar-light-bg info--text'"
-            :variant="!item.avatar ? 'tonal' : generateRandomColor()"
+            :class="item.avatar ? '' : 'text-white bg-primary'"
+            :variant="!item.avatar ? 'tonal' : ''"
           >
             <span>{{ avatarText(item.name_first + ' ' + item.name_last) }}</span>
           </VAvatar>
@@ -296,8 +295,6 @@ const getStatusCode = computed(() => {
 const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
 })
-
-const generateRandomColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(-50, '0')
 
 const handlePageChange = async page => {
   options.value.page = page
