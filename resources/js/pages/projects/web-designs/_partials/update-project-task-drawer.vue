@@ -107,6 +107,7 @@ const props = defineProps({
     required: true,
   },
   fetchProjectTasks: Function,
+  fetchProjectLists: Function,
   editingTask: Object,
   getLoadStatus: Boolean,
 })
@@ -146,6 +147,7 @@ async function submitEditTaskForm() {
         isLoading.value = true
         emit('update:isEditTaskDrawerOpen', false)
         toast.success('Task updated successfully', { timeout: 1000 })
+        await props.fetchProjectLists()
         await props.fetchProjectTasks()
         isLoading.value = false
       } catch (error) {
