@@ -163,9 +163,9 @@
                     <td>
                       <VIcon
                         v-if="item.subtasks && item.subtasks.length"
-                        :icon="item.expanded ? 'tabler-chevron-down' : 'tabler-chevron-right'"
+                        :icon="isExpandedSubTasks[item.id] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
                         color="primary"
-                        @click.stop="toggleSubtasks(item)"
+                        @click.stop="toggleSubtasks(item.id)"
                       />
                       <VIcon
                         class="tabler-playstation-circle"
@@ -175,7 +175,7 @@
                       <span
                         v-if="item.subtasks && item.subtasks.length"
                         class="text-primary  text-sm font-weight-bold cursor-pointer"
-                        @click.stop="toggleSubtasks(item)"
+                        @click.stop="toggleSubtasks(item.id)"
                       >
                         <VIcon
                           class="tabler-subtask ms-1"
@@ -250,7 +250,7 @@
                       </IconBtn>
                     </td>
                   </tr>
-                  <template v-if="item.expanded && item.subtasks && item.subtasks.length">
+                  <template v-if="isExpandedSubTasks[item.id] && item.subtasks && item.subtasks.length">
                     <tr
                       v-for="subtask in item.subtasks"
                       :key="subtask.id"
@@ -642,7 +642,7 @@
       no-gutters
     >
       <VCol
-        v-for="(list, index) in lists"
+        v-for="(list, index) in getProjectLists"
         :key="index"
         cols="4"
         class="kanban-column"
@@ -650,21 +650,11 @@
         <VCard class="mb-5">
           <VCardTitle class="d-flex justify-space-between bg-primary align-center">
             <div
-              v-if="!list.isEditing"
               class="cursor-pointer"
               @click="editTitle(index)"
             >
-              <span class="text-h6 text-white">{{ list.title }}</span>
+              <span class="text-h6 text-white">{{ list.name }}</span>
             </div>
-            <VTextField
-              v-else
-              v-model="list.title"
-              dense
-              hide-details
-              single-line
-              autofocus
-              @blur="saveTitle(index)"
-            />
           </VCardTitle>
         </VCard>
         <VueDraggableNext
@@ -801,6 +791,7 @@ const quickListTaskInput = ref([])
 const quickListTaskName = ref([])
 const quickSubTaskInput = ref([])
 const quickSubTaskName = ref([])
+const isExpandedSubTasks = ref([])
 const quickTaskName = ref('')
 const quickTaskInput = ref(null)
 const dueDate = ref(null)
@@ -872,6 +863,7 @@ function activateQuickListTask(index) {
 
 function activateQuickSubTask(index) {
   showAddSubTaskField.value[index] = true
+  isExpandedSubTasks.value[index] = true
   nextTick(() => {
     const inputRef = quickSubTaskInput.value[index]
     if (inputRef && inputRef.focus) {
@@ -1071,8 +1063,8 @@ const getLoadStatus = computed(() => {
   return projectTaskStore.getLoadStatus
 })
 
-function toggleSubtasks(item){
-  item.expanded = !item.expanded
+function toggleSubtasks(index){
+  isExpandedSubTasks.value[index] = !isExpandedSubTasks.value[index]
 }
 
 const lists = ref([

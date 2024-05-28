@@ -182,7 +182,7 @@ async function submitAddProjectForm() {
         toast.success('Project added successfully', { timeout: 1000 })
         await props.fetchProjects()
 
-        const newProjectID = projectStore.getProject.id
+        const newProjectID = projectStore.getProject.uuid
 
         router.push({ name: 'add-project-tasks', params: { id: newProjectID } })
 
