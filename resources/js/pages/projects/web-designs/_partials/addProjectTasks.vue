@@ -152,148 +152,237 @@
                 density="compact"
                 expand-on-click
                 class="ms-3 py-3"
-                @click="startEditing(item)"
               >
-                <template #expanded-row="{ item }">
-                  <tr v-if="item.subtasks && item.subtasks.length">
-                    <td :colspan="headers.length">
-                      <VTable
-                        density="compact"
-                        class="text-no-wrap ms-5"
+                <template #item="{ item }">
+                  <tr
+                    :class="{ 'row-hover': showAddSubtaskIcon === item.uuid }"
+                    @click="startEditing(item)"
+                    @mouseenter="showAddSubtaskIcon = item.uuid"
+                    @mouseleave="showAddSubtaskIcon = null"
+                  >
+                    <td>
+                      <VIcon
+                        v-if="item.subtasks && item.subtasks.length"
+                        :icon="item.expanded ? 'tabler-chevron-down' : 'tabler-chevron-right'"
+                        color="primary"
+                        @click.stop="toggleSubtasks(item)"
+                      />
+                      <VIcon
+                        class="tabler-playstation-circle"
+                        color="primary me-1"
+                      />
+                      <span>{{ item.name.length > 50 ? item.name.substring(0, 50) + '...' : item.name }}</span>
+                      <span
+                        v-if="item.subtasks && item.subtasks.length"
+                        class="text-primary  text-sm font-weight-bold cursor-pointer"
+                        @click.stop="toggleSubtasks(item)"
                       >
-                        <tbody>
-                          <tr
-                            v-for="subtask in item.subtasks"
-                            :key="subtask.id"
-                          >
-                            <td
-                              width="59.5%"
-                              style="padding: 0!important;"
-                            >
-                              <VIcon
-                                class="tabler-playstation-circle"
-                                size="small"
-                                color="primary ms-2 me-2"
-                              />
-                              <span class="text-grey-600">{{ subtask.name }}</span>
-                            </td>
-                            <td style="padding: 0!important;">
-                              <VChip
-                                color="secondary"
-                                size="small"
+                        <VIcon
+                          class="tabler-subtask ms-1"
+                          size="small"
+                        />
+                        <span>{{ item.subtasks.length }}</span>
+                      </span>
+                      <VBtn
+                        :color="showAddSubtaskIcon === item.uuid ? 'primary' : 'white'"
+                        variant="text"
+                        rounded
+                        class="ms-1"
+                        icon="tabler-plus"
+                        size="x-small"
+                        @click.stop="activateQuickSubTask(item.id)"
+                      />
+                      <VBtn
+                        :color="showAddSubtaskIcon === item.uuid ? 'primary' : 'white'"
+                        variant="text"
+                        rounded
+                        icon="tabler-edit"
+                        size="x-small"
+                        @click.stop="startEditing(item)"
+                      />
+                    </td>
+                    <td>
+                      <VChip
+                        color="secondary"
+                        size="small"
+                      >
+                        {{ item.status }}
+                      </VChip>
+                    </td>
+                    <td>
+                      <VChip
+                        v-if="item.due_date"
+                        color="error"
+                        size="small"
+                      >
+                        {{ formatDate(item.due_date) }}
+                      </VChip>
+                    </td>
+                    <td>
+                      <VChip
+                        color="primary"
+                        size="small"
+                      >
+                        {{ formatDate(item.created_at) }}
+                      </VChip>
+                    </td>
+                    <td>
+                      <IconBtn @click.prevent>
+                        <VIcon icon="tabler-dots" />
+                        <VMenu activator="parent">
+                          <VList>
+                            <VList>
+                              <VListItem
+                                value="edit"
+                                @click="startEditing(item)"
                               >
-                                {{ subtask.status }}
-                              </VChip>
-                            </td>
-                            <td style="padding: 0!important;">
-                              <VChip
-                                color="error"
-                                size="small"
+                                Edit
+                              </VListItem>
+                              <VListItem
+                                value="delete"
+                                @click="deleteTask(item)"
                               >
-                                {{ formatDate(subtask.due_date) }}
-                              </VChip>
-                            </td>
-                            <td style="padding: 0!important;">
-                              <VChip
-                                color="primary"
-                                size="small"
-                              >
-                                {{ formatDate(subtask.created_at) }}
-                              </VChip>
-                            </td>
-                            <td style="padding: 0!important;">
-                              <IconBtn @click.prevent>
-                                <VIcon icon="tabler-dots" />
-                                <VMenu activator="parent">
-                                  <VList>
-                                    <VList>
-                                      <VListItem
-                                        value="edit"
-                                        @click="startEditing(subtask)"
-                                      >
-                                        Edit
-                                      </VListItem>
-                                      <VListItem
-                                        value="delete"
-                                        @click="deleteTask(subtask)"
-                                      >
-                                        Delete
-                                      </VListItem>
-                                    </VList>
-                                  </VList>
-                                </VMenu>
-                              </IconBtn>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </VTable>
+                                Delete
+                              </VListItem>
+                            </VList>
+                          </VList>
+                        </VMenu>
+                      </IconBtn>
                     </td>
                   </tr>
-                </template>
-                <template #item.name="{ item }">
-                  <VIcon
-                    class="tabler-playstation-circle"
-                    color="primary mr-2"
-                  />
-                  <span>{{ item.name }}</span>
-                  <span
-                    v-if="item.subtasks && item.subtasks.length"
-                    class="text-caption"
-                  >
-                    <VIcon
-                      class="tabler-subtask ms-1"
-                      size="small"
-                    />
-                    <span>2</span>
-                  </span>
-                </template>
-                <template #item.status="{ item }">
-                  <VChip
-                    color="secondary"
-                    size="small"
-                  >
-                    {{ item.status }}
-                  </VChip>
-                </template>
-                <template #item.due_date="{ item }">
-                  <VChip
-                    v-if="item.due_date"
-                    color="error"
-                    size="small"
-                  >
-                    {{ formatDate(item.due_date) }}
-                  </VChip>
-                </template>
-                <template #item.created_at="{ item }">
-                  <VChip
-                    color="primary"
-                    size="small"
-                  >
-                    {{ formatDate(item.created_at) }}
-                  </VChip>
-                </template>
-                <template #item.action="{ item }">
-                  <IconBtn @click.prevent>
-                    <VIcon icon="tabler-dots" />
-                    <VMenu activator="parent">
-                      <VList>
-                        <VList>
-                          <VListItem
-                            value="edit"
-                            @click="startEditing(item)"
+                  <template v-if="item.expanded && item.subtasks && item.subtasks.length">
+                    <tr
+                      v-for="subtask in item.subtasks"
+                      :key="subtask.id"
+                      width="100%"
+                    >
+                      <td>
+                        <VIcon
+                          class="tabler-playstation-circle"
+                          size="small"
+                          color="primary ms-6 me-2"
+                        />
+                        <span class="text-grey-600">{{ subtask.name.length > 50 ? subtask.name.substring(0, 50) + '...' : subtask.name }}</span>
+                      </td>
+                      <td>
+                        <VChip
+                          color="secondary"
+                          size="small"
+                        >
+                          {{ subtask.status.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
+                        </VChip>
+                      </td>
+                      <td>
+                        <VChip
+                          v-if="subtask.due_date"
+                          color="error"
+                          size="small"
+                        >
+                          {{ formatDate(subtask.due_date) }}
+                        </VChip>
+                      </td>
+                      <td>
+                        <VChip
+                          color="primary"
+                          size="small"
+                        >
+                          {{ formatDate(subtask.created_at) }}
+                        </VChip>
+                      </td>
+                      <td>
+                        <IconBtn @click.prevent>
+                          <VIcon icon="tabler-dots" />
+                          <VMenu activator="parent">
+                            <VList>
+                              <VList>
+                                <VListItem
+                                  value="edit"
+                                  @click="startEditing(subtask)"
+                                >
+                                  Edit
+                                </VListItem>
+                                <VListItem
+                                  value="delete"
+                                  @click="deleteTask(subtask)"
+                                >
+                                  Delete
+                                </VListItem>
+                              </VList>
+                            </VList>
+                          </VMenu>
+                        </IconBtn>
+                      </td>
+                    </tr>
+                  </template>
+                  <tr>
+                    <VRow
+                      v-if="showAddSubTaskField[item.id]"
+                      class="px-13 py-2"
+                    >
+                      <VCol cols="8">
+                        <div class="d-flex align-center">
+                          <VIcon
+                            class="tabler-playstation-circle me-2"
+                            color="primary"
+                            size="small"
+                          />
+                          <VTextField
+                            :ref="el => quickSubTaskInput[item.id] = el"
+                            v-model="quickSubTaskName[item.id]"
+                            placeholder="Sub Task Name"
+                            style="margin-top: -7px;"
+                            variant="plain"
+                            hide-details
+                            dense
+                            @keydown.enter="addQuickSubTask(list.uuid, item.id)"
+                          />
+                        </div>
+                      </VCol>
+                      <VCol cols="4">
+                        <div class="float-right">
+                          <VIcon
+                            class="tabler-calendar me-1"
+                            color="primary"
+                            size="small"
                           >
-                            Edit
-                          </VListItem>
-                          <VListItem
-                            value="delete"
-                            @click="deleteTask(item)"
+                            <VTooltip
+                              activator="parent"
+                              location="top"
+                            >
+                              <span>Select Due Date</span>
+                            </VTooltip>
+                            <AppDateTimePicker v-model="dueDate" />
+                          </VIcon>
+                          <VIcon
+                            class="tabler-circle-check me-1"
+                            size="small"
+                            color="primary"
+                            @click="addQuickSubTask(list.uuid, item.id)"
                           >
-                            Delete
-                          </VListItem>
-                        </VList>
-                      </VList>
-                    </VMenu>
-                  </IconBtn>
+                            <VTooltip
+                              activator="parent"
+                              location="top"
+                            >
+                              <span>Save</span>
+                            </VTooltip>
+                          </VIcon>
+                          <VIcon
+                            class="tabler-x"
+                            size="small"
+                            color="primary"
+                            @click="cancelQuickSubTask(item.id)"
+                          >
+                            <VTooltip
+                              activator="parent"
+                              location="top"
+                            >
+                              <span>Cancel</span>
+                            </VTooltip>
+                          </VIcon>
+                        </div>
+                      </VCol>
+                    </VRow>
+                  </tr>
                 </template>
                 <template #bottom>
                   <VRow
@@ -335,7 +424,7 @@
                         <VIcon
                           class="tabler-circle-check me-1"
                           color="primary"
-                          @click="addQuickListTask"
+                          @click="addQuickListTask(list.uuid, index)"
                         >
                           <VTooltip
                             activator="parent"
@@ -704,10 +793,14 @@ const isAddListDialogVisible = ref(false)
 const addListForm = ref()
 const listTitle = ref(null)
 
+const showAddSubtaskIcon= ref(null)
 const showAddTaskField = ref(false)
 const showAddListTaskField = ref([])
+const showAddSubTaskField = ref([])
 const quickListTaskInput = ref([])
 const quickListTaskName = ref([])
+const quickSubTaskInput = ref([])
+const quickSubTaskName = ref([])
 const quickTaskName = ref('')
 const quickTaskInput = ref(null)
 const dueDate = ref(null)
@@ -771,6 +864,16 @@ function activateQuickListTask(index) {
   showAddListTaskField.value[index] = true
   nextTick(() => {
     const inputRef = quickListTaskInput.value[index]
+    if (inputRef && inputRef.focus) {
+      inputRef.focus()
+    }
+  })
+}
+
+function activateQuickSubTask(index) {
+  showAddSubTaskField.value[index] = true
+  nextTick(() => {
+    const inputRef = quickSubTaskInput.value[index]
     if (inputRef && inputRef.focus) {
       inputRef.focus()
     }
@@ -853,6 +956,34 @@ async function addQuickListTask(list_uuid, index) {
   }
 }
 
+async function addQuickSubTask(list_uuid, index) {
+  const taskName = quickSubTaskName.value[index]
+
+  if (taskName.trim() === '') {
+    toast.error('Task name cannot be empty.')
+
+    return
+  }
+
+  try {
+    activateQuickSubTask(index)
+
+    const newTaskListDetails = {
+      name: taskName.trim(),
+      due_date: dueDate.value,
+      list_uuid: list_uuid,
+      parent_id: index,
+    }
+
+    await listTaskStore.create(newTaskListDetails)
+    quickSubTaskName.value[index] = ''
+    dueDate.value = null
+    toast.success('Task added successfully', { timeout: 1000 })
+    fetchProjectLists()
+  } catch (error) {
+    toast.error('Failed to add task:', error)
+  }
+}
 
 function cancelQuickTask() {
   showAddTaskField.value = false
@@ -862,6 +993,11 @@ function cancelQuickTask() {
 function cancelQuickListTask(index) {
   showAddListTaskField.value[index] = false
   quickListTaskName.value[index] = ''
+}
+
+function cancelQuickSubTask(index) {
+  showAddSubTaskField.value[index] = false
+  quickSubTaskName.value[index] = ''
 }
 
 function startEditing(task) {
@@ -935,6 +1071,10 @@ const getLoadStatus = computed(() => {
   return projectTaskStore.getLoadStatus
 })
 
+function toggleSubtasks(item){
+  item.expanded = !item.expanded
+}
+
 const lists = ref([
   { title: 'To Do', tasks: getProjectTasks, isEditing: false },
   { title: 'In Progress', tasks: [], isEditing: false },
@@ -947,18 +1087,6 @@ const headers = [
   { title: 'Due Date', key: 'due_date', sortable: false },
   { title: 'Created Date', key: 'created_at', sortable: false },
   { title: 'Action', key: 'action', sortable: false },
-]
-
-const dummyTasks = [
-  { id: 1, name: 'Task 1', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12',
-    subtasks: [
-      { id: 101, name: 'Subtask 1.1', status: 'In Progress', due_date: '2022-12-15', created_at: '2022-12-13' },
-      { id: 102, name: 'Subtask 1.2', status: 'In Progress', due_date: '2022-12-16', created_at: '2022-12-14' },
-    ],
-  },
-  { id: 2, name: 'Task 2', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
-  { id: 3, name: 'Task 3', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
-  { id: 4, name: 'Task 4', status: 'In Progress', due_date: '2022-12-12', created_at: '2022-12-12' },
 ]
 
 const editTitle = index => {
@@ -1036,5 +1164,8 @@ const toggleRow = index => {
 }
 .expanded-row, .expanded-td{
     padding: 0 !important;
+}
+.row-hover {
+  background-color: #f0f0f0;
 }
 </style>

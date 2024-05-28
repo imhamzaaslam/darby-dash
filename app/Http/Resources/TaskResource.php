@@ -18,6 +18,7 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'subtasks' => $this->subtasks,
             'description' => $this->description,
             'status' => ucfirst($this->status),
             'project_id' => $this->project_id,
