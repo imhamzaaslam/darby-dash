@@ -18,9 +18,15 @@ class Task extends Base
         'description',
         'status',
         'project_id',
+        'parent_id',
         'list_id',
         'start_date',
         'due_date',
         'time_spent',
     ];
+
+    public function subtasks()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
 }
