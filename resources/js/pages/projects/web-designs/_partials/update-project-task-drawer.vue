@@ -107,6 +107,7 @@ const props = defineProps({
     required: true,
   },
   fetchProjectTasks: Function,
+  fetchProjectLists: Function,
   editingTask: Object,
   getLoadStatus: Boolean,
 })
@@ -147,6 +148,7 @@ async function submitEditTaskForm() {
         emit('update:isEditTaskDrawerOpen', false)
         toast.success('Task updated successfully', { timeout: 1000 })
         await props.fetchProjectTasks()
+        await props.fetchProjectLists()
         isLoading.value = false
       } catch (error) {
         toast.error('Failed to update task:', error.message || error)

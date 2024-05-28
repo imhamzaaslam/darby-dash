@@ -116,8 +116,10 @@
                   <span
                     class="mt-2 cursor-pointer"
                     @click="toggleRow(index)"
-                  >{{ list.name }} ({{ list.tasks.length }})</span>
-                  <!-- <VBtn
+                  >
+                    {{ list.name }} ({{ list.tasks.length }})
+                  </span>
+                  <VBtn
                     v-if="!showAddListTaskField[index]"
                     color="primary"
                     variant="plain"
@@ -126,10 +128,23 @@
                   >
                     <VIcon icon="tabler-plus" />
                     Add Task
-                  </VBtn> -->
+                  </VBtn>
                 </h6>
               </VCol>
+              <VCol cols="6">
+                <div class="d-flex justify-end">
+                  <VBtn
+                    icon
+                    size="small"
+                    color="error"
+                    @click="deleteProjectList(list)"
+                  >
+                    <VIcon icon="tabler-trash" />
+                  </VBtn>
+                </div>
+              </VCol>
             </VRow>
+
             <VRow v-if="expandedRows[index]">
               <VDataTable
                 :headers="headers"
@@ -185,7 +200,7 @@
                                 {{ formatDate(subtask.created_at) }}
                               </VChip>
                             </td>
-                            <!-- <td style="padding: 0!important;">
+                            <td style="padding: 0!important;">
                               <IconBtn @click.prevent>
                                 <VIcon icon="tabler-dots" />
                                 <VMenu activator="parent">
@@ -207,7 +222,7 @@
                                   </VList>
                                 </VMenu>
                               </IconBtn>
-                            </td> -->
+                            </td>
                           </tr>
                         </tbody>
                       </VTable>
@@ -291,7 +306,7 @@
                           color="primary"
                         />
                         <VTextField
-                          ref="`quickListTaskInput_${index}`"
+                          :ref="el => quickListTaskInput[index] = el"
                           v-model="quickListTaskName[index]"
                           placeholder="Task Name"
                           style="margin-top: -7px;"
@@ -316,18 +331,20 @@
                           </VTooltip>
                           <AppDateTimePicker v-model="dueDate" />
                         </VIcon>
-                        <!-- <VIcon
+                        <!--
+                          <VIcon
                           class="tabler-circle-check me-1"
                           color="primary"
-                          @click="addQuickTask"
-                        >
-                          <VTooltip
-                            activator="parent"
-                            location="top"
+                          @click="addQuickListTask"
                           >
-                            <span>Save</span>
+                          <VTooltip
+                          activator="parent"
+                          location="top"
+                          >
+                          <span>Save</span>
                           </VTooltip>
-                        </VIcon> -->
+                          </VIcon>
+                        -->
                         <VIcon
                           class="tabler-x"
                           color="primary"
@@ -653,13 +670,14 @@
     v-model:is-edit-task-drawer-open="isEditTaskDrawerOpen"
     :fetch-project-tasks="fetchProjectTasks"
     :editing-task="editingTask"
-    :project-id="projectId"
+    :fetch-project-lists="fetchProjectLists"
     :get-load-status="getLoadStatus"
   />
 </template>
 
 <script setup="js">
 import moment from 'moment'
+import Swal from 'sweetalert2'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-project-task-drawer.vue'
 import { computed, onBeforeMount, nextTick, ref } from 'vue'
@@ -753,9 +771,9 @@ function activateQuickAdd() {
 function activateQuickListTask(index) {
   showAddListTaskField.value[index] = true
   nextTick(() => {
-    const inputElement = quickListTaskInput.value[index].$el.querySelector('input')
-    if (inputElement) {
-      inputElement.focus()
+    const inputRef = quickListTaskInput.value[index]
+    if (inputRef && inputRef.focus) {
+      inputRef.focus()
     }
   })
 }
@@ -843,8 +861,8 @@ function cancelQuickTask() {
 }
 
 function cancelQuickListTask(index) {
-  showAddListTaskField[index].value = false
-  quickListTaskName[index].value = ''
+  showAddListTaskField.value[index] = false
+  quickListTaskName.value[index] = ''
 }
 
 function startEditing(task) {
@@ -862,8 +880,45 @@ async function deleteTask(task) {
     toast.success('Task deleted successfully', { timeout: 1000 })
     task.isDeleting = false
     fetchProjectTasks()
+    fetchProjectLists()
   } catch (error) {
     toast.error('Failed to delete task:', error)
+  }
+}
+
+const deleteProjectList = async list => {
+  try {
+    const listWithProjectId = { ...list, project_uuid: projectId.value }
+
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      html: `
+        <div>
+        <p>
+            Do you want to delete <strong>${list.name}</strong>?
+            <br>
+            <small>This action will also delete all associated tasks.</small>
+        </p>
+        </div>
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    })
+
+    if (confirmDelete.isConfirmed) {
+
+      const res = await projectListStore.delete(listWithProjectId)
+
+      isLoading.value = true
+      toast.success('Project list deleted successfully', { timeout: 1000 })
+      await fetchProjectLists()
+      isLoading.value = false
+    }
+  } catch (error) {
+    toast.error('Failed to delete project list:', error)
   }
 }
 
@@ -892,8 +947,7 @@ const headers = [
   { title: 'Status', key: 'status',  sortable: false },
   { title: 'Due Date', key: 'due_date', sortable: false },
   { title: 'Created Date', key: 'created_at', sortable: false },
-
-  // { title: 'Action', key: 'action', sortable: false },
+  { title: 'Action', key: 'action', sortable: false },
 ]
 
 const dummyTasks = [
