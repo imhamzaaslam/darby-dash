@@ -24,11 +24,13 @@
             @click="viewType = 'grid'"
           />
         </VBtnToggle>
-        <!-- <VIcon
+        <!--
+          <VIcon
           icon="tabler-filter"
           class="bg-primary ms-2"
           @click="isFilterDrawerOpen = !isFilterDrawerOpen"
-        /> -->
+          /> 
+        -->
       </VCol>
       <VCol
         cols="12"
@@ -45,22 +47,67 @@
       </VCol>
     </VRow>
 
-    <VRow
-      v-if="isMembersLoading"
-      class="mb-4"
-    >
-      <VCol cols="12">
-        <VCard
-          class="d-flex justify-center align-center"
-          height="200px"
+    <!-- Skeleton Loader -->
+    <div v-if="isMembersLoading">
+      <VRow class="mb-4">
+        <VCol
+          v-for="n in 3"
+          :key="n"
+          cols="12"
         >
-          <VProgressCircular
-            indeterminate
-            color="primary"
-          />
-        </VCard>
-      </VCol>
-    </VRow>
+          <VCard
+            class="d-flex ps-4 py-1 align-center"
+            style="height: 80px;"
+          >
+            <VCol cols="3">
+              <div class="d-flex align-center">
+                <VSkeletonLoader
+                  class="rounded-circle"
+                  style="width: 36px; height: 36px;"
+                />
+                <div class="d-flex flex-column ms-3">
+                  <VSkeletonLoader
+                    class="w-75 mb-1"
+                    height="10px"
+                  />
+                  <VSkeletonLoader
+                    class="w-50"
+                    height="10px"
+                  />
+                </div>
+              </div>
+            </VCol>
+            <VCol cols="3">
+              <VSkeletonLoader
+                class="w-75"
+                height="10px"
+              />
+            </VCol>
+            <VCol cols="3">
+              <VSkeletonLoader
+                class="w-50"
+                height="10px"
+              />
+            </VCol>
+            <VCol cols="2">
+              <VSkeletonLoader
+                class="w-50"
+                height="10px"
+              />
+            </VCol>
+            <VCol
+              cols="1"
+              class="ms-8"
+            >
+              <VSkeletonLoader
+                class="w-25"
+                height="10px"
+              />
+            </VCol>
+          </VCard>
+        </VCol>
+      </VRow>
+    </div>
 
     <div v-else>
       <VRow
