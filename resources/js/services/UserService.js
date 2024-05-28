@@ -39,4 +39,16 @@ export default {
   getUsersByRole(role) {
     return apiClient.get(`admin/users/role/${role}`)
   },
+
+  updateUserImage: async (avatar, uuid) => {
+    const formData = new FormData()
+
+    formData.append('avatar', avatar)
+
+    return await apiClient.post(`admin/users/${uuid}/avatar`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+  },
 }

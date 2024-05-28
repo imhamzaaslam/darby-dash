@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             Route::prefix('{uuid}')->group(function () {
                 Route::get('/', [UsersController::class, 'show']);
                 Route::patch('/', [UsersController::class, 'update']);
+                Route::post('/avatar', [UsersController::class, 'updateImage']);
                 Route::delete('/', [UsersController::class, 'delete']);
             });
             Route::get('/role/{role}', [UsersController::class, 'getByRole']);

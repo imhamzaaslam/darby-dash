@@ -29,4 +29,12 @@ interface UserInfoRepositoryInterface
      * @return bool
      */
     public function delete(UserInfo $userInfo): bool;
+
+    /**
+     * @param $file
+     * @param $path
+     *
+     * @return string
+     */
+    public function saveFile($file, $path): string;
 }

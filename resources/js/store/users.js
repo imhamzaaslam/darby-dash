@@ -118,7 +118,6 @@ export const useUserStore = defineStore('users', {
         console.error('getProjectManagers error ', error)
       }
     },
-
     async getMembers() {
       this.error = null
       this.loadStatus = 1
@@ -131,6 +130,20 @@ export const useUserStore = defineStore('users', {
         this.error = error
         this.loadStatus = 3
         console.error('getMembers error ', error)
+      }
+    },
+    async updateUserImage(avatar, uuid) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await UserService.updateUserImage(avatar, uuid)
+
+        this.user = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updateUserImage error ', error)
       }
     },
   },

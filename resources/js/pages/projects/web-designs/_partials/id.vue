@@ -1,24 +1,3 @@
-<script setup lang="js">
-import avatar1 from '@images/avatars/avatar-1.png'
-import girlWithLaptop from '@images/illustrations/PM.png'
-
-const skill = ref(72)
-
-const phaseData = [
-  { color: "success", title: 'Wireframe', phase: 'Phase 1', status: "DONE", isHover: false },
-  { color: "success", title: 'Design', phase: 'Phase 2', status: "DONE", isHover: false },
-  { color: "warning", title: 'Development', phase: 'Phase 3', status: "Inprogress", isHover: false },
-  { color: "info", title: 'Q&A', phase: 'Phase 4', status: "pending", isHover: false },
-]
-
-const assignmentData = [
-  { title: 'Wireframe', tasks: 120, progress: 100, color: 'success' },
-  { title: 'Design', tasks: 32, progress: 100, color: 'success' },
-  { title: 'Development', tasks: 182, progress: 67, color: 'warning' },
-  { title: 'Q&A', tasks: 56, progress: 0, color: 'info' },
-]
-</script>
-
 <template>
   <VRow>
     <VCol cols="12">
@@ -442,6 +421,27 @@ const assignmentData = [
     </VCol>
   </VRow>
 </template>
+
+<script setup lang="js">
+import avatar1 from '@images/avatars/avatar-1.png'
+import girlWithLaptop from '@images/illustrations/PM.png'
+
+const skill = ref(72)
+
+const phaseData = [
+  { color: "success", title: 'Wireframe', phase: 'Phase 1', status: "DONE", isHover: false },
+  { color: "success", title: 'Design', phase: 'Phase 2', status: "DONE", isHover: false },
+  { color: "warning", title: 'Development', phase: 'Phase 3', status: "Inprogress", isHover: false },
+  { color: "info", title: 'Q&A', phase: 'Phase 4', status: "pending", isHover: false },
+]
+
+const assignmentData = [
+  { title: 'Wireframe', tasks: 120, progress: 100, color: 'success' },
+  { title: 'Design', tasks: 32, progress: 100, color: 'success' },
+  { title: 'Development', tasks: 182, progress: 67, color: 'warning' },
+  { title: 'Q&A', tasks: 56, progress: 0, color: 'info' },
+]
+</script>
 
 <style lang="scss" scoped>
 @use "@core-scss/base/mixins" as mixins;

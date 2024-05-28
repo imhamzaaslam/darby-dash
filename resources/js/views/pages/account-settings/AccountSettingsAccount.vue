@@ -249,8 +249,16 @@ const editErrors = ref({
 const refInputEl = ref()
 const updateMemberForm = ref()
 const loggedInUserUuid = ref()
+const avatarUrl = ref('')
+const avatars = import.meta.glob('@images/avatars/*.{png,jpg,jpeg,gif}')
 
-const changeAvatar = file => {
+async function changeAvatar(file) {
+  if (!['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].includes(file.target.files[0].type) || file.target.files[0].size > 1024 * 1024) {
+    toast.error('Please upload a valid image file.')
+
+    return
+  }
+
   const fileReader = new FileReader()
   const { files } = file.target
   if (files && files.length) {
@@ -260,6 +268,7 @@ const changeAvatar = file => {
         accountData.value.avatar = fileReader.result
     }
   }
+  await userStore.updateUserImage(files[0], userStore.getUser?.uuid)
 }
 
 // reset avatar image
@@ -303,6 +312,7 @@ const getUser = async () => {
 
 const setUserDetails = async () => {
   let userDetails = userStore.getUser
+  // accountData.value.avatar = userDetails?.info?.avatar
   accountData.value.name_first = userDetails?.name_first
   accountData.value.name_last = userDetails?.name_last
   accountData.value.email = userDetails?.email
@@ -311,6 +321,18 @@ const setUserDetails = async () => {
   accountData.value.address = userDetails?.info?.address
   accountData.value.zip = userDetails?.info?.zip
 }
+
+// const getImgUrl = async userImage => {
+//   console.log('avatar is', userImage)
+
+//   const avatarPath = avatars[`@images/avatars/${userImage}`]
+//   if (!avatarPath) {
+//     throw new Error(`Avatar not found: ${userImage}`)
+//   }
+//   const module = await avatarPath()
+  
+//   return module.default // or module.default.src if you're using image loaders
+// }
 
 const showError = () => {
   if(getStatusCode.value == 500 || getStatusCode.value == 404){

@@ -7,6 +7,7 @@ use App\Contracts\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserAdminRequest;
+use App\Http\Requests\User\UpdateAvatarRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Carbon\Carbon;
@@ -123,7 +124,7 @@ class UsersController extends Controller
 
         $validatedInfoInput = $request->safe()->only([
             'phone' => $validated['phone'] ?? '',
-            'avatar' => $validated['avatar'] ?? null,
+            'avatar' => $validated['avatar'] ?? $user->info->avatar,
             'address' => $validated['address'] ?? '',
             'city' => $validated['city'] ?? '',
             'zip' => $validated['zip'] ?? '',
@@ -137,6 +138,25 @@ class UsersController extends Controller
         return (new UserResource($user))
             ->response()
             ->setStatusCode(200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UpdateAvatarRequest $request
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
+    public function updateImage(UpdateAvatarRequest $request, string $uuid): JsonResponse
+    {
+        $user = $this->userRepository->getByUuidOrFail($uuid);
+
+        $avatarName = $this->userInfoRepository->saveFile($request->file('avatar'), 'images/avatars');
+        $this->userInfoRepository->update($user->info, ['avatar' => $avatarName]);
+
+        return response()->json([
+            'message' => 'Avatar updated successfully',
+        ]);
     }
 
     /**
