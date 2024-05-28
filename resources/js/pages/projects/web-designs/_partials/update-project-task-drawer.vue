@@ -147,8 +147,8 @@ async function submitEditTaskForm() {
         isLoading.value = true
         emit('update:isEditTaskDrawerOpen', false)
         toast.success('Task updated successfully', { timeout: 1000 })
-        await props.fetchProjectTasks()
         await props.fetchProjectLists()
+        await props.fetchProjectTasks()
         isLoading.value = false
       } catch (error) {
         toast.error('Failed to update task:', error.message || error)

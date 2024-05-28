@@ -152,6 +152,7 @@
                 density="compact"
                 expand-on-click
                 class="ms-3 py-3"
+                @click="startEditing(item)"
               >
                 <template #expanded-row="{ item }">
                   <tr v-if="item.subtasks && item.subtasks.length">
@@ -331,20 +332,18 @@
                           </VTooltip>
                           <AppDateTimePicker v-model="dueDate" />
                         </VIcon>
-                        <!--
-                          <VIcon
+                        <VIcon
                           class="tabler-circle-check me-1"
                           color="primary"
                           @click="addQuickListTask"
-                          >
+                        >
                           <VTooltip
-                          activator="parent"
-                          location="top"
+                            activator="parent"
+                            location="top"
                           >
-                          <span>Save</span>
+                            <span>Save</span>
                           </VTooltip>
-                          </VIcon>
-                        -->
+                        </VIcon>
                         <VIcon
                           class="tabler-x"
                           color="primary"
@@ -879,8 +878,8 @@ async function deleteTask(task) {
     await projectTaskStore.delete(taskWithProjectId)
     toast.success('Task deleted successfully', { timeout: 1000 })
     task.isDeleting = false
-    fetchProjectTasks()
     fetchProjectLists()
+    fetchProjectTasks()
   } catch (error) {
     toast.error('Failed to delete task:', error)
   }
