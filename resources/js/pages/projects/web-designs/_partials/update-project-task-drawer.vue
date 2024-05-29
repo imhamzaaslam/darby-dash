@@ -41,7 +41,7 @@
               </VCol>
               <VCol cols="6">
                 <AppDateTimePicker
-                  v-model="props.editingTask.start_date"
+                  v-model="props.editingTask.created_at"
                   label="Start Date"
                   placeholder="Select Date"
                   locale="en-US"

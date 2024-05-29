@@ -62,12 +62,17 @@ const showNavigation = computed(() => {
           v-if="showNavigation"
           class="d-flex align-center"
         >
-          <a
-            href="#"
-            class="text-h6 ms-3 me-5 text-primary"
-          >Overview</a>
+          <RouterLink :to="`/projects/web-designs/${projectId}`">
+            <span
+              class="text-h6 ms-3 me-5 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/web-designs/${projectId}` }"
+            >Overview</span>
+          </RouterLink>
           <RouterLink :to="`/projects/${projectId}/chat`">
-            <span class="text-h6 me-5">
+            <span
+              class="text-h6 me-5 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/chat` }"
+            >
               <VBadge
                 class="new-badge"
                 color="error"
@@ -78,10 +83,16 @@ const showNavigation = computed(() => {
             </span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/files`">
-            <span class="text-h6 me-8 inner-badge-text">Files</span>
+            <span
+              class="text-h6 me-8 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/files` }"
+            >Files</span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/tasks/add`">
-            <span class="text-h6 me-8">
+            <span
+              class="text-h6 me-8 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/tasks/add` }"
+            >
               Tasks
               <!--
                 <VBadge
@@ -103,10 +114,16 @@ const showNavigation = computed(() => {
             class="text-h6 me-8 inner-badge-text"
           >Milestones</a>
           <RouterLink :to="`/projects/${projectId}/calendar`">
-            <span class="text-h6 me-8 inner-badge-text">Calendar</span>
+            <span
+              class="text-h6 me-8 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/calendar` }"
+            >Calendar</span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/team`">
-            <span class="text-h6 me-8 inner-badge-text">Your Team</span>
+            <span
+              class="text-h6 me-8 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
+            >Your Team</span>
           </RouterLink>
         </div>
 

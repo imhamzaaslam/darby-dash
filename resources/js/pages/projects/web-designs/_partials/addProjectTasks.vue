@@ -37,12 +37,14 @@
       >
         <div class="float-right">
           <VDialog
-            v-if="viewType === 'list'"
             v-model="isAddListDialogVisible"
             persistent
             class="v-dialog-sm"
           >
-            <template #activator="{ props }">
+            <template
+              v-if="viewType === 'list'"
+              #activator="{ props }"
+            >
               <VBtn
                 class="me-3"
                 v-bind="props"
@@ -144,18 +146,17 @@
                 </div>
               </VCol>
             </VRow>
-
             <VRow v-if="expandedRows[index]">
               <VDataTable
                 :headers="headers"
                 :items="list.tasks"
                 density="compact"
-                expand-on-click
                 class="ms-3 py-3"
+                :items-per-page="-1"
               >
                 <template #item="{ item }">
                   <tr
-                    :class="{ 'row-hover': showAddSubtaskIcon === item.uuid }"
+                    :class="{ 'bg-td-hover': showAddSubtaskIcon === item.uuid }"
                     @click="startEditing(item)"
                     @mouseenter="showAddSubtaskIcon = item.uuid"
                     @mouseleave="showAddSubtaskIcon = null"
@@ -259,7 +260,7 @@
                       <td>
                         <VIcon
                           class="tabler-playstation-circle"
-                          size="small"
+                          size="x-small"
                           color="primary ms-6 me-2"
                         />
                         <span class="text-grey-600">{{ subtask.name.length > 50 ? subtask.name.substring(0, 50) + '...' : subtask.name }}</span>
@@ -317,14 +318,14 @@
                   <tr>
                     <VRow
                       v-if="showAddSubTaskField[item.id]"
-                      class="px-13 py-2"
+                      class="px-12 py-2"
                     >
                       <VCol cols="8">
                         <div class="d-flex align-center">
                           <VIcon
                             class="tabler-playstation-circle me-2"
                             color="primary"
-                            size="small"
+                            size="x-small"
                           />
                           <VTextField
                             :ref="el => quickSubTaskInput[item.id] = el"
@@ -648,12 +649,38 @@
         class="kanban-column"
       >
         <VCard class="mb-5">
-          <VCardTitle class="d-flex justify-space-between bg-primary align-center">
+          <VCardTitle class="bg-primary">
+            <div v-if="isListEditing[list.id]">
+              <VTextField
+                :ref="el => editListTitleInput[list.id] = el"
+                v-model="editListTitle"
+                class="text-white pt-0"
+                density="compact"
+                variant="plain"
+                @blur="saveListTitle(list)"
+                @keyup.enter="cancelStateChangeListField(list)"
+              />
+            </div>
             <div
-              class="cursor-pointer"
-              @click="editTitle(index)"
+              v-else
+              class="cursor-pointer d-flex align-center"
+              @click="startListEditing(list)"
             >
-              <span class="text-h6 text-white">{{ list.name }}</span>
+              <span class="text-h6 text-white">{{ list.name.length > 25 ? list.name.substring(0, 25) + '...' : list.name }} ({{ list.tasks.length }})</span>
+              <VSpacer />
+              <VIcon
+                class="tabler-trash"
+                size="small"
+                color="white"
+                @click.stop="deleteProjectList(list)"
+              >
+                <VTooltip
+                  activator="parent"
+                  location="top"
+                >
+                  <span class="text-xs">Delete List</span>
+                </VTooltip>
+              </VIcon>
             </div>
           </VCardTitle>
         </VCard>
@@ -666,12 +693,10 @@
           <VCard
             v-for="(task) in list.tasks"
             :key="task.id"
-            class="mt-2 task-card"
+            class="mb-2 task-card px-3 py-3"
+            @click="startEditing(task)"
           >
-            <div
-              class="cursor-pointer"
-              @click="startEditing(task)"
-            >
+            <div class="cursor-pointer">
               <VIcon
                 icon="tabler-playstation-circle"
                 color="primary"
@@ -679,54 +704,112 @@
               />
               <span class="ms-1">{{ task.name }}</span>
             </div>
-            <div class="float-left">
-              <VChip
-                v-if="task.due_date"
-                color="error"
-                size="x-small"
-              >
-                {{ formatDate(task.due_date) }}
-                <VTooltip
-                  activator="parent"
-                  location="top"
+            <div class="d-flex justify-space-between align-center mt-2">
+              <div class="float-left">
+                <VChip
+                  v-if="task.due_date"
+                  color="error"
+                  size="x-small"
                 >
-                  <span>Task is due on {{ formatDate(task.due_date) }}</span>
-                </VTooltip>
-              </VChip>
-            </div>
-            <div class="float-right">
-              <VBtn
-                icon
-                size="x-small"
-                color="error"
-                class="me-1"
-                @click="deleteTask(task)"
-              >
-                <VIcon>
-                  tabler-trash
-                </VIcon>
-              </VBtn>
-              <VBtn
-                icon
-                size="x-small"
-                color="success"
-              >
-                <VIcon>
-                  tabler-check
-                </VIcon>
-              </VBtn>
+                  {{ formatDate(task.due_date) }}
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Task is due on {{ formatDate(task.due_date) }}</span>
+                  </VTooltip>
+                </VChip>
+              </div>
+              <div class="float-right">
+                <VBtn
+                  icon
+                  size="x-small"
+                  color="error"
+                  class="me-1"
+                  @click.stop="deleteTask(task)"
+                >
+                  <VIcon>
+                    tabler-trash
+                  </VIcon>
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span class="text-xs">Delete Task</span>
+                  </VTooltip>
+                </VBtn>
+              </div>
             </div>
           </VCard>
         </VueDraggableNext>
         <div class="justify-center mt-2">
-          <VBtn
-            color="primary"
-            variant="plain"
-            size="small"
-          >
-            <VIcon icon="tabler-plus" />
-            Add Task
-          </VBtn>
+          <VCard v-if="showAddKanbanListTaskInput === list.id">
+            <div class="d-flex align-center px-3 py-2">
+              <VIcon
+                icon="tabler-playstation-circle"
+                color="primary"
+                size="small"
+              />
+              <VTextField
+                :ref="el => kanbanListTaskInputRef[list.id] = el"
+                v-model="kanbanListTaskName"
+                class="kanban-input"
+                variant="plan"
+                placeholder="Task Name"
+                @keyup.enter="saveKanbanListTask(list)"
+              />
+            </div>
+            <div class="float-right px-3 mb-2">
+              <VIcon
+                class="tabler-calendar me-1"
+                color="primary"
+                size="small"
+              >
+                <VTooltip
+                  activator="parent"
+                  location="top"
+                >
+                  <span class="text-xs">Select Due Date</span>
+                </VTooltip>
+                <AppDateTimePicker v-model="dueDate" />
+              </VIcon>
+              <VIcon
+                color="success"
+                class="tabler-check me-1"
+                @click="saveKanbanListTask(list)"
+              >
+                <VTooltip
+                  activator="parent"
+                  location="top"
+                >
+                  <span class="text-xs">Save</span>
+                </VTooltip>
+              </VIcon>
+              <VIcon
+                color="error"
+                class="tabler-x"
+                @click="cancelKanbanListTask(list)"
+              >
+                <VTooltip
+                  activator="parent"
+                  location="top"
+                >
+                  <span class="text-xs">Cancel</span>
+                </VTooltip>
+              </VIcon>
+            </div>
+          </VCard>
+          <div v-else>
+            <VBtn
+              color="primary"
+              variant="plain"
+              size="small"
+              @click="activateAddKanbanListTask(list)"
+            >
+              <VIcon icon="tabler-plus" />
+              Add Task
+            </VBtn>
+          </div>
         </div>
       </VCol>
       <!-- Add column button -->
@@ -735,7 +818,7 @@
           <VBtn
             color="primary"
             variant="plain"
-            @click="addList"
+            @click="isAddListDialogVisible = !isAddListDialogVisible"
           >
             <VIcon icon="tabler-plus" />
             Another List
@@ -795,6 +878,12 @@ const isExpandedSubTasks = ref([])
 const quickTaskName = ref('')
 const quickTaskInput = ref(null)
 const dueDate = ref(null)
+const isListEditing = ref([])
+const editListTitleInput = ref([])
+const editListTitle = ref(null)
+const showAddKanbanListTaskInput = ref(null)
+const kanbanListTaskName = ref(null)
+const kanbanListTaskInputRef = ref([])
 
 const isLoading = ref(false)
 
@@ -853,6 +942,7 @@ function activateQuickAdd() {
 
 function activateQuickListTask(index) {
   showAddListTaskField.value[index] = true
+  expandedRows.value[index] = true
   nextTick(() => {
     const inputRef = quickListTaskInput.value[index]
     if (inputRef && inputRef.focus) {
@@ -977,6 +1067,34 @@ async function addQuickSubTask(list_uuid, index) {
   }
 }
 
+async function saveKanbanListTask(list) {
+  const taskName = kanbanListTaskName.value
+
+  if (taskName.trim() === '') {
+    toast.error('Task name cannot be empty.')
+
+    return
+  }
+
+  try {
+    activateAddKanbanListTask(list)
+
+    const newTaskListDetails = {
+      name: taskName.trim(),
+      due_date: dueDate.value,
+      list_uuid: list.uuid,
+    }
+
+    await listTaskStore.create(newTaskListDetails)
+    kanbanListTaskName.value = ''
+    dueDate.value = null
+    toast.success('Task added successfully', { timeout: 1000 })
+    fetchProjectLists()
+  } catch (error) {
+    toast.error('Failed to add task:', error)
+  }
+}
+
 function cancelQuickTask() {
   showAddTaskField.value = false
   quickTaskName.value = ''
@@ -995,6 +1113,21 @@ function cancelQuickSubTask(index) {
 function startEditing(task) {
   editingTask.value = { ...task, project_uuid: projectId.value }
   isEditTaskDrawerOpen.value = true
+}
+
+function activateAddKanbanListTask(list) {
+  showAddKanbanListTaskInput.value = list.id
+  nextTick(() => {
+    const inputRef = kanbanListTaskInputRef.value[list.id]
+    if (inputRef && inputRef.focus) {
+      inputRef.focus()
+    }
+  })
+}
+
+function cancelKanbanListTask(list) {
+  showAddKanbanListTaskInput.value = null
+  kanbanListTaskName.value = ""
 }
 
 async function deleteTask(task) {
@@ -1065,39 +1198,54 @@ const getLoadStatus = computed(() => {
 
 function toggleSubtasks(index){
   isExpandedSubTasks.value[index] = !isExpandedSubTasks.value[index]
+  cancelQuickSubTask(index)
 }
-
-const lists = ref([
-  { title: 'To Do', tasks: getProjectTasks, isEditing: false },
-  { title: 'In Progress', tasks: [], isEditing: false },
-  { title: 'Done', tasks: [], isEditing: false },
-])
 
 const headers = [
   { title: 'Task Name', key: 'name', sortable: false, width: '60%' },
   { title: 'Status', key: 'status',  sortable: false },
   { title: 'Due Date', key: 'due_date', sortable: false },
-  { title: 'Created Date', key: 'created_at', sortable: false },
+  { title: 'Start Date', key: 'created_at', sortable: false },
   { title: 'Action', key: 'action', sortable: false },
 ]
 
-const editTitle = index => {
-  lists.value[index].isEditing = true
 
-  const titleInput = $refs.titleInput[index]
-
-  titleInput && titleInput.focus()
+const startListEditing = list => {
+  isListEditing.value[list.id] = true
+  editListTitle.value = list.name
+  nextTick(() => {
+    const inputRef = editListTitleInput.value[list.id]
+    if (inputRef && inputRef.focus) {
+      inputRef.focus()
+    }
+  })
 }
 
-const saveTitle = index => {
-  lists.value[index].isEditing = false
+const saveListTitle = async list => {
+  try {
+    isListEditing.value[list.id] = false
+
+    const editedName = editListTitle.value.trim()
+    if (editedName !== list.name) {
+      const editListDetails = {
+        name: editedName,
+        uuid: list.uuid,
+        project_uuid: projectId.value,
+      }
+
+      await projectListStore.update(editListDetails)
+      toast.success('Title updated successfully', { timeout: 1000 })
+      await fetchProjectLists()
+    }
+  } catch (error) {
+    console.error('Error adding/updating list:', error)
+    toast.error('Failed to add/update list:', error)
+  }
 }
 
-const addList = () => {
-  const id = Date.now()
-  const newList = { id, title: 'New List', tasks: [] }
-
-  lists.value.push(newList)
+function cancelStateChangeListField(list)
+{
+  isListEditing.value[list.id] = false
 }
 
 const onDrop = (targetListIndex, event) => {
@@ -1114,6 +1262,7 @@ expandedRows.value[0] = true
 
 const toggleRow = index => {
   expandedRows.value[index] = !expandedRows.value[index]
+  cancelQuickListTask(index)
 }
 </script>
 
@@ -1131,6 +1280,11 @@ const toggleRow = index => {
     margin-right: 1rem;
 }
 
+.kanban-dropzone{
+    overflow-y: auto;
+    max-height: 468px;
+}
+
 .d-toggle{
     border: unset !important;
     padding: 0 !important;
@@ -1141,23 +1295,19 @@ const toggleRow = index => {
     border-bottom: 1px solid #ccc;
 }
 .task-card {
-    border-radius: 5px !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
     border: 1px solid #e0e0e0;
     font-size: 14px;
-    height: 100px;
-    padding: 12px !important;
+    height: auto;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .task-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
 }
 .expanded-row, .expanded-td{
     padding: 0 !important;
-}
-.row-hover {
-  background-color: #f0f0f0;
 }
 </style>

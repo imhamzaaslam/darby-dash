@@ -5,14 +5,14 @@ export default [
     icon: { icon: 'tabler-align-box-bottom-center' },
   },
   {
-    title: 'Members',
-    icon: { icon: 'tabler-users' },
-    to: { name: 'members-list' },
-  },
-  {
     title: 'Projects',
     icon: { icon: 'tabler-chart-histogram' },
     to: { name: 'web-designs-list' },
+  },
+  {
+    title: 'Members',
+    icon: { icon: 'tabler-users' },
+    to: { name: 'members-list' },
   },
   {
     title: 'Logout',
