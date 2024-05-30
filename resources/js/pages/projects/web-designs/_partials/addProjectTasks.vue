@@ -685,7 +685,7 @@
           </VCardTitle>
         </VCard>
         <VueDraggableNext
-          class="kanban-dropzone"
+          class="kanban-dropzone light"
           :list="list.tasks"
           group="tasks"
           @change="onDrop(index, $event)"
@@ -693,7 +693,7 @@
           <VCard
             v-for="(task) in list.tasks"
             :key="task.id"
-            class="mb-2 task-card px-3 py-3"
+            class="mt-1 mb-2 task-card px-3 py-3"
             @click="startEditing(task)"
           >
             <div class="cursor-pointer">
@@ -849,8 +849,10 @@ import { useListTaskStore } from "@/store/list_tasks"
 import { useProjectListStore } from "../../../../store/project_lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
+import { useTheme } from 'vuetify'
 
 const toast = useToast()
+const vuetifyTheme = useTheme()
 const projectStore = useProjectStore()
 const projectTaskStore = useProjectTaskStore()
 const listTaskStore = useListTaskStore()
@@ -1296,18 +1298,32 @@ const toggleRow = index => {
 }
 .task-card {
     border-radius: 8px !important;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
-    border: 1px solid #e0e0e0;
     font-size: 14px;
     height: auto;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .task-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid #f69636;
 }
 .expanded-row, .expanded-td{
     padding: 0 !important;
+}
+.light::-webkit-scrollbar {
+  width: 15px;
+}
+
+.light::-webkit-scrollbar-track {
+  background: #e6e6e6;
+  border-left: 1px solid #dadada;
+}
+
+.light::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border: solid 3px #e6e6e6;
+  border-radius: 7px;
+}
+
+.light::-webkit-scrollbar-thumb:hover {
+  background: #b0b0b0;
 }
 </style>
