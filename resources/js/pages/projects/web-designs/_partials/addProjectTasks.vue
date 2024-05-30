@@ -914,7 +914,7 @@ const fetchProjectDetails = async () => {
 const fetchProjectTasks = async () => {
   try {
     isLoading.value = true
-    await projectTaskStore.getAll(projectId.value)
+    await projectTaskStore.getUnlistedTasks(projectId.value)
   } catch (error) {
     toast.error('Error fetching project tasks:', error)
   }

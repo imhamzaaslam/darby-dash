@@ -177,7 +177,6 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
       start: 'drawerToggler,prev,next title',
       end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
     },
-    events: fetchEvents,
 
     // ❗ We need this to be true because when its false and event is allDay event and end date is same as start data then Full calendar will set end to null
     forceEventDuration: true,

@@ -1,7 +1,10 @@
 import { apiClient, generateQueryString } from './api'
 
 export default {
-  getProjectTasks(projectId) {
+  getAll(projectId) {
+    return apiClient.get(`admin/projects/${projectId}/allTasks`)
+  },
+  getUnlistedTasks(projectId) {
     return apiClient.get(`admin/projects/${projectId}/tasks`)
   },
   createProjectTask(task) {
