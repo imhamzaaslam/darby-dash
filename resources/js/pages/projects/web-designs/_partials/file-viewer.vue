@@ -18,57 +18,71 @@
           <img
             :src="file.url"
             :alt="file.name"
-            class="full-width-image"
+            class="uploaded-image"
           >
         </template>
-        <template v-else>
-          <iframe
-            v-if="file.type === 'application/pdf'"
+        <template v-else-if="file.type === 'application/pdf'">
+          <embed
             :src="file.url"
             width="100%"
             height="600px"
-          />
-          <template v-else>
-            <p>{{ fileContent }}</p>
-          </template>
+            type="application/pdf"
+          >
+        </template>
+        <template v-else-if="file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
+          <div v-html="wordContent" />
+        </template>
+        <template v-else-if="file.type === 'text/plain'">
+          <pre>{{ textContent }}</pre>
+        </template>
+        <template v-else>
+          <p>File format not supported for preview.</p>
         </template>
       </VCardText>
     </VCard>
   </VDialog>
 </template>
-    
 <script setup>
 import { ref, watch } from 'vue'
-    
+import mammoth from 'mammoth'
+
 const props = defineProps({
-  show: Boolean,
-  file: Object,
+  show: {
+    type: Boolean,
+    required: true,
+  },
+  file: {
+    type: Object,
+    required: true,
+  },
 })
-  
+
 const emit = defineEmits(['update:show'])
-    
-const fileContent = ref('')
-    
+
+const wordContent = ref('')
+const textContent = ref('')
+
 const handleClose = () => {
   emit('update:show', false)
 }
-    
-watch(props.file, newFile => {
-  if (newFile && !newFile.type.startsWith('image/') && newFile.type !== 'application/pdf') {
-    const reader = new FileReader()
-  
-    reader.onload = e => {
-      fileContent.value = e.target.result
-    }
-    reader.readAsText(new File([newFile.url], newFile.name))
+
+watch(() => props.file, async newFile => {
+  if (newFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    const response = await fetch(newFile.url)
+    const arrayBuffer = await response.arrayBuffer()
+    const result = await mammoth.convertToHtml({ arrayBuffer })
+
+    wordContent.value = result.value
+  } else if (newFile.type === 'text/plain') {
+    const response = await fetch(newFile.url)
+
+    textContent.value = await response.text()
   }
-}, { immediate: true })
+})
 </script>
-    
-    <style scoped>
-    .full-width-image {
-      width: 100%;
-      height: auto;
-    }
-    </style>
-    
+<style scoped>
+.uploaded-image {
+  width: 100%;
+  height: auto;
+}
+</style>
