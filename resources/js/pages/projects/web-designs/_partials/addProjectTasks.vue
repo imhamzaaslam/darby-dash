@@ -1309,7 +1309,7 @@ const toggleRow = index => {
     padding: 0 !important;
 }
 .light::-webkit-scrollbar {
-  width: 15px;
+  width: 10px;
 }
 
 .light::-webkit-scrollbar-track {
