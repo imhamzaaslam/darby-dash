@@ -25,10 +25,10 @@
   <VRow class="mt-2">
     <VCol
       v-for="(image, index) in images"
+      v-if="images.length > 0"
       :key="image.id"
       cols="12"
-      md="2"
-    >
+      md="2"> 
       <div
         class="image-container"
         @click="openFileViewer(image)"
@@ -71,9 +71,20 @@
           class="delete-icon"
           @click.stop="deleteImage(index)"
         >
-          <VIcon class="tabler-square-x-filled" size="large" />
+          <VIcon
+            class="tabler-square-x-filled"
+            size="large"
+          />
         </span>
       </div>
+    </VCol>
+    <VCol
+      v-else
+      cols="12"
+      class="d-flex flex-column align-center justify-center text-center" 
+    >
+      <span v-html="emptyFileImg" />
+      <span class="mt-n6">No Files added yet.</span>
     </VCol>
   </VRow>
 
@@ -87,6 +98,7 @@
 <script setup>
 import { ref } from 'vue'
 import FileViewer from './web-designs/_partials/file-viewer.vue'
+import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
 
 const fileInputRef = ref(null)
 const images = ref([])

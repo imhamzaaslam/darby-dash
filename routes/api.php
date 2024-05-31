@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\ProjectTypeController;
 use App\Http\Controllers\Api\Admin\ProjectController;
 use App\Http\Controllers\Api\Admin\ProjectListController;
 use App\Http\Controllers\Api\Admin\TaskController;
+use App\Http\Controllers\Api\Admin\CalendarFilterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,7 +77,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::delete('/', [ProjectListController::class, 'delete']);
                 });
 
-                Route::get('/tasks', [TaskController::class, 'getByProject']);
+                Route::get('/tasks', [TaskController::class, 'fetchUnlistedTasks']);
+                Route::get('/allTasks', [TaskController::class, 'getByProject']);
                 Route::post('/task', [TaskController::class, 'storeByProject']);
                 Route::prefix('task/{taskUuid}')->group(function () {
                     Route::patch('/', [TaskController::class, 'updateByProject']);
@@ -94,6 +96,9 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::delete('/', [TaskController::class, 'delete']);
             });
         });
+
+        Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);
+
 
         // Route::prefix('project/{id}/tasks')->group(function () {
         //     Route::get('/', [TaskController::class, 'index']);

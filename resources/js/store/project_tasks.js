@@ -4,6 +4,7 @@ import ProjectTaskService from '../services/ProjectTaskService'
 export const useProjectTaskStore = defineStore('project_tasks', {
   state: () => ({
     projectTasks: [],
+    projectAllTasks: [],
     projectTask: null,
     projectTasksCount: 0,
     loadStatus: 0,
@@ -15,7 +16,21 @@ export const useProjectTaskStore = defineStore('project_tasks', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ProjectTaskService.getProjectTasks(projectId)
+        const response = await ProjectTaskService.getAll(projectId)
+
+        this.projectAllTasks = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getLists error ', error)
+      }
+    },
+    async getUnlistedTasks(projectId) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectTaskService.getUnlistedTasks(projectId)
 
         this.projectTasks = response.data.data
         this.loadStatus = 2
@@ -85,6 +100,7 @@ export const useProjectTaskStore = defineStore('project_tasks', {
   getters: {
     getLoadStatus: state => state.loadStatus,
     getProjectTasks: state => state.projectTasks,
+    getProjectAllTasks: state => state.projectAllTasks,
     getProjectTask: state => state.projectTask,
     getErrors: state => state.error,
   },

@@ -97,6 +97,20 @@ class TaskController extends Controller
      * @param string $projectUuid
      * @return AnonymousResourceCollection|JsonResponse
      */
+    public function fetchUnlistedTasks(string $projectUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $tasks = $this->taskRepository->fetchUnlistedTasks($project);
+
+        return TaskResource::collection($tasks);
+    }
+
+    /**
+     * Get tasks by project.
+     *
+     * @param string $projectUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
     public function getByProject(string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
