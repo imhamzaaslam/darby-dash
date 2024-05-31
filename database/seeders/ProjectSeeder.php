@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Project;
 use App\Models\ProjectMember;
-use App\Models\ProjectBoard;
+use App\Models\ProjectList;
 
 class ProjectSeeder extends Seeder
 {
@@ -15,7 +15,7 @@ class ProjectSeeder extends Seeder
      */
     public function run(): void
     {
-        $boards = [
+        $lists = [
             ['name' => 'To Do', 'initial_name' => 'todo', 'display_order' => 1],
             ['name' => 'In Progress', 'initial_name' => 'in_progress', 'display_order' => 2],
             ['name' => 'Completed', 'initial_name' => 'completed', 'display_order' => 3],
@@ -36,12 +36,12 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
-        foreach ($boards as $board) {
-            ProjectBoard::create([
+        foreach ($lists as $list) {
+            ProjectList::create([
                 'project_id' => $firstProject->id,
-                'name' => $board['name'],
-                'initial_name' => $board['initial_name'],
-                'display_order' => $board['display_order'],
+                'name' => $list['name'],
+                'display_order' => $list['display_order'],
+                'is_deletable' => 0
             ]);
         }
 
@@ -60,12 +60,12 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
-        foreach ($boards as $board) {
-            ProjectBoard::create([
+        foreach ($lists as $list) {
+            ProjectList::create([
                 'project_id' => $secondProject->id,
-                'name' => $board['name'],
-                'initial_name' => $board['initial_name'],
-                'display_order' => $board['display_order'],
+                'name' => $list['name'],
+                'display_order' => $list['display_order'],
+                'is_deletable' => 0
             ]);
         }
 
@@ -84,12 +84,12 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
-        foreach ($boards as $board) {
-            ProjectBoard::create([
+        foreach ($lists as $list) {
+            ProjectList::create([
                 'project_id' => $thirdProject->id,
-                'name' => $board['name'],
-                'initial_name' => $board['initial_name'],
-                'display_order' => $board['display_order'],
+                'name' => $list['name'],
+                'display_order' => $list['display_order'],
+                'is_deletable' => 0
             ]);
         }
 
@@ -108,12 +108,12 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
-        foreach ($boards as $board) {
-            ProjectBoard::create([
+        foreach ($lists as $list) {
+            ProjectList::create([
                 'project_id' => $fourthProject->id,
-                'name' => $board['name'],
-                'initial_name' => $board['initial_name'],
-                'display_order' => $board['display_order'],
+                'name' => $list['name'],
+                'display_order' => $list['display_order'],
+                'is_deletable' => 0
             ]);
         }
 
@@ -132,12 +132,12 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
-        foreach ($boards as $board) {
-            ProjectBoard::create([
+        foreach ($lists as $list) {
+            ProjectList::create([
                 'project_id' => $fifthProject->id,
-                'name' => $board['name'],
-                'initial_name' => $board['initial_name'],
-                'display_order' => $board['display_order'],
+                'name' => $list['name'],
+                'display_order' => $list['display_order'],
+                'is_deletable' => 0
             ]);
         }
 
@@ -156,12 +156,12 @@ class ProjectSeeder extends Seeder
                 'user_id' => $memberId,
             ]);
         }
-        foreach ($boards as $board) {
-            ProjectBoard::create([
+        foreach ($lists as $list) {
+            ProjectList::create([
                 'project_id' => $sixthProject->id,
-                'name' => $board['name'],
-                'initial_name' => $board['initial_name'],
-                'display_order' => $board['display_order'],
+                'name' => $list['name'],
+                'display_order' => $list['display_order'],
+                'is_deletable' => 0
             ]);
         }
     }

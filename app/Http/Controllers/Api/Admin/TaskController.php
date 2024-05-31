@@ -9,6 +9,7 @@ use App\Contracts\ProjectListRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\task\StoreTaskRequest;
 use App\Http\Requests\task\StoreTaskByProjectRequest;
+use App\Http\Requests\task\StoreProjectTasksOrderRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -144,6 +145,26 @@ class TaskController extends Controller
     }
 
     /**
+     * Update project tasks order.
+     *
+     * @param StoreProjectTasksOrderRequest $request
+     * @param string $projectUuid
+     * @param string $taskUuid
+     * @return Response|JsonResponse
+     */
+
+    public function updateProjectTasksOrder(StoreProjectTasksOrderRequest $request, string $projectUuid, string $taskUuid): Response|JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $validated = $request->validated();
+        $this->taskRepository->updateTasksOrder($task, $validated);
+
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    /**
      * Delete task by project.
      *
      * @param string $projectUuid
@@ -156,6 +177,6 @@ class TaskController extends Controller
 
         $this->taskRepository->delete($task);
 
-        return response()->json(['message' => 'Task deleted successfully']);   
+        return response()->json(['message' => 'Task deleted successfully']);
     }
 }

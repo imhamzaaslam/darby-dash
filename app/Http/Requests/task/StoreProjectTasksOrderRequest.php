@@ -5,7 +5,7 @@ namespace App\Http\Requests\task;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\User;
 
-class StoreTaskByProjectRequest extends FormRequest
+class StoreProjectTasksOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,8 @@ class StoreTaskByProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'list_id' => 'sometimes|nullable|exists:project_lists,id',
-            'description' => 'sometimes|nullable|string',
-            'status' => 'sometimes|nullable|in:todo,in_progress,completed',
-            'start_date' => 'sometimes|nullable|date',
-            'due_date' => 'sometimes|nullable|date',
-            'time_spent' => 'sometimes|nullable|integer',
+            'list_id' => 'required|exists:project_lists,id',
+            'list_tasks' => 'required|array'
         ];
     }
 }

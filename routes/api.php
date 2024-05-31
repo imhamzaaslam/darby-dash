@@ -80,6 +80,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::post('/task', [TaskController::class, 'storeByProject']);
                 Route::prefix('task/{taskUuid}')->group(function () {
                     Route::patch('/', [TaskController::class, 'updateByProject']);
+                    Route::post('/order', [TaskController::class, 'updateProjectTasksOrder']);
                     Route::delete('/', [TaskController::class, 'deleteByProject']);
                 });
             });

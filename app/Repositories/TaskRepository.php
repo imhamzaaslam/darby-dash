@@ -56,4 +56,24 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         $data = array_merge($attributes, ['project_id' => $project->id]);
         return $this->model->create($data);
     }
+
+    public function updateTasksOrder(Task $task, array $attributes): Task
+    {
+        $listId = $attributes['list_id'];
+        $this->updateDisplayOrder($attributes['list_tasks']);
+        $task->update(['list_id' => $listId]);
+
+        return $task;
+    }
+
+    public function updateDisplayOrder(array $listTasks): void
+    {
+        foreach ($listTasks as $index => $taskDetails) {
+            $task = $this->model->find($taskDetails['id']);
+            if ($task) {
+                $task->update(['display_order' => $index]);
+            }
+        }
+    }
+
 }

@@ -20,6 +20,7 @@ class Task extends Base
         'project_id',
         'parent_id',
         'list_id',
+        'display_order',
         'start_date',
         'due_date',
         'time_spent',

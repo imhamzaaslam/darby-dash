@@ -7,7 +7,7 @@ use App\Contracts\ProjectRepositoryInterface;
 use App\Models\Base;
 use App\Models\Project;
 use App\Models\ProjectMember;
-use App\Models\ProjectBoard;
+use App\Models\ProjectList;
 
 class ProjectRepository extends AbstractEloquentRepository implements ProjectRepositoryInterface
 {
@@ -33,17 +33,18 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
 
     public function createProjectBoards(Project $project): void
     {
-        $boards = [
+        $lists = [
             ['name' => 'To Do', 'display_order' => 1],
             ['name' => 'In Progress', 'display_order' => 2],
             ['name' => 'Done', 'display_order' => 3],
         ];
 
-        foreach ($boards as $board) {
-            ProjectBoard::create([
+        foreach ($lists as $list) {
+            ProjectList::create([
                 'project_id' => $project->id,
-                'name' => $board['name'],
-                'display_order' => $board['display_order'],
+                'name' => $list['name'],
+                'display_order' => $list['display_order'],
+                'is_deletable' => 0
             ]);
         }
     }

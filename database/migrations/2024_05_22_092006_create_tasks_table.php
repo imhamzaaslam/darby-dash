@@ -16,9 +16,8 @@ return new class extends Migration
             $table->uuid();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('list_id')->nullable()->constrained('project_lists')->onDelete('cascade');
-            $table->foreignId('board_id')->default(1)->constrained('project_boards')->onDelete('cascade');
             $table->foreignId('parent_id')->nullable()->constrained('tasks')->onDelete('cascade');
-            $table->string('name');
+            $table->longText('name');
             $table->text('description')->nullable();
             $table->enum('status', ['todo', 'in_progress', 'done'])->default('todo');
             $table->timestamp('start_date')->nullable();
