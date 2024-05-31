@@ -69,15 +69,6 @@ class ProjectProgressService
     {
         $totalTasks = $project->tasks->count();
         $completedTasks = $project->tasks->where('status', 'done')->count();
-        dd($completedTasks);
         return $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
     }
 }
-
-
-// const listData = [
-//     { color: "success", title: 'Wireframe', phase: 'Phase 1', status: "DONE", isHover: false },
-//     { color: "success", title: 'Design', phase: 'Phase 2', status: "DONE", isHover: false },
-//     { color: "warning", title: 'Development', phase: 'Phase 3', status: "Inprogress", isHover: false },
-//     { color: "info", title: 'Q&A', phase: 'Phase 4', status: "pending", isHover: false },
-//   ]
