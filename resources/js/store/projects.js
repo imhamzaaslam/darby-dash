@@ -6,6 +6,7 @@ export const useProjectStore = defineStore('projects', {
     projects: [],
     projectsByType: [],
     project: null,
+    progress: [],
     usersCount: 0,
     loadStatus: 0,
     error: null,
@@ -98,11 +99,27 @@ export const useProjectStore = defineStore('projects', {
         console.error('deleteProject error ', error)
       }
     },
+    // progress
+    async getProgress(uuid) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectService.getProgress(uuid)
+
+        this.progress = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getProgress error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,
     getProjects: state => state.projects,
     getProjectsByType: state => state.projectsByType,
+    getProjectProgress: state => state.progress,
     getProject: state => state.project,
     getErrors: state => state.error,
   },

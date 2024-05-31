@@ -26,6 +26,10 @@ class Task extends Base
         'time_spent',
     ];
 
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
+
     public function subtasks()
     {
         return $this->hasMany(self::class, 'parent_id');

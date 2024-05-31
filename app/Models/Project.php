@@ -44,6 +44,11 @@ class Project extends Base
         return $this->hasMany(ProjectList::class);
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'project_members');
