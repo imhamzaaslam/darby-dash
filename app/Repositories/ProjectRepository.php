@@ -44,7 +44,7 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
                 'project_id' => $project->id,
                 'name' => $list['name'],
                 'display_order' => $list['display_order'],
-                'is_deletable' => 0
+                'is_deletable' => 1
             ]);
         }
     }

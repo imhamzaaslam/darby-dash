@@ -693,6 +693,8 @@
           :list="list.tasks"
           group="tasks"
           @change="onDrop(list.id, $event)"
+          @start="onDragStart"
+          @end="onDragEnd"
         >
           <div
             v-for="(task) in list.tasks"
@@ -700,6 +702,7 @@
           >
             <VCard
               class="mt-1 mb-2 task-card px-3 py-3"
+              :class="{ 'bg-grey-600': isDragging }"
               @click="startEditing(task)"
               @mouseenter="showKanbanTaskIcon = task.uuid"
               @mouseleave="showKanbanTaskIcon = null"
@@ -1086,6 +1089,7 @@ const editListTitle = ref(null)
 const showAddKanbanListTaskInput = ref(null)
 const kanbanListTaskName = ref(null)
 const kanbanListTaskInputRef = ref([])
+const isDragging = ref(false)
 
 const isLoading = ref(false)
 
@@ -1560,6 +1564,14 @@ expandedRows.value[0] = true
 const toggleRow = index => {
   expandedRows.value[index] = !expandedRows.value[index]
   cancelQuickListTask(index)
+}
+
+function onDragStart() {
+  isDragging.value = true
+}
+
+function onDragEnd() {
+  isDragging.value = false
 }
 </script>
 

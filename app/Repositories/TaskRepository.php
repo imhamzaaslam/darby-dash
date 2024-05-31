@@ -31,8 +31,8 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
     {
         $list_id = $list->id;
         $project_id = $list->project_id;
-
-        $data = array_merge($attributes, ['list_id' => $list_id, 'project_id' => $project_id]);
+        $display_order = $this->model->where('list_id', $list_id)->whereNull('parent_id')->count();
+        $data = array_merge($attributes, ['list_id' => $list_id, 'project_id' => $project_id, 'display_order' => $display_order + 1]);
         return $this->model->create($data);
     }
 
