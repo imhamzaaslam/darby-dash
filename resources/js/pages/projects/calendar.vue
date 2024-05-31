@@ -82,8 +82,7 @@ const setCalendarEvents = projectTasks => {
   calendarOptions.events = projectTasks.map(task => ({
     id: task.id,
     title: task.name,
-    start: task.created_at,
-    end: task.due_date || task.created_at,
+    start: task.due_date ? task.due_date : task.created_at,
     extendedProps: {
       calendar: 'Business',
     },
