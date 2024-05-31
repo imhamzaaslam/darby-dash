@@ -8,6 +8,7 @@ let adminAuthorizedPages = [
   'google-ads-programs',
   'google-ads-program',
   'team',
+  'milestones',
   'calendar',
   'files',
   'chat',

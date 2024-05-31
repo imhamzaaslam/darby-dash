@@ -16,7 +16,7 @@ class ProjectProgressService
             return [
                 'name' => $list->name,
                 'totalTasks' => $totalTasks,
-                'progress' => 100,
+                'progress' => $progress,
                 'status' => $this->getStatus($progress),
             ];
         });        
