@@ -248,6 +248,14 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
       if (resizedEvent.start && resizedEvent.end)
         updateEvent(extractEventDataFromEventApi(resizedEvent))
     },
+
+    eventContent: arg => {
+      // Truncate the title if it exceeds 16 characters
+      const truncatedTitle = arg.event.title.length > 22 ? arg.event.title.substring(0, 22) + "..." : arg.event.title
+      
+      return { html: `<div class="fc-content">${truncatedTitle}</div>` }
+    },
+    
     customButtons: {
       drawerToggler: {
         text: 'calendarDrawerToggler',
