@@ -1103,6 +1103,18 @@ onBeforeMount(async () => {
   await fetchProjectDetails()
 })
 
+onMounted(() => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const savedViewType = searchParams.get('view')
+  if (savedViewType && ['list', 'grid'].includes(savedViewType)) {
+    viewType.value = savedViewType
+  }
+})
+
+watch(viewType, newValue => {
+  router.push({ query: { view: newValue } })
+})
+
 const fetchProjectDetails = async () => {
   try {
     isLoading.value = true
