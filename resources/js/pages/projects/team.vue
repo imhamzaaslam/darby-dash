@@ -130,8 +130,8 @@
                 <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
               </VAvatar>
               <div class="d-flex flex-column ms-3">
-                <span class="font-weight-medium text-high-emphasis text-sm text-truncate side-flick-name">{{ member.name_first }} {{ member.name_last }}</span>
-                <small class="mt-0 text-xs side-flick-role">
+                <span class="font-weight-medium text-high-emphasis text-sm text-truncate side-flick-name ms-2">{{ member.name_first }} {{ member.name_last }}</span>
+                <small class="mt-0 text-xs side-flick-role ms-2">
                   {{ roleStore.capitalizeFirstLetter(member.role) }}
                 </small>
                 <div class="d-flex align-center mt-8">
