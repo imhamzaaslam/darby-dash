@@ -10,6 +10,7 @@ use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\TaskRepositoryInterface;
 use App\Contracts\ProjectListRepositoryInterface;
 use App\Contracts\CalendarFilterRepositoryInterface;
+use App\Contracts\StatusRepositoryInterface;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -18,6 +19,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\ProjectList;
 use App\Models\CalendarFilter;
+use App\Models\Status;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
@@ -26,6 +28,7 @@ use App\Repositories\ProjectRepository;
 use App\Repositories\TaskRepository;
 use App\Repositories\ProjectListRepository;
 use App\Repositories\CalendarFilterRepository;
+use App\Repositories\StatusRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -75,6 +78,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             CalendarFilterRepositoryInterface::class,
             fn() => new CalendarFilterRepository(new CalendarFilter)
+        );
+
+        $this->app->bind(
+            StatusRepositoryInterface::class,
+            fn() => new StatusRepository(new Status)
         );
     }
 

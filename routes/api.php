@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\ProjectTypeController;
 use App\Http\Controllers\Api\Admin\ProjectController;
 use App\Http\Controllers\Api\Admin\ProjectListController;
 use App\Http\Controllers\Api\Admin\TaskController;
+use App\Http\Controllers\Api\Admin\StatusController;
 use App\Http\Controllers\Api\Admin\CalendarFilterController;
 use App\Http\Controllers\Api\Admin\ProjectProgressController;
 
@@ -101,6 +102,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         });
 
         Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);
+        Route::get('/statuses', [StatusController::class, 'index']);
 
 
         // Route::prefix('project/{id}/tasks')->group(function () {
