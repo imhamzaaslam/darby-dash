@@ -24,13 +24,6 @@
             @click="viewType = 'grid'"
           />
         </VBtnToggle>
-        <!--
-          <VIcon
-          icon="tabler-filter"
-          class="bg-primary ms-2"
-          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
-          /> 
-        -->
       </VCol>
       <VCol
         cols="12"
@@ -39,7 +32,7 @@
         <div class="d-flex justify-end mb-5">
           <VBtn
             prepend-icon="tabler-plus"
-            @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
+            @click="isAddMemberDialogueOpen = !isAddMemberDialogueOpen"
           >
             New Member
           </VBtn>
@@ -71,44 +64,29 @@
           v-for="member in getUsersByProjects"
           :key="member.id"
           cols="12"
-        > 
+        >
           <VCard class="d-flex ps-4 py-1">
-            <VCol cols="3">
+            <VCol cols="4">
               <div class="d-flex align-center">
                 <VAvatar
                   size="36"
-                  color="primary"
-                  variant="tonal"
+                  :class="member.avatar ? '' : 'text-white bg-primary'"
+                  :variant="!member.avatar ? 'tonal' : ''"
                 >
                   <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
                 </VAvatar>
                 <div class="d-flex flex-column ms-3">
                   <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ member.name_first }} {{ member.name_last }}</span>
+                  <small class="mt-0 text-xs">
+                    {{ roleStore.capitalizeFirstLetter(member.role) }}
+                  </small>
                 </div>
               </div>
             </VCol>
-            <VCol cols="3">
-              <span>
+            <VCol cols="7">
+              <span class="">
                 {{ member.email }}
               </span>
-            </VCol>
-            <VCol cols="3">
-              <VChip
-                variant="outlined"
-                color="primary"
-                size="small"
-              >
-                <span>{{ member.role }}</span>
-              </VChip>
-            </VCol>
-            <VCol cols="2">
-              <VChip
-                variant="outlined"
-                color="success"
-                size="small"
-              >
-                <span>{{ roleStore.capitalizeFirstLetter(member.state) }}</span>
-              </VChip>
             </VCol>
             <VCol
               cols="1"
@@ -119,12 +97,6 @@
                 <VMenu activator="parent">
                   <VList>
                     <VList>
-                      <VListItem
-                        value="edit"
-                        @click="editProject(project)"
-                      >
-                        Edit
-                      </VListItem>
                       <VListItem
                         value="delete"
                         @click="deleteMember(project)"
@@ -155,16 +127,13 @@
                 class="dots-icon"
                 @click.prevent
               >
-                <VIcon icon="tabler-dots-vertical" />
+                <VIcon
+                  color="white"
+                  icon="tabler-dots-vertical"
+                />
                 <VMenu activator="parent">
                   <VList>
                     <VList>
-                      <VListItem
-                        value="edit"
-                        @click="editProject(project)"
-                      >
-                        Edit
-                      </VListItem>
                       <VListItem
                         value="delete"
                         @click="deleteProject(project)"
@@ -176,140 +145,135 @@
                 </VMenu>
               </IconBtn>
             </div>
-            <VCardText class="position-relative">
-              <!-- User Avatar -->
+            <VCardText class="position-relative d-flex align-center">
               <VAvatar
-                size="75"
+                size="80"
+                :class="member.avatar ? '' : 'text-white bg-primary'"
+                :variant="!member.avatar ? 'tonal' : ''"
                 class="avatar-center"
-                color="primary"
               >
                 <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
               </VAvatar>
-    
-              <VRow class="mt-5">
-                <VCol cols="8">
-                  <div class="d-flex align-center mt-1 ms-1">
-                    <div class="d-flex flex-column ms-3">
-                      <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ member.name_first }} {{ member.name_last }}</span>
-                      <span class="text-sm text-truncate mb-0">{{ member.email }}</span>
-                      <VChip
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                        class="mt-3 position-absolute user_role"
-                      >
-                        <span>{{ member.role }}</span>
-                      </VChip>
-                    </div>
-                  </div>
-                </VCol>
-              </VRow>
+              <div class="d-flex flex-column ms-3">
+                <span class="font-weight-medium text-high-emphasis text-sm text-truncate side-flick-name">{{ member.name_first }} {{ member.name_last }}</span>
+                <small class="mt-0 text-xs side-flick-role">
+                  {{ roleStore.capitalizeFirstLetter(member.role) }}
+                </small>
+                <div class="d-flex align-center mt-8">
+                  <VIcon
+                    color="primary"
+                    icon="tabler-mail"
+                  />
+                  <span class="ms-1 text-sm">{{ member.email }}</span>
+                </div>
+              </div>
             </VCardText>
           </VCard>
         </VCol>
       </VRow>
     </div>
   </div>
-  
-  
-  <AddMemberDrawer
-    v-model:is-drawer-open="isAddMemberDrawerOpen"
-    :fetch-members="fetchMembers"
-    :get-roles="getRoles"
-    :get-errors="getErrors"
-    :get-status-code="getStatusCode"
-    :get-load-status="getLoadStatus"
-  /> 
- 
-  <!--
-    <EditMemberDrawer
-    v-model:is-edit-drawer-open="isEditMemberDrawerOpen"
-    :fetch-members="fetchMembers"
-    :get-roles="getRoles"
-    :get-errors="getErrors"
-    :get-status-code="getStatusCode"
-    :edit-member-details="editMemberDetails"
-    :get-load-status="getLoadStatus"
-    />
-    <FilterDrawer
-    v-model:is-filter-drawer-open="isFilterDrawerOpen"
-    :fetch-projects="fetchProjects"
-    :get-members="getMembers"
-    :get-project-managers="getProjectManagers"
-    :get-load-status="getLoadStatus"
-    /> 
-  -->
+  <VDialog
+    v-model="isAddMemberDialogueOpen"
+    persistent
+    class="v-dialog-sm"
+  >
+    <!-- Dialog close btn -->
+    <DialogCloseBtn @click="isAddMemberDialogueOpen = !isAddMemberDialogueOpen" />
+
+    <!-- Dialog Content -->
+    <VCard title="Add Member">
+      <VForm
+        ref="addMemberForm"
+        @submit.prevent="submitAddMemberForm"
+      >
+        <VCardText>
+          <AppAutocomplete
+            v-model="project.member_ids"
+            :items="getMembers"
+            item-title="name"
+            item-value="id"
+            label="Members*"
+            placeholder="Select Members"
+            multiple
+            clearable
+            clear-icon="tabler-x"
+          />
+        </VCardText>
+
+        <VCardText class="d-flex justify-end gap-3 flex-wrap">
+          <VBtn
+            color="secondary"
+            @click="isAddMemberDialogueOpen = false"
+          >
+            Cancel
+          </VBtn>
+          <VBtn
+            type="submit"
+            @click="addMemberForm?.validate()"
+          >
+            Add
+          </VBtn>
+        </VCardText>
+      </VForm>
+    </VCard>
+  </VDialog>
 </template>
 
 <script setup>
 import Swal from 'sweetalert2'
-import AddMemberDrawer from '@/pages/teams/_partials/add-member-drawer.vue'
-import EditMemberDrawer from '@/pages/teams/_partials/update-member-drawer.vue'
-import FilterDrawer from '@/pages/projects/web-designs/_partials/filter-projects-drawer.vue'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import Page2 from '../../../images/pages/2.png'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../store/projects"
-import { useProjectTypeStore } from "../../store/project_types"
 import { useUserStore } from "../../store/users"
 import { useRoleStore } from "../../store/roles"
 import { useRoute } from 'vue-router'
 
 const toast = useToast()
 const projectStore = useProjectStore()
-const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
 const roleStore = useRoleStore()
-const route = useRoute()
+const router = useRoute()
 
-const totalRecords = ref(0)
 const viewType = ref('list')
-const isAddMemberDrawerOpen = ref(false)
-const isEditMemberDrawerOpen = ref(false)
-const isFilterDrawerOpen = ref(false)
+const addMemberForm = ref()
+const isAddMemberDialogueOpen = ref(false)
 const isLoading = ref(false)
 const isMembersLoading = ref(false)
-const selectedProjectType = ref(1)
-const editProjectDetails = ref({})
 
-watch(
-  () => route.query.type,
-  async newType => {
-    if (newType) {
-      selectedProjectType.value = parseInt(newType)
-      await fetchProjects()
-    }
-  },
-  { immediate: true },
-)
+const projectId = computed(() => router.params.id)
 
 onBeforeMount(async () => {
-  await fetchMembersByProject()
-  await fetchProjects()
-  await fetchProjectTypes()
-  await fetchProjectManagers()
+  await fetchProject()
   await fetchMembers()
-  totalRecords.value = totalProjects.value
 })
 
-const fetchProjects = async () => {
-  try {
-    console.log("SELECTED VALUE TYPE", selectedProjectType.value)
-    await projectStore.getByType(selectedProjectType.value)
-    isLoading.value = true
-  } catch (error) {
-    toast.error('Error fetching projects:', error)
-  }
-  finally {
-    isLoading.value = false
-  }
-}
+async function submitAddMemberForm() {
+  addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
 
-const editProject = project => {
-  editProjectDetails.value = { ...project }
-  isEditProjectDrawerOpen.value = true
+        const payload = {
+          id: project.id,
+          uuid: project.uuid,
+          member_ids: project.member_ids,
+        }
+
+        await projectStore.update(payload)
+
+        isAddMemberDialogueOpen.value = false
+        toast.success('Member added successfully', { timeout: 1000 })
+        await fetchMembers()
+        await fetchProject()
+      } catch (error) {
+        console.error('Error adding member:', error)
+        toast.error('Failed to add member:', error.message || error)
+      }
+    }
+  })
 }
 
 const deleteMember = async member => {
@@ -342,32 +306,6 @@ const deleteMember = async member => {
   }
 }
 
-const fetchProjectTypes = async () => {
-  try {
-    isLoading.value = true
-
-    await projectTypeStore.getAll()
-  } catch (error) {
-    toast.error('Failed to get project types:', error.message || error)
-  }
-  finally {
-    isLoading.value = false
-  }
-}
-
-const fetchProjectManagers = async () => {
-  try {
-    isLoading.value = true
-
-    await userStore.getProjectManagers()
-  } catch (error) {
-    toast.error('Failed to get project managers:', error.message || error)
-  }
-  finally {
-    isLoading.value = false
-  }
-}
-
 const fetchMembers = async () => {
   try {
     if(getLoadStatus.value === 1) return
@@ -382,44 +320,25 @@ const fetchMembers = async () => {
   }
 }
 
-const fetchMembersByProject = async () => {
+const fetchProject = async () => {
   try {
-    isMembersLoading.value = true
-
-    const projectUuid = route.params.id
-
-    await userStore.getByProjects(projectUuid)
-    isMembersLoading.value = false
+    if(getLoadStatus.value === 1) return
+    await projectStore.show(projectId.value)
+    isLoading.value = true
   } catch (error) {
-    toast.error('Error fetching members:', error)
+    toast.error('Error fetching project:', error)
   }
   finally {
     isLoading.value = false
   }
 }
 
-const getProjects = computed(() => {
-  return projectStore.getProjectsByType
-})
-
-const getProjectTypes = computed(() => {
-  return projectTypeStore.getProjectTypes
-})
-
-const getProjectManagers = computed(() => {
-  return userStore.getProjectManagersList
-})
-
 const getMembers = computed(() => {
   return userStore.getMembersList
 })
 
-const getRoles = computed(() => {
-  return roleStore.getRoles
-})
-
-const getUsers = computed(() => {
-  return userStore.getUsers
+const project = computed(() =>{
+  return projectStore.getProject
 })
 
 const getUsersByProjects = computed(() => {
@@ -430,16 +349,8 @@ const getErrors = computed(() => {
   return userStore.getErrors
 })
 
-const getStatusCode = computed(() => {
-  return userStore.getStatusCode
-})
-
 const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
-})
-
-const totalProjects = computed(() => {
-  return projectStore.projectsCount
 })
 </script>
 
@@ -470,5 +381,14 @@ const totalProjects = computed(() => {
 
 .user_role{
   right: 10px;
+}
+.side-flick-name{
+    position: absolute;
+    left: 27%;
+    top: 5%;
+}
+.side-flick-role{
+    position: absolute;
+    left: 27%;
 }
 </style>
