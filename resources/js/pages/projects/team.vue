@@ -41,7 +41,7 @@
     </VRow>
 
     <!-- Skeleton Loader -->
-    <div v-if="isMembersLoading">
+    <div v-if="getProjectLoadStatus === 1">
       <VRow
         v-if="viewType === 'list'"
         class="mb-4"
@@ -236,12 +236,12 @@ const viewType = ref('grid')
 const addMemberForm = ref()
 const isAddMemberDialogueOpen = ref(false)
 const isLoading = ref(false)
-const isMembersLoading = ref(false)
 const selectedMembers = ref([])
 
 const projectId = computed(() => router.params.id)
 
 onBeforeMount(async () => {
+  await getByProjects()
   await fetchProject()
   await fetchMembers()
   await setSelectedMembers()
@@ -310,12 +310,8 @@ const setSelectedMembers = async () => {
 const getByProjects = async () => {
   try {
     await userStore.getByProjects(projectId.value)
-    isMembersLoading.value = true
   } catch (error) {
     toast.error('Error fetching members:', error)
-  }
-  finally {
-    isMembersLoading.value = false
   }
 }
 
