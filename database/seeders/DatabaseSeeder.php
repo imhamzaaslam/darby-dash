@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ProjectTypeSeeder::class,
             ProjectSeeder::class,
             CalendarFilterSeeder::class,
+            StatusSeeder::class,
         ]);
     }
 }
