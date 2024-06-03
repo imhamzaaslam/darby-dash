@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProjectController;
 use App\Http\Controllers\Api\Admin\ProjectListController;
 use App\Http\Controllers\Api\Admin\TaskController;
 use App\Http\Controllers\Api\Admin\CalendarFilterController;
+use App\Http\Controllers\Api\Admin\ProjectProgressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +86,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::post('/order', [TaskController::class, 'updateProjectTasksOrder']);
                     Route::delete('/', [TaskController::class, 'deleteByProject']);
                 });
+                Route::get('/progress', [ProjectProgressController::class, 'index']);
             });
         });
 

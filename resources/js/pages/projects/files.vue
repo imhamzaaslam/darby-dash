@@ -45,7 +45,6 @@
         >
           <img
             src="../../../images/logos/document.png"
-            alt=""
             class="default-image"
           >
           <span class="file-type">.{{ image.name.split('.').pop().toLowerCase() }}</span>
@@ -64,18 +63,25 @@
           />
           <span class="progress-text">{{ uploadProgress[index].progress }}%</span>
         </div>
-        <div v-else>
-          <small>2 secs ago</small>
+        <div
+          v-else
+          class="d-flex align-center justify-space-between">
+          <span class="text-sm">2 secs ago</span>
+          <div class="d-flex align-center">
+            <VIcon
+              class="tabler-download"
+              size="small"
+              color="primary"
+              @click.stop="downloadFile(image)"
+            />
+            <VIcon
+              class="tabler-trash-filled ml-1"
+              size="small"
+              color="error"
+              @click.stop="deleteImage(index)"
+            />
+          </div>
         </div>
-        <span
-          class="delete-icon"
-          @click.stop="deleteImage(index)"
-        >
-          <VIcon
-            class="tabler-square-x-filled"
-            size="large"
-          />
-        </span>
       </div>
     </VCol>
     <VCol
@@ -84,7 +90,7 @@
       class="d-flex flex-column align-center justify-center text-center" 
     >
       <span v-html="emptyFileImg" />
-      <span class="mt-n6">No Files added yet.</span>
+      <span class="mt-n11">No Files added yet.</span>
     </VCol>
   </VRow>
 
@@ -173,6 +179,14 @@ const openFileViewer = file => {
   isViewerOpen.value = true
 }
 
+const downloadFile = file => {
+  const link = document.createElement('a')
+
+  link.href = file.url
+  link.download = file.name
+  link.click()
+}
+
 const deleteImage = index => {
   images.value.splice(index, 1)
   uploadProgress.value.splice(index, 1)
@@ -180,9 +194,21 @@ const deleteImage = index => {
 </script>
 
 <style scoped>
+/* .image-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.image-col {
+  flex: 1 1 20%; 
+  max-width: 20%;
+  box-sizing: border-box;
+  padding: 8px; 
+} */
+
 .image-container {
   position: relative;
-  border: 2px solid rgb(243 140 39);
+  border: 2px solid #F48D27;
   border-radius: 10px;
   padding: 5px;
   margin-bottom: 10px; /* Reduced margin */
@@ -245,7 +271,7 @@ const deleteImage = index => {
 
 .progress-bar {
   height: 100%;
-  background-color: #f48d27;
+  background-color: #F48D27;
   transition: width 0.6s ease;
   position: relative;
 }
@@ -255,19 +281,8 @@ const deleteImage = index => {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  color: white;
+  color: black ;
   font-size: 10px; 
   font-weight: bold;
-}
-
-.delete-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(45%, -53%);
-  cursor: pointer;
-  color: red;
-  border-radius: 50%;
-  padding: 5px;
 }
 </style>

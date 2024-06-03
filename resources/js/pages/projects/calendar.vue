@@ -4,81 +4,6 @@
       <!-- `z-index: 0` Allows overlapping vertical nav on calendar -->
       <VLayout style="z-index: 0;">
         <!-- 👉 Navigation drawer -->
-        <VNavigationDrawer
-          v-model="isLeftSidebarOpen"
-          width="292"
-          absolute
-          touchless
-          location="start"
-          class="calendar-add-event-drawer"
-          :temporary="$vuetify.display.mdAndDown"
-        >
-          <div style="margin: 1.4rem;">
-            <VBtn
-              block
-              prepend-icon="tabler-plus"
-              @click="isEventHandlerSidebarActive = true"
-            >
-              Add event
-            </VBtn>
-          </div>
-
-          <VDivider />
-
-          <div class="d-flex align-center justify-center pa-2 mb-3">
-            <AppDateTimePicker
-              :model-value="new Date().toJSON().slice(0, 10)"
-              :config="{ inline: true }"
-              class="calendar-date-picker"
-              @input="jumpToDate($event.target.value)"
-            />
-          </div>
-
-          <VDivider />
-          <div class="pa-7 calendar-filters">
-            <!-- <p class="text-sm text-uppercase text-disabled mb-3">
-              Events FILTER
-            </p>
-
-            <div class="d-flex flex-column calendars-checkbox">
-              <VCheckbox
-                v-model="checkAll"
-                label="View all"
-              />
-              <VCheckbox
-                v-for="calendar in store.availableCalendars"
-                :key="calendar.label"
-                v-model="store.selectedCalendars"
-                :value="calendar.label"
-                :color="calendar.color"
-                :label="calendar.label"
-              />
-            </div> -->
-
-            <p class="text-sm text-uppercase text-disabled mb-3">
-              Tasks FILTER
-            </p>
-
-            <div class="d-flex flex-column calendars-checkbox">
-              <VCheckbox
-                v-model="allTaskSelected"
-                label="View all"
-                @change="toggleAllTasks"
-              />
-              <VCheckbox
-                v-for="filter in taskFilters"
-                :key="filter.label"
-                v-model="selectedTaskType"
-                :value="filter.value"
-                :color="filter.color"
-                :label="filter.label"
-                :checked="filter.selected"
-              />
-            </div>
-          </div>
-          <VDivider />
-        </VNavigationDrawer>
-
         <VMain>
           <VCard flat>
             <FullCalendar
@@ -138,8 +63,8 @@ const allTaskSelected = ref(true)
 const selectedTaskType = ref(['Todo', 'In_progress', 'Done'])
 
 // use before mounted functiona nd set events option in calendarOptions
-onBeforeMount(() => {
-  fetchProjectTasks()
+onBeforeMount(async () => {
+  await fetchProjectTasks()
   setCalendarEvents(projectTaskStore.getProjectAllTasks)
 })
 
@@ -154,34 +79,30 @@ const fetchProjectTasks = async () => {
 }
 
 const setCalendarEvents = projectTasks => {
-  console.log('setCalendarEvents', projectTasks)
   calendarOptions.events = projectTasks.map(task => ({
     id: task.id,
     title: task.name,
-    start: task.created_at,
-    end: task.due_date || task.created_at,
+    start: task.due_date ? task.due_date : task.created_at,
     extendedProps: {
       calendar: 'Business',
     },
   }))
+
+  // Trigger a re-render
+  if (refCalendar.value) {
+    const calendarApi = refCalendar.value.getApi()
+
+    calendarApi.removeAllEvents()
+    calendarApi.addEventSource(calendarOptions.events)
+  }
 }
 
 const updateCalendarEvents = () => {
-  // get selectedTaskType values as array
   const selectedTaskTypes = toRaw(selectedTaskType.value)
-
-  console.log('selectedTaskTypes', selectedTaskTypes)
-
   const projectTasks = projectTaskStore.getProjectAllTasks
-
-  console.log('projectTasks', projectTasks)
-
   const filteredTasks = projectTasks.filter(task => selectedTaskTypes.includes(task.status))
-
-  console.log('filteredTasks', filteredTasks)
-
+  
   setCalendarEvents(filteredTasks)
-  refetchEvents()
 }
 
 const taskFilters = [

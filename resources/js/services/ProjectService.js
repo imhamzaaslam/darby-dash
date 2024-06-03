@@ -27,4 +27,7 @@ export default {
   deleteProject(id) {
     return apiClient.delete(`admin/projects/${id}`)
   },
+  getProgress(uuid) {
+    return apiClient.get(`admin/projects/${uuid}/progress`)
+  },
 }

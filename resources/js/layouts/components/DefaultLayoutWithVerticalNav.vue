@@ -109,10 +109,12 @@ const showNavigation = computed(() => {
             href="#"
             class="text-h6 me-8 inner-badge-text"
           >Project Scope</a>
-          <a
-            href="#"
+          <RouterLink
+            :to="`/projects/${projectId}/milestones`"
             class="text-h6 me-8 inner-badge-text"
-          >Milestones</a>
+          >
+            Milestones
+          </RouterLink>
           <RouterLink :to="`/projects/${projectId}/calendar`">
             <span
               class="text-h6 me-8 inner-badge-text"
