@@ -167,6 +167,12 @@
                     @click="deleteProjectList(list)"
                   >
                     <VIcon icon="tabler-trash" />
+                    <VTooltip
+                      activator="parent"
+                      location="top"
+                    >
+                      <span class="text-xs">Delete List</span>
+                    </VTooltip>
                   </VBtn>
                 </div>
               </VCol>
@@ -204,28 +210,49 @@
                         @click.stop="toggleSubtasks(item.id)"
                       >
                         <VIcon
-                          class="tabler-subtask ms-1"
                           size="small"
-                        />
+                          color="primary"
+                          class="ms-1 tabler-subtask"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span class="text-xs">{{ item.subtasks.length }} Subtasks</span>
+                          </VTooltip>
+                        </VIcon>
                         <span>{{ item.subtasks.length }}</span>
                       </span>
-                      <VBtn
+                      <VIcon
                         :color="showAddSubtaskIcon === item.uuid ? 'primary' : 'white'"
                         variant="text"
                         rounded
-                        class="ms-1"
-                        icon="tabler-plus"
-                        size="x-small"
+                        class="ms-2 tabler-plus"
+                        size="small"
                         @click.stop="activateQuickSubTask(item.id)"
-                      />
-                      <VBtn
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Add Subtask</span>
+                        </VTooltip>
+                      </VIcon>
+                      <VIcon
                         :color="showAddSubtaskIcon === item.uuid ? 'primary' : 'white'"
                         variant="text"
+                        class="tabler-edit"
                         rounded
-                        icon="tabler-edit"
-                        size="x-small"
+                        size="small"
                         @click.stop="startEditing(item)"
-                      />
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Edit Task</span>
+                        </VTooltip>
+                      </VIcon>
                     </td>
                     <td>
                       <VChip
@@ -773,7 +800,7 @@
                           activator="parent"
                           location="top"
                         >
-                          <span class="text-xs">Subtasks</span>
+                          <span class="text-xs">{{ task.subtasks.length }} Subtasks</span>
                         </VTooltip>
                       </VIcon>
                       <span class="text-primary font-weight-bold">{{ task.subtasks.length }}</span>
