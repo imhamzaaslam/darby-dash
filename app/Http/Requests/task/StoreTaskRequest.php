@@ -29,7 +29,6 @@ class StoreTaskRequest extends FormRequest
             'status' => 'sometimes|nullable|in:todo,in_progress,completed',
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
-            'time_spent' => 'sometimes|nullable|integer',
         ];
     }
 }
