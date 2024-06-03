@@ -7,6 +7,7 @@ use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\project\StoreProjectRequest;
+use App\Http\Requests\project\UpdateProjectUsersRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -137,5 +138,23 @@ class ProjectController extends Controller
         $project = $this->projectRepository->getByUuid($uuid);
  
         return UserResource::collection($project->users);
+    }
+
+    /**
+     * Update project users.
+     *
+     * @param UpdateProjectUsersRequest $request
+     * @param string $uuid
+     * @return JsonResponse
+     */
+    public function updateUsers(UpdateProjectUsersRequest $request, string $uuid): JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($uuid);
+
+        $member_ids = $request->member_ids;
+
+        $this->projectRepository->updateProjectMembers($project, $member_ids);
+
+        return response()->json(['message' => 'Members updated successfully']);
     }
 }

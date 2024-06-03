@@ -47,12 +47,6 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
         }
     }
 
-    public function updateProjectMembers(Project $project, array $members): void
-    {
-        ProjectMember::where('project_id', $project->id)->delete();
-        $this->storeProjectMembers($project, $members);
-    }
-
     public function update(Project $project, array $attributes): bool
     {
         return $project->fill($attributes)->save();
@@ -61,5 +55,11 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
     public function delete(Project $project): bool
     {
         return $project->delete();
+    }
+
+    public function updateProjectMembers(Project $project, array $members): void
+    {
+        ProjectMember::where('project_id', $project->id)->delete();
+        $this->storeProjectMembers($project, $members);
     }
 }

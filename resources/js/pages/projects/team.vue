@@ -41,7 +41,7 @@
     </VRow>
 
     <!-- Skeleton Loader -->
-    <div v-if="isMembersLoading == 1">
+    <div v-if="isMembersLoading">
       <VRow
         v-if="viewType === 'list'"
         class="mb-4"
@@ -65,7 +65,7 @@
           :key="member.id"
           cols="12"
         >
-          <VCard class="d-flex ps-4 py-1">
+          <VCard class="d-flex align-center ps-4 py-1">
             <VCol cols="4">
               <div class="d-flex align-center">
                 <VAvatar
@@ -83,30 +83,26 @@
                 </div>
               </div>
             </VCol>
-            <VCol cols="7">
-              <span class="">
+            <VCol cols="4">
+              <VIcon
+                color="primary"
+                icon="tabler-mail"
+              />
+              <span class="ms-2">
                 {{ member.email }}
               </span>
             </VCol>
             <VCol
-              cols="1"
+              cols="4"
               class="ms-8"
             >
-              <IconBtn @click.prevent>
-                <VIcon icon="tabler-dots" />
-                <VMenu activator="parent">
-                  <VList>
-                    <VList>
-                      <VListItem
-                        value="delete"
-                        @click="deleteMember(project)"
-                      >
-                        Delete
-                      </VListItem>
-                    </VList>
-                  </VList>
-                </VMenu>
-              </IconBtn>
+              <VIcon
+                color="primary"
+                icon="tabler-phone"
+              />
+              <span class="ms-2">
+                {{ member?.info.phone }}
+              </span>
             </VCol>
           </VCard>
         </VCol>
@@ -123,27 +119,6 @@
           <VCard>
             <div class="image-container">
               <VImg :src="Page2" />
-              <IconBtn
-                class="dots-icon"
-                @click.prevent
-              >
-                <VIcon
-                  color="white"
-                  icon="tabler-dots-vertical"
-                />
-                <VMenu activator="parent">
-                  <VList>
-                    <VList>
-                      <VListItem
-                        value="delete"
-                        @click="deleteProject(project)"
-                      >
-                        Delete
-                      </VListItem>
-                    </VList>
-                  </VList>
-                </VMenu>
-              </IconBtn>
             </div>
             <VCardText class="position-relative d-flex align-center">
               <VAvatar
@@ -165,6 +140,13 @@
                     icon="tabler-mail"
                   />
                   <span class="ms-1 text-sm">{{ member.email }}</span>
+                </div>
+                <div class="d-flex align-center mt-2">
+                  <VIcon
+                    color="primary"
+                    icon="tabler-phone"
+                  />
+                  <span class="ms-1 text-sm">{{ member?.info.phone }}</span>
                 </div>
               </div>
             </VCardText>
@@ -189,7 +171,7 @@
       >
         <VCardText>
           <AppAutocomplete
-            v-model="project.member_ids"
+            v-model="selectedMembers"
             :items="getMembers"
             item-title="name"
             item-value="id"
@@ -198,21 +180,33 @@
             multiple
             clearable
             clear-icon="tabler-x"
+            :rules="[requiredValidator]"
           />
         </VCardText>
 
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
+            type="submit"
+            :disabled="getProjectLoadStatus === 1"
+            @click="addMemberForm?.validate()"
+          >
+            <span v-if="getProjectLoadStatus === 1">
+              <VProgressCircular
+                :size="16"
+                width="3"
+                indeterminate
+              />
+              Loading...
+            </span>
+            <span v-else>
+              Save
+            </span>
+          </VBtn>
+          <VBtn
             color="secondary"
             @click="isAddMemberDialogueOpen = false"
           >
             Cancel
-          </VBtn>
-          <VBtn
-            type="submit"
-            @click="addMemberForm?.validate()"
-          >
-            Add
           </VBtn>
         </VCardText>
       </VForm>
@@ -238,72 +232,42 @@ const userStore = useUserStore()
 const roleStore = useRoleStore()
 const router = useRoute()
 
-const viewType = ref('list')
+const viewType = ref('grid')
 const addMemberForm = ref()
 const isAddMemberDialogueOpen = ref(false)
 const isLoading = ref(false)
 const isMembersLoading = ref(false)
+const selectedMembers = ref([])
 
 const projectId = computed(() => router.params.id)
 
 onBeforeMount(async () => {
   await fetchProject()
   await fetchMembers()
+  await setSelectedMembers()
 })
 
 async function submitAddMemberForm() {
   addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-
         const payload = {
-          id: project.id,
-          uuid: project.uuid,
-          member_ids: project.member_ids,
+          uuid: projectId.value,
+          member_ids: selectedMembers.value,
         }
 
-        await projectStore.update(payload)
+        await projectStore.updateMember(payload)
 
         isAddMemberDialogueOpen.value = false
         toast.success('Member added successfully', { timeout: 1000 })
-        await fetchMembers()
-        await fetchProject()
+
+        await getByProjects()
       } catch (error) {
         console.error('Error adding member:', error)
         toast.error('Failed to add member:', error.message || error)
       }
     }
   })
-}
-
-const deleteMember = async member => {
-  try {
-    const confirmDelete = await Swal.fire({
-      title: "Are you sure?",
-      text: `Do you want to delete ?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    })
-
-    if (confirmDelete.isConfirmed) {
-      await userStore.delete(member.uuid)
-      if(getErrors.value)
-      {
-        toast.error('Something went wrong. Please try again later.')
-      }
-      else{
-        isLoading.value = true
-        toast.success('Member deleted successfully', { timeout: 1000 })
-        await fetchMembers()
-        isLoading.value = false
-      }
-    }
-  } catch (error) {
-    toast.error('Failed to delete member:', error.message || error)
-  }
 }
 
 const fetchMembers = async () => {
@@ -333,6 +297,28 @@ const fetchProject = async () => {
   }
 }
 
+const setSelectedMembers = async () => {
+  // v-model="project.member_ids"
+
+  const project = projectStore.getProject
+  const members = project.member_ids
+
+  // set in selectedMembers
+  selectedMembers.value = members
+}
+
+const getByProjects = async () => {
+  try {
+    await userStore.getByProjects(projectId.value)
+    isMembersLoading.value = true
+  } catch (error) {
+    toast.error('Error fetching members:', error)
+  }
+  finally {
+    isMembersLoading.value = false
+  }
+}
+
 const getMembers = computed(() => {
   return userStore.getMembersList
 })
@@ -351,6 +337,10 @@ const getErrors = computed(() => {
 
 const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
+})
+
+const getProjectLoadStatus = computed(() => {
+  return projectStore.getLoadStatus
 })
 </script>
 

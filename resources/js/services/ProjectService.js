@@ -30,4 +30,7 @@ export default {
   getProgress(uuid) {
     return apiClient.get(`admin/projects/${uuid}/progress`)
   },
+  updateMember(project) {
+    return apiClient.patch(`admin/projects/${project.uuid}/users`, project)
+  },
 }
