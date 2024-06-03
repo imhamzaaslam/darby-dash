@@ -188,11 +188,13 @@
                 <template #item="{ item }">
                   <tr
                     :class="{ 'bg-td-hover': showAddSubtaskIcon === item.uuid }"
-                    @click="startEditing(item)"
                     @mouseenter="showAddSubtaskIcon = item.uuid"
                     @mouseleave="showAddSubtaskIcon = null"
                   >
-                    <td>
+                    <td
+                      class="cursor-pointer"
+                      @click="startEditing(item)"
+                    >
                       <VIcon
                         v-if="item.subtasks && item.subtasks.length"
                         :icon="isExpandedSubTasks[item.id] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
@@ -255,21 +257,66 @@
                       </VIcon>
                     </td>
                     <td>
-                      <VChip
-                        color="secondary"
-                        size="small"
+                      <VMenu
+                        v-model="statusMenu[item.id]"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
                       >
-                        {{ item.status }}
-                      </VChip>
+                        <template #activator="{ props }">
+                          <VChip
+                            :color="getStatusColor(item.status)"
+                            size="small"
+                            v-bind="props"
+                            class="cursor-pointer"
+                          >
+                            {{ item.status }}
+                          </VChip>
+                        </template>
+                        <VList>
+                          <VListItem
+                            v-for="status in statuses"
+                            :key="status.text"
+                            @click="updateStatus(item, status.text)"
+                          >
+                            <VListItemContent>
+                              <VListItemTitle :class="`text-${status.color}`">
+                                {{ status.text }}
+                              </VListItemTitle>
+                            </VListItemContent>
+                          </VListItem>
+                        </VList>
+                      </VMenu>
                     </td>
                     <td>
-                      <VChip
-                        v-if="item.due_date"
-                        color="error"
-                        size="small"
+                      <VMenu
+                        v-model="dueDateMenu[item.id]"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
                       >
-                        {{ formatDate(item.due_date) }}
-                      </VChip>
+                        <template #activator="{ props }">
+                          <VChip
+                            class="cursor-pointer"
+                            :color="item.due_date ? 'error' : 'primary'"
+                            size="small"
+                            v-bind="props"
+                          >
+                            <VIcon
+                              icon="tabler-calendar"
+                              class="me-1"
+                              left
+                            />
+                            <span v-if="item.due_date">{{ formatDate(item.due_date) }}</span>
+                            <span v-else><small>Set Due Date</small></span>
+                          </VChip>
+                        </template>
+                        <VDatePicker
+                          v-model="item.due_date"
+                          :config="{ dateFormat: 'F j, Y' }"
+                          @update:model-value="closeDueDateMenu(item.id)"
+                        />
+                      </VMenu>
                     </td>
                     <td>
                       <VChip
@@ -1139,6 +1186,14 @@ const showAddKanbanListTaskInput = ref(null)
 const kanbanListTaskName = ref(null)
 const kanbanListTaskInputRef = ref([])
 const isDragging = ref(false)
+const statusMenu = ref([])
+const dueDateMenu = ref([])
+
+const statuses = ref([
+  { text: 'To Do', color: 'secondary' },
+  { text: 'In Progress', color: 'warning' },
+  { text: 'Complete', color: 'success' },
+])
 
 const isLoading = ref(false)
 
@@ -1633,6 +1688,21 @@ function onDragStart() {
 
 function onDragEnd() {
   isDragging.value = false
+}
+
+function updateStatus(item, status) {
+  item.status = status
+  statusMenu.value[item.id] = false
+}
+
+const getStatusColor = status => {
+  const statusObj = statuses.value.find(s => s.text === status)
+
+  return statusObj ? statusObj.color : 'secondary'
+}
+
+const closeDueDateMenu = id => {
+  dueDateMenu.value[id] = false
 }
 </script>
 

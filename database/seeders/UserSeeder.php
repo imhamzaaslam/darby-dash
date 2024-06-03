@@ -75,7 +75,7 @@ class UserSeeder extends Seeder
             'uuid'              => $faker->uuid,
             'name_first'        => 'Umer',
             'name_last'         => 'Khan',
-            'email'             => 'developer',
+            'email'             => 'umer@gmail.com',
             'password'          => Hash::make('password'),
             'email_verified_at' => now(),
             'state'             => 'active',

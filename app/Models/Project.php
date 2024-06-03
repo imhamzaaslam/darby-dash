@@ -41,7 +41,7 @@ class Project extends Base
 
     public function lists()
     {
-        return $this->hasMany(ProjectList::class);
+        return $this->hasMany(ProjectList::class)->orderBy('id','DESC');
     }
 
     public function tasks()
