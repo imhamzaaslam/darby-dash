@@ -4,17 +4,12 @@ import { useAuthStore } from '@/store/auth'
 import adminAuthorizedPages from './adminAuthorizedPages'
 import WebDesignsList from '../../../js/pages/projects/web-designs/index.vue'
 import WebDesign from '../../../js/pages/projects/web-designs/_partials/id.vue'
-import SeoProgramsList from '../../../js/pages/projects/seo-programs/index.vue'
-import SeoProgram from '../../../js/pages/projects/seo-programs/_partials/id.vue'
-import GoogleAdsProgramsList from '../../../js/pages/projects/google-ads-programs/index.vue'
-import GoogleAdsProgram from '../../../js/pages/projects/google-ads-programs/_partials/id.vue'
 import Team from '../../../js/pages/projects/team.vue'
 import MileStones from '../../../js/pages/projects/milestones.vue'
 import TeamList from '../../../js/pages/teams/index.vue'
 import Calendar from '../../../js/pages/projects/calendar.vue'
 import Files from '../../../js/pages/projects/files.vue'
 import Chat from '../../../js/pages/projects/chat.vue'
-import Tasks from '../../../js/pages/projects/tasks.vue'
 import AddProjectTasks from '../../pages/projects/web-designs/_partials/addProjectTasks.vue'
 
 function recursiveLayouts(route) {
@@ -60,40 +55,6 @@ const router = createRouter({
         path: '/projects/web-designs/:id',
         name: 'web-design',
         component: WebDesign,
-        meta: { layout: 'default' },
-        props: true,
-      },
-    ),
-    recursiveLayouts(
-      {
-        path: '/projects/seo-programs',
-        name: 'seo-programs-list',
-        component: SeoProgramsList,
-        meta: { layout: 'default' },
-      },
-    ),
-    recursiveLayouts(
-      {
-        path: '/projects/seo-programs/:id',
-        name: 'seo-program',
-        component: SeoProgram,
-        meta: { layout: 'default' },
-        props: true,
-      },
-    ),
-    recursiveLayouts(
-      {
-        path: '/projects/google-ads-programs',
-        name: 'google-ads-programs',
-        component: GoogleAdsProgramsList,
-        meta: { layout: 'default' },
-      },
-    ),
-    recursiveLayouts(
-      {
-        path: '/projects/google-ads-programs/:id',
-        name: 'google-ads-program',
-        component: GoogleAdsProgram,
         meta: { layout: 'default' },
         props: true,
       },
@@ -148,15 +109,6 @@ const router = createRouter({
         path: '/projects/:id/tasks/add',
         name: 'add-project-tasks',
         component: AddProjectTasks,
-        meta: { layout: 'default' },
-        props: true,
-      },
-    ),
-    recursiveLayouts(
-      {
-        path: '/projects/:id/tasks',
-        name: 'tasks',
-        component: Tasks,
         meta: { layout: 'default' },
         props: true,
       },
