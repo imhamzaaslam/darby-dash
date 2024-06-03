@@ -23,7 +23,6 @@ class Task extends Base
         'display_order',
         'start_date',
         'due_date',
-        'time_spent',
     ];
 
     protected $casts = [
