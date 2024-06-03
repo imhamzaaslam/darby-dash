@@ -105,10 +105,6 @@ const showNavigation = computed(() => {
               -->
             </span>
           </RouterLink>
-          <a
-            href="#"
-            class="text-h6 me-8 inner-badge-text"
-          >Project Scope</a>
           <RouterLink
             :to="`/projects/${projectId}/milestones`"
             class="text-h6 me-8 inner-badge-text"
