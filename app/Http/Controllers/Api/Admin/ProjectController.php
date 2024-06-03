@@ -65,7 +65,7 @@ class ProjectController extends Controller
             $this->projectRepository->storeProjectMembers($project, $member_ids);
         }
 
-        $this->projectRepository->createProjectBoards($project);
+        $this->projectRepository->createBacklogList($project);
 
         return (new ProjectResource($project))
             ->response()

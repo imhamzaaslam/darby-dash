@@ -31,12 +31,10 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
         $project->members()->sync($members);
     }
 
-    public function createProjectBoards(Project $project): void
+    public function createBacklogList(Project $project): void
     {
         $lists = [
-            ['name' => 'To Do', 'display_order' => 1],
-            ['name' => 'In Progress', 'display_order' => 2],
-            ['name' => 'Done', 'display_order' => 3],
+            ['name' => 'Backlog', 'display_order' => 1],
         ];
 
         foreach ($lists as $list) {
@@ -44,7 +42,7 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
                 'project_id' => $project->id,
                 'name' => $list['name'],
                 'display_order' => $list['display_order'],
-                'is_deletable' => 1
+                'is_deletable' => 0
             ]);
         }
     }

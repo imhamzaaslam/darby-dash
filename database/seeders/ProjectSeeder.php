@@ -16,9 +16,7 @@ class ProjectSeeder extends Seeder
     public function run(): void
     {
         $lists = [
-            ['name' => 'To Do', 'initial_name' => 'todo', 'display_order' => 1],
-            ['name' => 'In Progress', 'initial_name' => 'in_progress', 'display_order' => 2],
-            ['name' => 'Completed', 'initial_name' => 'completed', 'display_order' => 3],
+            ['name' => 'Backlog', 'display_order' => 1],
         ];
         $project_manager_id = 2;
         $firstProject = Project::create([
