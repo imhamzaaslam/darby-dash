@@ -109,28 +109,50 @@
           >
             <VRow>
               <VCol cols="6">
-                <h6 class="text-h6 text-high-emphasize">
+                <h6 class="text-h6 text-high-emphasis d-flex align-center">
                   <VIcon
                     color="primary"
                     :icon="expandedRows[index] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
+                    class="me-2"
                     @click="toggleRow(index)"
                   />
-                  <span
-                    class="mt-2 cursor-pointer"
-                    @click="toggleRow(index)"
+                  <div
+                    class="d-flex align-center"
+                    style="flex-grow: 1;"
                   >
-                    {{ list.name }} ({{ list.tasks.length }})
-                  </span>
-                  <VBtn
-                    v-if="!showAddListTaskField[index]"
-                    color="primary"
-                    variant="plain"
-                    size="small"
-                    @click="activateQuickListTask(index)"
-                  >
-                    <VIcon icon="tabler-plus" />
-                    Add Task
-                  </VBtn>
+                    <span
+                      v-if="isListEditing[list.id] && list.is_deletable"
+                      class="d-flex align-center"
+                      style="flex-grow: 1;"
+                    >
+                      <VTextField
+                        :ref="el => editListTitleInput[list.id] = el"
+                        v-model="editListTitle"
+                        class="text-white text-h6 pt-0"
+                        density="compact"
+                        variant="plain"
+                        @blur="saveListTitle(list)"
+                        @keyup.enter="cancelStateChangeListField(list)"
+                      />
+                    </span>
+                    <span
+                      v-else
+                      class="cursor-pointer d-flex align-center"
+                      @click="startListEditing(list)"
+                    >
+                      {{ list.name }} ({{ list.tasks.length }})
+                    </span>
+                    <VBtn
+                      v-if="!showAddListTaskField[index]"
+                      color="primary"
+                      variant="plain"
+                      size="small"
+                      @click="activateQuickListTask(index)"
+                    >
+                      <VIcon icon="tabler-plus" />
+                      Add Task
+                    </VBtn>
+                  </div>
                 </h6>
               </VCol>
               <VCol
