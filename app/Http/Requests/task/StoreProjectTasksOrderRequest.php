@@ -23,8 +23,7 @@ class StoreProjectTasksOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'list_id' => 'required|exists:project_lists,id',
-            'list_tasks' => 'required|array'
+            'status_id' => 'required|exists:tasks,status',
         ];
     }
 }

@@ -776,7 +776,7 @@
               @end="onDragEnd"
             >
               <div
-                v-for="(task) in list.tasks.filter((task) => task.status == status.id)"
+                v-for="(task) in list.tasks.filter((task) => task.status.id == status.id)"
                 :key="task.id"
               >
                 <VCard
@@ -973,7 +973,7 @@
                         class="kanban-input"
                         variant="plan"
                         placeholder="Subtask Name"
-                        @keyup.enter="saveKanbanSubTask(list.uuid, task.id)"
+                        @keyup.enter="saveKanbanSubTask(list.uuid, task.id, status.id)"
                       />
                     </div>
                     <div class="float-right px-3 mb-2">
@@ -993,7 +993,7 @@
                       <VIcon
                         color="success"
                         class="tabler-check me-1"
-                        @click="saveKanbanSubTask(list.uuid, task.id)"
+                        @click="saveKanbanSubTask(list.uuid, task.id, status.id)"
                       >
                         <VTooltip
                           activator="parent"
@@ -1033,7 +1033,7 @@
                     class="kanban-input"
                     variant="plan"
                     placeholder="Task Name"
-                    @keyup.enter="saveKanbanListTask(status)"
+                    @keyup.enter="saveKanbanListTask(list, status.id)"
                   />
                 </div>
                 <div class="float-right px-3 mb-2">
@@ -1053,7 +1053,7 @@
                   <VIcon
                     color="success"
                     class="tabler-check me-1"
-                    @click="saveKanbanListTask(status)"
+                    @click="saveKanbanListTask(list, status.id)"
                   >
                     <VTooltip
                       activator="parent"
@@ -1186,17 +1186,18 @@ onMounted(() => {
   }
 
   const savedType = searchParams.get('type')
-  if (savedType && getProjectLists.value.filter(list => list.uuid).includes(savedViewType)) {
+  if (savedType && getProjectLists.value.some(list => list.uuid === savedType)) {
     selectedList.value = savedType
   }
 })
 
-watch(viewType, newValue => {
-  router.push({ query: { view: newValue } })
-})
-
-watch(selectedList, newValue => {
-  router.push({ query: { type: newValue } })
+watch([viewType, selectedList], ([newViewType, newSelectedList]) => {
+  router.push({
+    query: {
+      view: newViewType,
+      type: newSelectedList,
+    },
+  })
 })
 
 const fetchProjectDetails = async () => {
@@ -1397,7 +1398,7 @@ async function addQuickSubTask(list_uuid, index) {
   }
 }
 
-async function saveKanbanSubTask(list_uuid, index) {
+async function saveKanbanSubTask(list_uuid, index, status) {
   const taskName = quickKanbanSubTaskName.value
 
   if (taskName.trim() === '') {
@@ -1414,6 +1415,7 @@ async function saveKanbanSubTask(list_uuid, index) {
       due_date: dueDate.value,
       list_uuid: list_uuid,
       parent_id: index,
+      status: status,
     }
 
     await listTaskStore.create(newTaskListDetails)
@@ -1426,7 +1428,7 @@ async function saveKanbanSubTask(list_uuid, index) {
   }
 }
 
-async function saveKanbanListTask(list) {
+async function saveKanbanListTask(list, status) {
   const taskName = kanbanListTaskName.value
 
   if (taskName.trim() === '') {
@@ -1442,6 +1444,7 @@ async function saveKanbanListTask(list) {
       name: taskName.trim(),
       due_date: dueDate.value,
       list_uuid: list.uuid,
+      status: status,
     }
 
     await listTaskStore.create(newTaskListDetails)
@@ -1616,7 +1619,7 @@ function cancelStateChangeListField(list)
   isListEditing.value[list.id] = false
 }
 
-const onDrop = (targetListId, event) => {
+const onDrop = (statusId, event) => {
   const taskToMove = event.added ? event.added.element : event.removed.element
   if (!taskToMove) {
     toast.error('Task to move is undefined')
@@ -1624,36 +1627,13 @@ const onDrop = (targetListId, event) => {
     return
   }
 
-  const sourceList = getProjectLists.value.find(list => list.tasks.some(task => task.uuid === taskToMove.uuid))
-  if (!sourceList) {
-    toast.error('Source list not found')
-
-    return
-  }
-
-  const targetList = getProjectLists.value.find(list => list.id === targetListId)
-  if (!targetList) {
-    toast.error('Target list not found')
-
-    return
-  }
-  if (sourceList.id === targetListId) {
+  if(event.added )
+  {
     const taskUpdateData = {
-      list_id: targetList.id,
-      list_tasks: targetList.tasks,
       uuid: taskToMove.uuid,
       name: taskToMove.name,
       project_uuid: projectId.value,
-    }
-
-    updateTaskOrder(taskUpdateData)
-  }else{
-    const taskUpdateData = {
-      list_id: targetList.id,
-      list_tasks: targetList.tasks[0],
-      uuid: targetList.tasks[0].uuid,
-      name: targetList.tasks[0].name,
-      project_uuid: projectId.value,
+      status_id: statusId,
     }
 
     updateTaskOrder(taskUpdateData)
@@ -1668,6 +1648,7 @@ const updateTaskOrder = async taskUpdateData => {
     toast.error('Failed to update order')
   }
 }
+
 
 const expandedRows = ref([])
 
