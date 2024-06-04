@@ -22,7 +22,10 @@
             cols="3"
             style="flex: 0 0 auto; max-width: 33.333333%;"
           >
-            <VCard class="logistics-card-statistics cursor-pointer p-0">
+            <VCard 
+              class="logistics-card-statistics cursor-pointer p-0"
+              @click="() => $router.push(`/projects/${projectUuid}/tasks/add`)"
+            >
               <VCardText style="padding: 20px !important;">
                 <div class="mb-2 text-center">
                   <h5 class="text-h6 mb-3 font-weight-medium">
@@ -70,10 +73,34 @@
               </VCardText>
             </VCard>
           </VCol>
+          <!-- // check if projectProgress.lists is less then 3 then add empty card in 3 card column if length is 1 then show empty card on 2nd and 3rd card column if length is 2 then show empty card on 3rd card column -->
+          <VCol
+            v-if="projectProgress.lists.length < 3"
+            :cols="projectProgress.lists.length == 1 ? 6 : 3"
+            :style="`flex: 0 0 auto; max-width: ${projectProgress.lists.length == 1 ? '65%' : '33.333333%'};`"
+          >
+            <!-- // show a beautiful beautiful card with text that your Other List appear here -->
+            <VCard
+              class="logistics-card-statistics cursor-pointer p-0"
+              outlined
+            >
+              <VCardText class="text-center py-5 px-3">
+                <div class="mb-6">
+                  <h5
+                    class="text-h5 mb-4 font-weight-medium"
+                    style="color: #616161;"
+                  >
+                    Other List Appear Here
+                  </h5>
+                  <!-- Insert your beautiful SVG here -->
+                  <span v-html="otherListImg" />
+                </div>
+              </VCardText>
+            </VCard>
+          </VCol>
         </VRow>
       </div>
     </VCol>
-
 
     <VCol cols="3">
       <VCard class="logistics-card-statistics cursor-pointer p-1">
@@ -426,6 +453,7 @@
 <script setup lang="js">
 import avatar1 from '@images/avatars/avatar-1.png'
 import girlWithLaptop from '@images/illustrations/PM.png'
+import otherListImg from '@images/darby/other_list.svg?raw'
 import { useProjectStore } from "@/store/projects"
 import { useRoute } from 'vue-router'
 
