@@ -68,7 +68,7 @@ class ProjectProgressService
     public function getOverallProgress(Project $project): float
     {
         $totalTasks = $project->tasks->whereNull('parent_id')->count();
-        $completedTasks = $project->tasks->where('status', 3)->count();
+        $completedTasks = $project->tasks->where('status', 3)->whereNull('parent_id')->count();
         return $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
     }
 }

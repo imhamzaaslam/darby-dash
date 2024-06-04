@@ -370,12 +370,36 @@
                         <span class="text-grey-600">{{ subtask.name.length > 50 ? subtask.name.substring(0, 50) + '...' : subtask.name }}</span>
                       </td>
                       <td>
-                        <VChip
-                          color="secondary"
-                          size="small"
+                        <VMenu
+                          v-model="statusMenu[subtask.id]"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
                         >
-                          {{ subtask.status.name }}
-                        </VChip>
+                          <template #activator="{ props }">
+                            <VChip
+                              :color="getStatusColor(subtask.status)"
+                              size="small"
+                              v-bind="props"
+                              class="cursor-pointer"
+                            >
+                              {{ subtask.status.name }}
+                            </VChip>
+                          </template>
+                          <VList>
+                            <VListItem
+                              v-for="status in getStatuses"
+                              :key="status.name"
+                              @click="updateStatus(subtask, status)"
+                            >
+                              <VListItemContent>
+                                <VListItemTitle :class="`text-${status.color}`">
+                                  {{ status.name }}
+                                </VListItemTitle>
+                              </VListItemContent>
+                            </VListItem>
+                          </VList>
+                        </VMenu>
                       </td>
                       <td>
                         <VChip
