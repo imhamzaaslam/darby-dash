@@ -402,13 +402,34 @@
                         </VMenu>
                       </td>
                       <td>
-                        <VChip
-                          v-if="subtask.due_date"
-                          color="error"
-                          size="small"
+                        <VMenu
+                          v-model="dueDateMenu[subtask.id]"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
                         >
-                          {{ formatDate(subtask.due_date) }}
-                        </VChip>
+                          <template #activator="{ props }">
+                            <VChip
+                              class="cursor-pointer"
+                              :color="subtask.due_date ? 'error' : 'primary'"
+                              size="small"
+                              v-bind="props"
+                            >
+                              <VIcon
+                                icon="tabler-calendar"
+                                class="me-1"
+                                left
+                              />
+                              <span v-if="subtask.due_date">{{ formatDate(subtask.due_date) }}</span>
+                              <span v-else><small>Set Due Date</small></span>
+                            </VChip>
+                          </template>
+                          <VDatePicker
+                            v-model="dueDate"
+                            :config="{ dateFormat: 'F j, Y' }"
+                            @update:model-value="closeDueDateMenu(subtask)"
+                          />
+                        </VMenu>
                       </td>
                       <td>
                         <VChip
