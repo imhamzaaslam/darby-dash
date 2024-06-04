@@ -15,7 +15,7 @@ export const useStatusStore = defineStore('statuses', {
       try {
         const response = await StatusService.getStatuses()
 
-        this.statuses = response.data.data.map(status => ({ id: status.uuid, name: status.name }))
+        this.statuses = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
