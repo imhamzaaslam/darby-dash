@@ -1692,7 +1692,7 @@ function updateStatus(item, status) {
 }
 
 const getStatusColor = status => {
-  const statusObj = statuses.value.find(s => s.text === status)
+  const statusObj = getStatuses.value.find(s => s.uuid === status.uuid)
 
   return statusObj ? statusObj.color : 'secondary'
 }
