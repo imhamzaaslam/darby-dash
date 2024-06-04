@@ -317,9 +317,9 @@
                           </VChip>
                         </template>
                         <VDatePicker
-                          v-model="item.due_date"
+                          v-model="dueDate"
                           :config="{ dateFormat: 'F j, Y' }"
-                          @update:model-value="closeDueDateMenu(item.id)"
+                          @update:model-value="closeDueDateMenu(item)"
                         />
                       </VMenu>
                     </td>
@@ -1718,8 +1718,24 @@ const getStatusColor = status => {
   return statusObj ? statusObj.color : 'secondary'
 }
 
-const closeDueDateMenu = id => {
-  dueDateMenu.value[id] = false
+const closeDueDateMenu = async item => {
+  try {
+    dueDateMenu.value[item.id] = false
+
+    item.due_date = dueDate.value
+
+    const payload = {
+      due_date: dueDate.value,
+    }
+
+    payload.due_date = moment(payload.due_date).format('YYYY-MM-DD')
+
+    await projectTaskStore.updateAttributes(item.uuid, payload)
+    dueDate.value = ''
+    toast.success('Task status updated successfully', { timeout: 1000 })
+  } catch (error) {
+    toast.error('Failed to update task status:', error)
+  }
 }
 
 const filteredProjectLists = computed(() => {
