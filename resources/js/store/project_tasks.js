@@ -96,6 +96,19 @@ export const useProjectTaskStore = defineStore('project_tasks', {
         console.error('deleteProject error ', error)
       }
     },
+    async updateAttributes(taskUuid, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await ProjectTaskService.updateAttributes(taskUuid, payload)
+        
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updateAttributes error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

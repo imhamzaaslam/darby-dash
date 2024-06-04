@@ -8,6 +8,7 @@ use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\ProjectListRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\task\StoreTaskRequest;
+use App\Http\Requests\task\UpdateTaskRequest;
 use App\Http\Requests\task\StoreTaskByProjectRequest;
 use App\Http\Requests\task\StoreProjectTasksOrderRequest;
 use App\Http\Resources\TaskResource;
@@ -192,5 +193,24 @@ class TaskController extends Controller
         $this->taskRepository->delete($task);
 
         return response()->json(['message' => 'Task deleted successfully']);
+    }
+
+    /**
+     * Update task attributes.
+     *
+     * @param UpdateTaskRequest $request
+     * @param string $taskUuid
+     * @return Response|JsonResponse
+     */
+    public function updateAttributes(UpdateTaskRequest $request, string $taskUuid): Response|JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $validated = $request->validated();
+
+        $this->taskRepository->update($task, $validated);
+
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(200);
     }
 }

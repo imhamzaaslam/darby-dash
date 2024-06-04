@@ -370,12 +370,36 @@
                         <span class="text-grey-600">{{ subtask.name.length > 50 ? subtask.name.substring(0, 50) + '...' : subtask.name }}</span>
                       </td>
                       <td>
-                        <VChip
-                          color="secondary"
-                          size="small"
+                        <VMenu
+                          v-model="statusMenu[subtask.id]"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
                         >
-                          {{ subtask.status.name }}
-                        </VChip>
+                          <template #activator="{ props }">
+                            <VChip
+                              :color="getStatusColor(subtask.status)"
+                              size="small"
+                              v-bind="props"
+                              class="cursor-pointer"
+                            >
+                              {{ subtask.status.name }}
+                            </VChip>
+                          </template>
+                          <VList>
+                            <VListItem
+                              v-for="status in getStatuses"
+                              :key="status.name"
+                              @click="updateStatus(subtask, status)"
+                            >
+                              <VListItemContent>
+                                <VListItemTitle :class="`text-${status.color}`">
+                                  {{ status.name }}
+                                </VListItemTitle>
+                              </VListItemContent>
+                            </VListItem>
+                          </VList>
+                        </VMenu>
                       </td>
                       <td>
                         <VChip
@@ -1667,9 +1691,25 @@ function onDragEnd() {
   isDragging.value = false
 }
 
-function updateStatus(item, status) {
-  item.status = status
-  statusMenu.value[item.id] = false
+const updateStatus = async (item, status) => {
+  try {
+    statusMenu.value[item.id] = false
+
+    if (item.status.id === status.id) {
+      return
+    }
+
+    item.status = status
+
+    const payload = {
+      status: status.id,
+    }
+
+    await projectTaskStore.updateAttributes(item.uuid, payload)
+    toast.success('Task status updated successfully', { timeout: 1000 })
+  } catch (error) {
+    toast.error('Failed to update task status:', error)
+  }
 }
 
 const getStatusColor = status => {
