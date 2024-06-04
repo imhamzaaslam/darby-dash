@@ -44,7 +44,7 @@
                   v-model="props.editingTask.created_at"
                   label="Start Date"
                   placeholder="Select Date"
-                  locale="en-US"
+                  :config="{ dateFormat: 'm/d/Y' }"
                   clearable
                 />
               </VCol>
@@ -53,7 +53,7 @@
                   v-model="props.editingTask.due_date"
                   label="Due Date"
                   placeholder="Select Date"
-                  locale="en-US"
+                  :config="{ dateFormat: 'm/d/Y' }"
                   clearable
                 />
               </VCol>
