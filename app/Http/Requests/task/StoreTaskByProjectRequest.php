@@ -26,7 +26,7 @@ class StoreTaskByProjectRequest extends FormRequest
             'name' => 'required|string|max:255',
             'list_id' => 'sometimes|nullable|exists:project_lists,id',
             'description' => 'sometimes|nullable|string',
-            'status' => 'sometimes|nullable|in:todo,in_progress,completed',
+            'status' => 'sometimes|nullable|exists:statuses,id',
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
         ];

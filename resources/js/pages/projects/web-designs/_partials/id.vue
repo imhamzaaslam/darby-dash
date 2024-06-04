@@ -31,19 +31,43 @@
                   <h5 class="text-h6 mb-3 font-weight-medium">
                     {{ data.name }}
                   </h5>
-
-                  <VProgressCircular
-                    value="0"
-                    size="54"
+                  <VAvatar
+                    v-if="data.status == 'completed'"
+                    color="success"
+                    size="x-large"
                   >
-                    <span class="text-body-1 text-high-emphasis font-weight-medium">
-                      {{ data.totalTasks }}
-                    </span>
-                  </VProgressCircular>
+                    <VIcon
+                      icon="tabler-check"
+                      size="22"
+                    />
+                  </VAvatar>
+                  <VAvatar
+                    v-else-if="data.status == 'inprogress'"
+                    color="warning"
+                    size="x-large"
+                  >
+                    <span class="text-sm">{{ data.progress }}%</span>
+                  </VAvatar>
+                  <VAvatar
+                    v-else-if="data.status == 'pending'"
+                    color="info"
+                    size="x-large"
+                  >
+                    <VIcon
+                      icon="tabler-clock"
+                      size="22"
+                    />
+                  </VAvatar>
                 </div>
                 <div class="text-center text-h6 font-weight-medium">
-                  <small>
-                    {{ data.totalTasks > 0 ? 'Tasks' : 'Task' }}
+                  <small v-if="data.status == 'completed'">
+                    Completed
+                  </small>
+                  <small v-else-if="data.status == 'inprogress'">
+                    Inprogress
+                  </small>
+                  <small v-else>
+                    Pending
                   </small>
                 </div>
               </VCardText>
@@ -134,7 +158,10 @@
       </VCard>
     </VCol>
     <VCol cols="6">
-      <VCard class="pb-5" style="height: 388px;">
+      <VCard
+        class="pb-5"
+        style="height: 388px;"
+      >
         <VCardItem :title="`Your Tasks (${projectProgress.totalTasks})`">
           <template #append>
             <MoreBtn />
@@ -148,12 +175,13 @@
             >
               <template #prepend>
                 <VProgressCircular
-                  value="0"
+                  v-model="data.progress"
                   size="54"
                   class="me-4"
+                  :color="getColor(data.status)"
                 >
                   <span class="text-body-1 text-high-emphasis font-weight-medium">
-                    {{ data.totalTasks }}
+                    {{ data.progress }}%
                   </span>
                 </VProgressCircular>
               </template>
@@ -161,7 +189,7 @@
                 {{ data.name }}
               </VListItemTitle>
 
-              <VListItemSubtitle>{{ data.totalTasks > 0 ? 'Tasks' : 'Task' }}</VListItemSubtitle>
+              <VListItemSubtitle>{{ data.totalTasks }} Tasks</VListItemSubtitle>
               <template #append>
                 <VBtn
                   variant="tonal"
@@ -414,6 +442,16 @@ onBeforeMount(async () => {
 
 const getProjectProgress = async () => {
   await projectStore.getProgress(projectUuid)
+}
+
+const getColor = progress => {
+  if (progress == 'completed') {
+    return 'success'
+  } else if (progress == 'inprogress') {
+    return 'warning'
+  } else {
+    return 'info'
+  }
 }
 
 const projectProgress = computed(() => {

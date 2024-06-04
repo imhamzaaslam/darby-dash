@@ -10,8 +10,8 @@ class ProjectProgressService
     {
         $lists = $project->lists->map(function ($list) {
             $totalTasks = $list->tasks->count();
-            $completedTasks = $list->tasks->where('status', 'done')->count();
-            $progress = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
+            $completedTasks = $list->tasks->where('status', 3)->count();
+            $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
 
             return [
                 'name' => $list->name,
@@ -19,21 +19,21 @@ class ProjectProgressService
                 'progress' => $progress,
                 'status' => $this->getStatus($progress),
             ];
-        });        
+        });
 
         return [
             'lists' => $lists,
             'launchingDays' => $this->getLaunchingDays($project),
             'launchingDate' => $this->getLaunchingDate($project),
             'overallProgress' => $this->getOverallProgress($project),
-            'totalTasks' => $project->tasks->count(),
+            'totalTasks' => $project->tasks->whereNull('parent_id')->count(),
         ];
     }
 
     private function getStatus(float $progress): string
     {
         if ($progress == 100) {
-            return 'done';
+            return 'completed';
         }
         if ($progress == 0) {
             return 'pending';
@@ -67,8 +67,8 @@ class ProjectProgressService
 
     public function getOverallProgress(Project $project): float
     {
-        $totalTasks = $project->tasks->count();
-        $completedTasks = $project->tasks->where('status', 'done')->count();
-        return $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
+        $totalTasks = $project->tasks->whereNull('parent_id')->count();
+        $completedTasks = $project->tasks->where('status', 3)->count();
+        return $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
     }
 }

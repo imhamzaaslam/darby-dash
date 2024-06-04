@@ -18,6 +18,8 @@ class ProjectProgressController extends Controller
         $project = $this->projectRepository->getByUuidOrFail($uuid);
         $progress = (new ProjectProgressService())->getProgress($project);
 
+
+
         return response()->json(['data' => $progress]);
     }
 }
