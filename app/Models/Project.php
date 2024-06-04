@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Base;
+use App\Services\ProjectProgressService;
 use Illuminate\Database\Eloquent\Builder;
 
 class Project extends Base
@@ -52,6 +53,11 @@ class Project extends Base
     public function users()
     {
         return $this->belongsToMany(User::class, 'project_members');
+    }
+
+    public function progress()
+    {
+        return (new ProjectProgressService())->getProgress($this);
     }
 
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder

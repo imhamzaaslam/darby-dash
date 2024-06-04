@@ -135,13 +135,13 @@
                   <div class="flex-grow-1 mt-2">
                     <VProgressLinear
                       :height="6"
-                      :model-value="25"
+                      :model-value="project.progress"
                       color="primary"
                       rounded
                     />
                   </div>
                   <div class="text-body-1 text-high-emphasis mt-2">
-                    {{ 25 }}%
+                    {{ project.progress }}%
                   </div>
                 </div>
               </VCol>
@@ -277,10 +277,10 @@
                         :rotate="360"
                         :size="70"
                         :width="6"
-                        :model-value="25"
+                        :model-value="project.progress"
                         color="primary"
                       >
-                        25%
+                        <span>{{ project.progress }}%</span>
                       </VProgressCircular>
                     </div>
                   </VCol>
