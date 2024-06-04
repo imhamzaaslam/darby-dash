@@ -73,13 +73,11 @@
               </VCardText>
             </VCard>
           </VCol>
-          <!-- // check if projectProgress.lists is less then 3 then add empty card in 3 card column if length is 1 then show empty card on 2nd and 3rd card column if length is 2 then show empty card on 3rd card column -->
           <VCol
             v-if="projectProgress.lists.length < 3"
             :cols="projectProgress.lists.length == 1 ? 6 : 3"
             :style="`flex: 0 0 auto; max-width: ${projectProgress.lists.length == 1 ? '65%' : '33.333333%'};`"
           >
-            <!-- // show a beautiful beautiful card with text that your Other List appear here -->
             <VCard
               class="logistics-card-statistics cursor-pointer p-0"
               outlined
@@ -92,7 +90,6 @@
                   >
                     Other List Appear Here
                   </h5>
-                  <!-- Insert your beautiful SVG here -->
                   <span v-html="otherListImg" />
                 </div>
               </VCardText>
@@ -228,6 +225,37 @@
                   />
                 </VBtn>
               </template>
+            </VListItem>
+
+            <!-- Section for fewer than 3 tasks -->
+            <VListItem
+              v-if="projectProgress.lists.length < 3"
+              class="d-flex justify-center align-center"
+            >
+              <VCard
+                outlined
+                class="pa-3 d-flex align-center"
+              >
+                <VCardText class="d-flex align-center">
+                  <VIcon
+                    size="40"
+                    color="info"
+                    icon="tabler-info-circle"
+                    class="me-4"
+                  />
+                  <div>
+                    <h5
+                      class="text-h5 font-weight-medium mb-2"
+                      style="color: #616161;"
+                    >
+                      Other List Appear Here
+                    </h5>
+                    <p class="mb-0">
+                      Add more lists to see them here!
+                    </p>
+                  </div>
+                </VCardText>
+              </VCard>
             </VListItem>
           </VList>
         </VCardText>
