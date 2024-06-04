@@ -5,7 +5,7 @@
       <VCol
         cols="12"
         md="6"
-        class="d-flex"
+        class="d-flex align-center"
       >
         <VBtnToggle
           v-model="viewType"
@@ -31,20 +31,32 @@
           </h5>
         </VBtnToggle>
       </VCol>
+
       <VCol
         cols="12"
         md="6"
       >
-        <div class="float-right">
+        <div class="d-flex flex-column flex-md-row align-center justify-end">
+          <!-- Dropdown -->
+          <AppAutocomplete
+            v-if="viewType === 'grid'"
+            v-model="selectedList"
+            autocomplete="off"
+            placeholder="Select List"
+            :items="getProjectLists"
+            item-title="name"
+            item-value="uuid"
+            class="mb-3 ms-16 mb-md-0 me-md-3"
+            style="max-width:70%;"
+          />
+
+          <!-- Button and Dialog -->
           <VDialog
             v-model="isAddListDialogVisible"
             persistent
             class="v-dialog-sm"
           >
-            <template
-              v-if="viewType === 'list'"
-              #activator="{ props }"
-            >
+            <template #activator="{ props }">
               <VBtn
                 class="me-3"
                 v-bind="props"
@@ -87,17 +99,10 @@
               </VForm>
             </VCard>
           </VDialog>
-          <VBtn
-            v-if="!showAddTaskField && viewType === 'list'"
-            color="primary"
-            @click="activateQuickAdd"
-          >
-            <VIcon icon="tabler-plus" />
-            Add Task
-          </VBtn>
         </div>
       </VCol>
     </VRow>
+
     <!-- List View -->
     <VRow v-if="viewType === 'list'">
       <VCol cols="12">
@@ -270,7 +275,7 @@
                             v-bind="props"
                             class="cursor-pointer"
                           >
-                            {{ item.status }}
+                            {{ item.status.name }}
                           </VChip>
                         </template>
                         <VList>
@@ -369,7 +374,7 @@
                           color="secondary"
                           size="small"
                         >
-                          {{ subtask.status.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
+                          {{ subtask.status.name }}
                         </VChip>
                       </td>
                       <td>
@@ -596,7 +601,7 @@
                     size="small"
                     class="ms-2"
                   >
-                    {{ task.status }}
+                    {{ task.status.name }}
                   </VChip>
                   <VChip
                     v-if="task.due_date"
@@ -736,261 +741,299 @@
       </VCol>
     </VRow>
     <!-- Kanban View -->
-    <VRow
-      v-if="viewType === 'grid'"
-      class="kanban-columns mt-8"
-      no-gutters
-    >
-      <VCol
-        v-for="(list, index) in getProjectLists"
-        :key="index"
-        cols="4"
-        class="kanban-column"
+    <div v-if="viewType === 'grid'">
+      <div
+        v-for="(list, key) in filteredProjectLists"
+        :key="key"
+        class="mt-3"
       >
-        <VCard class="mb-5">
-          <VCardTitle class="bg-primary">
-            <div v-if="isListEditing[list.id] && list.is_deletable">
-              <VTextField
-                :ref="el => editListTitleInput[list.id] = el"
-                v-model="editListTitle"
-                class="text-white pt-0"
-                density="compact"
-                variant="plain"
-                @blur="saveListTitle(list)"
-                @keyup.enter="cancelStateChangeListField(list)"
-              />
-            </div>
-            <div
-              v-else
-              class="cursor-pointer d-flex align-center"
-              @click="startListEditing(list)"
-            >
-              <span class="text-h6 text-white">{{ list.name.length > 25 ? list.name.substring(0, 25) + '...' : list.name }} ({{ list.tasks.length }})</span>
-              <VSpacer />
-              <VIcon
-                v-if="list.is_deletable"
-                class="tabler-trash"
-                size="small"
-                color="white"
-                @click.stop="deleteProjectList(list)"
-              >
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
-                  <span class="text-xs">Delete List</span>
-                </VTooltip>
-              </VIcon>
-            </div>
-          </VCardTitle>
-        </VCard>
-        <VueDraggableNext
-          class="kanban-dropzone light"
-          :list="list.tasks"
-          group="tasks"
-          @change="onDrop(list.id, $event)"
-          @start="onDragStart"
-          @end="onDragEnd"
+        <p class="text-h6">
+          {{ list.name }} ({{ list.tasks ? list.tasks.length : 0 }})
+        </p>
+        <VRow
+          class="kanban-columns"
+          no-gutters
         >
-          <div
-            v-for="(task) in list.tasks"
-            :key="task.id"
+          <VCol
+            v-for="(status, index) in getStatuses"
+            :key="index"
+            cols="4"
+            class="kanban-column"
           >
-            <VCard
-              class="mt-1 mb-2 task-card px-3 py-3"
-              :class="{ 'bg-grey-600': isDragging }"
-              @click="startEditing(task)"
-              @mouseenter="showKanbanTaskIcon = task.uuid"
-              @mouseleave="showKanbanTaskIcon = null"
-            >
-              <div class="cursor-pointer">
-                <VIcon
-                  icon="tabler-playstation-circle"
-                  color="primary"
-                  size="small"
-                />
-                <span class="ms-1">{{ task.name }}</span>
-              </div>
-              <div class="d-flex justify-space-between align-center mt-2">
-                <!-- Chip and Subtask Section -->
+            <VCard class="mb-5">
+              <VCardTitle class="bg-primary">
                 <div class="d-flex align-center">
-                  <!-- Chip -->
-                  <div>
-                    <VChip
-                      v-if="task.due_date"
-                      color="error"
-                      size="x-small"
-                      class="me-2"
-                    >
-                      {{ formatDate(task.due_date) }}
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span>Task is due on {{ formatDate(task.due_date) }}</span>
-                      </VTooltip>
-                    </VChip>
+                  <span class="text-h6 text-white">{{ status.name }} ({{ list.tasks.filter((task) => task.status == status.id).length }})</span>
+                </div>
+              </VCardTitle>
+            </VCard>
+            <VueDraggableNext
+              class="kanban-dropzone light"
+              :list="list.tasks"
+              group="tasks"
+              @change="onDrop(status.id, $event)"
+              @start="onDragStart"
+              @end="onDragEnd"
+            >
+              <div
+                v-for="(task) in list.tasks.filter((task) => task.status == status.id)"
+                :key="task.id"
+              >
+                <VCard
+                  class="mt-1 mb-2 task-card px-3 py-3"
+                  :class="{ 'bg-grey-600': isDragging }"
+                  @click="startEditing(task)"
+                  @mouseenter="showKanbanTaskIcon = task.uuid"
+                  @mouseleave="showKanbanTaskIcon = null"
+                >
+                  <div class="cursor-pointer">
+                    <VIcon
+                      icon="tabler-playstation-circle"
+                      color="primary"
+                      size="small"
+                    />
+                    <span class="ms-1">{{ task.name }}</span>
                   </div>
+                  <div class="d-flex justify-space-between align-center mt-2">
+                    <!-- Chip and Subtask Section -->
+                    <div class="d-flex align-center">
+                      <!-- Chip -->
+                      <div>
+                        <VChip
+                          v-if="task.due_date"
+                          color="error"
+                          size="x-small"
+                          class="me-2"
+                        >
+                          {{ formatDate(task.due_date) }}
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span>Task is due on {{ formatDate(task.due_date) }}</span>
+                          </VTooltip>
+                        </VChip>
+                      </div>
 
-                  <!-- Subtask Count -->
-                  <div
-                    v-if="task.subtasks.length > 0"
-                    class="d-flex align-center"
-                  >
-                    <span @click.stop="toggleKanbanSubtasks(task.id)">
+                      <!-- Subtask Count -->
+                      <div
+                        v-if="task.subtasks.length > 0"
+                        class="d-flex align-center"
+                      >
+                        <span @click.stop="toggleKanbanSubtasks(task.id)">
+                          <VIcon
+                            size="small"
+                            color="primary"
+                            class=" tabler-subtask"
+                          >
+                            <VTooltip
+                              activator="parent"
+                              location="top"
+                            >
+                              <span class="text-xs">{{ task.subtasks.length }} Subtasks</span>
+                            </VTooltip>
+                          </VIcon>
+                          <span class="text-primary font-weight-bold">{{ task.subtasks.length }}</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Icon Section -->
+                    <div class="d-flex align-center">
                       <VIcon
+                        :color="showKanbanTaskIcon === task.uuid ? 'primary' : 'white'"
+                        variant="text"
+                        rounded
+                        class="me-1 tabler-plus"
                         size="small"
-                        color="primary"
-                        class=" tabler-subtask"
+                        @click.stop="activateQuickKanbanSubTask(task.id)"
                       >
                         <VTooltip
                           activator="parent"
                           location="top"
                         >
-                          <span class="text-xs">{{ task.subtasks.length }} Subtasks</span>
+                          <span class="text-xs">Add Subtask</span>
                         </VTooltip>
                       </VIcon>
-                      <span class="text-primary font-weight-bold">{{ task.subtasks.length }}</span>
-                    </span>
+                      <VIcon
+                        :color="showKanbanTaskIcon === task.uuid ? 'primary' : 'white'"
+                        variant="text"
+                        rounded
+                        class="tabler-edit me-1"
+                        size="small"
+                        @click.stop="startEditing(task)"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Edit Task</span>
+                        </VTooltip>
+                      </VIcon>
+                      <VIcon
+                        :color="showKanbanTaskIcon === task.uuid ? 'primary' : 'white'"
+                        variant="text"
+                        rounded
+                        class="tabler-trash"
+                        size="small"
+                        @click.stop="deleteTask(task)"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Delete Task</span>
+                        </VTooltip>
+                      </VIcon>
+                    </div>
                   </div>
+                </VCard>
+                <div v-if="isExpandedKanbanSubTasks[task.id]">
+                  <VCard
+                    v-for="(subtask) in task.subtasks"
+                    :key="subtask.id"
+                    class="mt-1 mb-2 ms-4 task-card px-3 py-2"
+                    @click="startEditing(subtask)"
+                    @mouseenter="showKanbanTaskIcon = subtask.uuid"
+                    @mouseleave="showKanbanTaskIcon = null"
+                  >
+                    <div class="cursor-pointer">
+                      <VIcon
+                        icon="tabler-playstation-circle"
+                        color="primary"
+                        size="x-small"
+                      />
+                      <span class="ms-1">{{ subtask.name }}</span>
+                    </div>
+                    <div class="d-flex justify-space-between align-center">
+                      <div class="float-left">
+                        <VChip
+                          v-if="subtask.due_date"
+                          color="error"
+                          size="x-small"
+                        >
+                          {{ formatDate(subtask.due_date) }}
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span>Subtask is due on {{ formatDate(subtask.due_date) }}</span>
+                          </VTooltip>
+                        </VChip>
+                      </div>
+                      <div class="float-right">
+                        <VIcon
+                          :color="showKanbanTaskIcon === subtask.uuid ? 'primary' : 'white'"
+                          variant="text"
+                          rounded
+                          class="tabler-edit me-1"
+                          size="small"
+                          @click.stop="startEditing(subtask)"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span class="text-xs">Edit Subtask</span>
+                          </VTooltip>
+                        </VIcon>
+                        <VIcon
+                          :color="showKanbanTaskIcon === subtask.uuid ? 'primary' : 'white'"
+                          variant="text"
+                          rounded
+                          class="tabler-trash"
+                          size="small"
+                          @click.stop="deleteTask(subtask)"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span class="text-xs">Delete Subtask</span>
+                          </VTooltip>
+                        </VIcon>
+                      </div>
+                    </div>
+                  </VCard>
                 </div>
-
-                <!-- Icon Section -->
-                <div class="d-flex align-center">
-                  <VIcon
-                    :color="showKanbanTaskIcon === task.uuid ? 'primary' : 'white'"
-                    variant="text"
-                    rounded
-                    class="me-1 tabler-plus"
-                    size="small"
-                    @click.stop="activateQuickKanbanSubTask(task.id)"
+                <div class="justify-center mt-2">
+                  <VCard
+                    v-if="showAddKanbanSubTaskField == task.id"
+                    class="ms-4 mb-2"
                   >
-                    <VTooltip
-                      activator="parent"
-                      location="top"
-                    >
-                      <span class="text-xs">Add Subtask</span>
-                    </VTooltip>
-                  </VIcon>
-                  <VIcon
-                    :color="showKanbanTaskIcon === task.uuid ? 'primary' : 'white'"
-                    variant="text"
-                    rounded
-                    class="tabler-edit me-1"
-                    size="small"
-                    @click.stop="startEditing(task)"
-                  >
-                    <VTooltip
-                      activator="parent"
-                      location="top"
-                    >
-                      <span class="text-xs">Edit Task</span>
-                    </VTooltip>
-                  </VIcon>
-                  <VIcon
-                    :color="showKanbanTaskIcon === task.uuid ? 'primary' : 'white'"
-                    variant="text"
-                    rounded
-                    class="tabler-trash"
-                    size="small"
-                    @click.stop="deleteTask(task)"
-                  >
-                    <VTooltip
-                      activator="parent"
-                      location="top"
-                    >
-                      <span class="text-xs">Delete Task</span>
-                    </VTooltip>
-                  </VIcon>
+                    <div class="d-flex align-center px-3">
+                      <VIcon
+                        icon="tabler-playstation-circle"
+                        color="primary"
+                        size="small"
+                      />
+                      <VTextField
+                        :ref="el => quickKanbanSubTaskInput[task.id] = el"
+                        v-model="quickKanbanSubTaskName"
+                        class="kanban-input"
+                        variant="plan"
+                        placeholder="Subtask Name"
+                        @keyup.enter="saveKanbanSubTask(list.uuid, task.id)"
+                      />
+                    </div>
+                    <div class="float-right px-3 mb-2">
+                      <VIcon
+                        class="tabler-calendar me-1"
+                        color="primary"
+                        size="small"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Select Due Date</span>
+                        </VTooltip>
+                        <AppDateTimePicker v-model="dueDate" />
+                      </VIcon>
+                      <VIcon
+                        color="success"
+                        class="tabler-check me-1"
+                        @click="saveKanbanSubTask(list.uuid, task.id)"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Save</span>
+                        </VTooltip>
+                      </VIcon>
+                      <VIcon
+                        color="error"
+                        class="tabler-x"
+                        @click="cancelQuickKanbanSubTask(task.id)"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Cancel</span>
+                        </VTooltip>
+                      </VIcon>
+                    </div>
+                  </VCard>
                 </div>
               </div>
-            </VCard>
-            <div v-if="isExpandedKanbanSubTasks[task.id]">
-              <VCard
-                v-for="(subtask) in task.subtasks"
-                :key="subtask.id"
-                class="mt-1 mb-2 ms-4 task-card px-3 py-2"
-                @click="startEditing(subtask)"
-                @mouseenter="showKanbanTaskIcon = subtask.uuid"
-                @mouseleave="showKanbanTaskIcon = null"
-              >
-                <div class="cursor-pointer">
-                  <VIcon
-                    icon="tabler-playstation-circle"
-                    color="primary"
-                    size="x-small"
-                  />
-                  <span class="ms-1">{{ subtask.name }}</span>
-                </div>
-                <div class="d-flex justify-space-between align-center">
-                  <div class="float-left">
-                    <VChip
-                      v-if="subtask.due_date"
-                      color="error"
-                      size="x-small"
-                    >
-                      {{ formatDate(subtask.due_date) }}
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span>Subtask is due on {{ formatDate(subtask.due_date) }}</span>
-                      </VTooltip>
-                    </VChip>
-                  </div>
-                  <div class="float-right">
-                    <VIcon
-                      :color="showKanbanTaskIcon === subtask.uuid ? 'primary' : 'white'"
-                      variant="text"
-                      rounded
-                      class="tabler-edit me-1"
-                      size="small"
-                      @click.stop="startEditing(subtask)"
-                    >
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span class="text-xs">Edit Subtask</span>
-                      </VTooltip>
-                    </VIcon>
-                    <VIcon
-                      :color="showKanbanTaskIcon === subtask.uuid ? 'primary' : 'white'"
-                      variant="text"
-                      rounded
-                      class="tabler-trash"
-                      size="small"
-                      @click.stop="deleteTask(subtask)"
-                    >
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span class="text-xs">Delete Subtask</span>
-                      </VTooltip>
-                    </VIcon>
-                  </div>
-                </div>
-              </VCard>
-            </div>
+            </VueDraggableNext>
             <div class="justify-center mt-2">
-              <VCard
-                v-if="showAddKanbanSubTaskField == task.id"
-                class="ms-4 mb-2"
-              >
-                <div class="d-flex align-center px-3">
+              <VCard v-if="showAddKanbanListTaskInput === status.id">
+                <div class="d-flex align-center px-3 py-2">
                   <VIcon
                     icon="tabler-playstation-circle"
                     color="primary"
                     size="small"
                   />
                   <VTextField
-                    :ref="el => quickKanbanSubTaskInput[task.id] = el"
-                    v-model="quickKanbanSubTaskName"
+                    :ref="el => kanbanListTaskInputRef[status.id] = el"
+                    v-model="kanbanListTaskName"
                     class="kanban-input"
                     variant="plan"
-                    placeholder="Subtask Name"
-                    @keyup.enter="saveKanbanSubTask(list.uuid, task.id)"
+                    placeholder="Task Name"
+                    @keyup.enter="saveKanbanListTask(status)"
                   />
                 </div>
                 <div class="float-right px-3 mb-2">
@@ -1010,7 +1053,7 @@
                   <VIcon
                     color="success"
                     class="tabler-check me-1"
-                    @click="saveKanbanSubTask(list.uuid, task.id)"
+                    @click="saveKanbanListTask(status)"
                   >
                     <VTooltip
                       activator="parent"
@@ -1022,7 +1065,7 @@
                   <VIcon
                     color="error"
                     class="tabler-x"
-                    @click="cancelQuickKanbanSubTask(task.id)"
+                    @click="cancelKanbanListTask(status)"
                   >
                     <VTooltip
                       activator="parent"
@@ -1033,93 +1076,22 @@
                   </VIcon>
                 </div>
               </VCard>
-            </div>
-          </div>
-        </VueDraggableNext>
-        <div class="justify-center mt-2">
-          <VCard v-if="showAddKanbanListTaskInput === list.id">
-            <div class="d-flex align-center px-3 py-2">
-              <VIcon
-                icon="tabler-playstation-circle"
-                color="primary"
-                size="small"
-              />
-              <VTextField
-                :ref="el => kanbanListTaskInputRef[list.id] = el"
-                v-model="kanbanListTaskName"
-                class="kanban-input"
-                variant="plan"
-                placeholder="Task Name"
-                @keyup.enter="saveKanbanListTask(list)"
-              />
-            </div>
-            <div class="float-right px-3 mb-2">
-              <VIcon
-                class="tabler-calendar me-1"
-                color="primary"
-                size="small"
-              >
-                <VTooltip
-                  activator="parent"
-                  location="top"
+              <div v-else>
+                <VBtn
+                  color="primary"
+                  variant="plain"
+                  size="small"
+                  @click="activateAddKanbanListTask(status)"
                 >
-                  <span class="text-xs">Select Due Date</span>
-                </VTooltip>
-                <AppDateTimePicker v-model="dueDate" />
-              </VIcon>
-              <VIcon
-                color="success"
-                class="tabler-check me-1"
-                @click="saveKanbanListTask(list)"
-              >
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
-                  <span class="text-xs">Save</span>
-                </VTooltip>
-              </VIcon>
-              <VIcon
-                color="error"
-                class="tabler-x"
-                @click="cancelKanbanListTask(list)"
-              >
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
-                  <span class="text-xs">Cancel</span>
-                </VTooltip>
-              </VIcon>
+                  <VIcon icon="tabler-plus" />
+                  Add Task
+                </VBtn>
+              </div>
             </div>
-          </VCard>
-          <div v-else>
-            <VBtn
-              color="primary"
-              variant="plain"
-              size="small"
-              @click="activateAddKanbanListTask(list)"
-            >
-              <VIcon icon="tabler-plus" />
-              Add Task
-            </VBtn>
-          </div>
-        </div>
-      </VCol>
-      <!-- Add column button -->
-      <VCol cols="4">
-        <div class="justify-center">
-          <VBtn
-            color="primary"
-            variant="plain"
-            @click="isAddListDialogVisible = !isAddListDialogVisible"
-          >
-            <VIcon icon="tabler-plus" />
-            Another List
-          </VBtn>
-        </div>
-      </VCol>
-    </VRow>
+          </VCol>
+        </VRow>
+      </div>
+    </div>
   </VContainer>
   <EditTaskDrawer
     v-model:is-edit-task-drawer-open="isEditTaskDrawerOpen"
@@ -1140,6 +1112,7 @@ import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../../store/projects"
 import { useProjectTaskStore } from "../../../../store/project_tasks"
 import { useListTaskStore } from "@/store/list_tasks"
+import { useStatusStore } from "@/store/status"
 import { useProjectListStore } from "../../../../store/project_lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
@@ -1151,6 +1124,7 @@ const projectStore = useProjectStore()
 const projectTaskStore = useProjectTaskStore()
 const listTaskStore = useListTaskStore()
 const projectListStore = useProjectListStore()
+const statusStore = useStatusStore()
 const router = useRouter()
 
 const viewType = ref('list')
@@ -1188,6 +1162,7 @@ const kanbanListTaskInputRef = ref([])
 const isDragging = ref(false)
 const statusMenu = ref([])
 const dueDateMenu = ref([])
+const selectedList = ref(null)
 
 const statuses = ref([
   { text: 'To Do', color: 'secondary' },
@@ -1202,8 +1177,10 @@ const projectId = computed(() => router.currentRoute.value.params.id)
 const formatDate = date => moment(date).format('MMM DD, YYYY')
 
 onBeforeMount(async () => {
+  selectedList.value = getProjectLists.value[0].uuid
   await fetchProjectTasks()
   await fetchProjectLists()
+  await fetchStatus()
   await fetchProjectDetails()
 })
 
@@ -1213,10 +1190,19 @@ onMounted(() => {
   if (savedViewType && ['list', 'grid'].includes(savedViewType)) {
     viewType.value = savedViewType
   }
+
+  const savedType = searchParams.get('type')
+  if (savedType && getProjectLists.value.filter(list => list.uuid).includes(savedViewType)) {
+    selectedList.value = savedType
+  }
 })
 
 watch(viewType, newValue => {
   router.push({ query: { view: newValue } })
+})
+
+watch(selectedList, newValue => {
+  router.push({ query: { type: newValue } })
 })
 
 const fetchProjectDetails = async () => {
@@ -1225,6 +1211,18 @@ const fetchProjectDetails = async () => {
     await projectStore.show(projectId.value)
   } catch (error) {
     toast.error('Error fetching project details:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
+const fetchStatus = async () => {
+  try {
+    isLoading.value = true
+    await statusStore.getAll()
+  } catch (error) {
+    toast.error('Error fetching statuses:', error)
   }
   finally {
     isLoading.value = false
@@ -1568,6 +1566,10 @@ const getLoadStatus = computed(() => {
   return projectTaskStore.getLoadStatus
 })
 
+const getStatuses = computed(() => {
+  return statusStore.getStatuses
+})
+
 function toggleSubtasks(index){
   isExpandedSubTasks.value[index] = !isExpandedSubTasks.value[index]
   cancelQuickSubTask(index)
@@ -1704,6 +1706,12 @@ const getStatusColor = status => {
 const closeDueDateMenu = id => {
   dueDateMenu.value[id] = false
 }
+
+const filteredProjectLists = computed(() => {
+  return getProjectLists.value.filter(list => {
+    return list.uuid == selectedList.value
+  })
+})
 </script>
 
 <style scoped>
