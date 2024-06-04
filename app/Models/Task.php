@@ -33,4 +33,9 @@ class Task extends Base
     {
         return $this->hasMany(self::class, 'parent_id');
     }
+
+    public function getStatus()
+    {
+        return $this->belongsTo(Status::class, 'status');
+    }
 }

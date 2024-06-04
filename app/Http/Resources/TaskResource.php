@@ -20,7 +20,12 @@ class TaskResource extends JsonResource
             'name' => $this->name,
             'subtasks' => $this->subtasks,
             'description' => $this->description,
-            'status' => ucfirst($this->status),
+            'status' => [
+                'id' => $this->getStatus->id,
+                'uuid' => $this->getStatus->uuid,
+                'name' => $this->getStatus->name,
+                'color' => $this->getStatus->color,
+            ],
             'project_id' => $this->project_id,
             'list_id' => $this->list_id,
             'start_date' => $this->start_date,
