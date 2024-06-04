@@ -19,4 +19,7 @@ export default {
   deleteProjectTask(task) {
     return apiClient.delete(`admin/projects/${task.project_uuid}/task/${task.uuid}`)
   },
+  updateAttributes(taskUuid, payload) {
+    return apiClient.patch(`admin/task/${taskUuid}`, payload)
+  },
 }

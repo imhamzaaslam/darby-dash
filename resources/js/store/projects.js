@@ -126,7 +126,7 @@ export const useProjectStore = defineStore('projects', {
         this.loadStatus = 3
         console.error('updateMember error ', error)
       }
-    }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

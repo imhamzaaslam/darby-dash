@@ -1686,9 +1686,25 @@ function onDragEnd() {
   isDragging.value = false
 }
 
-function updateStatus(item, status) {
-  item.status = status
-  statusMenu.value[item.id] = false
+const updateStatus = async (item, status) => {
+  try {
+    statusMenu.value[item.id] = false
+
+    if (item.status.id === status.id) {
+      return
+    }
+
+    item.status = status
+
+    const payload = {
+      status: status.id,
+    }
+
+    await projectTaskStore.updateAttributes(item.uuid, payload)
+    toast.success('Task status updated successfully', { timeout: 1000 })
+  } catch (error) {
+    toast.error('Failed to update task status:', error)
+  }
 }
 
 const getStatusColor = status => {
