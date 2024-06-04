@@ -18,6 +18,7 @@ class StatusResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'color' => $this->color,
         ];
     }
 }
