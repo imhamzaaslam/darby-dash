@@ -23,10 +23,7 @@
             style="flex: 0 0 auto; max-width: 33.333333%;"
           >
             <VCard class="logistics-card-statistics cursor-pointer p-0">
-              <VCardText style="padding: 10px !important;">
-                <div class="text-body-1 text-center">
-                  Phase {{ index + 1 }}
-                </div>
+              <VCardText style="padding: 20px !important;">
                 <div class="mb-2 text-center">
                   <h5 class="text-h6 mb-3 font-weight-medium">
                     {{ data.name }}
