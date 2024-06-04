@@ -280,13 +280,13 @@
                         </template>
                         <VList>
                           <VListItem
-                            v-for="status in statuses"
-                            :key="status.text"
-                            @click="updateStatus(item, status.text)"
+                            v-for="status in getStatuses"
+                            :key="status.name"
+                            @click="updateStatus(item, status)"
                           >
                             <VListItemContent>
                               <VListItemTitle :class="`text-${status.color}`">
-                                {{ status.text }}
+                                {{ status.name }}
                               </VListItemTitle>
                             </VListItemContent>
                           </VListItem>
@@ -1163,12 +1163,6 @@ const isDragging = ref(false)
 const statusMenu = ref([])
 const dueDateMenu = ref([])
 const selectedList = ref(null)
-
-const statuses = ref([
-  { text: 'To Do', color: 'secondary' },
-  { text: 'In Progress', color: 'warning' },
-  { text: 'Complete', color: 'success' },
-])
 
 const isLoading = ref(false)
 
