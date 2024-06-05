@@ -401,9 +401,12 @@ const deleteProject = async project => {
       text: `Do you want to delete ${project.title}?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#F69636",
+      cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+      },
     })
 
     if (confirmDelete.isConfirmed) {

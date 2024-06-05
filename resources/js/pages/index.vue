@@ -39,7 +39,7 @@
                 >
                   <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects:<strong> 10 | </strong></small>
                   <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks:<strong> 6 | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Team:<strong> 3 | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Members:<strong> 3 | </strong></small>
                   <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File:<strong> 10 </strong></small>
                 </VCol>
               </VRow>

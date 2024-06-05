@@ -126,7 +126,7 @@
                     style="flex-grow: 1;"
                   >
                     <span
-                      v-if="isListEditing[list.id] && list.is_deletable"
+                      v-if="isListEditing[list.id]"
                       class="d-flex align-center"
                       style="flex-grow: 1;"
                     >
@@ -161,7 +161,7 @@
                 </h6>
               </VCol>
               <VCol
-                v-if="list.is_deletable"
+                v-if="getProjectLists? getProjectLists.length > 1 : 0"
                 cols="6"
               >
                 <div class="d-flex justify-end">
@@ -1575,9 +1575,12 @@ const deleteProjectList = async list => {
       `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#F69636",
+      cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+      },
     })
 
     if (confirmDelete.isConfirmed) {
