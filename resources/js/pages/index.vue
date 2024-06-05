@@ -2,25 +2,20 @@
   <h3>Project Dashboards</h3>
   <VRow class="mt-3">
     <VCol
-      v-for="(data, index) in dashboards"
+      v-for="(data, index) in getProjectTypes"
       :key="index"
       cols="12"
       md="4"
       sm="4"
     >
       <div>
-        <RouterLink :to="{ path: data.url, query: { type: data.type } }">
-          <VCard
-            class="logistics-card-statistics cursor-pointer"
-            :style="data.isHover ? { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}))` } : { 'border-block-end': `2px solid rgba(var(--v-theme-${data.color}), var(--v-disabled-opacity))` }"
-            @mouseenter="data.isHover = true"
-            @mouseleave="data.isHover = false"
-          >
+        <RouterLink :to="{ path: '/projects/web-designs', query: { type: data.id } }">
+          <VCard class="logistics-card-statistics cursor-pointer">
             <VCardText>
               <div class="d-flex align-center gap-x-4 mb-2">
                 <VAvatar
                   variant="tonal"
-                  :color="data.color"
+                  color="primary"
                   rounded
                 >
                   <VIcon
@@ -29,7 +24,7 @@
                   />
                 </VAvatar>
                 <h5 class="text-h6 text-center">
-                  {{ data.title }}
+                  {{ data.name }}
                 </h5>
               </div>
               <VRow>
@@ -37,10 +32,10 @@
                   cols="12"
                   class="text-center"
                 >
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects:<strong> 10 | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks:<strong> 6 | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Members:<strong> 3 | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File:<strong> 10 </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects:<strong> {{ data.total_projects }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks:<strong> {{ data.total_tasks }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Members:<strong> {{ data.total_members }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File:<strong> {{ data.total_files }} </strong></small>
                 </VCol>
               </VRow>
             </VCardText>
@@ -49,54 +44,28 @@
       </div>
     </VCol>
   </VRow>
-  <!--
-    <VBtn
-    color="primary"
-    class="mt-3"
-    size="small"
-    @click="checkApi"
-    >
-    Check API
-    </VBtn>
-  -->
 </template>
 
 <script setup>
-import { useProjectStore } from '../store/projects'
+import { useProjectTypeStore } from '@/store/project_types'
 
-const projectStore = useProjectStore()
+const projectTypeStore = useProjectTypeStore()
 
-// async function checkApi() {
-//   let res = await projectStore.getAll()
-//   console.log(res)
-// }
+onBeforeMount(async () => {
+  await fetchProjectTypes()
+})
 
-const dashboards = ref([
-  {
-    icon: 'tabler-world',
-    color: 'primary',
-    title: 'Website Design Project',
-    url: '/projects/web-designs',
-    type: 1,
-    isHover: false,
-  },
-  {
-    icon: 'tabler-military-rank',
-    color: 'primary',
-    title: 'SEO Program',
-    url: '/projects/web-designs',
-    type: 2,
-    isHover: false,
-  },
-  {
-    icon: 'tabler-brand-google',
-    color: 'primary',
-    title: 'Google Ads Program',
-    url: '/projects/web-designs',
-    type: 3,
-    isHover: false,
-  },
-])
+const fetchProjectTypes = async () => {
+  try {
+    await projectTypeStore.getAll()
+  } catch (error) {
+    toast.error('Failed to get project types:', error.message || error)
+  }
+}
+
+const getProjectTypes = computed(() => {
+  return projectTypeStore.getProjectTypesWithAttributes
+})
 </script>
 
 <style lang="scss" scoped>
@@ -106,5 +75,11 @@ const dashboards = ref([
   @include mixins.elevation(12);
 
   transition: all 0.1s ease-out;
+}
+.logistics-card-statistics {
+  border-block-end: 2px solid rgba(var(--v-theme-primary));
+}
+.logistics-card-statistics:hover {
+  border-block-end: 2px solid rgba(var(--v-theme-primary));
 }
 </style>

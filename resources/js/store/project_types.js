@@ -4,6 +4,7 @@ import ProjectTypeService from '../services/ProjectTypeService'
 export const useProjectTypeStore = defineStore('project_types', {
   state: () => ({
     projectTypes: [],
+    projectTypesWithAttributes: [],
     loadStatus: 0,
     error: null,
   }),
@@ -16,6 +17,7 @@ export const useProjectTypeStore = defineStore('project_types', {
         const response = await ProjectTypeService.getProjectTypes()
 
         this.projectTypes = response.data.data.map(type => ({ id: type.id, name: type.name }))
+        this.projectTypesWithAttributes = response.data.data
 
         this.loadStatus = 2
       } catch (error) {
@@ -28,6 +30,7 @@ export const useProjectTypeStore = defineStore('project_types', {
   getters: {
     getLoadStatus: state => state.loadStatus,
     getProjectTypes: state => state.projectTypes,
+    getProjectTypesWithAttributes: state => state.projectTypesWithAttributes,
     getErrors: state => state.error,
   },
 })

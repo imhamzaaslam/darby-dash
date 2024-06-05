@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('project_types', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->string('name');
+            $table->string('icon');
+            $table->integer('display_order')->default(0);
+            $table->integer('is_deletable')->default(1);
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('deleted_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

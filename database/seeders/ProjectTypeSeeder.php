@@ -17,14 +17,14 @@ class ProjectTypeSeeder extends Seeder
         DB::beginTransaction();
         try {
             $projectTypes = [
-                'Website Design Project',
-                'SEO Program',
-                'Google Ads Program'
+                ['name' => 'Website Design Project', 'icon' => 'tabler-world', 'display_order' => 1],
+                ['name' => 'SEO Program', 'icon' => 'tabler-military-rank', 'display_order' => 2],
+                ['name' => 'Google Ads Program', 'icon' => 'tabler-brand-google', 'display_order' => 3],
             ];
     
             foreach ($projectTypes as $projectType) {
-                if (!ProjectType::where('name', $projectType)->exists()) {
-                    ProjectType::create(['name' => $projectType]);
+                if(!ProjectType::where('name', $projectType['name'])->exists()) {
+                    ProjectType::create($projectType);
                 }
             }
 

@@ -15,7 +15,7 @@ class ProjectTypeController extends Controller
 
     public function index(Request $request)
     {
-        $roles = $this->projectTypeRepository->getAll();
-        return ProjectTypeResource::collection($roles);
+        $projectTypes = $this->projectTypeRepository->getAll();
+        return ProjectTypeResource::collection($projectTypes);
     }
 }
