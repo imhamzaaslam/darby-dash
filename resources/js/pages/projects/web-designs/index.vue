@@ -38,7 +38,7 @@
           <AppAutocomplete
             v-model="selectedProjectType"
             placeholder="Select Project Type"
-            :items="projectTypesWithFirstOption('All')"
+            :items="projectTypesWithFirstOption('All Projects')"
             item-title="name"
             item-value="id"
             @update:model-value="fetchProjects"
@@ -312,7 +312,7 @@
   <FilterDrawer
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
     :apply-filters="applyFilters"
-    :get-project-types="projectTypesWithFirstOption('All')"
+    :get-project-types="projectTypesWithFirstOption('All Projects')"
     :selected-project-type="selectedProjectType"
     :get-project-managers="projectManagersWithFirstOption('-- Select --')"
     :get-load-status="getLoadStatus"
