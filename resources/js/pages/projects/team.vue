@@ -23,6 +23,12 @@
             :class="{ 'bg-primary': viewType === 'grid' }"
             @click="viewType = 'grid'"
           />
+          <h5
+            class="text-h5 ms-4 text-grey-700"
+            style="margin-top: -2px;"
+          >
+            {{ project.title }}
+          </h5>
         </VBtnToggle>
       </VCol>
       <VCol
@@ -232,7 +238,7 @@ const userStore = useUserStore()
 const roleStore = useRoleStore()
 const router = useRoute()
 
-const viewType = ref('grid')
+const viewType = ref('list')
 const addMemberForm = ref()
 const isAddMemberDialogueOpen = ref(false)
 const isLoading = ref(false)

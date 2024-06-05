@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- Toggle -->
-    <VRow>
+    <VRow class="mb-0">
       <VCol
         cols="12"
         md="7"
-        class="d-flex"
+        class="d-flex pb-0"
       >
         <VBtnToggle
           v-model="viewType"
@@ -33,8 +33,9 @@
       <VCol
         cols="12"
         md="3"
+        class="pb-0"
       >
-        <div class="d-flex justify-end mb-5">
+        <div class="d-flex justify-end">
           <AppAutocomplete
             v-model="selectedProjectType"
             placeholder="Select Project Type"
@@ -48,8 +49,9 @@
       <VCol
         cols="12"
         md="2"
+        class="pb-0"
       >
-        <div class="d-flex justify-end mb-5">
+        <div class="d-flex justify-end">
           <VBtn
             prepend-icon="tabler-plus"
             @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
@@ -57,6 +59,14 @@
             New Project
           </VBtn>
         </div>
+      </VCol>
+    </VRow>
+    <VRow class="mt-0 pt-0">
+      <VCol 
+        cols="12"
+        class="pt-0 ps-4"
+      >
+        <h3>Manage Projects</h3>
       </VCol>
     </VRow>
 

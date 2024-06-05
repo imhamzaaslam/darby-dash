@@ -7,7 +7,9 @@
         height="20"
       >
         <template #default="{ value }">
-          <span class="text-white">{{ Math.ceil(value) }}%</span>
+          <span :class="Math.ceil(value) < 50 ? 'text-primary' : 'text-white'">
+            {{ Math.ceil(value) }}%
+          </span>
         </template>
       </VProgressLinear>
     </VCol>

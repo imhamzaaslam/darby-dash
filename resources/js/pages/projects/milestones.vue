@@ -23,6 +23,12 @@
             :class="{ 'bg-primary': viewType === 'grid' }"
             @click="viewType = 'grid'"
           />
+          <h5
+            class="text-h5 ms-4 text-grey-700"
+            style="margin-top: -2px;"
+          >
+            {{ project.title }}
+          </h5>
         </VBtnToggle>
       </VCol>
       <VCol
@@ -166,6 +172,7 @@ const viewType = ref('list')
 
 onBeforeMount(async () => {
   await getProjectProgress()
+  await projectStore.show(projectUuid)
 })
 
 const getProjectProgress = async () => {
@@ -178,6 +185,10 @@ const capitalizeFirstLetter = string => {
 
 const projectProgress = computed(() => {
   return projectStore.getProjectProgress
+})
+
+const project = computed(() => {
+  return projectStore.getProject
 })
 </script>
 

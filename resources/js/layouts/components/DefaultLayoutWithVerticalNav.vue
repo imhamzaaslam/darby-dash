@@ -108,6 +108,7 @@ const showNavigation = computed(() => {
           <RouterLink
             :to="`/projects/${projectId}/milestones`"
             class="text-h6 me-8 inner-badge-text"
+            :class="{ 'text-primary': $route.path === `/projects/${projectId}/milestones` }"
           >
             Milestones
           </RouterLink>
