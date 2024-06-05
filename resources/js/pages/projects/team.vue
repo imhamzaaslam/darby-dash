@@ -23,19 +23,17 @@
             :class="{ 'bg-primary': viewType === 'grid' }"
             @click="viewType = 'grid'"
           />
-          <h5
-            class="text-h5 ms-4 text-grey-700"
-            style="margin-top: -2px;"
-          >
-            {{ project.title }}
-          </h5>
+          <VIcon
+            icon="tabler-filter"
+            class="bg-primary ms-2"
+          />
         </VBtnToggle>
       </VCol>
       <VCol
         cols="12"
         md="5"
       >
-        <div class="d-flex justify-end mb-5">
+        <div class="d-flex justify-end">
           <VBtn
             prepend-icon="tabler-plus"
             @click="isAddMemberDialogueOpen = !isAddMemberDialogueOpen"
@@ -43,6 +41,14 @@
             New Member
           </VBtn>
         </div>
+      </VCol>
+    </VRow>
+    <VRow class="mt-0 mb-3 pt-0 pb-0">
+      <VCol 
+        cols="12"
+        class="pt-0 ps-4 pb-0"
+      >
+        <h3>{{ project.title }}</h3>
       </VCol>
     </VRow>
 

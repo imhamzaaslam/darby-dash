@@ -18,19 +18,16 @@
           @click="viewType = 'list'"
         />
         <VIcon
-          icon="tabler-layout-cards"
+          icon="tabler-layout-grid"
           :class="{ 'bg-primary': viewType === 'grid' }"
           @click="viewType = 'grid'"
         />
-        <h5
-          class="text-h5 ms-4 text-grey-700"
-          style="margin-top: -2px;"
-        >
-          {{ project.title }}
-        </h5>
+        <VIcon
+          icon="tabler-filter"
+          class="bg-primary ms-2"
+        />
       </VBtnToggle>
     </VCol>
-
     <VCol
       cols="12"
       md="6"
@@ -101,9 +98,20 @@
       </div>
     </VCol>
   </VRow>
+  <VRow class="mt-0 pt-0 pb-0">
+    <VCol 
+      cols="12"
+      class="pt-0 ps-4 pb-0"
+    >
+      <h3>{{ project.title }}</h3>
+    </VCol>
+  </VRow>
 
   <!-- List View -->
-  <VRow v-if="viewType === 'list'">
+  <VRow 
+    v-if="viewType === 'list'"
+    class="mt-1"
+  >
     <VCol cols="12">
       <div v-if="getProjectLists? getProjectLists.length > 0 : 0">
         <VCard
@@ -791,9 +799,9 @@
       :key="key"
       class="mt-3"
     >
-      <p class="text-h6">
+      <!-- <p class="text-h6">
         {{ list.name }} ({{ list.tasks ? list.tasks.length : 0 }})
-      </p>
+      </p> -->
       <VRow
         class="kanban-columns"
         no-gutters
@@ -1769,10 +1777,11 @@ const filteredProjectLists = computed(() => {
 
 <style scoped>
 .kanban-columns {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 1rem;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  margin-top: 27px !important;
 }
 
 .kanban-column {

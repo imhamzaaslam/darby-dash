@@ -1,5 +1,13 @@
 <template>
   <div>
+    <VRow class="mt-0 mb-3">
+      <VCol 
+        cols="12"
+        class="pt-0 ps-4"
+      >
+        <h3>Manage Task & Events</h3>
+      </VCol>
+    </VRow>
     <VCard>
       <!-- `z-index: 0` Allows overlapping vertical nav on calendar -->
       <VLayout style="z-index: 0;">
