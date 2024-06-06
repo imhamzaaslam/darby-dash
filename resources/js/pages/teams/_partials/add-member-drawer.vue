@@ -219,14 +219,17 @@ const handleDrawerModelValueUpdate = val => {
 
 const resetFormFields = () => {
   addMemberForm.value?.reset()
+  assignEmptyValeus()
+  resetErrors()
   emit('update:isDrawerOpen', false)
 }
 
 async function submitAddMemberForm() {
   addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
+    console.log('validating')
     if(isValid){
       try {
-        resetForm('addingErrors')
+        resetErrors()
         await userStore.create(newMemberDetails.value)
         if(props.getErrors)
         {
@@ -237,13 +240,26 @@ async function submitAddMemberForm() {
           emit('update:isDrawerOpen', false)
           toast.success('Member added successfully', { timeout: 1000 })
           await props.fetchMembers()
-          resetForm('addingForm')
+          resetFormFields()
           isLoading.value = false
         }
       } catch (error) {
         toast.error('Failed to add member:', error)
       }
     }
+  })
+}
+
+const assignEmptyValeus = () => {
+  Object.assign(newMemberDetails.value, {
+    name_first: '',
+    name_last: '',
+    email: '',
+    role: null,
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    state: null,
   })
 }
 
@@ -255,13 +271,8 @@ const showError = () => {
   }
 }
 
-const resetForm = formType => {
-  if(formType === 'addErrors') {
-    addingErrors.value = Object.fromEntries(Object.keys(addingErrors.value).map(key => [key, '']))
-  }
-  if(formType === 'addingForm') {
-    newMemberDetails.value = Object.fromEntries(Object.keys(newMemberDetails.value).map(key => [key, '']))
-  }
+const resetErrors = () => {
+  addingErrors.value = Object.fromEntries(Object.keys(addingErrors.value).map(key => [key, '']))
 }
 </script>
 
