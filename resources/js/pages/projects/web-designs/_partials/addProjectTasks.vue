@@ -26,6 +26,15 @@
           icon="tabler-filter"
           class="bg-primary ms-2"
         />
+        <div class="d-flex justify-center align-center project-title">
+          <VIcon
+            icon="tabler-wand"
+            class="bg-white"
+          />
+          <h5 class="text-h5 text-white ms-1 mt-minus-2">
+            {{ project.title }}
+          </h5>
+        </div>
       </VBtnToggle>
     </VCol>
     <VCol
@@ -98,12 +107,12 @@
       </div>
     </VCol>
   </VRow>
-  <VRow class="mt-0 pt-0 pb-0">
+  <VRow class="mt-2 pt-0 pb-0">
     <VCol 
       cols="12"
       class="pt-0 ps-4 pb-0"
     >
-      <h3>{{ project.title }}</h3>
+      <h3>Manage Tasks</h3>
     </VCol>
   </VRow>
 
@@ -799,9 +808,11 @@
       :key="key"
       class="mt-3"
     >
-      <!-- <p class="text-h6">
+      <!--
+        <p class="text-h6">
         {{ list.name }} ({{ list.tasks ? list.tasks.length : 0 }})
-      </p> -->
+        </p> 
+      -->
       <VRow
         class="kanban-columns"
         no-gutters
@@ -1834,5 +1845,18 @@ const filteredProjectLists = computed(() => {
 
 .light::-webkit-scrollbar-thumb:hover {
   background: #b0b0b0;
+}
+
+.project-title {
+  background: #28C76F;
+  color: #fff;
+  padding: 1px 13px;
+  border: 2px solid #28C76F;
+  border-radius: 10px;
+  margin-left: 20px;
+}
+
+.mt-minus-2 {
+  margin-top: -2px;
 }
 </style>
