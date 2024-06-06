@@ -61,9 +61,8 @@ export const useUserStore = defineStore('users', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.createUser(user)
+        await UserService.createUser(user)
 
-        this.user = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -75,10 +74,8 @@ export const useUserStore = defineStore('users', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.updateUser(user)
-        console.log('response is', response)
+        await UserService.updateUser(user)
 
-        this.user = response.data.data
         this.loadStatus = 2
       } catch (error) {
         console.log('error is', error)
@@ -91,9 +88,8 @@ export const useUserStore = defineStore('users', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.deleteUser(id)
+        await UserService.deleteUser(id)
 
-        this.user = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
