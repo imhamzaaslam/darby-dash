@@ -49,7 +49,8 @@ class TaskController extends Controller
         $list = $this->projectListRepository->getByUuidOrFail($listUuid);
         $validated = $request->validated();
 
-        $task = $this->taskRepository->create($list, $validated);
+        $res = $this->taskRepository->create($list, $validated);
+        $task = $this->taskRepository->getByUuidOrFail($res->uuid);
 
         return (new TaskResource($task))
             ->response()
