@@ -14,23 +14,6 @@
       </VProgressLinear>
     </VCol>
   </VRow>
-  <VRow class="mt-2 pt-0 pb-0">
-    <VCol
-      cols="12"
-      class="pt-0 ps-4 pb-0"
-    >
-      <div class="d-flex justify-start align-center">
-        <VIcon
-          start
-          icon="tabler-wand"
-          color="primary"
-        />
-        <h3 class="text-primary">
-          {{ project.title }}
-        </h3>
-      </div>
-    </VCol>
-  </VRow>
   <VRow>
     <VCol cols="9">
       <div class="horizontal-scroll">
@@ -528,10 +511,6 @@ const getColor = progress => {
 
 const projectProgress = computed(() => {
   return projectStore.getProjectProgress
-})
-
-const project = computed(() => {
-  return projectStore.getProject
 })
 </script>
 
