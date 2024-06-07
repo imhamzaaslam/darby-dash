@@ -8,7 +8,7 @@
     >
       <VBtnToggle
         v-model="viewType"
-        class="d-toggle"
+        class="d-toggle align-center-important"
         rounded="0"
       >
         <VIcon
@@ -1858,5 +1858,9 @@ const filteredProjectLists = computed(() => {
 
 .mt-minus-2 {
   margin-top: -2px;
+}
+
+.align-center-important {
+  align-items: center !important;
 }
 </style>

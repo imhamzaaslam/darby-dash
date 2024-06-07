@@ -9,7 +9,7 @@
       >
         <VBtnToggle
           v-model="viewType"
-          class="d-toggle"
+          class="d-toggle align-center-important"
           rounded="0"
         >
           <VIcon
@@ -27,6 +27,15 @@
             icon="tabler-filter"
             class="bg-primary ms-2"
           />
+          <div class="d-flex justify-center align-center project-title">
+            <VIcon
+              icon="tabler-wand"
+              class="bg-white"
+            />
+            <h5 class="text-h5 text-white ms-1 mt-minus-2">
+              {{ project.title }}
+            </h5>
+          </div>
         </VBtnToggle>
       </VCol>
       <VCol
@@ -43,12 +52,12 @@
         </div>
       </VCol>
     </VRow>
-    <VRow class="mt-0 mb-3 pt-0 pb-0">
+    <VRow class="mt-2 mb-3 pt-0 pb-0">
       <VCol 
         cols="12"
         class="pt-0 ps-4 pb-0"
       >
-        <h3>{{ project.title }}</h3>
+        <h3>Manage Members</h3>
       </VCol>
     </VRow>
 
@@ -388,5 +397,22 @@ const getProjectLoadStatus = computed(() => {
 .side-flick-role{
     position: absolute;
     left: 27%;
+}
+
+.project-title {
+  background: #28C76F;
+  color: #fff;
+  padding: 1px 13px;
+  border: 2px solid #28C76F;
+  border-radius: 10px;
+  margin-left: 20px;
+}
+
+.mt-minus-2 {
+  margin-top: -2px;
+}
+
+.align-center-important {
+  align-items: center !important;
 }
 </style>
