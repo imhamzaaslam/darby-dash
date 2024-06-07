@@ -39,6 +39,7 @@ class MileStoneRepository extends AbstractEloquentRepository implements MileSton
 
     public function delete(MileStone $mileStone): bool
     {
+        ProjectList::where('milestone_id', $mileStone->id)->update(['milestone_id' => null]);
         return $mileStone->delete();
     }
 }

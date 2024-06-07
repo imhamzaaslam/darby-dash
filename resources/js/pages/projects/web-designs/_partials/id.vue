@@ -76,9 +76,9 @@
             </VCard>
           </VCol>
           <VCol
-            v-if="projectProgress.lists.length < 3"
-            :cols="projectProgress.lists.length == 1 ? 6 : 3"
-            :style="`flex: 0 0 auto; max-width: ${projectProgress.lists.length == 1 ? '65%' : '33.333333%'};`"
+            v-if="projectProgress?.lists?.length < 3 ? true : false"
+            :cols="projectProgress?.lists?.length == 1 ? 6 : 3"
+            :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length == 1 ? '65%' : '33.333333%'};`"
           >
             <VCard
               class="logistics-card-statistics cursor-pointer p-0"
@@ -231,7 +231,7 @@
 
             <!-- Section for fewer than 3 tasks -->
             <VListItem
-              v-if="projectProgress.lists.length < 3"
+              v-if="projectProgress?.lists?.length < 3"
               class="d-flex justify-center align-center"
             >
               <VCard
