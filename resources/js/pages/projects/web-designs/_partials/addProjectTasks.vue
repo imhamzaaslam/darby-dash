@@ -24,16 +24,17 @@
         />
         <VIcon
           icon="tabler-filter"
-          class="bg-primary ms-2"
+          class="bg-primary ms-1 me-2"
         />
-        <div class="d-flex justify-center align-center project-title">
+        <div class="ms-2 d-flex justify-center align-center">
           <VIcon
+            start
             icon="tabler-wand"
-            class="bg-white"
+            color="primary"
           />
-          <h5 class="text-h5 text-white ms-1 mt-minus-2">
+          <h3 class="text-primary">
             {{ project.title }}
-          </h5>
+          </h3>
         </div>
       </VBtnToggle>
     </VCol>
@@ -107,17 +108,19 @@
       </div>
     </VCol>
   </VRow>
-  <VRow class="mt-2 pt-0 pb-0">
-    <VCol 
+  <VRow class="mt-5 pt-0 pb-0">
+    <VCol
       cols="12"
       class="pt-0 ps-4 pb-0"
     >
-      <h3>Manage Tasks</h3>
+      <h3>
+        Manage Tasks
+      </h3>
     </VCol>
   </VRow>
 
   <!-- List View -->
-  <VRow 
+  <VRow
     v-if="viewType === 'list'"
     class="mt-1"
   >
@@ -129,7 +132,7 @@
           class="px-4 py-4 mt-2"
         >
           <VRow>
-            <VCol cols="6">
+            <VCol cols="8">
               <h6 class="text-h6 text-high-emphasis d-flex align-center">
                 <VIcon
                   color="primary"
@@ -151,7 +154,6 @@
                       v-model="editListTitle"
                       class="text-white text-h6 pt-0"
                       density="compact"
-                      variant="plain"
                       @blur="saveListTitle(list)"
                       @keyup.enter="cancelStateChangeListField(list)"
                     />
@@ -161,6 +163,16 @@
                     class="cursor-pointer d-flex align-center"
                     @click="startListEditing(list)"
                   >
+                    <VIcon
+                      class="tabler-edit cursor-pointer"
+                      color="primary"
+                    />
+                    <VTooltip
+                      activator="parent"
+                      location="top"
+                    >
+                      <span class="text-xs">Edit List Title</span>
+                    </VTooltip>
                     {{ list.name }} ({{ list.tasks.length }})
                   </span>
                   <VBtn
@@ -177,31 +189,37 @@
               </h6>
             </VCol>
             <VCol
-              v-if="getProjectLists? getProjectLists.length > 1 : 0"
-              cols="6"
+              cols="4"
+              class="d-flex justify-end align-center"
             >
-              <div class="d-flex justify-end">
-                <VBtn
-                  icon
-                  size="small"
-                  color="error"
-                  @click="deleteProjectList(list)"
+              <AppTextField
+                v-model="searchQuery[index]"
+                placeholder="Search tasks"
+                clearable
+                style="width:85%"
+                class="me-2"
+              />
+              <VBtn
+                v-if="getProjectLists? getProjectLists.length > 1 : 0"
+                icon
+                size="small"
+                color="error"
+                @click="deleteProjectList(list)"
+              >
+                <VIcon icon="tabler-trash" />
+                <VTooltip
+                  activator="parent"
+                  location="top"
                 >
-                  <VIcon icon="tabler-trash" />
-                  <VTooltip
-                    activator="parent"
-                    location="top"
-                  >
-                    <span class="text-xs">Delete List</span>
-                  </VTooltip>
-                </VBtn>
-              </div>
+                  <span class="text-xs">Delete List</span>
+                </VTooltip>
+              </VBtn>
             </VCol>
           </VRow>
           <VRow v-if="expandedRows[index]">
             <VDataTable
               :headers="headers"
-              :items="list.tasks"
+              :items="filteredTasks(index, list.tasks)"
               density="compact"
               class="ms-3 py-3"
               :items-per-page="-1"
@@ -811,7 +829,7 @@
       <!--
         <p class="text-h6">
         {{ list.name }} ({{ list.tasks ? list.tasks.length : 0 }})
-        </p> 
+        </p>
       -->
       <VRow
         class="kanban-columns"
@@ -1179,6 +1197,7 @@ import { useProjectListStore } from "../../../../store/project_lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useTheme } from 'vuetify'
+import { VIcon } from 'vuetify/lib/components/index.mjs'
 
 const toast = useToast()
 const vuetifyTheme = useTheme()
@@ -1221,6 +1240,7 @@ const editListTitle = ref(null)
 const showAddKanbanListTaskInput = ref(null)
 const kanbanListTaskName = ref(null)
 const kanbanListTaskInputRef = ref([])
+const searchQuery = ref([])
 const isDragging = ref(false)
 const statusMenu = ref([])
 const dueDateMenu = ref([])
@@ -1614,6 +1634,12 @@ const deleteProjectList = async list => {
   }
 }
 
+function filteredTasks(index, tasks) {
+  const query = searchQuery.value[index] || ''
+
+  return tasks.filter(task => task.name.toLowerCase().includes(query.toLowerCase()))
+}
+
 const getProjectTasks = computed(() => projectTaskStore.getProjectTasks)
 const getProjectLists = computed(() => projectListStore.getProjectLists)
 const project = computed(() => projectStore.getProject)
@@ -1845,19 +1871,6 @@ const filteredProjectLists = computed(() => {
 
 .light::-webkit-scrollbar-thumb:hover {
   background: #b0b0b0;
-}
-
-.project-title {
-  background: #28C76F;
-  color: #fff;
-  padding: 1px 13px;
-  border: 2px solid #28C76F;
-  border-radius: 10px;
-  margin-left: 20px;
-}
-
-.mt-minus-2 {
-  margin-top: -2px;
 }
 
 .align-center-important {

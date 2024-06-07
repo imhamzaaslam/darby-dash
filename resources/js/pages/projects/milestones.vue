@@ -25,16 +25,17 @@
           />
           <VIcon
             icon="tabler-filter"
-            class="bg-primary ms-2"
+            class="bg-primary ms-1"
           />
-          <div class="d-flex justify-center align-center project-title">
+          <div class="ms-4 d-flex justify-center align-center">
             <VIcon
+              start
               icon="tabler-wand"
-              class="bg-white"
+              color="primary"
             />
-            <h5 class="text-h5 text-white ms-1 mt-minus-2">
+            <h3 class="text-primary">
               {{ project.title }}
-            </h5>
+            </h3>
           </div>
         </VBtnToggle>
       </VCol>
@@ -52,12 +53,14 @@
         </div>
       </VCol>
     </VRow>
-    <VRow class="mt-2 mb-2 pt-0 pb-0">
-      <VCol 
+    <VRow class="mt-5 mb-2 pt-0 pb-0">
+      <VCol
         cols="12"
         class="pt-0 ps-4 pb-0"
       >
-        <h3>Manage MileStones</h3>
+        <h3>
+          Manage MileStones
+        </h3>
       </VCol>
     </VRow>
 
@@ -555,19 +558,6 @@ const capitalizeFirstLetter = string => {
 
 .user_role{
   right: 10px;
-}
-
-.project-title {
-  background: #28C76F;
-  color: #fff;
-  padding: 1px 13px;
-  border: 2px solid #28C76F;
-  border-radius: 10px;
-  margin-left: 20px;
-}
-
-.mt-minus-2 {
-  margin-top: -2px;
 }
 
 .align-center-important {

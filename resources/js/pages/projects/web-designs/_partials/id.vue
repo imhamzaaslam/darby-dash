@@ -14,6 +14,23 @@
       </VProgressLinear>
     </VCol>
   </VRow>
+  <VRow class="mt-2 pt-0 pb-0">
+    <VCol
+      cols="12"
+      class="pt-0 ps-4 pb-0"
+    >
+      <div class="d-flex justify-start align-center">
+        <VIcon
+          start
+          icon="tabler-wand"
+          color="primary"
+        />
+        <h3 class="text-primary">
+          {{ project.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
   <VRow>
     <VCol cols="9">
       <div class="horizontal-scroll">
@@ -24,7 +41,7 @@
             cols="3"
             style="flex: 0 0 auto; max-width: 33.333333%;"
           >
-            <VCard 
+            <VCard
               class="logistics-card-statistics cursor-pointer p-0"
               @click="() => $router.push(`/projects/${projectUuid}/tasks/add`)"
             >
@@ -511,6 +528,10 @@ const getColor = progress => {
 
 const projectProgress = computed(() => {
   return projectStore.getProjectProgress
+})
+
+const project = computed(() => {
+  return projectStore.getProject
 })
 </script>
 

@@ -45,7 +45,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
   // ℹ️ Extract event data from event API
   const extractEventDataFromEventApi = eventApi => {
     const { id, title, start, end, url, extendedProps: { calendar, guests, location, description }, allDay } = eventApi
-    
+
     return {
       id,
       title,
@@ -96,7 +96,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
     const existingEvent = calendarApi.value?.getEventById(String(updatedEventData.id))
     if (!existingEvent) {
       console.warn('Can\'t found event in calendar to update')
-      
+
       return
     }
 
@@ -212,7 +212,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
     navLinks: true,
     eventClassNames({ event: calendarEvent }) {
       const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar]
-      
+
       return [
         // Background Color
         `bg-light-${colorName} text-${colorName}`,
@@ -252,10 +252,10 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
     eventContent: arg => {
       // Truncate the title if it exceeds 16 characters
       const truncatedTitle = arg.event.title.length > 22 ? arg.event.title.substring(0, 22) + "..." : arg.event.title
-      
+
       return { html: `<div class="fc-content">${truncatedTitle}</div>` }
     },
-    
+
     customButtons: {
       drawerToggler: {
         text: 'calendarDrawerToggler',
@@ -264,6 +264,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
         },
       },
     },
+    firstDay: 1,
   }
 
 
@@ -281,7 +282,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
   watch(() => configStore.isAppRTL, val => {
     calendarApi.value?.setOption('direction', val ? 'rtl' : 'ltr')
   }, { immediate: true })
-  
+
   return {
     refCalendar,
     calendarOptions,
