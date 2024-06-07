@@ -1,4 +1,19 @@
 <template>
+  <VRow>
+    <VCol cols="12">
+      <VProgressLinear
+        v-model="projectProgress.overallProgress"
+        color="success"
+        height="20"
+      >
+        <template #default="{ value }">
+          <span :class="Math.ceil(value) < 50 ? 'text-primary' : 'text-white'">
+            {{ Math.ceil(value) }}%
+          </span>
+        </template>
+      </VProgressLinear>
+    </VCol>
+  </VRow>
   <VRow class="mt-2 pt-0 pb-0">
     <VCol
       cols="12"
@@ -14,21 +29,6 @@
           {{ project.title }}
         </h3>
       </div>
-    </VCol>
-  </VRow>
-  <VRow>
-    <VCol cols="12">
-      <VProgressLinear
-        v-model="projectProgress.overallProgress"
-        color="success"
-        height="20"
-      >
-        <template #default="{ value }">
-          <span :class="Math.ceil(value) < 50 ? 'text-primary' : 'text-white'">
-            {{ Math.ceil(value) }}%
-          </span>
-        </template>
-      </VProgressLinear>
     </VCol>
   </VRow>
   <VRow>
