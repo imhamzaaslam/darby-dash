@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Admin\TaskController;
 use App\Http\Controllers\Api\Admin\StatusController;
 use App\Http\Controllers\Api\Admin\CalendarFilterController;
 use App\Http\Controllers\Api\Admin\ProjectProgressController;
+use App\Http\Controllers\Api\Admin\MileStoneController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +90,17 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::delete('/', [TaskController::class, 'deleteByProject']);
                 });
                 Route::get('/progress', [ProjectProgressController::class, 'index']);
+
+                Route::get('/lists-without-milestone', [ProjectListController::class, 'getListWithoutMilestone']);
+                Route::prefix('milestones')->group(function () {
+                    Route::get('/', [MileStoneController::class, 'index']);
+                    Route::post('/', [MileStoneController::class, 'store']);
+                });
             });
+        });
+        Route::prefix('milestones')->group(function () {
+            Route::patch('/{milestoneUuid}', [MileStoneController::class, 'update']);
+            Route::delete('/{milestoneUuid}', [MileStoneController::class, 'delete']);
         });
 
         Route::prefix('list/{listUuid}')->group(function () {
@@ -109,7 +120,6 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
         Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);
         Route::get('/statuses', [StatusController::class, 'index']);
-
 
         // Route::prefix('project/{id}/tasks')->group(function () {
         //     Route::get('/', [TaskController::class, 'index']);

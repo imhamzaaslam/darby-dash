@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Project;
+use App\Models\MileStone;
 
 class ProjectProgressService
 {
@@ -27,6 +28,25 @@ class ProjectProgressService
             'launchingDate' => $this->getLaunchingDate($project),
             'overallProgress' => $this->getOverallProgress($project),
             'totalTasks' => $project->tasks->whereNull('parent_id')->count(),
+        ];
+    }
+
+    public function getMileStoneProgress($uuid): array
+    {
+        $mileStone = MileStone::where('uuid', $uuid)->first();
+        $totalTasks = $mileStone->lists->sum(function ($list) {
+            return $list->tasks->count();
+        });
+        $completedTasks = $mileStone->lists->sum(function ($list) {
+            return $list->tasks->where('status', 3)->count();
+        });
+        $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
+
+        return [
+            'totalTasks' => $totalTasks,
+            'completedTasks' => $completedTasks,
+            'progress' => $progress,
+            'status' => $this->getStatus($progress),
         ];
     }
 

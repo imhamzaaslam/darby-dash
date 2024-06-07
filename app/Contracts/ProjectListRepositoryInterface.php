@@ -17,4 +17,6 @@ interface ProjectListRepositoryInterface
     public function delete(ProjectList $projectList): bool;
 
     public function getListTasks(ProjectList $projectList): Collection;
+
+    public function getListWithoutMilestone(Project $project): Collection;
 }

@@ -97,4 +97,19 @@ class ProjectListController extends Controller
 
         return response()->json(['message' => 'Project List deleted successfully']);
     }
+
+    /**
+     * Get tasks by project.
+     *
+     * @param string $projectUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function getListWithoutMilestone(string $projectUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $projectLists = $this->projectListRepository->getListWithoutMilestone($project);
+
+        return ProjectListResource::collection($projectLists);
+    }
+
 }

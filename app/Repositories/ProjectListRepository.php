@@ -45,4 +45,9 @@ class ProjectListRepository extends AbstractEloquentRepository implements Projec
     {
         return $projectList->tasks;
     }
+
+    public function getListWithoutMilestone(Project $project): Collection
+    {
+        return $project->lists->where('milestone_id', null);
+    }
 }

@@ -4,6 +4,9 @@ export default {
   getProjectLists(projectId) {
     return apiClient.get(`admin/projects/${projectId}/lists`)
   },
+  getWithoutMileStone(projectId) {
+    return apiClient.get(`admin/projects/${projectId}/lists-without-milestone`)
+  },
   createProjectList(list) {
     return apiClient.post(`admin/projects/${list.project_uuid}/list`, list)
   },
