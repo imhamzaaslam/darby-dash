@@ -13,13 +13,22 @@
         multiple
         @change="filePicked"
       >
-      <VBtn
-        prepend-icon="tabler-upload"
-        color="primary"
-        @click="chooseFile"
-      >
-        Upload File
-      </VBtn>
+      <div class="d-flex gap-2">
+        <VBtn
+          prepend-icon="tabler-folder-plus"
+          color="primary"
+          @click="isCreateFolderDialogOpen = true"
+        >
+          Create Folder
+        </VBtn>
+        <VBtn
+          prepend-icon="tabler-upload"
+          color="primary"
+          @click="chooseFile"
+        >
+          Upload File
+        </VBtn>
+      </div>
     </VCol>
   </VRow>
   <VRow class="mt-2">
@@ -28,7 +37,8 @@
       v-if="images.length > 0"
       :key="image.id"
       cols="12"
-      md="2"> 
+      md="2"
+    > 
       <div
         class="image-container"
         @click="openFileViewer(image)"
@@ -65,7 +75,8 @@
         </div>
         <div
           v-else
-          class="d-flex align-center justify-space-between">
+          class="d-flex align-center justify-space-between"
+        >
           <span class="text-sm">2 secs ago</span>
           <div class="d-flex align-center">
             <VIcon
@@ -99,18 +110,33 @@
     :file="selectedFile"
     @update:show="isViewerOpen = $event"
   />
+  <CreateFolderDialog
+    :is-open="isCreateFolderDialogOpen"
+    @update:is-open="isCreateFolderDialogOpen = $event"
+    @createFolder="handleCreateFolder"
+  />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import FileViewer from './web-designs/_partials/file-viewer.vue'
 import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
+import CreateFolderDialog from '@/components/dialogs/CreateFolderDialog.vue'
+
+const isCreateFolderDialogOpen = ref(false)
 
 const fileInputRef = ref(null)
 const images = ref([])
 const uploadProgress = ref([])
 const isViewerOpen = ref(false)
 const selectedFile = ref(null)
+
+const handleCreateFolder = folderName => {
+  // alert('Folder created: ' + folderName)
+
+  // Handle folder creation logic
+  // console.log('Folder created:', folderName)
+}
 
 const chooseFile = () => {
   fileInputRef.value.click()
