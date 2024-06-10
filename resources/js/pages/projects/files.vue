@@ -31,10 +31,12 @@
       </div>
     </VCol>
   </VRow>
-  <VRow class="mt-2">
+  <VRow
+    v-if="images.length > 0" 
+    class="mt-2"
+  >
     <VCol
       v-for="(image, index) in images"
-      v-if="images.length > 0"
       :key="image.id"
       cols="12"
       md="2"
@@ -95,8 +97,39 @@
         </div>
       </div>
     </VCol>
+  </VRow>
+
+  <VRow 
+    v-if="folders.length > 0"
+    class="mt-4"
+  >
     <VCol
-      v-else
+      v-for="folder in folders"
+      :key="folder.id"
+      cols="12"
+      md="3"
+      lg="2"
+    >
+      <div class="folder-container">
+        <div class="folder-icon">
+          <VIcon 
+            class="tabler-folder"
+            size="large"
+            color="primary"
+          />
+        </div>
+        <div class="folder-name">
+          {{ folder.name }}
+        </div>
+      </div> 
+    </VCol>
+  </VRow>
+
+  <VRow
+    v-if="images.length === 0 && folders.length === 0"
+    class="mt-4"
+  >
+    <VCol
       cols="12"
       class="d-flex flex-column align-center justify-center text-center" 
     >
@@ -112,8 +145,8 @@
   />
   <CreateFolderDialog
     :is-open="isCreateFolderDialogOpen"
+    :folder-load-status="folderLoadStatus"
     @update:is-open="isCreateFolderDialogOpen = $event"
-    @createFolder="handleCreateFolder"
   />
 </template>
 
@@ -122,17 +155,28 @@ import { ref } from 'vue'
 import FileViewer from './web-designs/_partials/file-viewer.vue'
 import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
 import CreateFolderDialog from '@/components/dialogs/CreateFolderDialog.vue'
+import { useFolderStore } from '@/store/folders'
+import { useRoute } from 'vue-router'
+import { useToast } from "vue-toastification"
 
 const isCreateFolderDialogOpen = ref(false)
 
+const folderStore = useFolderStore()
+const $route = useRoute()
+const toast = useToast()
+const projectUuid = $route.params.id
 const fileInputRef = ref(null)
 const images = ref([])
 const uploadProgress = ref([])
 const isViewerOpen = ref(false)
 const selectedFile = ref(null)
 
-const handleCreateFolder = folderName => {
-  alert('Folder created: ' + folderName)
+onBeforeMount(async () => {
+  await getFolders()
+})
+
+const getFolders = async () => {
+  await folderStore.getAll(projectUuid)
 }
 
 const chooseFile = () => {
@@ -214,21 +258,17 @@ const deleteImage = index => {
   images.value.splice(index, 1)
   uploadProgress.value.splice(index, 1)
 }
+
+const folders = computed(() => {
+  return folderStore.folders
+})
+
+const folderLoadStatus = computed(() => {
+  return folderStore.loadStatus
+})
 </script>
 
 <style scoped>
-/* .image-row {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.image-col {
-  flex: 1 1 20%; 
-  max-width: 20%;
-  box-sizing: border-box;
-  padding: 8px; 
-} */
-
 .image-container {
   position: relative;
   border: 2px solid #F48D27;
@@ -307,5 +347,32 @@ const deleteImage = index => {
   color: black ;
   font-size: 10px; 
   font-weight: bold;
+}
+
+.folder-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.folder-container:hover {
+  transform: scale(1.05);
+}
+
+.folder-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.folder-name {
+  font-weight: bold;
+  text-align: center;
 }
 </style>

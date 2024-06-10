@@ -7,22 +7,33 @@
     <DialogCloseBtn @click="closeDialog" />
     <VCard title="Create Folder">
       <VForm
-        ref="form"
+        ref="createFolderForm"
         @submit.prevent="submit"
       >
         <VCardText>
           <VTextField
             v-model="folderName"
             label="Folder Name"
-            required
+            :rules="[requiredValidator]"
           />
         </VCardText>
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             type="submit"
             color="primary"
+            :disabled="folderLoadStatus === 1"
           >
-            Create
+            <span v-if="folderLoadStatus === 1">
+              <VProgressCircular
+                :size="16"
+                width="3"
+                indeterminate
+              />
+              Loading...
+            </span>
+            <span v-else>
+              Create
+            </span>
           </VBtn>
           <VBtn
             color="secondary"
@@ -37,33 +48,50 @@
 </template>
   
 <script setup>
-import { ref, watch } from 'vue'
-  
-// Define props
+import { useFolderStore } from '@/store/folders'
+import { useRoute } from 'vue-router'
+import { useToast } from "vue-toastification"
+
 const props = defineProps({
   isOpen: Boolean,
+  folderLoadStatus: String,
 })
-  
-// Define emits
-const emit = defineEmits(['update:isOpen', 'createFolder'])
-  
+
+const emit = defineEmits(['update:isOpen'])
+
+const folderStore = useFolderStore()
+const $route = useRoute()
+const toast = useToast()
+const projectUuid = $route.params.id
 const folderName = ref('')
+const createFolderForm = ref()
   
 // Close dialog function
 const closeDialog = () => {
   emit('update:isOpen', false)
-  folderName.value = ''
 }
-  
-// Submit function
+
 const submit = () => {
-  emit('createFolder', folderName.value)
-  closeDialog()
+  createFolderForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
+        const payload = {
+          'name': folderName.value,
+        }
+
+        await folderStore.create(projectUuid, payload)
+        toast.success('Folder created successfully')
+        closeDialog()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  })
 }
-  
+
 // Watch for prop changes to reset form state
 watch(() => props.isOpen, newVal => {
-  if (newVal === false) {
+  if (newVal === true) {
     folderName.value = ''
   }
 })
