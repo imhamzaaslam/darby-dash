@@ -111,6 +111,30 @@
       lg="2"
     >
       <div class="folder-container">
+        <IconBtn @click.prevent class="action-icon">
+          <VIcon icon="tabler-dots-vertical" />
+          <VMenu 
+            activator="parent" 
+            class="p-0"
+          >
+            <VList class="p-0">
+              <VListItem
+                value="edit"
+                class="p-0"
+                @click="editFolder(folder)"
+              >
+                Edit
+              </VListItem>
+              <VListItem
+                value="delete"
+                class="p-0"
+                @click="deleteFolder(folder)"
+              >
+                Delete
+              </VListItem>
+            </VList>
+          </VMenu>
+        </IconBtn>
         <div class="folder-icon">
           <VIcon 
             class="tabler-folder"
@@ -146,7 +170,15 @@
   <CreateFolderDialog
     :is-open="isCreateFolderDialogOpen"
     :folder-load-status="folderLoadStatus"
+    @get-folders="getFolders"
     @update:is-open="isCreateFolderDialogOpen = $event"
+  />
+  <EditFolderDialog
+    :is-open="isEditFolderDialogOpen"
+    :folder-load-status="folderLoadStatus"
+    :folder="selectedFolder"
+    @get-folders="getFolders"
+    @update:is-open="isEditFolderDialogOpen = $event"
   />
 </template>
 
@@ -155,11 +187,13 @@ import { ref } from 'vue'
 import FileViewer from './web-designs/_partials/file-viewer.vue'
 import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
 import CreateFolderDialog from '@/components/dialogs/CreateFolderDialog.vue'
+import EditFolderDialog from '@/components/dialogs/EditFolderDialog.vue'
 import { useFolderStore } from '@/store/folders'
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
 
 const isCreateFolderDialogOpen = ref(false)
+const isEditFolderDialogOpen = ref(false)
 
 const folderStore = useFolderStore()
 const $route = useRoute()
@@ -170,6 +204,7 @@ const images = ref([])
 const uploadProgress = ref([])
 const isViewerOpen = ref(false)
 const selectedFile = ref(null)
+const selectedFolder = ref(null)
 
 onBeforeMount(async () => {
   await getFolders()
@@ -257,6 +292,17 @@ const downloadFile = file => {
 const deleteImage = index => {
   images.value.splice(index, 1)
   uploadProgress.value.splice(index, 1)
+}
+
+const editFolder = folder => {
+  selectedFolder.value = folder
+  console.log(selectedFolder.value)
+  isEditFolderDialogOpen.value = true
+}
+
+const deleteFolder = async folder => {
+  await folderStore.delete(folder.uuid)
+  await getFolders()
 }
 
 const folders = computed(() => {
@@ -360,6 +406,13 @@ const folderLoadStatus = computed(() => {
   transition: transform 0.3s ease;
   cursor: pointer;
   margin-bottom: 16px;
+  position: relative;
+}
+
+.action-icon {
+  position: absolute;
+  top: -4px;
+  right: -8px;
 }
 
 .folder-container:hover {

@@ -5,7 +5,7 @@
   >
     <!-- Dialog close btn -->
     <DialogCloseBtn @click="closeDialog" />
-    <VCard title="Create Folder">
+    <VCard title="Update Folder">
       <VForm
         ref="createFolderForm"
         @submit.prevent="submit"
@@ -32,7 +32,7 @@
               Loading...
             </span>
             <span v-else>
-              Create
+              Update
             </span>
           </VBtn>
           <VBtn
@@ -46,31 +46,32 @@
     </VCard>
   </VDialog>
 </template>
-  
+    
 <script setup>
 import { useFolderStore } from '@/store/folders'
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
-
+  
 const props = defineProps({
   isOpen: Boolean,
   folderLoadStatus: String,
+  folder: Object,
 })
-
+  
 const emit = defineEmits(['update:isOpen', 'getFolders'])
-
+  
 const folderStore = useFolderStore()
 const $route = useRoute()
 const toast = useToast()
 const projectUuid = $route.params.id
-const folderName = ref('')
+const folderName = ref(props.folder?.name ?? '')
 const createFolderForm = ref()
-  
+    
 // Close dialog function
 const closeDialog = () => {
   emit('update:isOpen', false)
 }
-
+  
 const submit = () => {
   createFolderForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
@@ -78,9 +79,9 @@ const submit = () => {
         const payload = {
           'name': folderName.value,
         }
-
-        await folderStore.create(projectUuid, payload)
-        toast.success('Folder created successfully')
+  
+        await folderStore.update(props.folder.uuid, payload)
+        toast.success('Folder updated successfully')
         closeDialog()
         emit('getFolders')
       } catch (error) {
@@ -89,16 +90,18 @@ const submit = () => {
     }
   })
 }
-
+  
 // Watch for prop changes to reset form state
 watch(() => props.isOpen, newVal => {
   if (newVal === true) {
     folderName.value = ''
   }
+  if(props.folder){
+    folderName.value = props.folder?.name
+  }
 })
 </script>
-  
-  <style scoped>
-  /* Add any specific styles if needed */
-  </style>
-  
+    
+<style scoped>
+/* Add any specific styles if needed */
+</style>
