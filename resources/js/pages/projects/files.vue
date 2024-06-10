@@ -170,6 +170,7 @@
   <CreateFolderDialog
     :is-open="isCreateFolderDialogOpen"
     :folder-load-status="folderLoadStatus"
+    :get-errors="getErrors"
     @get-folders="getFolders"
     @update:is-open="isCreateFolderDialogOpen = $event"
   />
@@ -177,6 +178,7 @@
     :is-open="isEditFolderDialogOpen"
     :folder-load-status="folderLoadStatus"
     :folder="selectedFolder"
+    :get-errors="getErrors"
     @get-folders="getFolders"
     @update:is-open="isEditFolderDialogOpen = $event"
   />
@@ -311,6 +313,10 @@ const folders = computed(() => {
 
 const folderLoadStatus = computed(() => {
   return folderStore.loadStatus
+})
+
+const getErrors = computed(() => {
+  return folderStore.getError
 })
 </script>
 

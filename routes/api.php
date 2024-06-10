@@ -108,7 +108,6 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::patch('/', [CalendarEventController::class, 'update']);
                     Route::delete('/', [CalendarEventController::class, 'delete']);
                 });
-                // folder
                 Route::prefix('folders')->group(function () {
                     Route::get('/', [FolderController::class, 'index']);
                     Route::post('/', [FolderController::class, 'store']);

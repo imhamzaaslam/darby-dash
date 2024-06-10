@@ -5,7 +5,7 @@ namespace App\Http\Requests\project;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Project;
 
-class StoreFolderRequest extends FormRequest
+class UpdateFolderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,11 @@ class StoreFolderRequest extends FormRequest
      */
     public function rules(): array
     {
-        $project = Project::where('uuid', $this->route('uuid'))->firstOrFail();
+        $project = Project::where('uuid', $this->projectUuid)->firstOrFail();
 
         return [
-            'name' => 'required|string|max:255|unique:folders,name,NULL,id,project_id,' . $project->id,
+            'name' => 'required|string|max:255|unique:folders,name,' . $this->route('folderUuid') . ',uuid,project_id,' . $project->id,
+            'projectUuid' => 'required|string|exists:projects,uuid',
         ];
     }
 }

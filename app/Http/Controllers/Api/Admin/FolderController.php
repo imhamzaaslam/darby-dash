@@ -7,6 +7,7 @@ use App\Contracts\FolderRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\FolderResource;
 use App\Http\Requests\project\StoreFolderRequest;
+use App\Http\Requests\project\UpdateFolderRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -52,11 +53,11 @@ class FolderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param StoreFolderRequest $request
+     * @param UpdateFolderRequest $request
      * @param string $folderUuid
      * @return FolderResource|JsonResponse
      */
-    public function update(StoreFolderRequest $request, string $folderUuid): FolderResource|JsonResponse
+    public function update(UpdateFolderRequest $request, string $folderUuid): FolderResource|JsonResponse
     {
         $folder = $this->folderRepository->getByUuidOrFail($folderUuid);
         $this->folderRepository->update($folder, $request->validated());

@@ -15,6 +15,7 @@
             v-model="folderName"
             label="Folder Name"
             :rules="[requiredValidator]"
+            :error-messages="addingErrors.name"
           />
         </VCardText>
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
@@ -55,6 +56,7 @@ import { useToast } from "vue-toastification"
 const props = defineProps({
   isOpen: Boolean,
   folderLoadStatus: String,
+  getErrors: Object,
 })
 
 const emit = defineEmits(['update:isOpen', 'getFolders'])
@@ -65,6 +67,10 @@ const toast = useToast()
 const projectUuid = $route.params.id
 const folderName = ref('')
 const createFolderForm = ref()
+
+const addingErrors = ref({
+  name: null,
+})
   
 // Close dialog function
 const closeDialog = () => {
@@ -75,19 +81,39 @@ const submit = () => {
   createFolderForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
+        resetErrors()
+
         const payload = {
           'name': folderName.value,
         }
 
         await folderStore.create(projectUuid, payload)
-        toast.success('Folder created successfully')
-        closeDialog()
-        emit('getFolders')
+        if(props.getErrors) {
+          showError()
+        } else{
+          emit('getFolders')
+          closeDialog()
+          toast.success('Folder created successfully')
+        }
       } catch (error) {
         console.error(error)
       }
     }
   })
+}
+
+const showError = () => {
+  if (props.getStatusCode === 500) {
+    toast.error('Something went wrong. Please try again later.')
+  } else {
+    addingErrors.value = props.getErrors.response.data.errors
+  }
+}
+
+const resetErrors = () => {
+  addingErrors.value = {
+    name: null,
+  }
 }
 
 // Watch for prop changes to reset form state
