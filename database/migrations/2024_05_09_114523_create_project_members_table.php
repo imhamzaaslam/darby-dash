@@ -15,12 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->integer('display_order')->default(0);
-            $table->integer('is_deletable')->default(1);
-            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('deleted_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->softDeletes();
             $table->timestamps();
         });
     }
