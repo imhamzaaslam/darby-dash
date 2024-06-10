@@ -12,6 +12,8 @@ use App\Contracts\ProjectListRepositoryInterface;
 use App\Contracts\CalendarFilterRepositoryInterface;
 use App\Contracts\StatusRepositoryInterface;
 use App\Contracts\MileStoneRepositoryInterface;
+use App\Contracts\FileRepositoryInterface;
+use App\Contracts\FolderRepositoryInterface;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -22,6 +24,8 @@ use App\Models\ProjectList;
 use App\Models\CalendarFilter;
 use App\Models\Status;
 use App\Models\MileStone;
+use App\Models\File;
+use App\Models\Folder;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
@@ -32,6 +36,8 @@ use App\Repositories\ProjectListRepository;
 use App\Repositories\CalendarFilterRepository;
 use App\Repositories\StatusRepository;
 use App\Repositories\MileStoneRepository;
+use App\Repositories\FileRepository;
+use App\Repositories\FolderRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -91,6 +97,16 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             MileStoneRepositoryInterface::class,
             fn() => new MileStoneRepository(new MileStone)
+        );
+
+        $this->app->bind(
+            FileRepositoryInterface::class,
+            fn() => new FileRepository(new File)
+        );
+
+        $this->app->bind(
+            FolderRepositoryInterface::class,
+            fn() => new FolderRepository(new Folder)
         );
     }
 

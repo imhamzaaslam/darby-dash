@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\Admin\StatusController;
 use App\Http\Controllers\Api\Admin\CalendarFilterController;
 use App\Http\Controllers\Api\Admin\ProjectProgressController;
 use App\Http\Controllers\Api\Admin\MileStoneController;
+use App\Http\Controllers\Api\Admin\FileController;
+use App\Http\Controllers\Api\Admin\FolderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +100,12 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::get('/', [MileStoneController::class, 'index']);
                     Route::post('/', [MileStoneController::class, 'store']);
                 });
+
+                // folder
+                Route::prefix('folders')->group(function () {
+                    Route::get('/', [FolderController::class, 'index']);
+                    Route::post('/', [FolderController::class, 'store']);
+                });
             });
         });
         Route::prefix('milestones')->group(function () {
@@ -118,6 +126,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             Route::prefix('{taskUuid}')->group(function () {
                 Route::patch('/', [TaskController::class, 'updateAttributes']);
             });
+        });
+
+        Route::prefix('folders/{folderUuid}')->group(function () {
+            Route::patch('/', [FolderController::class, 'update']);
+            Route::delete('/', [FolderController::class, 'delete']);
         });
 
         Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);

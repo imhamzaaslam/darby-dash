@@ -132,10 +132,7 @@ const isViewerOpen = ref(false)
 const selectedFile = ref(null)
 
 const handleCreateFolder = folderName => {
-  // alert('Folder created: ' + folderName)
-
-  // Handle folder creation logic
-  // console.log('Folder created:', folderName)
+  alert('Folder created: ' + folderName)
 }
 
 const chooseFile = () => {
