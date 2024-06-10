@@ -22,10 +22,8 @@ class StoreFolderRequest extends FormRequest
      */
     public function rules(): array
     {
-        $project = Project::where('uuid', $this->route('uuid'))->firstOrFail();
-
         return [
-            'name' => 'required|string|max:255|unique:folders,name,NULL,id,project_id,' . $project->id,
+            'name' => 'required|string|max:255',
         ];
     }
 }

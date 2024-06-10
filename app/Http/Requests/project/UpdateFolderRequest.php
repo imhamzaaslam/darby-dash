@@ -22,11 +22,9 @@ class UpdateFolderRequest extends FormRequest
      */
     public function rules(): array
     {
-        $project = Project::where('uuid', $this->projectUuid)->firstOrFail();
 
         return [
-            'name' => 'required|string|max:255|unique:folders,name,' . $this->route('folderUuid') . ',uuid,project_id,' . $project->id,
-            'projectUuid' => 'required|string|exists:projects,uuid',
+            'name' => 'required|string|max:255',
         ];
     }
 }

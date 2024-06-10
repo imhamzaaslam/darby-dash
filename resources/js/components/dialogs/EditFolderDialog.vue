@@ -86,7 +86,6 @@ const submit = () => {
       try {
         const payload = {
           'name': folderName.value,
-          'projectUuid': projectUuid,
         }
   
         await folderStore.update(props.folder.uuid, payload)
