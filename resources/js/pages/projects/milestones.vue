@@ -34,7 +34,7 @@
               color="primary"
             />
             <h3 class="text-primary">
-              {{ project.title }}
+              {{ project?.title }}
             </h3>
           </div>
         </VBtnToggle>
@@ -265,10 +265,10 @@
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
             <VBtn
               type="submit"
-              :disabled="getProjectLoadStatus === 1"
+              :disabled="getProjectMileStone === 1"
               @click="addMileStoneForm?.validate()"
             >
-              <span v-if="getProjectLoadStatus === 1">
+              <span v-if="getProjectMileStone === 1">
                 <VProgressCircular
                   :size="16"
                   width="3"
@@ -331,10 +331,10 @@
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
             <VBtn
               type="submit"
-              :disabled="getProjectLoadStatus === 1"
+              :disabled="getProjectMileStone === 1"
               @click="editMileStoneForm?.validate()"
             >
-              <span v-if="getProjectLoadStatus === 1">
+              <span v-if="getProjectMileStone === 1">
                 <VProgressCircular
                   :size="16"
                   width="3"

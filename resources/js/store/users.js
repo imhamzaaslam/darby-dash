@@ -118,9 +118,10 @@ export const useUserStore = defineStore('users', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.getUsersByRole('developer')
+        const response = await UserService.getAll()
 
-        this.members = response.data.data.map(member => ({ id: member.id, name: member.name_first+ " " + member.name_last }))
+        // contatinate role
+        this.members = response.data.data.map(member => ({ id: member.id, name: member.name_first+ " " + member.name_last+ " (" + member.role + ")" }))
         this.loadStatus = 2
       } catch (error) {
         this.error = error

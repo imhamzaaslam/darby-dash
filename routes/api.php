@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\Admin\CalendarFilterController;
 use App\Http\Controllers\Api\Admin\ProjectProgressController;
 use App\Http\Controllers\Api\Admin\MileStoneController;
 use App\Http\Controllers\Api\Admin\CalendarEventController;
+use App\Http\Controllers\Api\Admin\FileController;
+use App\Http\Controllers\Api\Admin\FolderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +55,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UsersController::class, 'index']);
+            Route::get('/all', [UsersController::class, 'getAllUsers']);
             Route::post('/', [UsersController::class, 'store']);
             Route::prefix('{uuid}')->group(function () {
                 Route::get('/', [UsersController::class, 'show']);
@@ -74,6 +77,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/users', [ProjectController::class, 'updateUsers']);
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
+                Route::delete('/user/{userUuid}', [ProjectController::class, 'deleteUser']);
 
                 Route::get('/lists', [ProjectListController::class, 'index']);
                 Route::post('/list', [ProjectListController::class, 'store']);
@@ -104,6 +108,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::patch('/', [CalendarEventController::class, 'update']);
                     Route::delete('/', [CalendarEventController::class, 'delete']);
                 });
+                // folder
+                Route::prefix('folders')->group(function () {
+                    Route::get('/', [FolderController::class, 'index']);
+                    Route::post('/', [FolderController::class, 'store']);
+                });
             });
         });
         Route::prefix('milestones')->group(function () {
@@ -124,6 +133,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             Route::prefix('{taskUuid}')->group(function () {
                 Route::patch('/', [TaskController::class, 'updateAttributes']);
             });
+        });
+
+        Route::prefix('folders/{folderUuid}')->group(function () {
+            Route::patch('/', [FolderController::class, 'update']);
+            Route::delete('/', [FolderController::class, 'delete']);
         });
 
         Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);

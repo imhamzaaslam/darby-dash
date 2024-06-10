@@ -34,7 +34,7 @@
               color="primary"
             />
             <h3 class="text-primary">
-              {{ project.title }}
+              {{ project?.title }}
             </h3>
           </div>
         </VBtnToggle>
@@ -64,119 +64,153 @@
       </VCol>
     </VRow>
 
-    <!-- Skeleton Loader -->
-    <div v-if="getProjectLoadStatus === 1">
-      <VRow
-        v-if="viewType === 'list'"
-        class="mb-4"
-      >
-        <TeamListSkeleton />
-      </VRow>
-
-      <!-- Grid View Skeleton Loader -->
-      <VRow v-else>
-        <TeamGridSkeleton />
-      </VRow>
+    <div 
+      v-if="getProjectLoadStatus !== 1 && getUsersByProjects.length === 0"
+      class="text-center"
+    >
+      <div 
+        class="mt-12"
+        v-html="NoTaskInList"
+      />
+      <span>
+        No members found
+      </span>
     </div>
 
     <div v-else>
-      <VRow
-        v-if="viewType === 'list'"
-        class="mb-4"
-      >
-        <VCol
-          v-for="member in getUsersByProjects"
-          :key="member.id"
-          cols="12"
+      <!-- Skeleton Loader -->
+      <div v-if="getProjectLoadStatus === 1">
+        <VRow
+          v-if="viewType === 'list'"
+          class="mb-4"
         >
-          <VCard class="d-flex align-center ps-4 py-1">
-            <VCol cols="4">
-              <div class="d-flex align-center">
+          <TeamListSkeleton />
+        </VRow>
+
+        <!-- Grid View Skeleton Loader -->
+        <VRow v-else>
+          <TeamGridSkeleton />
+        </VRow>
+      </div>
+
+      <div v-else>
+        <VRow
+          v-if="viewType === 'list'"
+          class="mb-4"
+        >
+          <VCol
+            v-for="member in getUsersByProjects"
+            :key="member.id"
+            cols="12"
+          >
+            <VCard class="d-flex align-center ps-4 py-1">
+              <VCol cols="4">
+                <div class="d-flex align-center">
+                  <VAvatar
+                    size="36"
+                    :class="member.avatar ? '' : 'text-white bg-primary'"
+                    :variant="!member.avatar ? 'tonal' : ''"
+                  >
+                    <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
+                  </VAvatar>
+                  <div class="d-flex flex-column ms-3">
+                    <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ member.name_first }} {{ member.name_last }}</span>
+                    <small class="mt-0 text-xs">
+                      {{ roleStore.capitalizeFirstLetter(member.role) }}
+                    </small>
+                  </div>
+                </div>
+              </VCol>
+              <VCol cols="4">
+                <VIcon
+                  color="primary"
+                  icon="tabler-mail"
+                />
+                <span class="ms-2">
+                  {{ member.email }}
+                </span>
+              </VCol>
+              <VCol
+                cols="3"
+                class="ms-2"
+              >
+                <VIcon
+                  color="primary"
+                  icon="tabler-phone"
+                />
+                <span class="ms-2">
+                  {{ member?.info.phone }}
+                </span>
+              </VCol>
+              <VCol
+                cols="1"
+                class="ms-2 cursor-pointer"
+                @click="deleteMember(member)"
+              >
+                <VIcon
+                  color="primary"
+                  icon="tabler-trash"
+                />
+              </VCol>
+            </VCard>
+          </VCol>
+        </VRow>
+
+        <!-- Grid View -->
+        <VRow v-else>
+          <VCol
+            v-for="member in getUsersByProjects"
+            :key="member.id"
+            cols="12"
+            md="4"
+          >
+            <VCard>
+              <div class="image-container">
+                <VImg :src="Page2" />
+              </div>
+              <VCardText class="position-relative d-flex align-center">
                 <VAvatar
-                  size="36"
+                  size="80"
                   :class="member.avatar ? '' : 'text-white bg-primary'"
                   :variant="!member.avatar ? 'tonal' : ''"
+                  class="avatar-center"
                 >
                   <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
                 </VAvatar>
                 <div class="d-flex flex-column ms-3">
-                  <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ member.name_first }} {{ member.name_last }}</span>
-                  <small class="mt-0 text-xs">
+                  <span class="font-weight-medium text-high-emphasis text-sm text-truncate side-flick-name ms-4">{{ member.name_first }} {{ member.name_last }}</span>
+                  <small class="mt-0 text-xs side-flick-role ms-4">
                     {{ roleStore.capitalizeFirstLetter(member.role) }}
                   </small>
+                  <div class="d-flex align-center mt-8">
+                    <VIcon
+                      color="primary"
+                      icon="tabler-mail"
+                    />
+                    <span class="ms-1 text-sm">{{ member.email }}</span>
+                  </div>
+                  <div class="d-flex align-center mt-2">
+                    <VIcon
+                      color="primary"
+                      icon="tabler-phone"
+                    />
+                    <span class="ms-1 text-sm">{{ member?.info.phone }}</span>
+                  </div>
                 </div>
-              </div>
-            </VCol>
-            <VCol cols="4">
-              <VIcon
-                color="primary"
-                icon="tabler-mail"
-              />
-              <span class="ms-2">
-                {{ member.email }}
-              </span>
-            </VCol>
-            <VCol
-              cols="4"
-              class="ms-8"
-            >
-              <VIcon
-                color="primary"
-                icon="tabler-phone"
-              />
-              <span class="ms-2">
-                {{ member?.info.phone }}
-              </span>
-            </VCol>
-          </VCard>
-        </VCol>
-      </VRow>
-
-      <!-- Grid View -->
-      <VRow v-else>
-        <VCol
-          v-for="member in getUsersByProjects"
-          :key="member.id"
-          cols="12"
-          md="4"
-        >
-          <VCard>
-            <div class="image-container">
-              <VImg :src="Page2" />
-            </div>
-            <VCardText class="position-relative d-flex align-center">
-              <VAvatar
-                size="80"
-                :class="member.avatar ? '' : 'text-white bg-primary'"
-                :variant="!member.avatar ? 'tonal' : ''"
-                class="avatar-center"
+              </VCardText>
+              <div 
+                class="position-absolute delete-icon" 
+                @click="deleteMember(member)"
               >
-                <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
-              </VAvatar>
-              <div class="d-flex flex-column ms-3">
-                <span class="font-weight-medium text-high-emphasis text-sm text-truncate side-flick-name ms-2">{{ member.name_first }} {{ member.name_last }}</span>
-                <small class="mt-0 text-xs side-flick-role ms-2">
-                  {{ roleStore.capitalizeFirstLetter(member.role) }}
-                </small>
-                <div class="d-flex align-center mt-8">
-                  <VIcon
-                    color="primary"
-                    icon="tabler-mail"
-                  />
-                  <span class="ms-1 text-sm">{{ member.email }}</span>
-                </div>
-                <div class="d-flex align-center mt-2">
-                  <VIcon
-                    color="primary"
-                    icon="tabler-phone"
-                  />
-                  <span class="ms-1 text-sm">{{ member?.info.phone }}</span>
-                </div>
+                <VIcon
+                  color="primary"
+                  icon="tabler-trash"
+                />
               </div>
-            </VCardText>
-          </VCard>
-        </VCol>
-      </VRow>
+            </VCard>
+          </VCol>
+        </VRow>
+      </div>
     </div>
   </div>
   <VDialog
@@ -195,7 +229,7 @@
       >
         <VCardText>
           <AppAutocomplete
-            v-model="selectedMembers"
+            v-model="newMembers"
             :items="getMembers"
             item-title="name"
             item-value="id"
@@ -243,6 +277,7 @@ import Swal from 'sweetalert2'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import Page2 from '../../../images/pages/2.png'
+import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../store/projects"
@@ -261,6 +296,7 @@ const addMemberForm = ref()
 const isAddMemberDialogueOpen = ref(false)
 const isLoading = ref(false)
 const selectedMembers = ref([])
+const newMembers = ref([])
 
 const projectId = computed(() => router.params.id)
 
@@ -277,7 +313,7 @@ async function submitAddMemberForm() {
       try {
         const payload = {
           uuid: projectId.value,
-          member_ids: selectedMembers.value,
+          member_ids: [...selectedMembers.value, ...newMembers.value],
         }
 
         await projectStore.updateMember(payload)
@@ -286,6 +322,8 @@ async function submitAddMemberForm() {
         toast.success('Member added successfully', { timeout: 1000 })
 
         await getByProjects()
+        await fetchProject()
+        await setSelectedMembers()
       } catch (error) {
         console.error('Error adding member:', error)
         toast.error('Failed to add member:', error.message || error)
@@ -296,9 +334,7 @@ async function submitAddMemberForm() {
 
 const fetchMembers = async () => {
   try {
-    if(getLoadStatus.value === 1) return
-
-    await userStore.getAll()
+    await userStore.getMembers()
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching members:', error)
@@ -310,7 +346,6 @@ const fetchMembers = async () => {
 
 const fetchProject = async () => {
   try {
-    if(getLoadStatus.value === 1) return
     await projectStore.show(projectId.value)
     isLoading.value = true
   } catch (error) {
@@ -326,9 +361,12 @@ const setSelectedMembers = async () => {
 
   const project = projectStore.getProject
   const members = project.member_ids
-
+  
   // set in selectedMembers
   selectedMembers.value = members
+
+  // set newMembers to empty
+  newMembers.value = []
 }
 
 const getByProjects = async () => {
@@ -339,8 +377,38 @@ const getByProjects = async () => {
   }
 }
 
+const deleteMember = async member => {
+  try {
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to delete ${member.name_first + ' ' + member.name_last}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#F69636",
+      cancelButtonColor: "#808390",
+      confirmButtonText: "Yes, delete it!",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+      },
+    })
+
+    if (confirmDelete.isConfirmed) {
+      await projectStore.deleteMember(projectId.value, member.uuid)
+      toast.success('Member deleted successfully', { timeout: 1000 })
+      await getByProjects()
+      await fetchProject()
+      await setSelectedMembers()
+
+    }
+  } catch (error) {
+    toast.error('Error deleting member:', error)
+  }
+}
+
 const getMembers = computed(() => {
-  return userStore.getMembersList
+  const members = userStore.getMembersList
+
+  return members.filter(member => !selectedMembers.value.includes(member.id))
 })
 
 const project = computed(() =>{
@@ -404,5 +472,19 @@ const getProjectLoadStatus = computed(() => {
 
 .align-center-important {
   align-items: center !important;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 0 0 0 10px;
+  cursor: pointer;
+}
+
+.delete-icon:hover {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 </style>

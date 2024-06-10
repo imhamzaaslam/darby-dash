@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Contracts\ProjectRepositoryInterface;
+use App\Contracts\UserRepositoryInterface;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\project\StoreProjectRequest;
@@ -15,7 +16,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class ProjectController extends Controller
 {
     public function __construct(
-        protected ProjectRepositoryInterface $projectRepository
+        protected ProjectRepositoryInterface $projectRepository,
+        protected UserRepositoryInterface $userRepository
     ) {}
 
     /**
@@ -156,5 +158,22 @@ class ProjectController extends Controller
         $this->projectRepository->updateProjectMembers($project, $member_ids);
 
         return response()->json(['message' => 'Members updated successfully']);
+    }
+
+    /**
+     * Remove the specified user from project.
+     *
+     * @param string $uuid
+     * @param string $userUuid
+     * @return JsonResponse
+     */
+    public function deleteUser(string $uuid, string $userUuid): JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $user = $this->userRepository->getByUuidOrFail($userUuid);
+
+        $this->projectRepository->deleteProjectMember($project, $user);
+
+        return response()->json(['message' => 'Member removed successfully']);
     }
 }

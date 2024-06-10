@@ -33,4 +33,7 @@ export default {
   updateMember(project) {
     return apiClient.patch(`admin/projects/${project.uuid}/users`, project)
   },
+  deleteMember(uuid, userUuid) {
+    return apiClient.delete(`admin/projects/${uuid}/user/${userUuid}`)
+  },
 }

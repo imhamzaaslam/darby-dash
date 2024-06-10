@@ -42,27 +42,4 @@ use Illuminate\Support\Carbon;
 class File extends Base
 {
     use HasFactory;
-
-    protected $fillable = [
-        'uuid',
-        'fileable_id',
-        'fileable_type',
-        'name',
-        'mime_type',
-        'path',
-        'url',
-        'size',
-        'type'
-    ];
-    protected $hidden = ['deleted_at'];
-
-    public function users(): MorphToMany
-    {
-        return $this->morphedByMany(User::class, 'fileable');
-    }
-
-    public function getPathAttribute(): string
-    {
-        return '/' . ltrim(parse_url($this->attributes['url'], PHP_URL_PATH), '/');
-    }
 }

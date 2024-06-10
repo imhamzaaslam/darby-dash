@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Base;
 
-class ProjectMember extends Base
+class Folder extends Base
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $fillable = [
+        'uuid',
+        'name',
+        'project_id',
+    ];
 }
