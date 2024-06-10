@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UsersController::class, 'index']);
+            Route::get('/all', [UsersController::class, 'getAllUsers']);
             Route::post('/', [UsersController::class, 'store']);
             Route::prefix('{uuid}')->group(function () {
                 Route::get('/', [UsersController::class, 'show']);
@@ -73,6 +74,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/users', [ProjectController::class, 'updateUsers']);
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
+                Route::delete('/user/{userUuid}', [ProjectController::class, 'deleteUser']);
 
                 Route::get('/lists', [ProjectListController::class, 'index']);
                 Route::post('/list', [ProjectListController::class, 'store']);

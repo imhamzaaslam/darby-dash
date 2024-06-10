@@ -127,6 +127,19 @@ export const useProjectStore = defineStore('projects', {
         console.error('updateMember error ', error)
       }
     },
+    async deleteMember(uuid, userUuid) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await ProjectService.deleteMember(uuid, userUuid)
+        
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('deleteMember error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

@@ -14,6 +14,10 @@ export default {
     return await apiClient.get(baseUrl + queryString)
   },
 
+  getAll() {
+    return apiClient.get('admin/users/all')
+  },
+
   getByProjects: async projectUuid => {
     return await apiClient.get(`admin/projects/${projectUuid}/users`)
   },
@@ -36,8 +40,12 @@ export default {
   deleteUser(id) {
     return apiClient.delete(`admin/users/${id}`)
   },
-  getUsersByRole(role) {
-    return apiClient.get(`admin/users/role/${role}`)
+  getUsersByRole(role = null) {
+    if (role) {
+      return apiClient.get(`admin/users/role/${role}`)
+    }
+
+    return apiClient.get('admin/users/role')
   },
 
   updateUserImage: async (avatar, uuid) => {

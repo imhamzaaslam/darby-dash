@@ -8,6 +8,7 @@ use App\Models\Base;
 use App\Models\Project;
 use App\Models\ProjectMember;
 use App\Models\ProjectList;
+use App\Models\User;
 
 class ProjectRepository extends AbstractEloquentRepository implements ProjectRepositoryInterface
 {
@@ -61,5 +62,10 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
     {
         ProjectMember::where('project_id', $project->id)->delete();
         $this->storeProjectMembers($project, $members);
+    }
+
+    public function deleteProjectMember(Project $project, User $user): void
+    {
+        $project->members()->detach($user->id);
     }
 }

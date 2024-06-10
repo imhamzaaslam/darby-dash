@@ -3,6 +3,7 @@
 namespace App\Contracts;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Support\Collection;
 
 interface ProjectRepositoryInterface
@@ -18,4 +19,6 @@ interface ProjectRepositoryInterface
     public function delete(Project $project): bool;
 
     public function updateProjectMembers(Project $project, array $members): void;
+
+    public function deleteProjectMember(Project $project, User $user): void;
 }

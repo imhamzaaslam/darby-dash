@@ -45,6 +45,18 @@ class UsersController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function getAllUsers(): AnonymousResourceCollection|JsonResponse
+    {
+        $users = $this->userRepository->all();
+
+        return UserResource::collection($users);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param StoreUserRequest  $request
