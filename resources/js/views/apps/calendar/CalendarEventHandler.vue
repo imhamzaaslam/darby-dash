@@ -2,17 +2,22 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { useCalendarStore } from './useCalendarStore'
-import avatar1 from '@images/avatars/avatar-1.png'
-import avatar2 from '@images/avatars/avatar-2.png'
-import avatar3 from '@images/avatars/avatar-3.png'
-import avatar5 from '@images/avatars/avatar-5.png'
-import avatar6 from '@images/avatars/avatar-6.png'
-import avatar7 from '@images/avatars/avatar-7.png'
+import { useCalendarEventStore } from "@/store/calendar_events"
+import { useToast } from "vue-toastification"
 
 // 👉 store
 const props = defineProps({
   isDrawerOpen: {
     type: Boolean,
+    required: true,
+  },
+  projectUuid: {
+    type: String,
+    required: true,
+  },
+  getLoadStatus: String,
+  getProjectGuests: {
+    type: Object,
     required: true,
   },
   event: {
@@ -27,6 +32,9 @@ const emit = defineEmits([
   'updateEvent',
   'removeEvent',
 ])
+
+const calendarEventStore = useCalendarEventStore()
+const toast = useToast()
 
 const store = useCalendarStore()
 const refForm = ref()
@@ -51,8 +59,19 @@ const removeEvent = () => {
 }
 
 const handleSubmit = () => {
-  refForm.value?.validate().then(({ valid }) => {
+  refForm.value?.validate().then(async ({ valid }) => {
     if (valid) {
+      const newEventDetails = ref({
+        name: event.value.title,
+        project_uuid: props.projectUuid,
+        description: event.value.extendedProps.description,
+        start_date: event.value.start,
+        end_date: event.value.end,
+        url: event.value.url,
+        guests_ids: event.value.extendedProps.guests,
+      })
+
+      const res = await calendarEventStore.create(newEventDetails.value)
 
       // If id exist on id => Update event
       if ('id' in event.value)
@@ -64,36 +83,10 @@ const handleSubmit = () => {
 
       // Close drawer
       emit('update:isDrawerOpen', false)
+      toast.success('Event added successfully', { timeout: 1000 })
     }
   })
 }
-
-const guestsOptions = [
-  {
-    avatar: avatar1,
-    name: 'Jane Foster',
-  },
-  {
-    avatar: avatar3,
-    name: 'Donna Frank',
-  },
-  {
-    avatar: avatar5,
-    name: 'Gabrielle Robertson',
-  },
-  {
-    avatar: avatar7,
-    name: 'Lori Spears',
-  },
-  {
-    avatar: avatar6,
-    name: 'Sandy Vega',
-  },
-  {
-    avatar: avatar2,
-    name: 'Cheryl May',
-  },
-]
 
 // 👉 Form
 const onCancel = () => {
@@ -109,8 +102,7 @@ const onCancel = () => {
 
 const startDateTimePickerConfig = computed(() => {
   const config = {
-    enableTime: !event.value.allDay,
-    dateFormat: `m/d/Y${ event.value.allDay ? '' : ' H:i' }`,
+    dateFormat: `m/d/Y H:i`,
   }
 
   if (event.value.end)
@@ -121,8 +113,7 @@ const startDateTimePickerConfig = computed(() => {
 
 const endDateTimePickerConfig = computed(() => {
   const config = {
-    enableTime: !event.value.allDay,
-    dateFormat: `m/d/Y${ event.value.allDay ? '' : ' H:i' }`,
+    dateFormat: `m/d/Y H:i`,
   }
 
   if (event.value.start)
@@ -182,35 +173,6 @@ const dialogModelValueUpdate = val => {
                 />
               </VCol>
 
-              <!-- 👉 Calendar -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="event.extendedProps.calendar"
-                  label="Label"
-                  placeholder="Select Event Label"
-                  :rules="[requiredValidator]"
-                  :items="store.availableCalendars"
-                  :item-title="item => item.label"
-                  :item-value="item => item.label"
-                >
-                  <template #selection="{ item }">
-                    <div
-                      v-show="event.extendedProps.calendar"
-                      class="align-center"
-                      :class="event.extendedProps.calendar ? 'd-flex' : ''"
-                    >
-                      <VBadge
-                        :color="item.raw.color"
-                        inline
-                        dot
-                        class="pa-1 pb-2"
-                      />
-                      <span>{{ item.raw.label }}</span>
-                    </div>
-                  </template>
-                </AppSelect>
-              </VCol>
-
               <!-- 👉 Start date -->
               <VCol cols="12">
                 <AppDateTimePicker
@@ -235,14 +197,6 @@ const dialogModelValueUpdate = val => {
                 />
               </VCol>
 
-              <!-- 👉 All day -->
-              <VCol cols="12">
-                <VSwitch
-                  v-model="event.allDay"
-                  label="All day"
-                />
-              </VCol>
-
               <!-- 👉 Event URL -->
               <VCol cols="12">
                 <AppTextField
@@ -260,21 +214,12 @@ const dialogModelValueUpdate = val => {
                   v-model="event.extendedProps.guests"
                   label="Guests"
                   placeholder="Select guests"
-                  :items="guestsOptions"
+                  :items="props.getProjectGuests"
                   :item-title="item => item.name"
-                  :item-value="item => item.name"
+                  :item-value="item => item.id"
                   chips
                   multiple
                   eager
-                />
-              </VCol>
-
-              <!-- 👉 Location -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="event.extendedProps.location"
-                  label="Location"
-                  placeholder="Meeting room"
                 />
               </VCol>
 
@@ -292,8 +237,19 @@ const dialogModelValueUpdate = val => {
                 <VBtn
                   type="submit"
                   class="me-3"
+                  :disabled="props.getLoadStatus === 1"
                 >
-                  Submit
+                  <span v-if="props.getLoadStatus === 1">
+                    <VProgressCircular
+                      :size="16"
+                      width="3"
+                      indeterminate
+                    />
+                    Loading...
+                  </span>
+                  <span v-else>
+                    Submit
+                  </span>
                 </VBtn>
                 <VBtn
                   variant="outlined"

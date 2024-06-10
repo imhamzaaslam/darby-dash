@@ -1,7 +1,7 @@
 <template>
   <div>
     <VRow class="mt-0 mb-3">
-      <VCol 
+      <VCol
         cols="12"
         class="pt-0 ps-4"
       >
@@ -26,6 +26,9 @@
     <CalendarEventHandler
       v-model:isDrawerOpen="isEventHandlerSidebarActive"
       :event="event"
+      :get-project-guests="getProjectGuests"
+      :get-load-status="getLoadStatus"
+      :project-uuid="route.params.id"
       @add-event="addEvent"
       @update-event="updateEvent"
       @remove-event="removeEvent"
@@ -39,17 +42,18 @@ import {
   blankEvent,
   useCalendar,
 } from '@/views/apps/calendar/useCalendar'
-import { useCalendarStore } from '@/views/apps/calendar/useCalendarStore'
 
 // Components
 import CalendarEventHandler from '@/views/apps/calendar/CalendarEventHandler.vue'
 import { useProjectTaskStore } from "@/store/project_tasks"
+import { useCalendarEventStore } from "@/store/calendar_events"
+import { useUserStore } from "@/store/users"
 import { useRoute } from 'vue-router'
-import { set } from '@vueuse/core'
 
 // 👉 Store
-const store = useCalendarStore()
 const projectTaskStore = useProjectTaskStore()
+const userStore = useUserStore()
+const calendarEventStore = useCalendarEventStore()
 const route = useRoute()
 
 // 👉 Event
@@ -66,14 +70,12 @@ const { isLeftSidebarOpen } = useResponsiveLeftSidebar()
 // 👉 useCalendar
 const { refCalendar, calendarOptions, addEvent, updateEvent, removeEvent, jumpToDate, refetchEvents } = useCalendar(event, isEventHandlerSidebarActive, isLeftSidebarOpen)
 
-// put pending, in_progress, done in selectedTaskType
-const allTaskSelected = ref(true)
-const selectedTaskType = ref(['Todo', 'In_progress', 'Done'])
-
 // use before mounted functiona nd set events option in calendarOptions
 onBeforeMount(async () => {
   await fetchProjectTasks()
-  setCalendarEvents(projectTaskStore.getProjectAllTasks)
+  await fetchCalendarEvents()
+  await fetchProjectGuests()
+  setCalendarEvents(projectTaskStore.getProjectAllTasks, calendarEventStore.getCalendarEvents)
 })
 
 const fetchProjectTasks = async () => {
@@ -86,89 +88,63 @@ const fetchProjectTasks = async () => {
   }
 }
 
-const setCalendarEvents = projectTasks => {
-  calendarOptions.events = projectTasks.map(task => ({
-    id: task.id,
-    title: task.name,
-    start: task.due_date ? task.due_date : task.created_at,
-    extendedProps: {
-      calendar: 'Business',
-    },
-  }))
+const fetchCalendarEvents = async () => {
+  try {
+    const projectUuid = route.params.id
+
+    await calendarEventStore.getAll(projectUuid)
+  } catch (error) {
+    console.error('Error fetching calendar events', error)
+  }
+}
+
+const fetchProjectGuests = async () => {
+  try {
+    const projectUuid = route.params.id
+
+    await userStore.getByProjects(projectUuid)
+  } catch (error) {
+    console.error('Error fetching guests', error)
+  }
+}
+
+const setCalendarEvents = (projectTasks, calendarEvents) => {
+  const combinedEvents = [
+    ...projectTasks.map(task => ({
+      id: task.id,
+      title: task.name,
+      start: task.due_date ? task.due_date : task.created_at,
+    })),
+    ...calendarEvents.map(event => ({
+      id: event.id,
+      uuid: event.uuid,
+      title: event.name,
+      start: event.start_date,
+      end: event.end_date,
+    })),
+  ]
+
+  calendarOptions.events = combinedEvents
 
   // Trigger a re-render
   if (refCalendar.value) {
     const calendarApi = refCalendar.value.getApi()
 
     calendarApi.removeAllEvents()
-    calendarApi.addEventSource(calendarOptions.events)
+    calendarApi.addEventSource(combinedEvents)
   }
 }
 
-const updateCalendarEvents = () => {
-  const selectedTaskTypes = toRaw(selectedTaskType.value)
-  const projectTasks = projectTaskStore.getProjectAllTasks
-  const filteredTasks = projectTasks.filter(task => selectedTaskTypes.includes(task.status))
-  
-  setCalendarEvents(filteredTasks)
-}
-
-const taskFilters = [
-  {
-    label: 'Pending',
-    value: 'Todo',
-    color: 'warning',
-    selected: true,
-  },
-  {
-    label: 'In Progress',
-    value: 'In_progress',
-    color: 'info',
-    selected: true,
-  },
-  {
-    label: 'Completed',
-    value: 'Done',
-    color: 'success',
-    selected: true,
-  },
-]
-
-// 👉 Toggle all tasks
-const toggleAllTasks = () => {
-  if (allTaskSelected.value) {
-    selectedTaskType.value = taskFilters.map(i => i.value)
-  } else {
-    selectedTaskType.value = []
-  }
-}
-
-// use watch to check the selectedTaskType and update the selected filters in taskFilters
-watch(selectedTaskType, val => {
-  taskFilters.forEach(filter => {
-    filter.selected = val.includes(filter.value)
-  })
-  allTaskSelected.value = val.length === taskFilters.length
-
-  updateCalendarEvents()
+const getProjectGuests = computed(() => {
+  return userStore.getUsersByProjects.map(member => ({
+    id: member.id,
+    name: `${member.name_first} ${member.name_last} (${member.role})`,
+  }))
 })
 
-// 👉 Check all
-const checkAll = computed({
-
-  /*GET: Return boolean `true` => if length of options matches length of selected filters => Length matches when all events are selected
-SET: If value is `true` => then add all available options in selected filters => Select All
-Else if => all filters are selected (by checking length of both array) => Empty Selected array  => Deselect All
-*/
-  get: () => store.selectedCalendars.length === store.availableCalendars.length,
-  set: val => {
-    if (val)
-      store.selectedCalendars = store.availableCalendars.map(i => i.label)
-    else if (store.selectedCalendars.length === store.availableCalendars.length)
-      store.selectedCalendars = []
-  },
+const getLoadStatus = computed(() => {
+  return calendarEventStore.getLoadStatus
 })
-// !SECTION
 </script>
 
 <style lang="scss">

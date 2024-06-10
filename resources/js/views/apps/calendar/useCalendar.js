@@ -215,7 +215,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
 
       return [
         // Background Color
-        `bg-light-${colorName} text-${colorName}`,
+        `bg-light-primary text-primary`,
       ]
     },
     eventClick({ event: clickedEvent }) {
