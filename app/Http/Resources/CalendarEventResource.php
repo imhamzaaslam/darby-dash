@@ -24,7 +24,6 @@ class CalendarEventResource extends JsonResource
             'url' => $this->url,
             'project_id' => $this->project_id,
             'display_order' => $this->display_order,
-            'guests' => UserResource::collection($this->whenLoaded('guests')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

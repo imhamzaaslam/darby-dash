@@ -17,7 +17,7 @@ export const useCalendarEventStore = defineStore('calendar_events', {
       try {
         const response = await CalendarEventService.getCalendarEvents(projectId)
 
-        this.projectLists = response.data.data
+        this.calendarEvents = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error
