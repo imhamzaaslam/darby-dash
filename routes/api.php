@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Admin\StatusController;
 use App\Http\Controllers\Api\Admin\CalendarFilterController;
 use App\Http\Controllers\Api\Admin\ProjectProgressController;
 use App\Http\Controllers\Api\Admin\MileStoneController;
+use App\Http\Controllers\Api\Admin\CalendarEventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +96,13 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::prefix('milestones')->group(function () {
                     Route::get('/', [MileStoneController::class, 'index']);
                     Route::post('/', [MileStoneController::class, 'store']);
+                });
+
+                Route::get('/calendar-events', [CalendarEventController::class, 'index']);
+                Route::post('/calendar-event', [CalendarEventController::class, 'store']);
+                Route::prefix('calendar-event/{calendarEventUuid}')->group(function () {
+                    Route::patch('/', [CalendarEventController::class, 'update']);
+                    Route::delete('/', [CalendarEventController::class, 'delete']);
                 });
             });
         });
