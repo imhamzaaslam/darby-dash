@@ -575,7 +575,6 @@ const folderFiles = computed(() => {
   border: 2px solid #F48D27;
   border-radius: 10px;
   padding: 5px;
-  margin-bottom: 10px; /* Reduced margin */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   max-width: 150px; /* Reduced size */
@@ -660,7 +659,6 @@ const folderFiles = computed(() => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   cursor: pointer;
-  margin-bottom: 16px;
   position: relative;
 }
 
