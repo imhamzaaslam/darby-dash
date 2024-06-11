@@ -165,7 +165,7 @@ const setCalendarEvents = async () => {
       title: event.name,
       start: event.start_date,
       url: event.url ? event.url : '',
-      end: event.end_date ? event.end_date : null,
+      end: event.end_date ? event.end_date : event.start_date,
       extendedProps: {
         description: event.description,
         guests: event.guests || [],
