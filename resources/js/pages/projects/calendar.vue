@@ -1,4 +1,5 @@
 <template>
+  <Loader v-if="getUserLoadStatus == 1" />
   <div>
     <VRow class="mt-0 mb-3">
       <VCol
@@ -43,6 +44,7 @@ import CalendarEventHandler from '@/views/apps/calendar/CalendarEventHandler.vue
 import { useProjectTaskStore } from "@/store/project_tasks"
 import { useCalendarEventStore } from "@/store/calendar_events"
 import { useUserStore } from "@/store/users"
+import Loader from "@/components/Loader.vue"
 import { useRoute } from 'vue-router'
 import { ref, watch, onBeforeMount, computed } from 'vue'
 
@@ -159,6 +161,14 @@ const getProjectGuests = computed(() => {
 
 const getLoadStatus = computed(() => {
   return calendarEventStore.getLoadStatus
+})
+
+const getTaskLoadStatus = computed(() => {
+  return projectTaskStore.getLoadStatus
+})
+
+const getUserLoadStatus = computed(() => {
+  return userStore.getLoadStatus
 })
 </script>
 
