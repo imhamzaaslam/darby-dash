@@ -64,11 +64,11 @@
       </VCol>
     </VRow>
 
-    <div 
+    <div
       v-if="getProjectLoadStatus !== 1 && getUsersByProjects.length === 0"
       class="text-center"
     >
-      <div 
+      <div
         class="mt-12"
         v-html="NoTaskInList"
       />
@@ -149,7 +149,7 @@
               >
                 <VIcon
                   color="primary"
-                  icon="tabler-trash"
+                  icon="tabler-user-minus"
                 />
               </VCol>
             </VCard>
@@ -198,13 +198,13 @@
                   </div>
                 </div>
               </VCardText>
-              <div 
-                class="position-absolute delete-icon" 
+              <div
+                class="position-absolute delete-icon"
                 @click="deleteMember(member)"
               >
                 <VIcon
                   color="primary"
-                  icon="tabler-trash"
+                  icon="tabler-user-minus"
                 />
               </div>
             </VCard>
@@ -361,7 +361,7 @@ const setSelectedMembers = async () => {
 
   const project = projectStore.getProject
   const members = project.member_ids
-  
+
   // set in selectedMembers
   selectedMembers.value = members
 
@@ -381,12 +381,12 @@ const deleteMember = async member => {
   try {
     const confirmDelete = await Swal.fire({
       title: "Are you sure?",
-      text: `Do you want to delete ${member.name_first + ' ' + member.name_last}?`,
+      html: `<small>Do you want to remove <b>${member.name_first + ' ' + member.name_last}</b> from <b>${project.value?.title}</b>?</small>`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#F69636",
       cancelButtonColor: "#808390",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, remove it!",
       didOpen: () => {
         document.querySelector('.swal2-confirm').blur()
       },
