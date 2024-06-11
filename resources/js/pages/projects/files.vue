@@ -48,7 +48,7 @@
           />
           <span class="ml-2">Back</span>
         </div>
-        <h3>{{ openFolder.name }}</h3>
+        <h3 class="text-primary">{{ openFolder.name }}</h3>
       </VCol>
     </VRow>
     <VRow

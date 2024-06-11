@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Contracts\FolderRepositoryInterface;
+use App\Contracts\FileRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\FolderResource;
 use App\Http\Requests\project\StoreFolderRequest;
 use App\Http\Requests\project\UpdateFolderRequest;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -16,7 +18,9 @@ class FolderController extends Controller
 {
     public function __construct(
         protected FolderRepositoryInterface $folderRepository,
-        protected ProjectRepositoryInterface $projectRepository
+        protected FileRepositoryInterface $fileRepository,
+        protected ProjectRepositoryInterface $projectRepository,
+        protected FileUploadService $fileUploadService,
     ) {}
 
     /**
@@ -74,6 +78,12 @@ class FolderController extends Controller
     public function delete(string $folderUuid): JsonResponse
     {
         $folder = $this->folderRepository->getByUuidOrFail($folderUuid);
+
+        $files = $this->fileRepository->getBy('folder_id', $folder->id);
+        foreach ($files as $file) {
+            $this->fileUploadService->deleteFile($file->path, 'public');
+        }
+
         $this->folderRepository->delete($folder);
 
         return response()->json(['message' => 'Folder deleted successfully']);
