@@ -1,12 +1,28 @@
 <template>
   <Loader v-if="getUserLoadStatus == 1" />
+  <VRow>
+    <VCol cols="12">
+      <div class="d-flex justify-start align-center">
+        <VIcon
+          start
+          icon="tabler-wand"
+          color="primary"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
   <div>
-    <VRow class="mt-0 mb-3">
+    <VRow class="mt-5 mb-1">
       <VCol
         cols="12"
         class="pt-0 ps-4"
       >
-        <h3>Manage Task & Events</h3>
+        <h3>
+          Manage Task & Events
+        </h3>
       </VCol>
     </VRow>
     <VCard>
@@ -43,6 +59,7 @@ import { blankEvent, useCalendar } from '@/views/apps/calendar/useCalendar'
 import CalendarEventHandler from '@/views/apps/calendar/CalendarEventHandler.vue'
 import { useProjectTaskStore } from "@/store/project_tasks"
 import { useCalendarEventStore } from "@/store/calendar_events"
+import { useProjectStore } from "@/store/projects"
 import { useUserStore } from "@/store/users"
 import Loader from "@/components/Loader.vue"
 import { useRoute } from 'vue-router'
@@ -51,6 +68,7 @@ import { ref, watch, onBeforeMount, computed } from 'vue'
 // 👉 Store
 const projectTaskStore = useProjectTaskStore()
 const userStore = useUserStore()
+const projectStore = useProjectStore()
 const calendarEventStore = useCalendarEventStore()
 const route = useRoute()
 
@@ -75,6 +93,7 @@ const {
 
 // use before mounted function and set events option in calendarOptions
 onBeforeMount(async () => {
+  await fetchProject()
   setCalendarEvents()
 })
 
@@ -105,6 +124,18 @@ const fetchProjectGuests = async () => {
     await userStore.getByProjects(projectUuid)
   } catch (error) {
     console.error('Error fetching guests', error)
+  }
+}
+
+const fetchProject = async () => {
+  try {
+    await projectStore.show(route.params.id)
+    isLoading.value = true
+  } catch (error) {
+    toast.error('Error fetching project:', error)
+  }
+  finally {
+    isLoading.value = false
   }
 }
 
@@ -163,8 +194,8 @@ const getLoadStatus = computed(() => {
   return calendarEventStore.getLoadStatus
 })
 
-const getTaskLoadStatus = computed(() => {
-  return projectTaskStore.getLoadStatus
+const project = computed(() => {
+  return projectStore.getProject
 })
 
 const getUserLoadStatus = computed(() => {

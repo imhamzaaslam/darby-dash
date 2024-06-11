@@ -73,13 +73,16 @@ const showNavigation = computed(() => {
               class="text-h6 me-5 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/chat` }"
             >
-              <VBadge
+              Inbox
+              <!--
+                <VBadge
                 class="new-badge"
                 color="error"
                 content="14"
-              >
+                >
                 <span class="inner-badge-text">Inbox</span>
-              </VBadge>
+                </VBadge>
+              -->
             </span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/files`">

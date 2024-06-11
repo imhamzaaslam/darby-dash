@@ -149,8 +149,15 @@
               >
                 <VIcon
                   color="primary"
-                  icon="tabler-user-minus"
-                />
+                  class="tabler-user-off"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Remove from Project</span>
+                  </VTooltip>
+                </VIcon>
               </VCol>
             </VCard>
           </VCol>
@@ -204,8 +211,15 @@
               >
                 <VIcon
                   color="primary"
-                  icon="tabler-user-minus"
-                />
+                  class="tabler-user-off"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Remove from Project</span>
+                  </VTooltip>
+                </VIcon>
               </div>
             </VCard>
           </VCol>

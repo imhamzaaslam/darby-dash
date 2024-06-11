@@ -1,6 +1,20 @@
 <template>
   <VRow>
     <VCol cols="12">
+      <div class="d-flex justify-start align-center">
+        <VIcon
+          start
+          icon="tabler-wand"
+          color="primary"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
+  <VRow>
+    <VCol cols="12">
       <VProgressLinear
         v-model="projectProgress.overallProgress"
         color="success"
@@ -496,7 +510,20 @@ onBeforeMount(async () => {
 })
 
 const getProjectProgress = async () => {
+  await fetchProject()
   await projectStore.getProgress(projectUuid)
+}
+
+const fetchProject = async () => {
+  try {
+    await projectStore.show(projectUuid)
+    isLoading.value = true
+  } catch (error) {
+    toast.error('Error fetching project:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
 }
 
 const getColor = progress => {
@@ -511,6 +538,10 @@ const getColor = progress => {
 
 const projectProgress = computed(() => {
   return projectStore.getProjectProgress
+})
+
+const project = computed(() =>{
+  return projectStore.getProject
 })
 </script>
 
