@@ -1,5 +1,5 @@
 <template>
-  <Loader v-if="folderLoadStatus === 1 || fileLoadStatus === 1 || isLoading" />
+  <Loader v-if="isLoading" />
   <VRow>
     <VCol
       cols="12"
@@ -359,17 +359,31 @@ onBeforeMount(async () => {
 })
 
 const getFolders = async () => {
-  await folderStore.getAll(projectUuid)
+  isLoading.value = true
+  try {
+    await folderStore.getAll(projectUuid)
+  } catch (error) {
+    toast.error('Failed to fetch folders')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const getFiles = async () => {
+  isLoading.value = true
   images.value = []
-  // empty the uploadProgress array
+
   uploadProgress.value = []
   if (openFolder.value) {
     getFolderFiles(openFolder.value)
   } else {
-    await fileStore.getAll(projectUuid)
+    try {
+      await fileStore.getAll(projectUuid)
+    } catch (error) {
+      toast.error('Failed to fetch files')
+    } finally {
+      isLoading.value = false
+    }
   }
 }
 
@@ -486,12 +500,15 @@ const downloadFile = file => {
 }
 
 const deleteImage = async files => {
+  isLoading.value = true
   try {
     await fileStore.delete(files.uuid)
     toast.success('File deleted successfully')
     await getFiles()
   } catch (error) {
     toast.error('Failed to delete file')
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -517,7 +534,14 @@ const getImageUrl = path => {
 }
 
 const getFolderFiles = async folder => {
-  await folderStore.getFiles(folder.uuid)
+  isLoading.value = true
+  try {
+    await folderStore.getFiles(folder.uuid)
+  } catch (error) {
+    toast.error('Failed to fetch folder files')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const folders = computed(() => {
@@ -551,7 +575,6 @@ const folderFiles = computed(() => {
   border: 2px solid #F48D27;
   border-radius: 10px;
   padding: 5px;
-  margin-bottom: 10px; /* Reduced margin */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   max-width: 150px; /* Reduced size */
@@ -636,7 +659,6 @@ const folderFiles = computed(() => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   cursor: pointer;
-  margin-bottom: 16px;
   position: relative;
 }
 
