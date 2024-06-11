@@ -112,6 +112,10 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::get('/', [FolderController::class, 'index']);
                     Route::post('/', [FolderController::class, 'store']);
                 });
+                Route::prefix('files')->group(function () {
+                    Route::get('/', [FileController::class, 'index']);
+                    Route::post('/', [FileController::class, 'store']);
+                });
             });
         });
         Route::prefix('milestones')->group(function () {
@@ -137,6 +141,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::prefix('folders/{folderUuid}')->group(function () {
             Route::patch('/', [FolderController::class, 'update']);
             Route::delete('/', [FolderController::class, 'delete']);
+            Route::get('/files', [FileController::class, 'getFiles']);
+        });
+
+        Route::prefix('files/{fileUuid}')->group(function () {
+            Route::delete('/', [FileController::class, 'delete']);
         });
 
         Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);

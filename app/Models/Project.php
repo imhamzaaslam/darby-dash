@@ -60,6 +60,11 @@ class Project extends Base
         return (new ProjectProgressService())->getProgress($this);
     }
 
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder
     {
         $projectsTable = (new Project())->getTable();

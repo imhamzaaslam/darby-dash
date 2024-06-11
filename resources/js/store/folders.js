@@ -5,6 +5,7 @@ export const useFolderStore = defineStore('folders', {
   state: () => ({
     folders: [],
     folder: null,
+    folderFiles: [],
     loadStatus: 0,
     error: null,
   }),
@@ -63,12 +64,29 @@ export const useFolderStore = defineStore('folders', {
         console.error('deleteFolder error ', error)
       }
     },
+    async getFiles(folderUuid) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await FolderService.getFiles(folderUuid)
+
+        console.log('getFiles', response.data.data)
+    
+        this.folderFiles = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getFolder error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,
     getError: state => state.error,
     getFolders: state => state.folders,
     getFolder: state => state.folder,
+    getFolderFiles: state => state.folderFiles,
   },
 })
     

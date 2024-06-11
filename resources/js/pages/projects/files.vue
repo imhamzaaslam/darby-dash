@@ -15,6 +15,7 @@
       >
       <div class="d-flex gap-2">
         <VBtn
+          v-if="!openFolder"
           prepend-icon="tabler-folder-plus"
           color="primary"
           @click="isCreateFolderDialogOpen = true"
@@ -31,6 +32,206 @@
       </div>
     </VCol>
   </VRow>
+
+  <div v-if="openFolder">
+    <VRow class="mt-4">
+      <VCol
+        cols="12"
+        class="d-flex align-center justify-space-between"
+      >
+        <div>
+          <VIcon
+            class="tabler-arrow-left"
+            size="large"
+            color="primary"
+            @click="openFolder = null"
+          />
+          <span class="ml-2">Back</span>
+        </div>
+        <h3>{{ openFolder.name }}</h3>
+      </VCol>
+    </VRow>
+    <VRow
+      v-if="folderFiles.length > 0"
+      class="mt-4"
+    >
+      <VCol
+        v-for="(file, index) in folderFiles"
+        :key="file.id"
+        cols="12"
+        md="2"
+      >
+        <div
+          class="image-container"
+          @click="openFileViewer(file)"
+        >
+          <img
+            v-if="file.type.includes('image/')"
+            :src="getImageUrl(file.path)"
+            :alt="file.name"
+            class="uploaded-image"
+          >
+          <div
+            v-else
+            class="file-placeholder"
+          >
+            <img
+              src="../../../images/logos/document.png"
+              class="default-image"
+            >
+            <span class="file-type">.{{ file.name.split('.').pop().toLowerCase() }}</span>
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <span class="text-xs">{{ file.created_at }}</span>
+            <div class="d-flex align-center">
+              <VIcon
+                class="tabler-download"
+                size="small"
+                color="primary"
+                @click.stop="downloadFile(file)"
+              />
+              <VIcon
+                class="tabler-trash-filled ml-1"
+                size="small"
+                color="error"
+                @click.stop="deleteImage(file)"
+              />
+            </div>
+          </div>
+        </div>
+      </VCol>
+    </VRow>
+    <VRow
+      v-if="folderFiles.length === 0 && images.length === 0"
+      class="mt-4"
+    >
+      <VCol
+        cols="12"
+        class="d-flex flex-column align-center justify-center text-center" 
+      >
+        <span v-html="emptyFileImg" />
+        <span class="mt-n11">No Files added yet.</span>
+      </VCol>
+    </VRow>
+  </div>
+
+  <div v-else>
+    <VRow 
+      v-if="folders.length > 0"
+      class="mt-4"
+    >
+      <VCol
+        v-for="folder in folders"
+        :key="folder.id"
+        cols="12"
+        md="3"
+        lg="2"
+        @dblclick="setOpenFolder(folder)"
+      >
+        <div class="folder-container">
+          <IconBtn @click.prevent class="action-icon">
+            <VIcon icon="tabler-dots-vertical" />
+            <VMenu 
+              activator="parent" 
+              class="p-0"
+            >
+              <VList class="p-0">
+                <VListItem
+                  value="edit"
+                  class="p-0"
+                  @click="editFolder(folder)"
+                >
+                  Edit
+                </VListItem>
+                <VListItem
+                  value="delete"
+                  class="p-0"
+                  @click="deleteFolder(folder)"
+                >
+                  Delete
+                </VListItem>
+              </VList>
+            </VMenu>
+          </IconBtn>
+          <div class="folder-icon">
+            <VIcon 
+              class="tabler-folder"
+              size="large"
+              color="primary"
+            />
+          </div>
+          <div class="folder-name">
+            {{ folder.name }}
+          </div>
+        </div> 
+      </VCol>
+    </VRow>
+
+    <VRow
+      v-if="allFiles.length > 0"
+      class="mt-4"
+    >
+      <VCol
+        v-for="(file, index) in allFiles"
+        :key="file.id"
+        cols="12"
+        md="2"
+      >
+        <div
+          class="image-container"
+          @click="openFileViewer(file)"
+        >
+          <img
+            v-if="file.type.includes('image/')"
+            :src="getImageUrl(file.path)"
+            :alt="file.name"
+            class="uploaded-image"
+          >
+          <div
+            v-else
+            class="file-placeholder"
+          >
+            <img
+              src="../../../images/logos/document.png"
+              class="default-image"
+            >
+            <span class="file-type">.{{ file.name.split('.').pop().toLowerCase() }}</span>
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <span class="text-xs">{{ file.created_at }}</span>
+            <div class="d-flex align-center">
+              <VIcon
+                class="tabler-download"
+                size="small"
+                color="primary"
+                @click.stop="downloadFile(file)"
+              />
+              <VIcon
+                class="tabler-trash-filled ml-1"
+                size="small"
+                color="error"
+                @click.stop="deleteImage(file)"
+              />
+            </div>
+          </div>
+        </div>
+      </VCol>
+    </VRow>
+
+    <VRow
+      v-if="images.length === 0 && folders.length === 0 && allFiles.length === 0"
+      class="mt-4"
+    >
+      <VCol
+        cols="12"
+        class="d-flex flex-column align-center justify-center text-center" 
+      >
+        <span v-html="emptyFileImg" />
+        <span class="mt-n11">No Files added yet.</span>
+      </VCol>
+    </VRow>
+  </div>
+
   <VRow
     v-if="images.length > 0" 
     class="mt-2"
@@ -99,69 +300,6 @@
     </VCol>
   </VRow>
 
-  <VRow 
-    v-if="folders.length > 0"
-    class="mt-4"
-  >
-    <VCol
-      v-for="folder in folders"
-      :key="folder.id"
-      cols="12"
-      md="3"
-      lg="2"
-    >
-      <div class="folder-container">
-        <IconBtn @click.prevent class="action-icon">
-          <VIcon icon="tabler-dots-vertical" />
-          <VMenu 
-            activator="parent" 
-            class="p-0"
-          >
-            <VList class="p-0">
-              <VListItem
-                value="edit"
-                class="p-0"
-                @click="editFolder(folder)"
-              >
-                Edit
-              </VListItem>
-              <VListItem
-                value="delete"
-                class="p-0"
-                @click="deleteFolder(folder)"
-              >
-                Delete
-              </VListItem>
-            </VList>
-          </VMenu>
-        </IconBtn>
-        <div class="folder-icon">
-          <VIcon 
-            class="tabler-folder"
-            size="large"
-            color="primary"
-          />
-        </div>
-        <div class="folder-name">
-          {{ folder.name }}
-        </div>
-      </div> 
-    </VCol>
-  </VRow>
-
-  <VRow
-    v-if="images.length === 0 && folders.length === 0"
-    class="mt-4"
-  >
-    <VCol
-      cols="12"
-      class="d-flex flex-column align-center justify-center text-center" 
-    >
-      <span v-html="emptyFileImg" />
-      <span class="mt-n11">No Files added yet.</span>
-    </VCol>
-  </VRow>
-
   <FileViewer
     :show="isViewerOpen"
     :file="selectedFile"
@@ -191,6 +329,7 @@ import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
 import CreateFolderDialog from '@/components/dialogs/CreateFolderDialog.vue'
 import EditFolderDialog from '@/components/dialogs/EditFolderDialog.vue'
 import { useFolderStore } from '@/store/folders'
+import { useFileStore } from '@/store/files'
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
 
@@ -198,6 +337,7 @@ const isCreateFolderDialogOpen = ref(false)
 const isEditFolderDialogOpen = ref(false)
 
 const folderStore = useFolderStore()
+const fileStore = useFileStore()
 const $route = useRoute()
 const toast = useToast()
 const projectUuid = $route.params.id
@@ -207,13 +347,27 @@ const uploadProgress = ref([])
 const isViewerOpen = ref(false)
 const selectedFile = ref(null)
 const selectedFolder = ref(null)
+const files = ref([])
+const openFolder = ref(null)
 
 onBeforeMount(async () => {
   await getFolders()
+  await getFiles()
 })
 
 const getFolders = async () => {
   await folderStore.getAll(projectUuid)
+}
+
+const getFiles = async () => {
+  images.value = []
+  // empty the uploadProgress array
+  uploadProgress.value = []
+  if (openFolder.value) {
+    getFolderFiles(openFolder.value)
+  } else {
+    await fileStore.getAll(projectUuid)
+  }
 }
 
 const chooseFile = () => {
@@ -222,6 +376,8 @@ const chooseFile = () => {
 
 const filePicked = event => {
   const files = event.target.files
+  // upload files to the server
+  uploadFiles(files)
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
     const uniqueId = `${file.name}-${Date.now()}`
@@ -260,6 +416,45 @@ const filePicked = event => {
   event.target.value = ''
 }
 
+const uploadFiles = async files => {
+  let fileData = []
+
+  for (let i = 0; i < files.length; i++) {
+    fileData.push(files[i])
+  }
+
+  try {
+    // await fileStore.upload(fileData, projectUuid)
+
+    if (openFolder.value) {
+      await fileStore.upload(fileData, projectUuid, openFolder.value.uuid)
+    } else {
+      await fileStore.upload(fileData, projectUuid)
+    }
+
+    // check if isCompleted is true for all files in the uploadProgress array
+    const isAllCompleted = uploadProgress.value.every(f => f.isCompleted)
+    if (isAllCompleted) {
+      // get all files again
+      await getFiles()
+    } else {
+      // if not all files are completed, then set a trigger to get all files again, set an interval to check every second
+      // if all files are completed
+      const interval = setInterval(async () => {
+        const isAllCompleted = uploadProgress.value.every(f => f.isCompleted)
+        if (isAllCompleted) {
+          clearInterval(interval)
+          await getFiles()
+        }
+      }, 500)
+    }
+
+
+  } catch (error) {
+    toast.error('Failed to upload files')
+  }
+}
+
 const simulateUploadProgress = uniqueId => {
   const progressIndex = uploadProgress.value.findIndex(f => f.id === uniqueId)
   if (progressIndex !== -1) {
@@ -279,6 +474,7 @@ const simulateUploadProgress = uniqueId => {
 }
 
 const openFileViewer = file => {
+  file.url = getImageUrl(file.path)
   selectedFile.value = file
   isViewerOpen.value = true
 }
@@ -286,19 +482,23 @@ const openFileViewer = file => {
 const downloadFile = file => {
   const link = document.createElement('a')
 
-  link.href = file.url
+  link.href = getImageUrl(file.path)
   link.download = file.name
   link.click()
 }
 
-const deleteImage = index => {
-  images.value.splice(index, 1)
-  uploadProgress.value.splice(index, 1)
+const deleteImage = async files => {
+  try {
+    await fileStore.delete(files.uuid)
+    toast.success('File deleted successfully')
+    await getFiles()
+  } catch (error) {
+    toast.error('Failed to delete file')
+  }
 }
 
 const editFolder = folder => {
   selectedFolder.value = folder
-  console.log(selectedFolder.value)
   isEditFolderDialogOpen.value = true
 }
 
@@ -307,8 +507,27 @@ const deleteFolder = async folder => {
   await getFolders()
 }
 
+const setOpenFolder = async folder => {
+  openFolder.value = folder
+  await getFolderFiles(folder)
+}
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+
+const getFolderFiles = async folder => {
+  await folderStore.getFiles(folder.uuid)
+}
+
 const folders = computed(() => {
   return folderStore.folders
+})
+
+const allFiles = computed(() => {
+  return fileStore.files
 })
 
 const folderLoadStatus = computed(() => {
@@ -317,6 +536,10 @@ const folderLoadStatus = computed(() => {
 
 const getErrors = computed(() => {
   return folderStore.getError
+})
+
+const folderFiles = computed(() => {
+  return folderStore.getFolderFiles
 })
 </script>
 

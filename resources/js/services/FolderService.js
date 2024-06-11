@@ -13,4 +13,7 @@ export default {
   delete(folderUuid) {
     return apiClient.delete(`admin/folders/${folderUuid}`)
   },
+  getFiles(folderUuid) {
+    return apiClient.get(`admin/folders/${folderUuid}/files`)
+  },
 }
