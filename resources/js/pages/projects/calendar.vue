@@ -1,5 +1,5 @@
 <template>
-  <Loader v-if="getLoadStatus == 1 || getTaskLoadStatus == 1 || getUserLoadStatus == 1" />
+  <Loader v-if="getUserLoadStatus == 1" />
   <div>
     <VRow class="mt-0 mb-3">
       <VCol
