@@ -1,6 +1,20 @@
 <template>
   <VRow>
     <VCol cols="12">
+      <div class="d-flex justify-start align-center">
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
+  <VRow>
+    <VCol cols="12">
       <VProgressLinear
         v-model="projectProgress.overallProgress"
         color="success"
@@ -486,6 +500,7 @@ import girlWithLaptop from '@images/illustrations/PM.png'
 import otherListImg from '@images/darby/other_list.svg?raw'
 import { useProjectStore } from "@/store/projects"
 import { useRoute } from 'vue-router'
+import sketch from '@images/icons/project-icons/sketch.png'
 
 const projectStore = useProjectStore()
 const $route = useRoute()
@@ -496,7 +511,20 @@ onBeforeMount(async () => {
 })
 
 const getProjectProgress = async () => {
+  await fetchProject()
   await projectStore.getProgress(projectUuid)
+}
+
+const fetchProject = async () => {
+  try {
+    await projectStore.show(projectUuid)
+    isLoading.value = true
+  } catch (error) {
+    toast.error('Error fetching project:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
 }
 
 const getColor = progress => {
@@ -511,6 +539,10 @@ const getColor = progress => {
 
 const projectProgress = computed(() => {
   return projectStore.getProjectProgress
+})
+
+const project = computed(() =>{
+  return projectStore.getProject
 })
 </script>
 

@@ -28,10 +28,10 @@
             class="bg-primary ms-1"
           />
           <div class="ms-4 d-flex justify-center align-center">
-            <VIcon
-              start
-              icon="tabler-wand"
-              color="primary"
+            <VAvatar
+              :size="30"
+              class="me-1"
+              :image="sketch"
             />
             <h3 class="text-primary">
               {{ project?.title }}
@@ -149,8 +149,15 @@
               >
                 <VIcon
                   color="primary"
-                  icon="tabler-user-minus"
-                />
+                  class="tabler-user-off"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Remove from Project</span>
+                  </VTooltip>
+                </VIcon>
               </VCol>
             </VCard>
           </VCol>
@@ -204,8 +211,15 @@
               >
                 <VIcon
                   color="primary"
-                  icon="tabler-user-minus"
-                />
+                  class="tabler-user-off"
+                >
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span>Remove from Project</span>
+                  </VTooltip>
+                </VIcon>
               </div>
             </VCard>
           </VCol>
@@ -284,6 +298,7 @@ import { useProjectStore } from "../../store/projects"
 import { useUserStore } from "../../store/users"
 import { useRoleStore } from "../../store/roles"
 import { useRoute } from 'vue-router'
+import sketch from '@images/icons/project-icons/sketch.png'
 
 const toast = useToast()
 const projectStore = useProjectStore()

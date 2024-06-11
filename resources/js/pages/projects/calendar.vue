@@ -1,12 +1,28 @@
 <template>
   <Loader v-if="getUserLoadStatus == 1" />
+  <VRow>
+    <VCol cols="12">
+      <div class="d-flex justify-start align-center">
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
   <div>
-    <VRow class="mt-0 mb-3">
+    <VRow class="mt-5 mb-1">
       <VCol
         cols="12"
         class="pt-0 ps-4"
       >
-        <h3>Manage Task & Events</h3>
+        <h3>
+          Manage Task & Events
+        </h3>
       </VCol>
     </VRow>
     <VCard>
@@ -43,14 +59,17 @@ import { blankEvent, useCalendar } from '@/views/apps/calendar/useCalendar'
 import CalendarEventHandler from '@/views/apps/calendar/CalendarEventHandler.vue'
 import { useProjectTaskStore } from "@/store/project_tasks"
 import { useCalendarEventStore } from "@/store/calendar_events"
+import { useProjectStore } from "@/store/projects"
 import { useUserStore } from "@/store/users"
 import Loader from "@/components/Loader.vue"
 import { useRoute } from 'vue-router'
+import sketch from '@images/icons/project-icons/sketch.png'
 import { ref, watch, onBeforeMount, computed } from 'vue'
 
 // 👉 Store
 const projectTaskStore = useProjectTaskStore()
 const userStore = useUserStore()
+const projectStore = useProjectStore()
 const calendarEventStore = useCalendarEventStore()
 const route = useRoute()
 
@@ -75,6 +94,7 @@ const {
 
 // use before mounted function and set events option in calendarOptions
 onBeforeMount(async () => {
+  await fetchProject()
   setCalendarEvents()
 })
 
@@ -108,6 +128,18 @@ const fetchProjectGuests = async () => {
   }
 }
 
+const fetchProject = async () => {
+  try {
+    await projectStore.show(route.params.id)
+    isLoading.value = true
+  } catch (error) {
+    toast.error('Error fetching project:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
 const setCalendarEvents = async () => {
   await fetchCalendarEvents()
   await fetchProjectTasks()
@@ -133,7 +165,7 @@ const setCalendarEvents = async () => {
       title: event.name,
       start: event.start_date,
       url: event.url ? event.url : '',
-      end: event.end_date ? event.end_date : null,
+      end: event.end_date ? event.end_date : event.start_date,
       extendedProps: {
         description: event.description,
         guests: event.guests || [],
@@ -163,8 +195,8 @@ const getLoadStatus = computed(() => {
   return calendarEventStore.getLoadStatus
 })
 
-const getTaskLoadStatus = computed(() => {
-  return projectTaskStore.getLoadStatus
+const project = computed(() => {
+  return projectStore.getProject
 })
 
 const getUserLoadStatus = computed(() => {

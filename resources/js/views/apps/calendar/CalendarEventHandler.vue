@@ -198,8 +198,8 @@ const dialogModelValueUpdate = val => {
                 <AppDateTimePicker
                   :key="JSON.stringify(endDateTimePickerConfig)"
                   v-model="event.end"
-                  label="End date"
-                  placeholder="Select End Date"
+                  label="Due date"
+                  placeholder="Select Date"
                   :config="endDateTimePickerConfig"
                 />
               </VCol>
@@ -219,8 +219,8 @@ const dialogModelValueUpdate = val => {
               <VCol cols="12">
                 <AppSelect
                   v-model="event.extendedProps.guests"
-                  label="Guests"
-                  placeholder="Select guests"
+                  label="Members"
+                  placeholder="Select Members"
                   :items="props.getProjectGuests"
                   :item-title="item => item.name"
                   :item-value="item => item.id"
