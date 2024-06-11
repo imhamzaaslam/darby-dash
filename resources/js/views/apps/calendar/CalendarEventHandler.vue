@@ -67,34 +67,38 @@ const removeEvent = () => {
   toast.success('Event deleted successfully', { timeout: 1000 })
 }
 
-const handleSubmit = () => {
-  refForm.value?.validate().then(async ({ valid }) => {
-    if (valid) {
-      const eventDetails = ref({
-        name: event.value.title,
-        uuid: event.value.uuid,
-        project_uuid: props.projectUuid,
-        description: event.value.extendedProps.description,
-        start_date: event.value.start ? formatDate(event.value.start) : null,
-        end_date: event.value.end ? formatDate(event.value.end) : null,
-        url: event.value.url,
-        guests_ids: event.value.extendedProps.guests,
-      })
+const handleSubmit = async () => {
+  const { valid } = await refForm.value?.validate()
 
-      // If id exist on id => Update event
-      if ('id' in event.value){
+  if (valid) {
+    const eventDetails = ref({
+      name: event.value.title,
+      uuid: event.value.uuid,
+      project_uuid: props.projectUuid,
+      description: event.value.extendedProps.description,
+      start_date: event.value.start ? formatDate(event.value.start) : null,
+      end_date: event.value.end ? formatDate(event.value.end) : null,
+      url: event.value.url,
+      guests_ids: event.value.extendedProps.guests,
+    })
+
+    try {
+      if ('id' in event.value) {
         emit('updateEvent', eventDetails.value)
+        emit('refreshCalendar')
         toast.success('Event Updated successfully', { timeout: 1000 })
-      }
-      else{
+      } else {
         emit('addEvent', eventDetails.value)
+        emit('refreshCalendar')
         toast.success('Event added successfully', { timeout: 1000 })
       }
-      emit('refreshCalendar')
       emit('update:isDrawerOpen', false)
+    } catch (error) {
+      toast.error('An error occurred while updating the calendar.', { timeout: 1000 })
     }
-  })
+  }
 }
+
 
 // 👉 Form
 const onCancel = () => {

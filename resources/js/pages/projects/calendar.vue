@@ -94,8 +94,8 @@ const {
 
 // use before mounted function and set events option in calendarOptions
 onBeforeMount(async () => {
+  await setCalendarEvents()
   await fetchProject()
-  setCalendarEvents()
 })
 
 const fetchProjectTasks = async () => {
@@ -131,12 +131,8 @@ const fetchProjectGuests = async () => {
 const fetchProject = async () => {
   try {
     await projectStore.show(route.params.id)
-    isLoading.value = true
   } catch (error) {
     toast.error('Error fetching project:', error)
-  }
-  finally {
-    isLoading.value = false
   }
 }
 
