@@ -9,15 +9,12 @@
       </VCol>
     </VRow>
     <VCard>
-      <!-- `z-index: 0` Allows overlapping vertical nav on calendar -->
       <VLayout style="z-index: 0;">
-        <!-- 👉 Navigation drawer -->
         <VMain>
           <VCard flat>
             <FullCalendar
               ref="refCalendar"
               :options="calendarOptions"
-              :events="staticEvents"
             />
           </VCard>
         </VMain>
@@ -32,16 +29,14 @@
       @add-event="addEvent"
       @update-event="updateEvent"
       @remove-event="removeEvent"
+      @refresh-calendar="setCalendarEvents"
     />
   </div>
 </template>
 
 <script setup>
 import FullCalendar from '@fullcalendar/vue3'
-import {
-  blankEvent,
-  useCalendar,
-} from '@/views/apps/calendar/useCalendar'
+import { blankEvent, useCalendar } from '@/views/apps/calendar/useCalendar'
 
 // Components
 import CalendarEventHandler from '@/views/apps/calendar/CalendarEventHandler.vue'
@@ -49,6 +44,7 @@ import { useProjectTaskStore } from "@/store/project_tasks"
 import { useCalendarEventStore } from "@/store/calendar_events"
 import { useUserStore } from "@/store/users"
 import { useRoute } from 'vue-router'
+import { ref, watch, onBeforeMount, computed } from 'vue'
 
 // 👉 Store
 const projectTaskStore = useProjectTaskStore()
@@ -61,21 +57,23 @@ const event = ref(structuredClone(blankEvent))
 const isEventHandlerSidebarActive = ref(false)
 
 watch(isEventHandlerSidebarActive, val => {
-  if (!val)
-    event.value = structuredClone(blankEvent)
+  if (!val) event.value = structuredClone(blankEvent)
 })
 
 const { isLeftSidebarOpen } = useResponsiveLeftSidebar()
 
 // 👉 useCalendar
-const { refCalendar, calendarOptions, addEvent, updateEvent, removeEvent, jumpToDate, refetchEvents } = useCalendar(event, isEventHandlerSidebarActive, isLeftSidebarOpen)
+const {
+  refCalendar,
+  calendarOptions,
+  addEvent,
+  updateEvent,
+  removeEvent,
+} = useCalendar(event, isEventHandlerSidebarActive, isLeftSidebarOpen, route.params.id)
 
-// use before mounted functiona nd set events option in calendarOptions
+// use before mounted function and set events option in calendarOptions
 onBeforeMount(async () => {
-  await fetchProjectTasks()
-  await fetchCalendarEvents()
-  await fetchProjectGuests()
-  setCalendarEvents(projectTaskStore.getProjectAllTasks, calendarEventStore.getCalendarEvents)
+  setCalendarEvents()
 })
 
 const fetchProjectTasks = async () => {
@@ -108,19 +106,36 @@ const fetchProjectGuests = async () => {
   }
 }
 
-const setCalendarEvents = (projectTasks, calendarEvents) => {
+const setCalendarEvents = async () => {
+  await fetchCalendarEvents()
+  await fetchProjectTasks()
+  await fetchProjectGuests()
+
+  const projectTasks = projectTaskStore.getProjectAllTasks
+  const calendarEvents = calendarEventStore.getCalendarEvents
+
   const combinedEvents = [
     ...projectTasks.map(task => ({
       id: task.id,
+      uuid: task.uuid,
       title: task.name,
       start: task.due_date ? task.due_date : task.created_at,
+      extendedProps: {
+        description: task.description,
+        guests: task.guests || [],
+      },
     })),
     ...calendarEvents.map(event => ({
       id: event.id,
       uuid: event.uuid,
       title: event.name,
       start: event.start_date,
-      end: event.end_date,
+      url: event.url ? event.url : '',
+      end: event.end_date ? event.end_date : null,
+      extendedProps: {
+        description: event.description,
+        guests: event.guests || [],
+      },
     })),
   ]
 
@@ -147,55 +162,55 @@ const getLoadStatus = computed(() => {
 })
 </script>
 
-<style lang="scss">
-@use "@core-scss/template/libs/full-calendar";
+  <style lang="scss">
+  @use "@core-scss/template/libs/full-calendar";
 
-.calendar-filters {
-  max-height: 374px;
-  overflow-y: scroll;
-  margin-bottom: 20px;
-}
-
-.calendars-checkbox {
-  .v-label {
-    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
-    opacity: var(--v-high-emphasis-opacity);
+  .calendar-filters {
+    max-height: 374px;
+    overflow-y: scroll;
+    margin-bottom: 20px;
   }
-}
 
-.calendar-add-event-drawer {
-  &.v-navigation-drawer:not(.v-navigation-drawer--temporary) {
-    border-end-start-radius: 0.375rem;
-    border-start-start-radius: 0.375rem;
-  }
-}
-
-.calendar-date-picker {
-  display: none;
-
-  +.flatpickr-input {
-    +.flatpickr-calendar.inline {
-      border: none;
-      box-shadow: none;
-
-      .flatpickr-months {
-        border-block-end: none;
-      }
+  .calendars-checkbox {
+    .v-label {
+      color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+      opacity: var(--v-high-emphasis-opacity);
     }
   }
 
-  &~.flatpickr-calendar .flatpickr-weekdays {
-    margin-block: 0 4px;
+  .calendar-add-event-drawer {
+    &.v-navigation-drawer:not(.v-navigation-drawer--temporary) {
+      border-end-start-radius: 0.375rem;
+      border-start-start-radius: 0.375rem;
+    }
   }
-}
-</style>
 
-<style lang="scss" scoped>
-.v-layout {
-  overflow: visible !important;
+  .calendar-date-picker {
+    display: none;
 
-  .v-card {
-    overflow: visible;
+    +.flatpickr-input {
+      +.flatpickr-calendar.inline {
+        border: none;
+        box-shadow: none;
+
+        .flatpickr-months {
+          border-block-end: none;
+        }
+      }
+    }
+
+    &~.flatpickr-calendar .flatpickr-weekdays {
+      margin-block: 0 4px;
+    }
   }
-}
-</style>
+  </style>
+
+  <style lang="scss" scoped>
+  .v-layout {
+    overflow: visible !important;
+
+    .v-card {
+      overflow: visible;
+    }
+  }
+  </style>

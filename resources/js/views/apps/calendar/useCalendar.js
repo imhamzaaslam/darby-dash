@@ -3,67 +3,50 @@ import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { useConfigStore } from '@core/stores/config'
-import { useCalendarStore } from '@/views/apps/calendar/useCalendarStore'
+import { useCalendarEventStore } from "@/store/calendar_events"
 
 export const blankEvent = {
   title: '',
   start: '',
   end: '',
-  allDay: false,
   url: '',
   extendedProps: {
-    /*
-          ℹ️ We have to use undefined here because if we have blank string as value then select placeholder will be active (moved to top).
-          Hence, we need to set it to undefined or null
-        */
-    calendar: undefined,
     guests: [],
-    location: '',
-    description: '',
+    description: null,
+    uuid: '',
   },
 }
-export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpen) => {
+export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpen, projectUuid) => {
   const configStore = useConfigStore()
 
   // 👉 Store
-  const store = useCalendarStore()
+  const store = useCalendarEventStore()
 
   // 👉 Calendar template ref
   const refCalendar = ref()
 
 
-  // 👉 Calendar colors
-  const calendarsColor = {
-    Business: 'primary',
-    Holiday: 'success',
-    Personal: 'error',
-    Family: 'warning',
-    ETC: 'info',
-  }
-
-
   // ℹ️ Extract event data from event API
   const extractEventDataFromEventApi = eventApi => {
-    const { id, title, start, end, url, extendedProps: { calendar, guests, location, description }, allDay } = eventApi
+    const { id, title, start, end, url, extendedProps: { guests, description, uuid } } = eventApi
 
     return {
       id,
+      uuid,
       title,
       start,
       end,
       url,
       extendedProps: {
-        calendar,
         guests,
-        location,
         description,
+        uuid,
       },
-      allDay,
     }
   }
 
   if (typeof process !== 'undefined' && process.server)
-    store.fetchEvents()
+    store.getAll({ projectUuid })
 
 
   // 👉 Fetch events
@@ -71,14 +54,16 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
     // If there's no info => Don't make useless API call
     if (!info)
       return
-    store.fetchEvents()
+    store.getAll({ projectUuid })
       .then(r => {
         successCallback(r.map(e => ({
           ...e,
 
           // Convert string representation of date to Date object
-          start: new Date(e.start),
-          end: new Date(e.end),
+          start: new Date(e.start_date),
+          end: e.end_date ? new Date(e.end_date) : null,
+          uuid: e.uuid,
+          url: e.url,
         })))
       })
       .catch(e => {
@@ -111,7 +96,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
 
     // --- Set date related props
     // ? Docs: https://fullcalendar.io/docs/Event-setDates
-    existingEvent.setDates(updatedEventData.start, updatedEventData.end, { allDay: updatedEventData.allDay })
+    existingEvent.setDates(updatedEventData.start_date, updatedEventData.end_date ? updatedEventData.end_date : null)
 
     // --- Set event's extendedProps
     // ? Docs: https://fullcalendar.io/docs/Event-setExtendedProp
@@ -136,12 +121,10 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
     calendarApi.value?.refetchEvents()
   }
 
-  watch(() => store.selectedCalendars, refetchEvents)
-
 
   // 👉 Add event
   const addEvent = _event => {
-    store.addEvent(_event)
+    store.create(_event)
       .then(() => {
         refetchEvents()
       })
@@ -150,10 +133,10 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
 
   // 👉 Update event
   const updateEvent = _event => {
-    store.updateEvent(_event)
+    store.update(_event)
       .then(r => {
         const propsToUpdate = ['id', 'title', 'url']
-        const extendedPropsToUpdate = ['calendar', 'guests', 'location', 'description']
+        const extendedPropsToUpdate = ['guests', 'description', 'uuid']
 
         updateEventInCalendar(r, propsToUpdate, extendedPropsToUpdate)
       })
@@ -162,9 +145,9 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
 
 
   // 👉 Remove event
-  const removeEvent = eventId => {
-    store.removeEvent(eventId).then(() => {
-      removeEventInCalendar(eventId)
+  const removeEvent = event => {
+    store.delete(event).then(() => {
+      removeEventInCalendar(event.id)
     })
   }
 
@@ -211,8 +194,6 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
       */
     navLinks: true,
     eventClassNames({ event: calendarEvent }) {
-      const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar]
-
       return [
         // Background Color
         `bg-light-primary text-primary`,
