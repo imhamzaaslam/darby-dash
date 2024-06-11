@@ -68,23 +68,6 @@ const showNavigation = computed(() => {
               :class="{ 'text-primary': $route.path === `/projects/web-designs/${projectId}` }"
             >Overview</span>
           </RouterLink>
-          <RouterLink :to="`/projects/${projectId}/chat`">
-            <span
-              class="text-h6 me-5 inner-badge-text"
-              :class="{ 'text-primary': $route.path === `/projects/${projectId}/chat` }"
-            >
-              Inbox
-              <!--
-                <VBadge
-                class="new-badge"
-                color="error"
-                content="14"
-                >
-                <span class="inner-badge-text">Inbox</span>
-                </VBadge>
-              -->
-            </span>
-          </RouterLink>
           <RouterLink :to="`/projects/${projectId}/files`">
             <span
               class="text-h6 me-8 inner-badge-text"
@@ -126,6 +109,23 @@ const showNavigation = computed(() => {
               class="text-h6 me-8 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
             >Your Team</span>
+          </RouterLink>
+          <RouterLink :to="`/projects/${projectId}/chat`">
+            <span
+              class="text-h6 me-5 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/chat` }"
+            >
+              Inbox
+              <!--
+                <VBadge
+                class="new-badge"
+                color="error"
+                content="14"
+                >
+                <span class="inner-badge-text">Inbox</span>
+                </VBadge>
+              -->
+            </span>
           </RouterLink>
         </div>
 

@@ -7,37 +7,39 @@
         md="7"
         class="d-flex"
       >
-        <VBtnToggle
+        <!--
+          <VBtnToggle
           v-model="viewType"
           class="d-toggle align-center-important"
           rounded="0"
-        >
+          >
           <VIcon
-            icon="tabler-list"
+          icon="tabler-list"
+          class="me-1"
+          :class="{ 'bg-primary': viewType === 'list' }"
+          @click="viewType = 'list'"
+          />
+          <VIcon
+          icon="tabler-layout-grid"
+          :class="{ 'bg-primary': viewType === 'grid' }"
+          @click="viewType = 'grid'"
+          />
+          <VIcon
+          icon="tabler-filter"
+          class="bg-primary ms-1"
+          />
+        -->
+        <div class="d-flex justify-center align-center">
+          <VAvatar
+            :size="30"
             class="me-1"
-            :class="{ 'bg-primary': viewType === 'list' }"
-            @click="viewType = 'list'"
+            :image="sketch"
           />
-          <VIcon
-            icon="tabler-layout-grid"
-            :class="{ 'bg-primary': viewType === 'grid' }"
-            @click="viewType = 'grid'"
-          />
-          <VIcon
-            icon="tabler-filter"
-            class="bg-primary ms-1"
-          />
-          <div class="ms-4 d-flex justify-center align-center">
-            <VAvatar
-              :size="30"
-              class="me-1"
-              :image="sketch"
-            />
-            <h3 class="text-primary">
-              {{ project?.title }}
-            </h3>
-          </div>
-        </VBtnToggle>
+          <h3 class="text-primary">
+            {{ project?.title }}
+          </h3>
+        </div>
+        <!-- </VBtnToggle> -->
       </VCol>
       <VCol
         cols="12"
@@ -124,9 +126,17 @@
                 cols="3"
                 class="mt-2"
               >
-                <span>
-                  Lists ({{ data.lists.length }})
-                </span>
+                <div>
+                  <VChip
+                    v-for="(list, index) in data.lists"
+                    :key="index"
+                    class="me-1"
+                    color="primary"
+                    size="small"
+                  >
+                    {{ list.name }}
+                  </VChip>
+                </div>
               </VCol>
               <VCol
                 cols="2"
