@@ -28,10 +28,10 @@
             class="bg-primary ms-1"
           />
           <div class="ms-4 d-flex justify-center align-center">
-            <VIcon
-              start
-              icon="tabler-wand"
-              color="primary"
+            <VAvatar
+              :size="30"
+              class="me-1"
+              :image="sketch"
             />
             <h3 class="text-primary">
               {{ project?.title }}
@@ -48,7 +48,7 @@
             prepend-icon="tabler-plus"
             @click="isAddMileStoneDialogueOpen = !isAddMileStoneDialogueOpen"
           >
-            Add New
+            Add Milestone
           </VBtn>
         </div>
       </VCol>
@@ -59,21 +59,21 @@
         class="pt-0 ps-4 pb-0"
       >
         <h3>
-          Manage MileStones
+          Manage Milestones
         </h3>
       </VCol>
     </VRow>
 
-    <div 
+    <div
       v-if="mileStoneLoadStatus !== 1 && getProjectMileStone.length === 0"
       class="text-center"
     >
-      <div 
+      <div
         class="mt-12"
         v-html="NoTaskInList"
       />
       <span>
-        No MileStones Added Yet
+        No Milestones Added Yet
       </span>
     </div>
 
@@ -102,29 +102,38 @@
             v-for="(data, index) in getProjectMileStone"
             :key="index"
             cols="12"
-          > 
-            <VCard class="d-flex ps-4 py-1">
-              <VCol cols="3">
-                <div class="d-flex align-center gap-x-3">
-                  <VAvatar
-                    :size="34"
-                    :image="sketch"
+          >
+            <VCard class="d-flex py-1">
+              <VCol
+                cols="3"
+                class="mt-2"
+              >
+                <div class="d-flex align-center">
+                  <VIcon
+                    icon="tabler-playstation-square"
+                    color="primary"
                   />
                   <div>
-                    <h6 class="text-h6 text-no-wrap">
+                    <h6 class="ms-1 text-h6 text-no-wrap">
                       <span class="d-block">{{ data.name }}</span>
                     </h6>
                   </div>
                 </div>
               </VCol>
-              <VCol cols="3">
+              <VCol
+                cols="3"
+                class="mt-2"
+              >
                 <span>
                   Lists ({{ data.lists.length }})
                 </span>
               </VCol>
-              <VCol cols="2">
+              <VCol
+                cols="2"
+                class="mt-1"
+              >
                 <div class="d-flex align-center gap-3">
-                  <div class="flex-grow-1 mt-2">
+                  <div class="flex-grow-1 mt-1">
                     <VProgressLinear
                       :height="6"
                       :model-value="data.mileStoneProgress.progress"
@@ -137,7 +146,10 @@
                   </div>
                 </div>
               </VCol>
-              <VCol cols="3 text-center">
+              <VCol
+                cols="3 text-center"
+                class="mt-2"
+              >
                 <VChip
                   variant="outlined"
                   :color="data.status === 'done' ? 'success' : 'warning'"
@@ -197,13 +209,13 @@
                 >
                   <span>{{ avatarText('Mile Stones') }}</span>
                 </VAvatar>
-    
+
                 <VRow class="mt-5">
                   <VCol cols="8">
                     <div class="d-flex align-center mt-1 ms-1">
                       <div class="d-flex flex-column ms-3">
                         <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ data.name }}</span>
-                      
+
                         <span class="text-sm text-truncate mb-0">
                           Lists ({{ data.lists.length }})
                         </span>
@@ -234,7 +246,7 @@
       <DialogCloseBtn @click="isAddMileStoneDialogueOpen = !isAddMileStoneDialogueOpen" />
 
       <!-- Dialog Content -->
-      <VCard title="Add MileStone">
+      <VCard title="Add Milestone">
         <VForm
           ref="addMileStoneForm"
           @submit.prevent="submitAddMileStoneForm"
@@ -363,13 +375,13 @@
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import Page2 from '../../../images/pages/2.png'
-import sketch from '@images/icons/project-icons/sketch.png'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import { useProjectStore } from "../../store/projects"
 import { useMileStoneStore } from "@/store/milestones"
 import { useProjectListStore } from "@/store/project_lists"
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
+import sketch from '@images/icons/project-icons/sketch.png'
 
 const mileStoneStore = useMileStoneStore()
 const projectStore = useProjectStore()

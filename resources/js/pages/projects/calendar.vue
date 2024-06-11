@@ -3,10 +3,10 @@
   <VRow>
     <VCol cols="12">
       <div class="d-flex justify-start align-center">
-        <VIcon
-          start
-          icon="tabler-wand"
-          color="primary"
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
         />
         <h3 class="text-primary">
           {{ project?.title }}
@@ -63,6 +63,7 @@ import { useProjectStore } from "@/store/projects"
 import { useUserStore } from "@/store/users"
 import Loader from "@/components/Loader.vue"
 import { useRoute } from 'vue-router'
+import sketch from '@images/icons/project-icons/sketch.png'
 import { ref, watch, onBeforeMount, computed } from 'vue'
 
 // 👉 Store

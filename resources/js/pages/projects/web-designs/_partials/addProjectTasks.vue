@@ -27,10 +27,10 @@
           class="bg-primary ms-1 me-2"
         />
         <div class="ms-2 d-flex justify-center align-center">
-          <VIcon
-            start
-            icon="tabler-wand"
-            color="primary"
+          <VAvatar
+            :size="30"
+            class="me-1"
+            :image="sketch"
           />
           <h3 class="text-primary">
             {{ project.title }}
@@ -1198,6 +1198,7 @@ import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useTheme } from 'vuetify'
 import { VIcon } from 'vuetify/lib/components/index.mjs'
+import sketch from '@images/icons/project-icons/sketch.png'
 
 const toast = useToast()
 const vuetifyTheme = useTheme()

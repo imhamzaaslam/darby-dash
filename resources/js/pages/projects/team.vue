@@ -28,10 +28,10 @@
             class="bg-primary ms-1"
           />
           <div class="ms-4 d-flex justify-center align-center">
-            <VIcon
-              start
-              icon="tabler-wand"
-              color="primary"
+            <VAvatar
+              :size="30"
+              class="me-1"
+              :image="sketch"
             />
             <h3 class="text-primary">
               {{ project?.title }}
@@ -298,6 +298,7 @@ import { useProjectStore } from "../../store/projects"
 import { useUserStore } from "../../store/users"
 import { useRoleStore } from "../../store/roles"
 import { useRoute } from 'vue-router'
+import sketch from '@images/icons/project-icons/sketch.png'
 
 const toast = useToast()
 const projectStore = useProjectStore()

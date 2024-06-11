@@ -2,10 +2,10 @@
   <VRow>
     <VCol cols="12">
       <div class="d-flex justify-start align-center">
-        <VIcon
-          start
-          icon="tabler-wand"
-          color="primary"
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
         />
         <h3 class="text-primary">
           {{ project?.title }}
@@ -500,6 +500,7 @@ import girlWithLaptop from '@images/illustrations/PM.png'
 import otherListImg from '@images/darby/other_list.svg?raw'
 import { useProjectStore } from "@/store/projects"
 import { useRoute } from 'vue-router'
+import sketch from '@images/icons/project-icons/sketch.png'
 
 const projectStore = useProjectStore()
 const $route = useRoute()
