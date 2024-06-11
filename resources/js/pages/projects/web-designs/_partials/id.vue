@@ -518,12 +518,8 @@ const getProjectProgress = async () => {
 const fetchProject = async () => {
   try {
     await projectStore.show(projectUuid)
-    isLoading.value = true
   } catch (error) {
     toast.error('Error fetching project:', error)
-  }
-  finally {
-    isLoading.value = false
   }
 }
 
