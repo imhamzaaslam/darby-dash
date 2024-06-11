@@ -33,7 +33,7 @@
             color="primary"
           />
           <h3 class="text-primary">
-            {{ project.title }}
+            {{ project?.title }}
           </h3>
         </div>
       </VBtnToggle>
@@ -1253,7 +1253,8 @@ const projectId = computed(() => router.currentRoute.value.params.id)
 const formatDate = date => moment(date).format('MMM DD, YYYY')
 
 onBeforeMount(async () => {
-  selectedList.value = getProjectLists.value[0].uuid
+  // selectedList.value = getProjectLists.value[0].uuid
+  // console.log('testing', selectedList.value)
   await fetchProjectTasks()
   await fetchProjectLists()
   await fetchStatus()
