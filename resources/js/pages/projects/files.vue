@@ -1,5 +1,5 @@
 <template>
-  <Loader v-if="folderLoadStatus === 1 || fileLoadStatus === 1 || isLoading" />
+  <Loader v-if="isLoading" />
   <VRow>
     <VCol
       cols="12"
@@ -359,17 +359,31 @@ onBeforeMount(async () => {
 })
 
 const getFolders = async () => {
-  await folderStore.getAll(projectUuid)
+  isLoading.value = true
+  try {
+    await folderStore.getAll(projectUuid)
+  } catch (error) {
+    toast.error('Failed to fetch folders')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const getFiles = async () => {
+  isLoading.value = true
   images.value = []
-  // empty the uploadProgress array
+
   uploadProgress.value = []
   if (openFolder.value) {
     getFolderFiles(openFolder.value)
   } else {
-    await fileStore.getAll(projectUuid)
+    try {
+      await fileStore.getAll(projectUuid)
+    } catch (error) {
+      toast.error('Failed to fetch files')
+    } finally {
+      isLoading.value = false
+    }
   }
 }
 
@@ -486,12 +500,15 @@ const downloadFile = file => {
 }
 
 const deleteImage = async files => {
+  isLoading.value = true
   try {
     await fileStore.delete(files.uuid)
     toast.success('File deleted successfully')
     await getFiles()
   } catch (error) {
     toast.error('Failed to delete file')
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -517,7 +534,14 @@ const getImageUrl = path => {
 }
 
 const getFolderFiles = async folder => {
-  await folderStore.getFiles(folder.uuid)
+  isLoading.value = true
+  try {
+    await folderStore.getFiles(folder.uuid)
+  } catch (error) {
+    toast.error('Failed to fetch folder files')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const folders = computed(() => {
