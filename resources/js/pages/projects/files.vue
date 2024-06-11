@@ -1,4 +1,5 @@
 <template>
+  <Loader v-if="folderLoadStatus === 1 || fileLoadStatus === 1 || isLoading" />
   <VRow>
     <VCol
       cols="12"
@@ -328,6 +329,7 @@ import FileViewer from './web-designs/_partials/file-viewer.vue'
 import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
 import CreateFolderDialog from '@/components/dialogs/CreateFolderDialog.vue'
 import EditFolderDialog from '@/components/dialogs/EditFolderDialog.vue'
+import Loader from '@/components/Loader.vue'
 import { useFolderStore } from '@/store/folders'
 import { useFileStore } from '@/store/files'
 import { useRoute } from 'vue-router'
@@ -335,6 +337,7 @@ import { useToast } from "vue-toastification"
 
 const isCreateFolderDialogOpen = ref(false)
 const isEditFolderDialogOpen = ref(false)
+const isLoading = ref(false)
 
 const folderStore = useFolderStore()
 const fileStore = useFileStore()
@@ -376,7 +379,6 @@ const chooseFile = () => {
 
 const filePicked = event => {
   const files = event.target.files
-  // upload files to the server
   uploadFiles(files)
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
@@ -417,6 +419,7 @@ const filePicked = event => {
 }
 
 const uploadFiles = async files => {
+  isLoading.value = true
   let fileData = []
 
   for (let i = 0; i < files.length; i++) {
@@ -424,34 +427,29 @@ const uploadFiles = async files => {
   }
 
   try {
-    // await fileStore.upload(fileData, projectUuid)
-
     if (openFolder.value) {
       await fileStore.upload(fileData, projectUuid, openFolder.value.uuid)
     } else {
       await fileStore.upload(fileData, projectUuid)
     }
 
-    // check if isCompleted is true for all files in the uploadProgress array
     const isAllCompleted = uploadProgress.value.every(f => f.isCompleted)
     if (isAllCompleted) {
-      // get all files again
       await getFiles()
+      isLoading.value = false
     } else {
-      // if not all files are completed, then set a trigger to get all files again, set an interval to check every second
-      // if all files are completed
       const interval = setInterval(async () => {
         const isAllCompleted = uploadProgress.value.every(f => f.isCompleted)
         if (isAllCompleted) {
           clearInterval(interval)
           await getFiles()
+          isLoading.value = false
         }
       }, 500)
     }
-
-
   } catch (error) {
     toast.error('Failed to upload files')
+    isLoading.value = false
   }
 }
 
@@ -531,7 +529,11 @@ const allFiles = computed(() => {
 })
 
 const folderLoadStatus = computed(() => {
-  return folderStore.loadStatus
+  return folderStore.getLoadStatus
+})
+
+const fileLoadStatus = computed(() => {
+  return fileStore.getLoadStatus
 })
 
 const getErrors = computed(() => {
