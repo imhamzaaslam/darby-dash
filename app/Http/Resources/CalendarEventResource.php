@@ -21,6 +21,7 @@ class CalendarEventResource extends JsonResource
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
+            'guests' => $this->guests->pluck('id'),
             'url' => $this->url,
             'project_id' => $this->project_id,
             'display_order' => $this->display_order,

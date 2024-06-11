@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->string('name');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->string('start_date');
-            $table->string('end_date');
-            $table->string('url');
+            $table->string('end_date')->nullable();
+            $table->string('url')->nullable();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->integer('display_order')->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');

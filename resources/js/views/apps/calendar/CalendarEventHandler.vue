@@ -1,9 +1,8 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { useCalendarStore } from './useCalendarStore'
-import { useCalendarEventStore } from "@/store/calendar_events"
 import { useToast } from "vue-toastification"
+import moment from 'moment'
 
 // 👉 store
 const props = defineProps({
@@ -15,7 +14,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  getLoadStatus: String,
+  getLoadStatus: Number,
   getProjectGuests: {
     type: Object,
     required: true,
@@ -31,12 +30,15 @@ const emit = defineEmits([
   'addEvent',
   'updateEvent',
   'removeEvent',
+  'refreshCalendar',
 ])
 
-const calendarEventStore = useCalendarEventStore()
+const formatDate = date => {
+  return moment(date).format('YYYY-MM-DD HH:mm')
+}
+
 const toast = useToast()
 
-const store = useCalendarStore()
 const refForm = ref()
 
 // 👉 Event
@@ -52,38 +54,44 @@ const resetEvent = () => {
 watch(() => props.isDrawerOpen, resetEvent)
 
 const removeEvent = () => {
-  emit('removeEvent', String(event.value.id))
+  const eventDetails = ref({
+    id: event.value.id,
+    uuid: event.value.uuid,
+    project_uuid: props.projectUuid,
+  })
+
+  emit('removeEvent', eventDetails.value)
 
   // Close drawer
   emit('update:isDrawerOpen', false)
+  toast.success('Event deleted successfully', { timeout: 1000 })
 }
 
 const handleSubmit = () => {
   refForm.value?.validate().then(async ({ valid }) => {
     if (valid) {
-      const newEventDetails = ref({
+      const eventDetails = ref({
         name: event.value.title,
+        uuid: event.value.uuid,
         project_uuid: props.projectUuid,
         description: event.value.extendedProps.description,
-        start_date: event.value.start,
-        end_date: event.value.end,
+        start_date: event.value.start ? formatDate(event.value.start) : null,
+        end_date: event.value.end ? formatDate(event.value.end) : null,
         url: event.value.url,
         guests_ids: event.value.extendedProps.guests,
       })
 
-      const res = await calendarEventStore.create(newEventDetails.value)
-
       // If id exist on id => Update event
-      if ('id' in event.value)
-        emit('updateEvent', event.value)
-
-      // Else => add new event
-      else
-        emit('addEvent', event.value)
-
-      // Close drawer
+      if ('id' in event.value){
+        emit('updateEvent', eventDetails.value)
+        toast.success('Event Updated successfully', { timeout: 1000 })
+      }
+      else{
+        emit('addEvent', eventDetails.value)
+        toast.success('Event added successfully', { timeout: 1000 })
+      }
+      emit('refreshCalendar')
       emit('update:isDrawerOpen', false)
-      toast.success('Event added successfully', { timeout: 1000 })
     }
   })
 }
@@ -190,7 +198,6 @@ const dialogModelValueUpdate = val => {
                 <AppDateTimePicker
                   :key="JSON.stringify(endDateTimePickerConfig)"
                   v-model="event.end"
-                  :rules="[requiredValidator]"
                   label="End date"
                   placeholder="Select End Date"
                   :config="endDateTimePickerConfig"
