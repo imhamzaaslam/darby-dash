@@ -299,10 +299,6 @@ async function submitUpdateMemberForm() {
   })
 }
 
-// const resetForm = () => {
-//   accountData.value = Object.fromEntries(Object.keys(accountData.value).map(key => [key, '']))
-// }
-
 const getUser = async () => {
   let user = JSON.parse(localStorage.getItem('user'))
   const uuid = user.user?.uuid
@@ -321,18 +317,6 @@ const setUserDetails = async () => {
   accountData.value.address = userDetails?.info?.address
   accountData.value.zip = userDetails?.info?.zip
 }
-
-// const getImgUrl = async userImage => {
-//   console.log('avatar is', userImage)
-
-//   const avatarPath = avatars[`@images/avatars/${userImage}`]
-//   if (!avatarPath) {
-//     throw new Error(`Avatar not found: ${userImage}`)
-//   }
-//   const module = await avatarPath()
-  
-//   return module.default // or module.default.src if you're using image loaders
-// }
 
 const showError = () => {
   if(getStatusCode.value == 500 || getStatusCode.value == 404){
@@ -354,4 +338,8 @@ const getStatusCode = computed(() => {
 const getErrors = computed(() => {
   return userStore.getErrors
 })
+
+watch(() => userStore.getUser, () => {
+  setUserDetails()
+}, { immediate: true })
 </script>
