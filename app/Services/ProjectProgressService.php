@@ -72,9 +72,16 @@ class ProjectProgressService
 
     public function getLaunchingDate(Project $project): string
     {
+        $tasks = $project->tasks()->count();
         $launchingDays = $this->getLaunchingDays($project);
         if (!$launchingDays) {
-            return 'No Launching Date';
+            if(!$tasks)
+            {
+                return 'No Launching Date';
+            }
+            else{
+                return 'Today';
+            }
         }
 
         $currentDate = Carbon::now();
