@@ -1,5 +1,5 @@
 <template>
-  <Loader v-if="getUserLoadStatus == 1" />
+  <Loader v-if="isLoading" />
   <VRow>
     <VCol cols="12">
       <div class="d-flex justify-start align-center">
@@ -72,6 +72,7 @@ const userStore = useUserStore()
 const projectStore = useProjectStore()
 const calendarEventStore = useCalendarEventStore()
 const route = useRoute()
+const isLoading = ref(false)
 
 // 👉 Event
 const event = ref(structuredClone(blankEvent))
@@ -137,6 +138,7 @@ const fetchProject = async () => {
 }
 
 const setCalendarEvents = async () => {
+  isLoading.value = true
   await fetchCalendarEvents()
   await fetchProjectTasks()
   await fetchProjectGuests()
@@ -178,6 +180,7 @@ const setCalendarEvents = async () => {
     calendarApi.removeAllEvents()
     calendarApi.addEventSource(combinedEvents)
   }
+  isLoading.value = false
 }
 
 const getProjectGuests = computed(() => {
