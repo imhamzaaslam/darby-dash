@@ -76,38 +76,6 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
   const calendarApi = ref(null)
 
 
-  // 👉 Update event in calendar [UI]
-  const updateEventInCalendar = (updatedEventData, propsToUpdate, extendedPropsToUpdate) => {
-    const existingEvent = calendarApi.value?.getEventById(String(updatedEventData.id))
-    if (!existingEvent) {
-      console.warn('Can\'t found event in calendar to update')
-
-      return
-    }
-
-    // ---Set event properties except date related
-    // Docs: https://fullcalendar.io/docs/Event-setProp
-    // dateRelatedProps => ['start', 'end', 'allDay']
-    for (let index = 0; index < propsToUpdate.length; index++) {
-      const propName = propsToUpdate[index]
-
-      existingEvent.setProp(propName, updatedEventData[propName])
-    }
-
-    // --- Set date related props
-    // ? Docs: https://fullcalendar.io/docs/Event-setDates
-    existingEvent.setDates(updatedEventData.start_date, updatedEventData.end_date ? updatedEventData.end_date : null)
-
-    // --- Set event's extendedProps
-    // ? Docs: https://fullcalendar.io/docs/Event-setExtendedProp
-    for (let index = 0; index < extendedPropsToUpdate.length; index++) {
-      const propName = extendedPropsToUpdate[index]
-
-      existingEvent.setExtendedProp(propName, updatedEventData.extendedProps[propName])
-    }
-  }
-
-
   // 👉 Remove event in calendar [UI]
   const removeEventInCalendar = eventId => {
     const _event = calendarApi.value?.getEventById(eventId)
@@ -125,23 +93,18 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
   // 👉 Add event
   const addEvent = _event => {
     store.create(_event)
-      .then(() => {
-        refetchEvents()
-      })
   }
 
 
   // 👉 Update event
-  const updateEvent = _event => {
-    store.update(_event)
-      .then(r => {
-        const propsToUpdate = ['id', 'title', 'url']
-        const extendedPropsToUpdate = ['guests', 'description', 'uuid']
-
-        updateEventInCalendar(r, propsToUpdate, extendedPropsToUpdate)
-      })
-    refetchEvents()
+  const updateEvent = async _event => {
+    try {
+      await store.update(_event)
+    } catch (error) {
+      console.error('Error updating event:', error)
+    }
   }
+
 
 
   // 👉 Remove event

@@ -222,7 +222,10 @@
                   </span>
                 </VProgressCircular>
               </template>
-              <VListItemTitle class="font-weight-medium mb-1">
+              <VListItemTitle
+                class="font-weight-medium mb-1 cursor-pointer"
+                @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
+              >
                 {{ data.name }}
               </VListItemTitle>
 
@@ -233,7 +236,7 @@
                   color="default"
                   class="rounded-sm"
                   size="30"
-                  @click="() => $router.push(`/projects/${projectUuid}/tasks/add`)"
+                  @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
                 >
                   <VIcon
                     icon="tabler-chevron-right"

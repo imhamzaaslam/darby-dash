@@ -1745,8 +1745,12 @@ const toggleRow = (index, isIteration = false) => {
         expandedRows.value[i] = false
       }
     })
+    activateQuickListTask(index)
   }
-  cancelQuickListTask(index)
+  if(!isIteration)
+  {
+    cancelQuickListTask(index)
+  }
 }
 
 function onDragStart() {
