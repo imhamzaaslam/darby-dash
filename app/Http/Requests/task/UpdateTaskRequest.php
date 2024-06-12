@@ -26,6 +26,7 @@ class UpdateTaskRequest extends FormRequest
             'status' => 'sometimes|exists:statuses,id',
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
+            'est_time' => 'sometimes|nullable|regex:/^\d{1,2}h \d{1,2}m$/',
         ];
     }
 }

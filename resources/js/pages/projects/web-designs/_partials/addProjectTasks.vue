@@ -359,6 +359,68 @@
                     </VMenu>
                   </td>
                   <td>
+                    <div v-if="!isEditingHours[item.id]">
+                      <VChip
+                        color="primary"
+                        size="small"
+                        @click="enableEditingHours(item)"
+                      >
+                        <VIcon
+                          size="x-small"
+                          class="tabler-clock me-1"
+                        />
+                        <small>{{ item.est_time || 'Set EST Time' }}</small>
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <small>Example 03h 45m</small>
+                        </VTooltip>
+                      </VChip>
+                    </div>
+                    <div
+                      v-else
+                      class="d-flex align-items-center"
+                    >
+                      <AppTextField
+                        :ref="el => inputHoursRef[item.id] = el"
+                        v-model="inputHours[item.id]"
+                        v-mask="'##h ##m'"
+                        density="compact"
+                        :style="{ width: '100px' }"
+                        @input="validateMinutes($event)"
+                        @blur="saveHours(item)"
+                        @keyup.enter="saveHours(item)"
+                      />
+                      <VIcon
+                        size="x-small"
+                        color="success"
+                        class="ms-2 mt-2 tabler-check"
+                        @click="saveHours(item)"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <small>Save</small>
+                        </VTooltip>
+                      </VIcon>
+                      <VIcon
+                        size="x-small"
+                        color="error"
+                        class="ms-1 mt-2 tabler-x"
+                        @click="cancelHoursEdit(item)"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <small>Cancel</small>
+                        </VTooltip>
+                      </VIcon>
+                    </div>
+                  </td>
+                  <td>
                     <VChip
                       color="primary"
                       size="small"
@@ -465,6 +527,68 @@
                           @update:model-value="closeDueDateMenu(subtask)"
                         />
                       </VMenu>
+                    </td>
+                    <td>
+                      <div v-if="!isEditingHours[subtask.id]">
+                        <VChip
+                          color="primary"
+                          size="small"
+                          @click="enableEditingHours(subtask)"
+                        >
+                          <VIcon
+                            size="x-small"
+                            class="tabler-clock me-1"
+                          />
+                          <small>{{ subtask.est_time || 'Set EST Time' }}</small>
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <small>Example 03h 45m</small>
+                          </VTooltip>
+                        </VChip>
+                      </div>
+                      <div
+                        v-else
+                        class="d-flex align-items-center"
+                      >
+                        <AppTextField
+                          :ref="el => inputHoursRef[subtask.id] = el"
+                          v-model="inputHours[subtask.id]"
+                          v-mask="'##h ##m'"
+                          density="compact"
+                          :style="{ width: '100px' }"
+                          @input="validateMinutes($event)"
+                          @blur="saveHours(subtask)"
+                          @keyup.enter="saveHours(subtask)"
+                        />
+                        <VIcon
+                          size="x-small"
+                          color="success"
+                          class="ms-2 mt-2 tabler-check"
+                          @click="saveHours(subtask)"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <small>Save</small>
+                          </VTooltip>
+                        </VIcon>
+                        <VIcon
+                          size="x-small"
+                          color="error"
+                          class="ms-1 mt-2 tabler-x"
+                          @click="cancelHoursEdit(subtask)"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <small>Cancel</small>
+                          </VTooltip>
+                        </VIcon>
+                      </div>
                     </td>
                     <td>
                       <VChip
@@ -1248,12 +1372,26 @@ const isDragging = ref(false)
 const statusMenu = ref([])
 const dueDateMenu = ref([])
 const selectedList = ref(null)
+const isEditingHours = ref([])
+const inputHours = ref([])
+const inputHoursRef = ref([])
 
 const isLoading = ref(false)
 
 const projectId = computed(() => router.currentRoute.value.params.id)
 
 const formatDate = date => moment(date).format('MMM DD, YYYY')
+
+const validateMinutes = event => {
+  const inputValue = event.target.value
+  const minutes = parseInt(inputValue.split(' ')[1])
+  if (isNaN(minutes) || minutes < 0 || minutes > 59) {
+    const sanitizedValue = inputValue.replace(/\d{2}m/, '00m')
+
+    event.target.value = sanitizedValue
+    inputHours[item.id] = sanitizedValue
+  }
+}
 
 onBeforeMount(async () => {
   isLoading.value = true
@@ -1554,6 +1692,12 @@ function cancelQuickKanbanSubTask(index) {
   quickKanbanSubTaskName.value = ''
 }
 
+const cancelHoursEdit = item => {
+  isEditingHours.value[item.id] = false
+
+  inputHours.value[item.id] = item.est_time
+}
+
 function startEditing(task) {
   editingTask.value = { ...task, project_uuid: projectId.value }
   isEditTaskDrawerOpen.value = true
@@ -1660,6 +1804,7 @@ const headers = [
   { title: 'Task Name', key: 'name', sortable: false, width: '60%' },
   { title: 'Status', key: 'status',  sortable: false },
   { title: 'Due Date', key: 'due_date', sortable: false },
+  { title: 'EST Time', key: 'est_time', sortable: false },
   { title: 'Start Date', key: 'created_at', sortable: false },
   { title: 'Action', key: 'action', sortable: false },
 ]
@@ -1670,6 +1815,17 @@ const startListEditing = list => {
   editListTitle.value = list.name
   nextTick(() => {
     const inputRef = editListTitleInput.value[list.id]
+    if (inputRef && inputRef.focus) {
+      inputRef.focus()
+    }
+  })
+}
+
+const enableEditingHours = item => {
+  isEditingHours.value[item.id] = true
+  inputHours.value[item.id] = item.est_time
+  nextTick(() => {
+    const inputRef = inputHoursRef.value[item.id]
     if (inputRef && inputRef.focus) {
       inputRef.focus()
     }
@@ -1779,6 +1935,28 @@ const updateStatus = async (item, status) => {
     toast.success('Task status updated successfully', { timeout: 1000 })
   } catch (error) {
     toast.error('Failed to update task status:', error)
+  }
+}
+
+const saveHours = async item => {
+  try {
+    isEditingHours.value[item.id] = false
+
+    const time = inputHours.value[item.id]
+    if (item.est_time === time) {
+      return
+    }
+
+    item.est_time = time
+
+    const payload = {
+      est_time: time,
+    }
+
+    await projectTaskStore.updateAttributes(item.uuid, payload)
+    toast.success('Task EST time updated successfully', { timeout: 1000 })
+  } catch (error) {
+    toast.error('Failed to update task est time:', error)
   }
 }
 

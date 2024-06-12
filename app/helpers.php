@@ -53,3 +53,39 @@ if (!function_exists('get_past_months')) {
         return \Carbon\CarbonPeriod::create($startDate, '1 month', $endDate);
     }
 }
+
+if (!function_exists('convertToMinutes')) {
+    function convertToMinutes(string $estTime): int
+    {
+        preg_match('/(\d+)h (\d+)m/', $estTime, $matches);
+        $hours = (int)$matches[1];
+        $minutes = (int)$matches[2];
+
+        $totalMinutes = ($hours * 60) + $minutes;
+
+        return $totalMinutes;
+    }
+}
+
+if (!function_exists('convertToHoursAndMinutes')) {
+    function convertToHoursAndMinutes(int $totalMinutes): string
+    {
+        $hours = floor($totalMinutes / 60);
+        $minutes = $totalMinutes % 60;
+
+        $formattedTime = sprintf("%02dh %02dm", $hours, $minutes);
+
+        return $formattedTime;
+    }
+}
+
+if (!function_exists('convertMinutesToDays')) {
+    function convertMinutesToDays(int $totalMinutes): float
+    {
+        $minutesInADay = 8 * 60;
+        $days = $totalMinutes / $minutesInADay;
+
+        return $days;
+    }
+}
+

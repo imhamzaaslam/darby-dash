@@ -126,17 +126,22 @@
                 cols="3"
                 class="mt-2"
               >
-                <div>
-                  <VChip
-                    v-for="(list, index) in data.lists"
-                    :key="index"
-                    class="me-1"
-                    color="primary"
-                    size="small"
+                <div v-if="data.lists ? data.lists.length>0 : 0 ">
+                  <span
+                    v-for="(list, listIndex) in data.lists"
+                    :key="listIndex"
                   >
-                    {{ list.name }}
-                  </VChip>
+                    <VChip
+                      class="me-1"
+                      color="primary"
+                      size="small"
+                      @click="() => $router.push(`/projects/${projectUuid}/tasks/add`)"
+                    >
+                      {{ list.name }}
+                    </VChip>
+                  </span>
                 </div>
+                <small v-else>No list added yet.</small>
               </VCol>
               <VCol
                 cols="2"

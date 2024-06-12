@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Project;
 use App\Models\MileStone;
+use Carbon\Carbon;
 
 class ProjectProgressService
 {
@@ -63,26 +64,23 @@ class ProjectProgressService
 
     public function getLaunchingDays(Project $project): int
     {
-        $lastTask = $project->tasks()->whereNotNull('due_date')->orderBy('due_date', 'desc')->first();
-        if (!$lastTask) {
-            return 0;
-        }
-
-        return now()->diffInDays($lastTask->due_date, false);
+        $estTimes = $project->tasks()->pluck('est_time');
+        $totalMinutes = $estTimes->sum();
+        $launchingDays = convertMinutesToDays($totalMinutes);
+        return $launchingDays;
     }
 
     public function getLaunchingDate(Project $project): string
     {
-        $lastTask = $project->tasks()->whereNotNull('due_date')->orderBy('due_date', 'desc')->first();
-        if (!$lastTask) {
-            return 'No due date';
+        $launchingDays = $this->getLaunchingDays($project);
+        if (!$launchingDays) {
+            return 'No Launching Date';
         }
 
-        if ($lastTask->due_date->isToday()) {
-            return $lastTask->due_date->format('l F j, Y');
-        }
+        $currentDate = Carbon::now();
+        $launchingDate = $currentDate->addDays($launchingDays);
 
-        return $lastTask->due_date->format('l F j, Y');
+        return $launchingDate->format('l F j, Y');
     }
 
     public function getOverallProgress(Project $project): float
