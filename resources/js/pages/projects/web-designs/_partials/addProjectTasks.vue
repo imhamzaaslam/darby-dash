@@ -382,7 +382,7 @@
                       v-else
                       class="d-flex align-items-center"
                     >
-                      <AppTextField
+                      <VTextField
                         :ref="el => inputHoursRef[item.id] = el"
                         v-model="inputHours[item.id]"
                         v-mask="'##h ##m'"
@@ -552,7 +552,7 @@
                         v-else
                         class="d-flex align-items-center"
                       >
-                        <AppTextField
+                        <VTextField
                           :ref="el => inputHoursRef[subtask.id] = el"
                           v-model="inputHours[subtask.id]"
                           v-mask="'##h ##m'"
@@ -1828,6 +1828,7 @@ const enableEditingHours = item => {
     const inputRef = inputHoursRef.value[item.id]
     if (inputRef && inputRef.focus) {
       inputRef.focus()
+      inputRef.select()
     }
   })
 }
