@@ -9,7 +9,10 @@ use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\FolderResource;
 use App\Http\Requests\project\StoreFolderRequest;
 use App\Http\Requests\project\UpdateFolderRequest;
+use App\Http\Requests\File\StoreFileRequest;
+use App\Http\Resources\FileResource;
 use App\Services\FileUploadService;
+use App\Services\FileResolverService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -21,6 +24,7 @@ class FolderController extends Controller
         protected FileRepositoryInterface $fileRepository,
         protected ProjectRepositoryInterface $projectRepository,
         protected FileUploadService $fileUploadService,
+        protected FileResolverService $fileResolverService,
     ) {}
 
     /**
@@ -87,5 +91,56 @@ class FolderController extends Controller
         $this->folderRepository->delete($folder);
 
         return response()->json(['message' => 'Folder deleted successfully']);
+    }
+
+    /**
+     * Get all files from a folder.
+     *
+     * @param Request $request
+     * @param string $folderUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function getFiles(Request $request, string $folderUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $folder = $this->folderRepository->getByUuidOrFail($folderUuid);
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $folderUuid);
+
+        $files = $this->fileRepository->getAllByMorph($fileResolver['morph_type'], $fileResolver['morph_id']);
+
+        return FileResource::collection($files);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreFileRequest $request
+     * @param string $folderUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function storeFiles(StoreFileRequest $request, string $folderUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $folder = $this->folderRepository->getByUuidOrFail($folderUuid);
+        $files = $request->file('files');
+
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $folderUuid);
+        $disk = app()->environment('testing') ? 'testing' : 'public';
+
+        $storedFiles = [];
+        foreach ($files as $file) {
+            $fileData = $this->fileUploadService->uploadFile(
+                $file,
+                $fileResolver['directory'],
+                $disk,
+                $file->getClientOriginalName()
+            );
+
+            $storedFiles[] = $this->fileRepository->store(
+                $fileResolver['morph_type'],
+                $fileResolver['morph_id'],
+                $fileData
+            );
+        }
+
+        return FileResource::collection($storedFiles);
     }
 }

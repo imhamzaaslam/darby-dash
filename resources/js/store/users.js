@@ -133,9 +133,8 @@ export const useUserStore = defineStore('users', {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.updateUserImage(avatar, uuid)
+        await UserService.updateUserImage(avatar, uuid)
 
-        this.user = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error

@@ -1,14 +1,24 @@
 <template>
+  <Loader v-if="isLoading" />
   <VRow>
     <VCol cols="12">
       <VCard title="Profile Details">
         <VCardText class="d-flex">
           <!-- 👉 Avatar -->
           <VAvatar
+            v-if="loggedInUser?.info?.avatar"
             rounded
             size="100"
             class="me-6"
-            :image="accountData.avatar"
+            :image="getImageUrl(loggedInUser?.info?.avatar.path)"
+          />
+
+          <VAvatar
+            v-else
+            rounded
+            size="100"
+            class="me-6"
+            :image="defaultAvatar"
           />
 
           <!-- 👉 Upload Photo -->
@@ -33,19 +43,6 @@
                 hidden
                 @input="changeAvatar"
               >
-
-              <VBtn
-                type="reset"
-                color="secondary"
-                variant="tonal"
-                @click="resetAvatar"
-              >
-                <span class="d-none d-sm-block">Reset</span>
-                <VIcon
-                  icon="tabler-refresh"
-                  class="d-sm-none"
-                />
-              </VBtn>
             </div>
 
             <p class="text-body-1 mb-0">
@@ -191,17 +188,6 @@
                     Save
                   </span>
                 </VBtn>
-
-                <!--
-                  <VBtn
-                  color="secondary"
-                  variant="tonal"
-                  type="reset"
-                  @click.prevent="resetForm"
-                  >
-                  Reset
-                  </VBtn> 
-                -->
               </VCol>
             </VRow>
           </VForm>
@@ -212,7 +198,8 @@
 </template>
 
 <script setup>
-import avatar1 from '@images/avatars/avatar-1.png'
+import defaultAvatar from '@images/avatars/default-avatar.png'
+import Loader from '@/components/Loader.vue'
 import { useUserStore } from "@/store/users"
 import { useToast } from "vue-toastification"
 import { computed, onMounted, ref } from 'vue'
@@ -224,9 +211,10 @@ onMounted(() => {
 
 const userStore = useUserStore()
 const toast = useToast()
+const isLoading = ref(false)
 
 const accountData = ref({
-  avatar: avatar1,
+  avatar: '',
   name_first: '',
   name_last: '',
   email: '',
@@ -248,9 +236,6 @@ const editErrors = ref({
 
 const refInputEl = ref()
 const updateMemberForm = ref()
-const loggedInUserUuid = ref()
-const avatarUrl = ref('')
-const avatars = import.meta.glob('@images/avatars/*.{png,jpg,jpeg,gif}')
 
 async function changeAvatar(file) {
   if (!['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].includes(file.target.files[0].type) || file.target.files[0].size > 1024 * 1024) {
@@ -258,6 +243,8 @@ async function changeAvatar(file) {
 
     return
   }
+
+  isLoading.value = true
 
   const fileReader = new FileReader()
   const { files } = file.target
@@ -269,11 +256,12 @@ async function changeAvatar(file) {
     }
   }
   await userStore.updateUserImage(files[0], userStore.getUser?.uuid)
-}
-
-// reset avatar image
-const resetAvatar = () => {
-  accountData.value.avatar = avatar1
+  if(getErrors.value){
+    toast.error('Something went wrong. Please try again later.')
+  }else{
+    await getUser()
+    toast.success('Image uploaded successfully', { timeout: 1000 })
+  }
 }
 
 async function submitUpdateMemberForm() {
@@ -300,14 +288,17 @@ async function submitUpdateMemberForm() {
 }
 
 const getUser = async () => {
+  isLoading.value = true
   let user = JSON.parse(localStorage.getItem('user'))
   const uuid = user.user?.uuid
 
   await userStore.show(uuid)
+  isLoading.value = false
 }
 
 const setUserDetails = async () => {
   let userDetails = userStore.getUser
+
   // accountData.value.avatar = userDetails?.info?.avatar
   accountData.value.name_first = userDetails?.name_first
   accountData.value.name_last = userDetails?.name_last
@@ -327,6 +318,12 @@ const showError = () => {
   }
 }
 
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+
 const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
 })
@@ -337,6 +334,10 @@ const getStatusCode = computed(() => {
 
 const getErrors = computed(() => {
   return userStore.getErrors
+})
+
+const loggedInUser = computed(() => {
+  return userStore.getUser
 })
 
 watch(() => userStore.getUser, () => {

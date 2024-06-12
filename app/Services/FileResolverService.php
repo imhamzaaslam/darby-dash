@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Contracts\PlatformRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
+use App\Contracts\ProjectRepositoryInterface;
+use App\Contracts\FolderRepositoryInterface;
 use App\Exceptions\InvalidResourceException;
 use App\Policies\UserPolicy;
 
@@ -14,7 +15,8 @@ class FileResolverService
 
     private array $routes = [
         'users' => UserRepositoryInterface::class,
-        'platforms' => PlatformRepositoryInterface::class
+        'projects' => ProjectRepositoryInterface::class,
+        'folders' => FolderRepositoryInterface::class,
     ];
 
     public function __construct(
@@ -31,7 +33,7 @@ class FileResolverService
      */
     public function resolve(array $routeSegments, string $uuid): array
     {
-        if (!in_array('users', $routeSegments, true) && !in_array('platforms', $routeSegments, true)) {
+        if (!in_array('users', $routeSegments, true) && !in_array('projects', $routeSegments, true) && !in_array('folders', $routeSegments, true)) {
             throw new InvalidResourceException();
         }
 
@@ -39,7 +41,7 @@ class FileResolverService
             if (in_array($key, $routeSegments, true)) {
                 $repository = $this->getRepositoryName($key);
                 $model = app($repository)->getByUuid($uuid);
-                $this->authorize('canUploadFile', $model);
+                // $this->authorize('canUploadFile', $model);
                 $directory = "{$key}/{$model->uuid}";
             }
         }

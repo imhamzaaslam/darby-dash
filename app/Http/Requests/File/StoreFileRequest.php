@@ -24,7 +24,6 @@ class StoreFileRequest extends FormRequest
         return [
             'files' => 'required|array',
             'files.*' => 'file|max:2048',
-            'folder_uuid' => 'sometimes|nullable|exists:folders,uuid',
         ];
     }
 }

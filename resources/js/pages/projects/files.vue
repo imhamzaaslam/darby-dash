@@ -67,7 +67,7 @@
           @click="openFileViewer(file)"
         >
           <img
-            v-if="file.type.includes('image/')"
+            v-if="file.mime_type.includes('image/')"
             :src="getImageUrl(file.path)"
             :alt="file.name"
             class="uploaded-image"
@@ -183,7 +183,7 @@
           @click="openFileViewer(file)"
         >
           <img
-            v-if="file.type.includes('image/')"
+            v-if="file.mime_type.includes('image/')"
             :src="getImageUrl(file.path)"
             :alt="file.name"
             class="uploaded-image"
@@ -442,7 +442,7 @@ const uploadFiles = async files => {
 
   try {
     if (openFolder.value) {
-      await fileStore.upload(fileData, projectUuid, openFolder.value.uuid)
+      await folderStore.uploadFiles(fileData, openFolder.value.uuid)
     } else {
       await fileStore.upload(fileData, projectUuid)
     }

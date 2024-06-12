@@ -141,7 +141,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::prefix('folders/{folderUuid}')->group(function () {
             Route::patch('/', [FolderController::class, 'update']);
             Route::delete('/', [FolderController::class, 'delete']);
-            Route::get('/files', [FileController::class, 'getFiles']);
+            Route::get('/files', [FolderController::class, 'getFiles']);
+            Route::post('/files', [FolderController::class, 'storeFiles']);
         });
 
         Route::prefix('files/{fileUuid}')->group(function () {

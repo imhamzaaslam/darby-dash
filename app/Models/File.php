@@ -7,6 +7,39 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Base;
 
+/**
+ * App\Models\File
+ *
+ * @property int $id
+ * @property string $fileable_type
+ * @property int $fileable_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property string $name
+ * @property string|null $mime_type
+ * @property string $path
+ * @property string|null $type
+ * @property int|null $size
+ * @property-read Collection<int, User> $users
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|File newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|File newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|File query()
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereFileableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereFileableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+
 class File extends Base
 {
     use HasFactory;
@@ -14,16 +47,15 @@ class File extends Base
 
     protected $fillable = [
         'uuid',
+        'fileable_id',
+        'fileable_type',
         'name',
+        'mime_type',
         'path',
         'url',
-        'type',
         'size',
-        'project_id',
-        'folder_id',
-        'display_order',
-        'created_by',
-        'updated_by',
-        'deleted_by',
+        'type'
     ];
+
+    protected $hidden = ['deleted_at'];
 }

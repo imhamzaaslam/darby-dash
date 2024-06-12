@@ -45,7 +45,7 @@ class UpdateUserAdminRequest extends FormRequest
             'confirmPassword' => 'sometimes|same:password',
             'state' => 'required|string|in:active,inactive',
             'role' => 'required|string|exists:roles,name',
-            'avatar' => 'sometimes|image|mimes:jpg,jpeg,gif,png|max:1024',
+            'avatar' => 'sometimes|nullable|image|mimes:jpg,jpeg,gif,png|max:1024',
             'address' => 'sometimes|string|max:255',
             'city' => 'sometimes|string|max:255',
             'state' => 'sometimes|string|max:255',

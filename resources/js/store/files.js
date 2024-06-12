@@ -25,11 +25,11 @@ export const useFileStore = defineStore('files', {
         console.error('getFiles error ', error)
       }
     },
-    async upload(files, projectUuid, folderUuid = null) {
+    async upload(files, projectUuid) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await FileService.uploadFiles(files, projectUuid, folderUuid)
+        const response = await FileService.uploadFiles(files, projectUuid)
     
         this.file = response.data.data
         this.loadStatus = 2

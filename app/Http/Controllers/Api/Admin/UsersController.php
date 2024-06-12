@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Contracts\UserInfoRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
+use App\Contracts\FileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserAdminRequest;
 use App\Http\Requests\User\UpdateAvatarRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\FileResource;
+use App\Services\FileResolverService;
+use App\Services\FileUploadService;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -24,7 +28,10 @@ class UsersController extends Controller
 {
     public function __construct(
         protected UserRepositoryInterface $userRepository,
-        protected UserInfoRepositoryInterface $userInfoRepository
+        protected UserInfoRepositoryInterface $userInfoRepository,
+        protected FileRepositoryInterface $fileRepository,
+        protected FileResolverService $fileResolverService,
+        protected FileUploadService $fileUploadService,
     ) {}
 
     /**
@@ -157,18 +164,45 @@ class UsersController extends Controller
      *
      * @param UpdateAvatarRequest $request
      * @param  string  $uuid
-     * @return JsonResponse
+     * @return AnonymousResourceCollection|JsonResponse
      */
-    public function updateImage(UpdateAvatarRequest $request, string $uuid): JsonResponse
+    public function updateImage(UpdateAvatarRequest $request, string $uuid): AnonymousResourceCollection|JsonResponse
     {
         $user = $this->userRepository->getByUuidOrFail($uuid);
 
-        $avatarName = $this->userInfoRepository->saveFile($request->file('avatar'), 'images/avatars');
-        $this->userInfoRepository->update($user->info, ['avatar' => $avatarName]);
+        $file = $request->file('avatar');
 
-        return response()->json([
-            'message' => 'Avatar updated successfully',
-        ]);
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $uuid);
+
+        // check if user has an avatar
+        $existingFile = $this->fileRepository->getByMorph($fileResolver['morph_type'], $fileResolver['morph_id']);
+
+        $disk = app()->environment('testing') ? 'testing' : 'public';
+
+        $fileData = $this->fileUploadService->uploadFile(
+            $file,
+            $fileResolver['directory'],
+            $disk,
+            $file->getClientOriginalName()
+        );
+
+        if ($existingFile) {
+            $file = $this->fileRepository->update(
+                $existingFile->uuid,
+                $fileResolver['morph_type'],
+                $fileResolver['morph_id'],
+                $fileData
+            );
+            $this->fileUploadService->deleteFile($existingFile->path, $disk);
+        } else {
+            $file = $this->fileRepository->store(
+                $fileResolver['morph_type'],
+                $fileResolver['morph_id'],
+                $fileData
+            );
+        }
+
+        return (new FileResource($file))->response()->setStatusCode(200);
     }
 
     /**

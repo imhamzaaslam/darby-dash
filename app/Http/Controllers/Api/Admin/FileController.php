@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Contracts\FileRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\FolderRepositoryInterface;
-use App\Http\Resources\FileResource;
 use App\Http\Requests\File\StoreFileRequest;
+use App\Http\Resources\FileResource;
+use App\Services\FileResolverService;
 use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -20,18 +21,22 @@ class FileController extends Controller
         protected ProjectRepositoryInterface $projectRepository,
         protected FolderRepositoryInterface $folderRepository,
         protected FileUploadService $fileUploadService,
+        protected FileResolverService $fileResolverService,
     ) {}
 
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @param string $projectUuid
      * @return AnonymousResourceCollection|JsonResponse
      */
-    public function index(string $projectUuid): AnonymousResourceCollection|JsonResponse
+    public function index(Request $request, string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
-        $files = $this->fileRepository->getProjectFiles($project);
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $projectUuid);
+
+        $files = $this->fileRepository->getAllByMorph($fileResolver['morph_type'], $fileResolver['morph_id']);
 
         return FileResource::collection($files);
     }
@@ -50,26 +55,25 @@ class FileController extends Controller
 
         $validated = $request->validated();
 
-        $folder = null;
-        if (isset($validated['folder_uuid'])) {
-            $folder = $this->folderRepository->getByUuidOrFail($validated['folder_uuid']);
-        }
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $projectUuid);
+        $disk = app()->environment('testing') ? 'testing' : 'public';
 
         $storedFiles = [];
         foreach ($files as $file) {
+            $fileData = $this->fileUploadService->uploadFile(
+                $file,
+                $fileResolver['directory'],
+                $disk,
+                $file->getClientOriginalName()
+            );
+
             $fileData = $this->fileUploadService->uploadFile($file, 'uploads', 'public');
 
-            $attributes = [
-                'name' => $fileData->name,
-                'path' => $fileData->path,
-                'url' => $fileData->url,
-                'type' => $fileData->mimeType,
-                'size' => $fileData->size,
-                'project_id' => $project->id,
-                'folder_id' => $folder ? $folder->id : null,
-            ];
-
-            $storedFiles[] = $this->fileRepository->create($attributes);
+            $storedFiles[] = $this->fileRepository->store(
+                $fileResolver['morph_type'],
+                $fileResolver['morph_id'],
+                $fileData
+            );
         }
 
         return FileResource::collection($storedFiles);
@@ -92,19 +96,4 @@ class FileController extends Controller
 
         return response()->json(['message' => 'File deleted successfully']);
     }
-
-    /**
-     * Get all files from a folder.
-     *
-     * @param string $folderUuid
-     * @return AnonymousResourceCollection|JsonResponse
-     */
-    public function getFiles(string $folderUuid): AnonymousResourceCollection|JsonResponse
-    {
-        $folder = $this->folderRepository->getByUuidOrFail($folderUuid);
-        $files = $this->fileRepository->getBy('folder_id', $folder->id);
-
-        return FileResource::collection($files);
-    }
-
 }

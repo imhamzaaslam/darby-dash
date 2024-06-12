@@ -80,6 +80,19 @@ export const useFolderStore = defineStore('folders', {
         console.error('getFolder error ', error)
       }
     },
+    async uploadFiles(files, folderUuid) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await FolderService.uploadFiles(files, folderUuid)
+    
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('uploadFiles error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

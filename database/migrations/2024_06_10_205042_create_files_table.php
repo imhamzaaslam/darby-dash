@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->uuid();
+            $table->string('fileable_type');
+            $table->unsignedInteger('fileable_id');
             $table->string('name');
-            $table->text('url');
+            $table->string('mime_type')->nullable();
             $table->string('path');
-            $table->string('type')->nullable();
+            $table->string('url',900);
+            $table->enum('type', ['avatar', 'document'])->nullable();
             $table->integer('size')->nullable();
-            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('folder_id')->nullable()->constrained()->cascadeOnDelete();
             $table->integer('display_order')->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');

@@ -16,4 +16,17 @@ export default {
   getFiles(folderUuid) {
     return apiClient.get(`admin/folders/${folderUuid}/files`)
   },
+  uploadFiles(files, folderUuid) {
+    const formData = new FormData()
+
+    files.forEach(file => {
+      formData.append('files[]', file)
+    })
+
+    return apiClient.post(`admin/folders/${folderUuid}/files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+  },
 }
