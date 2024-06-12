@@ -61,7 +61,7 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="newMemberDetails.phone"
-                  type="number"
+                  v-mask="'(###) ###-####'"
                   label="Phone *"
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.phone"
@@ -106,9 +106,9 @@
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.password"
-                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
                   placeholder="Password"
                   autocomplete="new-password"
+                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
               </VCol>
 
@@ -121,8 +121,8 @@
                   :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
                   :error-messages="addingErrors.confirmPassword"
-                  @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
                   placeholder="Confirm Password"
+                  @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
                 />
               </VCol>
 
@@ -179,7 +179,7 @@ const props = defineProps({
   getRoles: Object,
   getErrors: Object,
   getStatusCode: Object,
-  getLoadStatus: Boolean,
+  getLoadStatus: Number,
 })
 
 const emit = defineEmits(['update:isDrawerOpen'])

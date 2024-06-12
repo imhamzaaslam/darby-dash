@@ -109,7 +109,7 @@ const props = defineProps({
   fetchProjectTasks: Function,
   fetchProjectLists: Function,
   editingTask: Object,
-  getLoadStatus: Boolean,
+  getLoadStatus: Number,
 })
 
 const emit = defineEmits(['update:isEditTaskDrawerOpen'])

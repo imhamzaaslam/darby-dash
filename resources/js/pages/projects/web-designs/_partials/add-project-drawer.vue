@@ -142,7 +142,7 @@ const props = defineProps({
   getProjectTypes: Object,
   getMembers: Object,
   getProjectManagers: Object,
-  getLoadStatus: Boolean,
+  getLoadStatus: Number,
 })
 
 const emit = defineEmits(['update:isDrawerOpen'])

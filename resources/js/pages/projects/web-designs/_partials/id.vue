@@ -40,7 +40,7 @@
           >
             <VCard
               class="logistics-card-statistics cursor-pointer p-0"
-              @click="() => $router.push(`/projects/${projectUuid}/tasks/add`)"
+              @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
             >
               <VCardText style="padding: 20px !important;">
                 <div class="mb-2 text-center">

@@ -1,5 +1,6 @@
 <template>
   <!-- Toggle -->
+  <Loader v-if="isLoading" />
   <VRow>
     <VCol
       cols="12"
@@ -1199,6 +1200,7 @@ import { VueDraggableNext } from 'vue-draggable-next'
 import { useTheme } from 'vuetify'
 import { VIcon } from 'vuetify/lib/components/index.mjs'
 import sketch from '@images/icons/project-icons/sketch.png'
+import Loader from "@/components/Loader.vue"
 
 const toast = useToast()
 const vuetifyTheme = useTheme()
@@ -1254,15 +1256,15 @@ const projectId = computed(() => router.currentRoute.value.params.id)
 const formatDate = date => moment(date).format('MMM DD, YYYY')
 
 onBeforeMount(async () => {
-  // selectedList.value = getProjectLists.value[0].uuid
-  // console.log('testing', selectedList.value)
+  isLoading.value = true
   await fetchProjectTasks()
   await fetchProjectLists()
   await fetchStatus()
   await fetchProjectDetails()
+  isLoading.value = false
 })
 
-onMounted(() => {
+onBeforeMount(() => {
   const searchParams = new URLSearchParams(window.location.search)
   const savedViewType = searchParams.get('view')
   if (savedViewType && ['list', 'grid'].includes(savedViewType)) {
@@ -1273,6 +1275,13 @@ onMounted(() => {
   if (savedType && getProjectLists.value.some(list => list.uuid === savedType)) {
     selectedList.value = savedType
   }
+  else{
+    selectedList.value = getProjectLists.value[0].uuid
+  }
+
+  const selectedExpandedIndex = searchParams.get('expanded')
+
+  selectedExpandedIndex ?  toggleRow(selectedExpandedIndex, true) : toggleRow(0, true)
 })
 
 watch([viewType, selectedList], ([newViewType, newSelectedList]) => {
@@ -1286,49 +1295,33 @@ watch([viewType, selectedList], ([newViewType, newSelectedList]) => {
 
 const fetchProjectDetails = async () => {
   try {
-    isLoading.value = true
     await projectStore.show(projectId.value)
   } catch (error) {
     toast.error('Error fetching project details:', error)
-  }
-  finally {
-    isLoading.value = false
   }
 }
 
 const fetchStatus = async () => {
   try {
-    isLoading.value = true
     await statusStore.getAll()
   } catch (error) {
     toast.error('Error fetching statuses:', error)
-  }
-  finally {
-    isLoading.value = false
   }
 }
 
 const fetchProjectTasks = async () => {
   try {
-    isLoading.value = true
     await projectTaskStore.getUnlistedTasks(projectId.value)
   } catch (error) {
     toast.error('Error fetching project tasks:', error)
-  }
-  finally {
-    isLoading.value = false
   }
 }
 
 const fetchProjectLists = async () => {
   try {
-    isLoading.value = true
     await projectListStore.getAll(projectId.value)
   } catch (error) {
     toast.error('Error fetching project lists:', error)
-  }
-  finally {
-    isLoading.value = false
   }
 }
 
@@ -1626,10 +1619,8 @@ const deleteProjectList = async list => {
 
       const res = await projectListStore.delete(listWithProjectId)
 
-      isLoading.value = true
       toast.success('Project list deleted successfully', { timeout: 1000 })
       await fetchProjectLists()
-      isLoading.value = false
     }
   } catch (error) {
     toast.error('Failed to delete project list:', error)
@@ -1745,10 +1736,16 @@ const updateTaskOrder = async taskUpdateData => {
 
 const expandedRows = ref([])
 
-expandedRows.value[0] = true
-
-const toggleRow = index => {
+const toggleRow = (index, isIteration = false) => {
   expandedRows.value[index] = !expandedRows.value[index]
+  if(isIteration)
+  {
+    expandedRows.value.forEach((row, i) => {
+      if (i != index) {
+        expandedRows.value[i] = false
+      }
+    })
+  }
   cancelQuickListTask(index)
 }
 
@@ -1878,4 +1875,4 @@ const filteredProjectLists = computed(() => {
 .align-center-important {
   align-items: center !important;
 }
-</style>
+</style>_index_list_row

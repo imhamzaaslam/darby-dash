@@ -62,6 +62,7 @@
               <VCol cols="6">
                 <AppTextField
                   v-model="props.editMemberDetails.phone"
+                  v-mask="'(###) ###-####'"
                   label="Phone *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.phone"
@@ -151,7 +152,7 @@ const props = defineProps({
   getErrors: Object,
   getStatusCode: Object,
   editMemberDetails: Object,
-  getLoadStatus: Boolean,
+  getLoadStatus: Number,
 })
 
 const emit = defineEmits(['update:isEditDrawerOpen'])

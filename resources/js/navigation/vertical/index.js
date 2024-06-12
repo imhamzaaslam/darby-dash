@@ -17,5 +17,6 @@ export default [
   {
     title: 'Logout',
     icon: { icon: 'tabler-logout' },
+    to: { name: 'logout' },
   },
 ]
