@@ -66,7 +66,7 @@
                   label="Phone *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.phone"
-                  placeholder="Phone"
+                  placeholder="(123) 456-7890"
                 />
               </VCol>
 

@@ -114,8 +114,9 @@
               >
                 <AppTextField
                   v-model="accountData.phone"
-                  label="Phone Number *"
-                  placeholder="+1 (917) 543-9876"
+                  v-mask="'(###) ###-####'"
+                  label="Phone *"
+                  placeholder="(123) 456-7890"
                   variant="outlined"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.phone"

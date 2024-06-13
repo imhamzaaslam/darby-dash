@@ -12,7 +12,14 @@
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
+      <template v-if="userDetails?.info?.avatar?.path">
+        <VImg :src="getImageUrl(userDetails?.info?.avatar.path)" />
+      </template>
+      <template v-else>
+        <span>
+          {{ userDetails?.name_first.charAt(0) + userDetails?.name_last.charAt(0) }}
+        </span>
+      </template>
 
       <!-- SECTION Menu -->
       <VMenu
@@ -37,7 +44,14 @@
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="avatar1" />
+                    <template v-if="userDetails?.info?.avatar?.path">
+                      <VImg :src="getImageUrl(userDetails?.info?.avatar.path)" />
+                    </template>
+                    <template v-else>
+                      <span>
+                        {{ userDetails?.name_first.charAt(0) + userDetails?.name_last.charAt(0) }}
+                      </span>
+                    </template>
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
@@ -113,6 +127,13 @@ const getUser = async () => {
 
   await userStore.show(uuid)
 }
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+
 
 const userDetails = computed(() => {
   console.log('user is', userStore.getUser?.name_first + ' ' + userStore.getUser?.name_last)
