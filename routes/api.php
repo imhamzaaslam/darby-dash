@@ -136,6 +136,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::prefix('task')->group(function () {
             Route::prefix('{taskUuid}')->group(function () {
                 Route::patch('/', [TaskController::class, 'updateAttributes']);
+                Route::get('/files', [TaskController::class, 'getFiles']);
+                Route::post('/files', [TaskController::class, 'storeFiles']);
             });
         });
 

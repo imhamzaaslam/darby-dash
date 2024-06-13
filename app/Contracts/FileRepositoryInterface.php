@@ -19,9 +19,7 @@ interface FileRepositoryInterface
 
     public function getAllByMorph(string $fileableType, int $fileableId): Collection;
 
-
-
-
+    public function deleteByMorph(string $fileableType, int $fileableId): bool;
 
     public function create(array $attributes): File;
 

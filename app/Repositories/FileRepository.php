@@ -69,6 +69,22 @@ class FileRepository extends AbstractEloquentRepository implements FileRepositor
             ->get();
     }
 
+    public function deleteByMorph(string $fileableType, int $fileableId): bool
+    {
+        $files = $this->model->where('fileable_type', $fileableType)
+            ->where('fileable_id', $fileableId)
+            ->get();
+        
+        foreach ($files as $file) {
+            $disk = $file->path ? $file->path : 'public';
+            Storage::disk($disk)->delete($file->path);
+        }
+
+        return $this->model->where('fileable_type', $fileableType)
+            ->where('fileable_id', $fileableId)
+            ->delete();
+    }
+
     public function create(array $attributes): File
     {
         return $this->model->create($attributes);

@@ -33,6 +33,10 @@ class FileUploadService
         }
         $path = $file->storeAs($directory, $fileName, ['disk' => $disk]);
         $url = Storage::disk($disk)->url($directory . '/' . $fileName);
+
+        // remove two slashes after the protocol
+        $url = preg_replace('/([^:])(\/{2,})/', '$1/', $url);
+
         return new FileData(
             name: $file->getClientOriginalName(),
             path: $path,

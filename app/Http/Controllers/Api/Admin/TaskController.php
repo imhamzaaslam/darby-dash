@@ -6,12 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Contracts\TaskRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\ProjectListRepositoryInterface;
+use App\Contracts\FileRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\task\StoreTaskRequest;
 use App\Http\Requests\task\UpdateTaskRequest;
 use App\Http\Requests\task\StoreTaskByProjectRequest;
 use App\Http\Requests\task\StoreProjectTasksOrderRequest;
+use App\Http\Requests\file\StoreFileRequest;
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\FileResource;
+use App\Services\FileResolverService;
+use App\Services\FileUploadService;
+use App\Models\Task;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -20,7 +26,10 @@ class TaskController extends Controller
     public function __construct(
         protected TaskRepositoryInterface $taskRepository,
         protected ProjectRepositoryInterface $projectRepository,
-        protected ProjectListRepositoryInterface $projectListRepository
+        protected ProjectListRepositoryInterface $projectListRepository,
+        protected FileRepositoryInterface $fileRepository,
+        protected FileResolverService $fileResolverService,
+        protected FileUploadService $fileUploadService,
     ) {}
 
     /**
@@ -158,6 +167,58 @@ class TaskController extends Controller
         return (new TaskResource($task))
             ->response()
             ->setStatusCode(200);
+    }
+
+    /**
+     * Get files by task.
+     *
+     * @param Request $request
+     * @param string $taskUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function getFiles(Request $request, string $taskUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $taskUuid);
+
+        $files = $this->fileRepository->getAllByMorph($fileResolver['morph_type'], $fileResolver['morph_id']);
+
+        return FileResource::collection($files);
+    }
+
+    /**
+     * Store files to task.
+     *
+     * @param StoreFileRequest $request
+     * @param string $taskUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function storeFiles(Request $request, string $taskUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $files = $request->file('files');
+
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $taskUuid);
+
+        $disk = app()->environment('testing') ? 'testing' : 'public';
+
+        $storedFiles = [];
+        foreach ($files as $file) {
+            $fileData = $this->fileUploadService->uploadFile(
+                $file,
+                $fileResolver['directory'],
+                $disk,
+                $file->getClientOriginalName()
+            );
+
+            $storedFiles[] = $this->fileRepository->store(
+                $fileResolver['morph_type'],
+                $fileResolver['morph_id'],
+                $fileData
+            );
+        }
+
+        return FileResource::collection($storedFiles);
     }
 
     /**

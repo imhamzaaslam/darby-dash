@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Contracts\UserRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\FolderRepositoryInterface;
+use App\Contracts\TaskRepositoryInterface;
 use App\Exceptions\InvalidResourceException;
 use App\Policies\UserPolicy;
 
@@ -17,6 +18,7 @@ class FileResolverService
         'users' => UserRepositoryInterface::class,
         'projects' => ProjectRepositoryInterface::class,
         'folders' => FolderRepositoryInterface::class,
+        'task' => TaskRepositoryInterface::class,
     ];
 
     public function __construct(
@@ -33,7 +35,7 @@ class FileResolverService
      */
     public function resolve(array $routeSegments, string $uuid): array
     {
-        if (!in_array('users', $routeSegments, true) && !in_array('projects', $routeSegments, true) && !in_array('folders', $routeSegments, true)) {
+        if (!in_array('users', $routeSegments, true) && !in_array('projects', $routeSegments, true) && !in_array('folders', $routeSegments, true) && !in_array('task', $routeSegments, true)) {
             throw new InvalidResourceException();
         }
 

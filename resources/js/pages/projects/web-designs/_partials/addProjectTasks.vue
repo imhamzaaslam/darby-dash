@@ -1299,6 +1299,7 @@
     </div>
   </div>
   <EditTaskDrawer
+    v-if="isEditTaskDrawerOpen"
     v-model:is-edit-task-drawer-open="isEditTaskDrawerOpen"
     :fetch-project-tasks="fetchProjectTasks"
     :editing-task="editingTask"

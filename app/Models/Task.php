@@ -39,4 +39,9 @@ class Task extends Base
     {
         return $this->belongsTo(Status::class, 'status');
     }
+
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
 }

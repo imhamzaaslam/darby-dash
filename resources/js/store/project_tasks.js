@@ -7,6 +7,7 @@ export const useProjectTaskStore = defineStore('project_tasks', {
     projectAllTasks: [],
     projectTask: null,
     projectTasksCount: 0,
+    taskFiles: [],
     loadStatus: 0,
     error: null,
   }),
@@ -68,6 +69,32 @@ export const useProjectTaskStore = defineStore('project_tasks', {
         console.error('updateProjectTask error ', error)
       }
     },
+    async fetchFiles(taskUuid) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectTaskService.fetchFiles(taskUuid)
+
+        this.taskFiles = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('fetchFiles error ', error)
+      }
+    },
+    async uploadFiles(taskUuid, files) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await ProjectTaskService.uploadFiles(taskUuid, files)
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('uploadFiles error ', error)
+      }
+    },
     async updateTaskOrdering(task) {
       this.error = null
       this.loadStatus = 1
@@ -115,6 +142,7 @@ export const useProjectTaskStore = defineStore('project_tasks', {
     getProjectTasks: state => state.projectTasks,
     getProjectAllTasks: state => state.projectAllTasks,
     getProjectTask: state => state.projectTask,
+    getTaskFiles: state => state.taskFiles,
     getErrors: state => state.error,
   },
 })
