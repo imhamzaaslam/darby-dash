@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserAdminRequest;
 use App\Http\Requests\User\UpdateAvatarRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\FileResource;
 use App\Services\FileResolverService;
@@ -219,6 +220,35 @@ class UsersController extends Controller
 
         return response()->json([
             'message' => 'User deleted successfully',
+        ]);
+    }
+
+    // updatePassword
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UpdatePasswordRequest $request
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
+    public function updatePassword(UpdatePasswordRequest $request, string $uuid): JsonResponse
+    {
+        $validated = $request->validated();
+        $user = $this->userRepository->getByUuidOrFail($uuid);
+
+        if (!password_verify($validated['current_password'], $user->password)) {
+            return response()->json([
+                'message' => 'The provided password does not match your current password',
+                'errors' => [
+                    'current_password' => ['The provided password does not match your current password'],
+                ],
+            ], 422);
+        }
+
+        $this->userRepository->updatePassword($user, $validated['new_password']);
+
+        return response()->json([
+            'message' => 'Password updated successfully',
         ]);
     }
 }

@@ -25,9 +25,11 @@ export default {
   getUser(uuid) {
     return apiClient.get(`admin/users/${uuid}`)
   },
+
   createUser(user) {
     return apiClient.post('admin/users', user)
   },
+
   updateUser(user) {
     // delete user avatar
     let newUser = { ...user }
@@ -37,9 +39,11 @@ export default {
     
     return apiClient.patch(`admin/users/${user.uuid}`, newUser)
   },
+
   deleteUser(id) {
     return apiClient.delete(`admin/users/${id}`)
   },
+
   getUsersByRole(role = null) {
     if (role) {
       return apiClient.get(`admin/users/role/${role}`)
@@ -58,5 +62,9 @@ export default {
         'Content-Type': 'multipart/form-data',
       },
     })
+  },
+
+  updatePassword: async (uuid, payload) => {
+    return await apiClient.patch(`admin/users/${uuid}/update-password`, payload)
   },
 }

@@ -26,4 +26,6 @@ interface UserRepositoryInterface
     public function getAdmins(): Collection;
 
     public function getByRole(string $role): Collection;
+
+    public function updatePassword(User $user, string $password): bool;
 }

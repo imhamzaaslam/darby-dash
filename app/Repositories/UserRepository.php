@@ -111,4 +111,9 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
             $query->where('name', $role);
         })->get();
     }
+
+    public function updatePassword(User $user, string $password): bool
+    {
+        return $user->fill(['password' => bcrypt($password)])->save();
+    }
 }

@@ -62,6 +62,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [UsersController::class, 'update']);
                 Route::post('/avatar', [UsersController::class, 'updateImage']);
                 Route::delete('/', [UsersController::class, 'delete']);
+                Route::patch('/update-password', [UsersController::class, 'updatePassword']);
             });
             Route::get('/role/{role}', [UsersController::class, 'getByRole']);
         });

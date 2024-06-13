@@ -142,6 +142,19 @@ export const useUserStore = defineStore('users', {
         console.error('updateUserImage error ', error)
       }
     },
+    async updatePassword(uuid, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await UserService.updatePassword(uuid, payload)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updatePassword error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,
