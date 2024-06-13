@@ -191,7 +191,6 @@ async function submit() {
         showError()
       } else {
         toast.success('Password changed successfully')
-        resetFormFields()
       }
     }
   })

@@ -1,44 +1,3 @@
-<script setup="js">
-import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
-import AccountSettingsBillingAndPlans from '@/views/pages/account-settings/AccountSettingsBillingAndPlans.vue'
-import AccountSettingsDangerZone from '@/views/pages/account-settings/AccountSettingsDangerZone.vue'
-import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
-import { ref } from 'vue'
-
-const activeTab = ref('account')
-
-// tabs
-const tabs = [
-  {
-    title: 'Account',
-    icon: 'tabler-users',
-    tab: 'account',
-  },
-  {
-    title: 'Security',
-    icon: 'tabler-lock',
-    tab: 'security',
-  },
-  {
-    title: 'Billing & Plans',
-    icon: 'tabler-file-text',
-    tab: 'billing-plans',
-  },
-
-  // {
-  //   title: 'Danger Zone',
-  //   icon: 'tabler-alert-triangle',
-  //   tab: 'danger-zone',
-  // },
-]
-
-function setActiveTab(tab) {
-  activeTab.value = tab
-}
-
-definePage({ meta: { navActiveLink: 'account-setting' } })
-</script>
-
 <template>
   <div>
     <VTabs
@@ -89,3 +48,64 @@ definePage({ meta: { navActiveLink: 'account-setting' } })
     </VWindow>
   </div>
 </template>
+
+<script setup="js">
+import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
+import AccountSettingsBillingAndPlans from '@/views/pages/account-settings/AccountSettingsBillingAndPlans.vue'
+import AccountSettingsDangerZone from '@/views/pages/account-settings/AccountSettingsDangerZone.vue'
+import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
+import { watch } from 'vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+onBeforeMount(() => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const activeTab = searchParams.get('tab')
+  if (activeTab && ['account', 'security', 'billing-plans'].includes(activeTab)) {
+    setActiveTab(activeTab)
+  }
+})
+
+const activeTab = ref('account')
+const router = useRouter()
+
+// tabs
+const tabs = [
+  {
+    title: 'Account',
+    icon: 'tabler-users',
+    tab: 'account',
+  },
+  {
+    title: 'Security',
+    icon: 'tabler-lock',
+    tab: 'security',
+  },
+  {
+    title: 'Billing & Plans',
+    icon: 'tabler-file-text',
+    tab: 'billing-plans',
+  },
+
+  // {
+  //   title: 'Danger Zone',
+  //   icon: 'tabler-alert-triangle',
+  //   tab: 'danger-zone',
+  // },
+]
+
+function setActiveTab(tab) {
+  activeTab.value = tab
+}
+
+// use watch to change the active tab and then pass to the route as query param
+watch(activeTab, (newActiveTab) => {
+  router.push({
+    query: {
+      tab: newActiveTab,
+    },
+  })
+})
+
+definePage({ meta: { navActiveLink: 'account-setting' } })
+</script>
