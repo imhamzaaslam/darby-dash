@@ -387,6 +387,8 @@
 </template>
 
 <script setup lang="js">
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import Page2 from '../../../images/pages/2.png'
@@ -556,6 +558,10 @@ const projectListsForDropDown = computed(() => {
 const capitalizeFirstLetter = string => {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+watch(project, () => {
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title}` })
+})
 </script>
 
 <style scoped>

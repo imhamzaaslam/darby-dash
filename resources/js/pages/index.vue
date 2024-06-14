@@ -47,13 +47,16 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import { useProjectTypeStore } from '@/store/project_types'
 
-const projectTypeStore = useProjectTypeStore()
-
+useHead({ title: `${layoutConfig.app.title} | Project Dashboards` })
 onBeforeMount(async () => {
   await fetchProjectTypes()
 })
+
+const projectTypeStore = useProjectTypeStore()
 
 const fetchProjectTypes = async () => {
   try {

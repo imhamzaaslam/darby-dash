@@ -52,6 +52,8 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import FullCalendar from '@fullcalendar/vue3'
 import { blankEvent, useCalendar } from '@/views/apps/calendar/useCalendar'
 
@@ -200,6 +202,10 @@ const project = computed(() => {
 
 const getUserLoadStatus = computed(() => {
   return userStore.getLoadStatus
+})
+
+watch(project, () => {
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title}` })
 })
 </script>
 

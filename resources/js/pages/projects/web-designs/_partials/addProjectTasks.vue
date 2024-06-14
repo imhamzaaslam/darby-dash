@@ -1309,6 +1309,8 @@
 </template>
 
 <script setup="js">
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import moment from 'moment'
 import Swal from 'sweetalert2'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
@@ -1992,6 +1994,10 @@ const filteredProjectLists = computed(() => {
   return getProjectLists.value.filter(list => {
     return list.uuid == selectedList.value
   })
+})
+
+watch(project, () => {
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title}` })
 })
 </script>
 

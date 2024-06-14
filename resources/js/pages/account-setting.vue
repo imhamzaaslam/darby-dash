@@ -50,14 +50,17 @@
 </template>
 
 <script setup="js">
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
 import AccountSettingsBillingAndPlans from '@/views/pages/account-settings/AccountSettingsBillingAndPlans.vue'
 import AccountSettingsDangerZone from '@/views/pages/account-settings/AccountSettingsDangerZone.vue'
 import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
-import { watch } from 'vue'
-import { ref } from 'vue'
+import { watch, ref } from 'vue'
+
 import { useRouter } from 'vue-router'
 
+useHead({ title: `${layoutConfig.app.title} | Account` })
 onBeforeMount(() => {
   const searchParams = new URLSearchParams(window.location.search)
   const activeTab = searchParams.get('tab')
@@ -99,12 +102,14 @@ function setActiveTab(tab) {
 }
 
 // use watch to change the active tab and then pass to the route as query param
-watch(activeTab, (newActiveTab) => {
+watch(activeTab, newActiveTab => {
   router.push({
     query: {
       tab: newActiveTab,
     },
   })
+
+  useHead({ title: `${layoutConfig.app.title} | ${tabs.find(tab => tab.tab === newActiveTab).title}` })
 })
 
 definePage({ meta: { navActiveLink: 'account-setting' } })

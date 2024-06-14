@@ -287,6 +287,8 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import Swal from 'sweetalert2'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
@@ -444,6 +446,10 @@ const getLoadStatus = computed(() => {
 
 const getProjectLoadStatus = computed(() => {
   return projectStore.getLoadStatus
+})
+
+watch(project, () => {
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title}` })
 })
 </script>
 

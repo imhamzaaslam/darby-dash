@@ -330,6 +330,8 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import Swal from 'sweetalert2'
 import sketch from '@images/icons/project-icons/sketch.png'
 import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project-drawer.vue'
@@ -343,6 +345,15 @@ import { useProjectStore } from "../../../store/projects"
 import { useProjectTypeStore } from "../../../store/project_types"
 import { useUserStore } from "../../../store/users"
 import { useRoute } from 'vue-router'
+
+useHead({ title: `${layoutConfig.app.title} | Manage Projects` })
+onBeforeMount(async () => {
+  await fetchProjects()
+  await fetchProjectTypes()
+  await fetchProjectManagers()
+  await fetchMembers()
+  totalRecords.value = totalProjects.value
+})
 
 const toast = useToast()
 const projectStore = useProjectStore()
@@ -360,25 +371,6 @@ const selectedProjectType = ref(null)
 const editProjectDetails = ref({})
 const search = ref('')
 const selectedProjectManagerId = ref(null)
-
-watch(
-  () => route.query.type,
-  async newType => {
-    if (newType) {
-      selectedProjectType.value = parseInt(newType)
-      await fetchProjects()
-    }
-  },
-  { immediate: true },
-)
-
-onBeforeMount(async () => {
-  await fetchProjects()
-  await fetchProjectTypes()
-  await fetchProjectManagers()
-  await fetchMembers()
-  totalRecords.value = totalProjects.value
-})
 
 const fetchProjects = async () => {
   try {
@@ -531,6 +523,17 @@ const getLoadStatus = computed(() => {
 const totalProjects = computed(() => {
   return projectStore.projectsCount
 })
+
+watch(
+  () => route.query.type,
+  async newType => {
+    if (newType) {
+      selectedProjectType.value = parseInt(newType)
+      await fetchProjects()
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <style scoped>

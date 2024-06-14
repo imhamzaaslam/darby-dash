@@ -324,6 +324,8 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import { ref } from 'vue'
 import Swal from 'sweetalert2'
 import FileViewer from './web-designs/_partials/file-viewer.vue'
@@ -331,10 +333,17 @@ import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
 import CreateFolderDialog from '@/components/dialogs/CreateFolderDialog.vue'
 import EditFolderDialog from '@/components/dialogs/EditFolderDialog.vue'
 import Loader from '@/components/Loader.vue'
+import { useProjectStore } from "@/store/projects"
 import { useFolderStore } from '@/store/folders'
 import { useFileStore } from '@/store/files'
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
+
+onBeforeMount(async () => {
+  await getFolders()
+  await getFiles()
+  await fetchProject()
+})
 
 const isCreateFolderDialogOpen = ref(false)
 const isEditFolderDialogOpen = ref(false)
@@ -342,6 +351,7 @@ const isLoading = ref(false)
 
 const folderStore = useFolderStore()
 const fileStore = useFileStore()
+const projectStore = useProjectStore()
 const $route = useRoute()
 const toast = useToast()
 const projectUuid = $route.params.id
@@ -353,11 +363,6 @@ const selectedFile = ref(null)
 const selectedFolder = ref(null)
 const files = ref([])
 const openFolder = ref(null)
-
-onBeforeMount(async () => {
-  await getFolders()
-  await getFiles()
-})
 
 const getFolders = async () => {
   isLoading.value = true
@@ -385,6 +390,14 @@ const getFiles = async () => {
     } finally {
       isLoading.value = false
     }
+  }
+}
+
+const fetchProject = async () => {
+  try {
+    await projectStore.show(projectUuid)
+  } catch (error) {
+    toast.error('Error fetching project:', error)
   }
 }
 
@@ -597,6 +610,14 @@ const getErrors = computed(() => {
 
 const folderFiles = computed(() => {
   return folderStore.getFolderFiles
+})
+
+const project = computed(() =>{
+  return projectStore.getProject
+})
+
+watch(project, () => {
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title}` })
 })
 </script>
 

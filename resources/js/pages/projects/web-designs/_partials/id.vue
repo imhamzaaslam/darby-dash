@@ -498,6 +498,8 @@
 </template>
 
 <script setup lang="js">
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import avatar1 from '@images/avatars/avatar-1.png'
 import girlWithLaptop from '@images/illustrations/PM.png'
 import otherListImg from '@images/darby/other_list.svg?raw'
@@ -505,13 +507,13 @@ import { useProjectStore } from "@/store/projects"
 import { useRoute } from 'vue-router'
 import sketch from '@images/icons/project-icons/sketch.png'
 
-const projectStore = useProjectStore()
-const $route = useRoute()
-const projectUuid = $route.params.id
-
 onBeforeMount(async () => {
   await getProjectProgress()
 })
+
+const projectStore = useProjectStore()
+const $route = useRoute()
+const projectUuid = $route.params.id
 
 const getProjectProgress = async () => {
   await fetchProject()
@@ -542,6 +544,10 @@ const projectProgress = computed(() => {
 
 const project = computed(() =>{
   return projectStore.getProject
+})
+
+watch(project, () => {
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title}` })
 })
 </script>
 

@@ -143,6 +143,8 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import Swal from 'sweetalert2'
 import AddMemberDrawer from '@/pages/teams/_partials/add-member-drawer.vue'
 import EditMemberDrawer from '@/pages/teams/_partials/update-member-drawer.vue'
@@ -150,6 +152,8 @@ import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRoleStore } from "../../store/roles"
 import { useUserStore } from "../../store/users"
+
+useHead({ title: `${layoutConfig.app.title} | Manage Members` })
 
 const toast = useToast()
 const roleStore = useRoleStore()
