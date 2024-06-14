@@ -209,7 +209,6 @@ const uploadFiles = async e => {
     toast.success('Task updated successfully', { timeout: 1000 })
     await fetchFiles()
     await props.fetchProjectLists()
-    await props.fetchProjectTasks()
     isLoading.value = false
   } catch (error) {
     toast.error('Failed to upload files:', error.message || error)

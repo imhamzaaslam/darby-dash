@@ -302,8 +302,8 @@
                     >
                       <VIcon
                         size="small"
-                        color="primary"
                         class="tabler-paperclip"
+                        :color="showAddSubtaskIcon === item.uuid ? 'primary' : 'white'"
                       >
                         <VTooltip
                           activator="parent"
@@ -312,7 +312,9 @@
                           <span class="text-xs">{{ item?.files_count }} Attachments</span>
                         </VTooltip>
                       </VIcon>
-                      <span class="text-primary font-weight-bold">{{ item?.files_count }}</span>
+                      <span :class="showAddSubtaskIcon === item.uuid ? 'text-primary font-weight-bold' : 'text-white font-weight-bold'">
+                        {{ item?.files_count }}
+                      </span>
                     </span>
                   </td>
                   <td>
