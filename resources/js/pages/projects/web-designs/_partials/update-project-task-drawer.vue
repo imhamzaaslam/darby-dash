@@ -79,11 +79,12 @@
               <VCol cols="12">
                 <div
                   v-for="(file, index) in taskFiles"
-                  :key="index" 
-                  class="image-wrapper"
+                  :key="index"
+                  class="image-wrapper cursor-pointer"
+                  @click="openFileViewer(file)"
                 >
                   <VImg
-                    :src="file.url"
+                    :src="getImageUrl(file.path)"
                     width="100"
                     height="100"
                     class="mb-2"
@@ -141,6 +142,11 @@
       </PerfectScrollbar>
     </VCard>
   </VNavigationDrawer>
+  <FileViewer
+    :show="isViewerOpen"
+    :file="selectedFile"
+    @update:show="isViewerOpen = $event"
+  />
 </template>
 
 <script setup>
@@ -150,6 +156,7 @@ import { ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectTaskStore } from "@/store/project_tasks"
 import { useFileStore } from '@/store/files'
+import FileViewer from '@/pages/projects/web-designs/_partials/file-viewer.vue'
 
 const props = defineProps({
   isEditTaskDrawerOpen: {
@@ -175,6 +182,8 @@ const fileStore = useFileStore()
 const editTaskForm = ref()
 const isLoading= ref(false)
 const fileInputRef = ref(null)
+const isViewerOpen = ref(false)
+const selectedFile = ref(null)
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isEditTaskDrawerOpen', val)
@@ -245,6 +254,18 @@ async function submitEditTaskForm() {
       }
     }
   })
+}
+
+const openFileViewer = file => {
+  file.url = getImageUrl(file.path)
+  selectedFile.value = file
+  isViewerOpen.value = true
+}
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
 }
 
 const fetchFiles = async () => {
