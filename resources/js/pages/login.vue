@@ -98,12 +98,16 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { useAuthStore } from "../store/auth"
 import { useRouter } from 'vue-router'
+import { useToast } from "vue-toastification"
 
 definePage({ meta: { layout: 'blank' } })
+useHead({ title: `${layoutConfig.app.title} | Login` })
 
 const form = ref({
   email: 'eric@darby.com',
@@ -115,6 +119,7 @@ const refForm = ref(null)
 const isPasswordVisible = ref(false)
 const authStore = useAuthStore()
 const $router = useRouter()
+const toast = useToast()
 const loadStatus = computed(() => authStore.getLoadStatus)
 
 async function submit() {
@@ -124,8 +129,8 @@ async function submit() {
       let res = await authStore.login(email, password)
 
       if (!res.data.success) {
-        alert(res.data.message)
-        
+        toast.error(res.data.message)
+
         return
       }
 
