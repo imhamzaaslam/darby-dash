@@ -28,7 +28,7 @@ const isChatContactActive = computed(() => {
 
 <template>
   <li
-    :key="store.chatsContacts.length"
+    :key="store.chatsContacts?.length"
     class="chat-contact cursor-pointer d-flex align-center"
     :class="{ 'chat-contact-active': isChatContactActive }"
   >

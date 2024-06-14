@@ -1,4 +1,6 @@
 <script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import {
   useDisplay,
@@ -13,6 +15,7 @@ import { useChat } from '@/views/apps/chat/useChat'
 import { useChatStore } from '@/views/apps/chat/useChatStore'
 
 definePage({ meta: { layoutWrapperClasses: 'layout-content-height-fixed' } })
+useHead({ title: `${layoutConfig.app.title} | Chat` })
 
 // composables
 const vuetifyDisplays = useDisplay()

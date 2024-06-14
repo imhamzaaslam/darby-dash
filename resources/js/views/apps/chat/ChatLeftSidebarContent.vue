@@ -92,7 +92,7 @@ const store = useChatStore()
     />
 
     <span
-      v-show="!store.chatsContacts.length"
+      v-show="!store.chatsContacts?.length"
       class="no-chat-items-text text-disabled"
     >No chats found</span>
     <li class="list-none pt-2">
@@ -109,7 +109,7 @@ const store = useChatStore()
     />
 
     <span
-      v-show="!store.contacts.length"
+      v-show="!store.contacts?.length"
       class="no-chat-items-text text-disabled"
     >No contacts found</span>
   </PerfectScrollbar>

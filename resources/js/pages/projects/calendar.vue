@@ -205,7 +205,7 @@ const getUserLoadStatus = computed(() => {
 })
 
 watch(project, () => {
-  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title}` })
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title} - Calendar` })
 })
 </script>
 
