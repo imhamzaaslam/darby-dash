@@ -154,6 +154,7 @@ import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { ref } from 'vue'
 import { useToast } from "vue-toastification"
+import Swal from 'sweetalert2'
 import { useProjectTaskStore } from "@/store/project_tasks"
 import { useFileStore } from '@/store/files'
 import FileViewer from '@/pages/projects/web-designs/_partials/file-viewer.vue'
@@ -215,15 +216,30 @@ const uploadFiles = async e => {
 }
 
 const deleteFile = async file => {
-  isLoading.value = true
-  try {
-    await fileStore.delete(file.uuid)
-    toast.success('File deleted successfully')
-    await fetchFiles()
-  } catch (error) {
-    toast.error('Failed to delete file')
-  } finally {
-    isLoading.value = false
+  const confirmDelete = await Swal.fire({
+    title: "Are you sure?",
+    html: `<small>Do you want to delete this file?</small>`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#F69636",
+    cancelButtonColor: "#808390",
+    confirmButtonText: "Yes, remove it!",
+    didOpen: () => {
+      document.querySelector('.swal2-confirm').blur()
+    },
+  })
+
+  if (confirmDelete.isConfirmed) {
+    isLoading.value = true
+    try {
+      await fileStore.delete(file.uuid)
+      toast.success('File deleted successfully')
+      await fetchFiles()
+    } catch (error) {
+      toast.error('Failed to delete file')
+    } finally {
+      isLoading.value = false
+    }
   }
 }
 

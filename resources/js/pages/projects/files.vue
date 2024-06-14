@@ -325,6 +325,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import Swal from 'sweetalert2'
 import FileViewer from './web-designs/_partials/file-viewer.vue'
 import emptyFileImg from '../../../images/darby/empty_file.svg?raw'
 import CreateFolderDialog from '@/components/dialogs/CreateFolderDialog.vue'
@@ -499,16 +500,31 @@ const downloadFile = file => {
   link.click()
 }
 
-const deleteImage = async files => {
-  isLoading.value = true
-  try {
-    await fileStore.delete(files.uuid)
-    toast.success('File deleted successfully')
-    await getFiles()
-  } catch (error) {
-    toast.error('Failed to delete file')
-  } finally {
-    isLoading.value = false
+const deleteImage = async file => {
+  const confirmDelete = await Swal.fire({
+    title: "Are you sure?",
+    html: `<small>Do you want to delete this file?</small>`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#F69636",
+    cancelButtonColor: "#808390",
+    confirmButtonText: "Yes, remove it!",
+    didOpen: () => {
+      document.querySelector('.swal2-confirm').blur()
+    },
+  })
+
+  if (confirmDelete.isConfirmed) {
+    isLoading.value = true
+    try {
+      await fileStore.delete(file.uuid)
+      toast.success('File deleted successfully')
+      await getFiles()
+    } catch (error) {
+      toast.error('Failed to delete file')
+    } finally {
+      isLoading.value = false
+    }
   }
 }
 
@@ -518,8 +534,23 @@ const editFolder = folder => {
 }
 
 const deleteFolder = async folder => {
-  await folderStore.delete(folder.uuid)
-  await getFolders()
+  const confirmDelete = await Swal.fire({
+    title: "Are you sure?",
+    html: `<p class="mb-0">Do you want to delete this <b>${folder.name}</b> folder?</p><small>All files inside this folder will also be deleted.</small>`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#F69636",
+    cancelButtonColor: "#808390",
+    confirmButtonText: "Yes, remove it!",
+    didOpen: () => {
+      document.querySelector('.swal2-confirm').blur()
+    },
+  })
+
+  if (confirmDelete.isConfirmed) {
+    await folderStore.delete(folder.uuid)
+    await getFolders()
+  }
 }
 
 const setOpenFolder = async folder => {
