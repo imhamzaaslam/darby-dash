@@ -58,4 +58,9 @@ class File extends Base
     ];
 
     protected $hidden = ['deleted_at'];
+
+    public function fileable()
+    {
+        return $this->morphTo();
+    }
 }

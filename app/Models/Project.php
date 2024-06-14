@@ -62,7 +62,12 @@ class Project extends Base
 
     public function files()
     {
-        return $this->hasMany(File::class);
+        return $this->morphMany(File::class, 'fileable');
+    }
+
+    public function folders()
+    {
+        return $this->hasMany(Folder::class);
     }
 
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder

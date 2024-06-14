@@ -44,4 +44,9 @@ class Task extends Base
     {
         return $this->morphMany(File::class, 'fileable');
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

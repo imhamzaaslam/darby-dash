@@ -21,7 +21,7 @@ class ProjectTypeResource extends JsonResource
             'total_projects' => $this->projects->count(),
             'total_tasks' => $this->tasks->count(),
             'total_members' => $this->members->unique('user_id')->count(),
-            'total_files' => 0,
+            'total_files' => $this->getAllFiles()->count(),
         ];
     }
 }

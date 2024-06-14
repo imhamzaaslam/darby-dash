@@ -295,6 +295,25 @@
                         <span class="text-xs">Edit Task</span>
                       </VTooltip>
                     </VIcon>
+                    <span
+                      v-if="item?.files_count > 0"
+                      class="text-sm font-weight-bold cursor-pointer ms-1"
+                      @click.stop="startEditing(item)"
+                    >
+                      <VIcon
+                        size="small"
+                        color="primary"
+                        class="tabler-paperclip"
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">{{ item?.files_count }} Attachments</span>
+                        </VTooltip>
+                      </VIcon>
+                      <span class="text-primary font-weight-bold">{{ item?.files_count }}</span>
+                    </span>
                   </td>
                   <td>
                     <VMenu
@@ -465,6 +484,25 @@
                         color="primary ms-6 me-2"
                       />
                       <span class="text-grey-600">{{ subtask.name.length > 50 ? subtask.name.substring(0, 50) + '...' : subtask.name }}</span>
+                      <span
+                        v-if="subtask?.files_count > 0"
+                        class="text-sm font-weight-bold cursor-pointer ms-1"
+                        @click.stop="startEditing(subtask)"
+                      >
+                        <VIcon
+                          size="small"
+                          color="primary"
+                          class="tabler-paperclip"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span class="text-xs">{{ subtask?.files_count }} Attachments</span>
+                          </VTooltip>
+                        </VIcon>
+                        <span class="text-primary font-weight-bold">{{ subtask?.files_count }}</span>
+                      </span>
                     </td>
                     <td>
                       <VMenu

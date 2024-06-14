@@ -208,6 +208,8 @@ const uploadFiles = async e => {
     await projectTaskStore.uploadFiles(props.editingTask.uuid, filesArray)
     toast.success('Task updated successfully', { timeout: 1000 })
     await fetchFiles()
+    await props.fetchProjectLists()
+    await props.fetchProjectTasks()
     isLoading.value = false
   } catch (error) {
     toast.error('Failed to upload files:', error.message || error)
@@ -235,6 +237,7 @@ const deleteFile = async file => {
       await fileStore.delete(file.uuid)
       toast.success('File deleted successfully')
       await fetchFiles()
+      await props.fetchProjectLists()
     } catch (error) {
       toast.error('Failed to delete file')
     } finally {

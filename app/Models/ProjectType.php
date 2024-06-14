@@ -32,4 +32,27 @@ class ProjectType extends Base
     {
         return $this->hasManyThrough(ProjectMember::class, Project::class);
     }
+
+    public function getAllFiles()
+    {
+        $files = collect();
+
+        $projects = $this->projects;
+        foreach ($projects as $project) {
+            $files = $files->merge($project->files);
+            $folders = $project->folders;
+            foreach ($folders as $folder) {
+                $files = $files->merge($folder->files);
+            }
+
+            $tasks = $project->tasks;
+            foreach ($tasks as $task) {
+                $files = $files->merge($task->files);
+            }
+        }
+
+        return $files;
+    }
+
+    // return $this->morphMany(File::class, 'fileable');
 }
