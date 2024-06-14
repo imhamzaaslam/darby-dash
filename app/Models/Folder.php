@@ -17,4 +17,9 @@ class Folder extends Base
         'name',
         'project_id',
     ];
+
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
 }

@@ -162,7 +162,7 @@
             />
           </div>
           <div class="folder-name">
-            {{ folder.name }}
+            {{ folder.name }} ({{ folder.filesCount }})
           </div>
         </div> 
       </VCol>
@@ -464,6 +464,7 @@ const uploadFiles = async files => {
     const isAllCompleted = uploadProgress.value.every(f => f.isCompleted)
     if (isAllCompleted) {
       await getFiles()
+      await getFolders()
       isLoading.value = false
     } else {
       const interval = setInterval(async () => {
@@ -471,6 +472,7 @@ const uploadFiles = async files => {
         if (isAllCompleted) {
           clearInterval(interval)
           await getFiles()
+          await getFolders()
           isLoading.value = false
         }
       }, 500)
