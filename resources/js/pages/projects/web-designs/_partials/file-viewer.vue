@@ -14,7 +14,7 @@
         />
       </VCardTitle>
       <VCardText>
-        <template v-if="file.type.startsWith('image/')">
+        <template v-if="file.mime_type.includes('image/')">
           <img
             :src="file.url"
             :alt="file.name"

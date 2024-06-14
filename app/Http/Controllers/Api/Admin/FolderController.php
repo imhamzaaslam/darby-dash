@@ -76,16 +76,22 @@ class FolderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Request $request
      * @param string $folderUuid
      * @return JsonResponse
      */
-    public function delete(string $folderUuid): JsonResponse
+    public function delete(Request $request, string $folderUuid): JsonResponse
     {
         $folder = $this->folderRepository->getByUuidOrFail($folderUuid);
 
-        $files = $this->fileRepository->getBy('folder_id', $folder->id);
+        $fileResolver = $this->fileResolverService->resolve($request->segments(), $folderUuid);
+
+        $files = $this->fileRepository->getAllByMorph($fileResolver['morph_type'], $fileResolver['morph_id']);
+
         foreach ($files as $file) {
             $this->fileUploadService->deleteFile($file->path, 'public');
+
+            $this->fileRepository->delete($file);
         }
 
         $this->folderRepository->delete($folder);
