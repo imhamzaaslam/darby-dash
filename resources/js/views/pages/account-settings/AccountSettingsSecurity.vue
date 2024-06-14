@@ -121,7 +121,7 @@
     <!-- !SECTION -->
 
     <!-- SECTION Two-steps verification -->
-    <VCol cols="5">
+    <!-- <VCol cols="5">
       <VCard title="Two-steps verification">
         <VCardText>
           <p>
@@ -138,7 +138,7 @@
           </VBtn>
         </VCardText>
       </VCard>
-    </VCol>
+    </VCol> -->
   </VRow>
 
   <!-- SECTION Enable One time password -->
