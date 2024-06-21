@@ -13,6 +13,7 @@
         <VCardText>
           <VTextField
             v-model="folderName"
+            autofocus
             label="Folder Name"
             :rules="[requiredValidator]"
             :error-messages="addingErrors.name"
@@ -47,7 +48,7 @@
     </VCard>
   </VDialog>
 </template>
-  
+
 <script setup>
 import { useFolderStore } from '@/store/folders'
 import { useRoute } from 'vue-router'
@@ -71,7 +72,7 @@ const createFolderForm = ref()
 const addingErrors = ref({
   name: null,
 })
-  
+
 // Close dialog function
 const closeDialog = () => {
   emit('update:isOpen', false)
@@ -123,8 +124,7 @@ watch(() => props.isOpen, newVal => {
   }
 })
 </script>
-  
+
   <style scoped>
   /* Add any specific styles if needed */
   </style>
-  

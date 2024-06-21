@@ -39,6 +39,9 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
     public function update(Task $task, array $attributes): bool
     {
         if (isset($attributes['est_time'])) {
+            if (!preg_match('/^\d{1,2}h \d{1,2}m$/', $attributes['est_time'])) {
+                $attributes['est_time'] = convertToDefaultFormat($attributes['est_time']);
+            }
             $attributes['est_time'] = convertToMinutes($attributes['est_time']);
         }
         return $task->fill($attributes)->save();

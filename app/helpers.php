@@ -89,3 +89,24 @@ if (!function_exists('convertMinutesToDays')) {
     }
 }
 
+if (!function_exists('convertToDefaultFormat')) {
+    function convertToDefaultFormat(string $input): string
+    {
+        $parts = explode(' ', $input);
+
+        if (count($parts) === 1) {
+            $hours = str_pad($input, 2, '0', STR_PAD_LEFT);
+            $minutes = '00';
+        } elseif (count($parts) === 2) {
+            $hours = str_pad($parts[0], 2, '0', STR_PAD_LEFT);
+            $minutes = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+        } else {
+            // Handle other cases as needed
+            $hours = '00';
+            $minutes = '00';
+        }
+
+        return $hours."h ".$minutes."m";
+    }
+}
+

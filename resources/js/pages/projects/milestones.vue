@@ -269,6 +269,7 @@
           <VCardText>
             <VTextField
               v-model="mileStoneForm.name"
+              autofocus
               label="Name*"
               placeholder="Enter MileStone Name"
               clearable
@@ -284,6 +285,7 @@
               label="Add Project List"
               placeholder="Select Project List"
               multiple
+              close-on-select="true"
               clearable
               clear-icon="tabler-x"
             />
@@ -335,6 +337,7 @@
           <VCardText>
             <VTextField
               v-model="editMileStoneFormData.name"
+              autofocus
               label="Name*"
               placeholder="Enter MileStone Name"
               clearable
@@ -399,6 +402,7 @@ import { useProjectListStore } from "@/store/project_lists"
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
 import sketch from '@images/icons/project-icons/sketch.png'
+import { nextTick } from 'vue'
 
 const mileStoneStore = useMileStoneStore()
 const projectStore = useProjectStore()

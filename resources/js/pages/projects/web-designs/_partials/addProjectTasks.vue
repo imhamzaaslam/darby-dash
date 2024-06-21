@@ -86,6 +86,7 @@
                 <AppTextField
                   v-model="listTitle"
                   label="Title *"
+                  autofocus
                   :rules="[requiredValidator]"
                 />
               </VCardText>
@@ -407,9 +408,10 @@
                         :ref="el => inputHoursRef[item.id] = el"
                         v-model="inputHours[item.id]"
                         v-mask="'##h ##m'"
+                        placeholder="03h 45m"
                         density="compact"
                         :style="{ width: '100px' }"
-                        @input="validateMinutes($event)"
+                        @input="validateMinutes($event, item)"
                         @blur="saveHours(item)"
                         @keyup.enter="saveHours(item)"
                       />
@@ -596,9 +598,10 @@
                           :ref="el => inputHoursRef[subtask.id] = el"
                           v-model="inputHours[subtask.id]"
                           v-mask="'##h ##m'"
+                          placeholder="03h 45m"
                           density="compact"
                           :style="{ width: '100px' }"
-                          @input="validateMinutes($event)"
+                          @input="validateMinutes($event, subtask)"
                           @blur="saveHours(subtask)"
                           @keyup.enter="saveHours(subtask)"
                         />
@@ -1425,7 +1428,7 @@ const projectId = computed(() => router.currentRoute.value.params.id)
 
 const formatDate = date => moment(date).format('MMM DD, YYYY')
 
-const validateMinutes = event => {
+const validateMinutes = (event, item) => {
   const inputValue = event.target.value
   const minutes = parseInt(inputValue.split(' ')[1])
   if (isNaN(minutes) || minutes < 0 || minutes > 59) {
@@ -1998,6 +2001,7 @@ const saveHours = async item => {
     }
 
     await projectTaskStore.updateAttributes(item.uuid, payload)
+    fetchProjectLists()
     toast.success('Task EST time updated successfully', { timeout: 1000 })
   } catch (error) {
     toast.error('Failed to update task est time:', error)
@@ -2105,4 +2109,4 @@ watch(project, () => {
 .align-center-important {
   align-items: center !important;
 }
-</style>_index_list_row
+</style>

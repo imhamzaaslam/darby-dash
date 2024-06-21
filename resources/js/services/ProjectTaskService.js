@@ -36,8 +36,6 @@ export default {
     return apiClient.delete(`admin/projects/${task.project_uuid}/task/${task.uuid}`)
   },
   updateAttributes(taskUuid, payload) {
-    console.log('taskUuid', taskUuid)
-    console.log('payload', payload)
     return apiClient.patch(`admin/task/${taskUuid}`, payload)
   },
 }

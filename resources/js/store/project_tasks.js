@@ -127,8 +127,9 @@ export const useProjectTaskStore = defineStore('project_tasks', {
       this.error = null
       this.loadStatus = 1
       try {
-        await ProjectTaskService.updateAttributes(taskUuid, payload)
-        
+        const response = await ProjectTaskService.updateAttributes(taskUuid, payload)
+
+        this.projectTask = response.data.data
         this.loadStatus = 2
       } catch (error) {
         this.error = error

@@ -114,6 +114,7 @@ const onCancel = () => {
 
 const startDateTimePickerConfig = computed(() => {
   const config = {
+    enableTime: true,
     dateFormat: `m/d/Y H:i`,
   }
 
@@ -125,6 +126,7 @@ const startDateTimePickerConfig = computed(() => {
 
 const endDateTimePickerConfig = computed(() => {
   const config = {
+    enableTime: true,
     dateFormat: `m/d/Y H:i`,
   }
 
@@ -179,6 +181,7 @@ const dialogModelValueUpdate = val => {
               <VCol cols="12">
                 <AppTextField
                   v-model="event.title"
+                  autofocus
                   label="Title"
                   placeholder="Meeting with Jane"
                   :rules="[requiredValidator]"

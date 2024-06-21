@@ -13,6 +13,7 @@
         <VCardText>
           <VTextField
             v-model="folderName"
+            autofocus
             label="Folder Name"
             :rules="[requiredValidator]"
             :error-messages="updatingErrors.name"
@@ -47,21 +48,21 @@
     </VCard>
   </VDialog>
 </template>
-    
+
 <script setup>
 import { useFolderStore } from '@/store/folders'
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
-  
+
 const props = defineProps({
   isOpen: Boolean,
   folderLoadStatus: String,
   folder: Object,
   getErrors: Object,
 })
-  
+
 const emit = defineEmits(['update:isOpen', 'getFolders'])
-  
+
 const folderStore = useFolderStore()
 const $route = useRoute()
 const toast = useToast()
@@ -72,12 +73,12 @@ const createFolderForm = ref()
 const updatingErrors = ref({
   name: null,
 })
-    
+
 // Close dialog function
 const closeDialog = () => {
   emit('update:isOpen', false)
 }
-  
+
 const submit = () => {
   createFolderForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
@@ -87,7 +88,7 @@ const submit = () => {
         const payload = {
           'name': folderName.value,
         }
-  
+
         await folderStore.update(props.folder.uuid, payload)
         if(props.getErrors) {
           showError()
@@ -120,7 +121,7 @@ const resetErrors = () => {
     name: null,
   }
 }
-  
+
 // Watch for prop changes to reset form state
 watch(() => props.isOpen, newVal => {
   if (newVal === true) {
@@ -131,7 +132,7 @@ watch(() => props.isOpen, newVal => {
   }
 })
 </script>
-    
+
 <style scoped>
 /* Add any specific styles if needed */
 </style>
