@@ -250,6 +250,15 @@
       </VCol>
     </VRow>
   </div>
+
+  <TablePagination
+    v-if="!isLoading && getUsers.length > 0"
+    v-model:page="options.page"
+    :items-per-page="options.itemsPerPage"
+    :total-items="totalUsers"
+    class="custom-pagination"
+    @update:page="handlePageChange"
+  />
   <AddMemberDrawer
     v-model:is-drawer-open="isAddMemberDrawerOpen"
     :fetch-members="fetchMembers"
@@ -279,7 +288,7 @@
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import AddMemberDrawer from '@/pages/teams/_partials/add-member-drawer.vue'
 import EditMemberDrawer from '@/pages/teams/_partials/update-member-drawer.vue'
@@ -294,7 +303,6 @@ import { useUserStore } from "../../store/users"
 useHead({ title: `${layoutConfig.app.title} | Manage Members` })
 
 const router = useRouter()
-const route = useRoute()
 const toast = useToast()
 const roleStore = useRoleStore()
 const userStore = useUserStore()
@@ -310,37 +318,6 @@ const searchName = ref('')
 const searchEmail = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
-const headers = [
-  {
-    title: 'Name',
-    key: 'name',
-    sortable: true,
-  },
-  {
-    title: 'Email',
-    key: 'email',
-    sortable: false,
-  },
-  {
-    title: 'Status',
-    key: 'state',
-    sortable: true,
-    width: '15%',
-  },
-  {
-    title: 'Created At',
-    key: 'created_at',
-    sortable: true,
-    width: '20%',
-  },
-  {
-    title: 'Actions',
-    key: 'actions',
-    sortable: false,
-    width: '5%',
-  },
-]
-
 onBeforeMount(async () => {
   const searchParams = new URLSearchParams(window.location.search)
   const savedViewType = searchParams.get('view')
@@ -353,7 +330,7 @@ onBeforeMount(async () => {
 
 const fetchMembers = async () => {
   try {
-    await userStore.getAll(searchName.value, searchEmail.value, selectedRole.value)
+    await userStore.getAll(options.value.page, options.value.itemsPerPage, searchName.value, searchEmail.value, selectedRole.value)
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching members:', error)
@@ -363,24 +340,11 @@ const fetchMembers = async () => {
   }
 }
 
-// const fetchMembers = async () => {
-//   try {
-//     if(getLoadStatus.value === 1) return
-
-//     await userStore.getAll(options.value.page, options.value.itemsPerPage, search.value, options.value.orderBy, options.value.order)
-//     isLoading.value = true
-//   } catch (error) {
-//     toast.error('Error fetching members:', error)
-//   }
-//   finally {
-//     isLoading.value = false
-//   }
-// }
-
 const applyFilters = async (name = '', email = null, roleId = null) => {
   searchName.value = name
   searchEmail.value = email
   selectedRole.value = roleId
+  options.value.page = 1
   await fetchMembers()
 }
 
@@ -453,19 +417,17 @@ const rolesWithFirstOption = (firstOption = null) => {
   }
 
   return roles
+}
 
+const handlePageChange = async page => {
+  options.value.page = page
+  await fetchMembers()
+}
 
-
-  // const projectTypes = computed(() => {
-  //   let types = [...projectTypeStore.getProjectTypes]
-  //   if (firstOption) {
-  //     types.unshift({ id: null, name: firstOption })
-  //   }
-    
-  //   return types
-  // })
-
-  // return projectTypes.value
+const onFilter = async value => {
+  selectedRole.value = value
+  options.value.page = 1
+  await fetchMembers()
 }
 
 const getRoles = computed(() => {
@@ -492,29 +454,6 @@ const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
 })
 
-const handlePageChange = async page => {
-  options.value.page = page
-  await fetchMembers()
-}
-
-const onFilter = async value => {
-  selectedRole.value = value
-  await fetchMembers()
-
-
-  // options.value.page = 1
-  // search.value = value
-  // await fetchMembers()
-}
-
-const updateOptions = async updateOptions => {
-  console.log('updateOptions calling')
-  options.value.orderBy = updateOptions.sortBy[0]?.key,
-  options.value.order = updateOptions.sortBy[0]?.order
-
-  await fetchMembers()
-}
-
 watch([viewType], ([newViewType]) => {
   router.push({
     query: {
@@ -539,5 +478,9 @@ watch([viewType], ([newViewType]) => {
 
 .user-state-chip {
   width: fit-content;
+}
+
+.custom-pagination :deep(hr) {
+  display: none !important;
 }
 </style>

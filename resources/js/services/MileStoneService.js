@@ -1,8 +1,12 @@
 import { apiClient, generateQueryString } from './api'
 
 export default {
-  getAll(projectUuid) {
-    return apiClient.get(`admin/projects/${projectUuid}/milestones`)
+  getAll(
+    page = 1,
+    perPage = 10,
+    projectUuid,
+  ) {
+    return apiClient.get(`/admin/projects/${projectUuid}/milestones?page=${page}&per_page=${perPage}`)
   },
   create(projectUuid, payload) {
     return apiClient.post(`admin/projects/${projectUuid}/milestones`, payload)

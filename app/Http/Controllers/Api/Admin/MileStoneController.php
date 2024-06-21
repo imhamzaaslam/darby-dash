@@ -21,13 +21,16 @@ class MileStoneController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * Request $request
      * @param string $projectUuid
      * @return AnonymousResourceCollection|JsonResponse
      */
-    public function index(string $projectUuid): AnonymousResourceCollection|JsonResponse
+    public function index(Request $request, string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
-        $mileStones = $this->mileStoneRepository->getBy('project_id', $project->id);
+        $mileStones = $this->mileStoneRepository
+            ->getByProjectQuery($project)
+            ->paginate($request->per_page ?? config('pagination.per_page', 10));
 
         return MileStoneResource::collection($mileStones);
     }

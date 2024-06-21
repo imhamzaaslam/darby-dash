@@ -81,7 +81,7 @@
 
     <div v-else>
       <!-- Skeleton Loader -->
-      <div v-if="getProjectLoadStatus == 1 || mileStoneLoadStatus === 1">
+      <div v-if="mileStoneLoadStatus === 1">
         <VRow
           v-if="viewType === 'list'"
           class="mb-4"
@@ -252,6 +252,14 @@
         </VRow>
       </div>
     </div>
+    <TablePagination
+      v-if="mileStoneLoadStatus !== 1 && getProjectMileStone.length > 0"
+      v-model:page="options.page"
+      :items-per-page="options.itemsPerPage"
+      :total-items="totalMileStones"
+      class="custom-pagination"
+      @update:page="handlePageChange"
+    />
     <VDialog
       v-model="isAddMileStoneDialogueOpen"
       persistent
@@ -294,10 +302,10 @@
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
             <VBtn
               type="submit"
-              :disabled="getProjectMileStone === 1"
+              :disabled="mileStoneLoadStatus === 1"
               @click="addMileStoneForm?.validate()"
             >
-              <span v-if="getProjectMileStone === 1">
+              <span v-if="mileStoneLoadStatus === 1">
                 <VProgressCircular
                   :size="16"
                   width="3"
@@ -361,10 +369,10 @@
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
             <VBtn
               type="submit"
-              :disabled="getProjectMileStone === 1"
+              :disabled="mileStoneLoadStatus === 1"
               @click="editMileStoneForm?.validate()"
             >
-              <span v-if="getProjectMileStone === 1">
+              <span v-if="mileStoneLoadStatus === 1">
                 <VProgressCircular
                   :size="16"
                   width="3"
@@ -416,6 +424,7 @@ const isAddMileStoneDialogueOpen = ref(false)
 const editMileStoneForm = ref()
 const isEditMileStoneDialogueOpen = ref(false)
 const editProjectList = ref()
+const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const mileStoneForm = ref({
   name: '',
@@ -491,11 +500,16 @@ const fetchProject = async () => {
 }
 
 const getMileStones = async () => {
-  await mileStoneStore.getAll(projectUuid)
+  await mileStoneStore.getAll(options.value.page, options.value.itemsPerPage, projectUuid)
 }
 
 const getListsWithoutMileStones = async () => {
   await projectListStore.getWithoutMileStone(projectUuid)
+}
+
+const handlePageChange = async page => {
+  options.value.page = page
+  await getMileStones()
 }
 
 const editMileStone = async data => {
@@ -559,6 +573,10 @@ const projectListsForDropDown = computed(() => {
   return projectListStore.getProjectListsForDropDown
 })
 
+const totalMileStones = computed(() => {
+  return mileStoneStore.mileStonesCount
+})
+
 const capitalizeFirstLetter = string => {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
@@ -599,5 +617,13 @@ watch(project, () => {
 
 .align-center-important {
   align-items: center !important;
+}
+
+.custom-pagination :deep(hr) {
+  display: none !important;
+}
+
+.custom-pagination :deep(div) {
+  padding-top: 0px !important;
 }
 </style>

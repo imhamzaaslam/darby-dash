@@ -42,7 +42,7 @@
             :items="projectTypesWithFirstOption('All Projects')"
             item-title="name"
             item-value="id"
-            @update:model-value="fetchProjects"
+            @update:model-value="onFilter"
           />
         </div>
       </VCol>
@@ -301,6 +301,15 @@
         </VCol>
       </VRow>
     </div>
+
+    <TablePagination
+      v-if="getLoadStatus !== 1 && getProjects.length > 0"
+      v-model:page="options.page"
+      :items-per-page="options.itemsPerPage"
+      :total-items="totalProjects"
+      class="custom-pagination"
+      @update:page="handlePageChange"
+    />
   </div>
   <AddProjectDrawer
     v-model:is-drawer-open="isAddProjectDrawerOpen"
@@ -371,10 +380,11 @@ const selectedProjectType = ref(null)
 const editProjectDetails = ref({})
 const search = ref('')
 const selectedProjectManagerId = ref(null)
+const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const fetchProjects = async () => {
   try {
-    await projectStore.getAll(search.value, selectedProjectType.value, selectedProjectManagerId.value)
+    await projectStore.getAll(options.value.page, options.value.itemsPerPage, search.value, selectedProjectType.value, selectedProjectManagerId.value)
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching projects:', error)
@@ -470,6 +480,18 @@ const fetchMembers = async () => {
   }
 }
 
+const handlePageChange = async page => {
+  options.value.page = page
+  await fetchProjects()
+}
+
+const onFilter = async value => {
+  selectedProjectType.value = value
+  options.value.page = 1
+  await fetchProjects()
+}
+
+
 const getProjects = computed(() => {
   return projectStore.getProjects
 })
@@ -542,5 +564,9 @@ watch(
     padding: 0 !important;
     align-items: unset !important;
     block-size: unset !important;
+}
+
+.custom-pagination :deep(hr) {
+  display: none !important;
 }
 </style>

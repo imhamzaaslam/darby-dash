@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Contracts\AbstractEloquentRepository;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Models\Base;
@@ -20,6 +21,13 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
     public function __construct(Project $model)
     {
         parent::__construct($model);
+    }
+
+    public function getProjectMembersQuery(Project $project): Builder
+    {
+        $projectMembers = ProjectMember::where('project_id', $project->id)->pluck('user_id');
+
+        return User::whereIn('id', $projectMembers);
     }
 
     public function create(array $attributes): Project
@@ -60,7 +68,7 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
 
     public function updateProjectMembers(Project $project, array $members): void
     {
-        ProjectMember::where('project_id', $project->id)->delete();
+        // ProjectMember::where('project_id', $project->id)->delete();
         $this->storeProjectMembers($project, $members);
     }
 
