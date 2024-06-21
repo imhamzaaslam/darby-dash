@@ -480,7 +480,7 @@ watch([viewType], ([newViewType]) => {
   width: fit-content;
 }
 
-.custom-pagination /deep/ hr {
+.custom-pagination :deep(hr) {
   display: none !important;
 }
 </style>

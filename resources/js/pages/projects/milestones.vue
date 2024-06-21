@@ -615,11 +615,11 @@ watch(project, () => {
   align-items: center !important;
 }
 
-.custom-pagination /deep/ hr {
+.custom-pagination :deep(hr) {
   display: none !important;
 }
 
-.custom-pagination /deep/ div {
+.custom-pagination :deep(div) {
   padding-top: 0px !important;
 }
 </style>
