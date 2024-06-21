@@ -2,17 +2,33 @@ import { apiClient, generateQueryString } from './api'
 
 export default {
   getUsers: async (
-    page = 1,
-    perPage = 10,
-    search = null,
-    orderBy = null,
-    orderDirection = null,
+    searchName = null,
+    searchEmail = null,
+    roleId = null,
   ) => {
-    const baseUrl = `/admin/users?page=${page}&perPage=${perPage}`
-    const queryString = generateQueryString(search, orderBy, orderDirection)
+    const queryParams = [
+      searchName && `name=${searchName}`,
+      searchEmail && `email=${searchEmail}`,
+      roleId && `roleId=${roleId}`,
+    ].filter(Boolean)
 
-    return await apiClient.get(baseUrl + queryString)
+    const queryString = queryParams.length ? `?${queryParams.join('&')}` : ''
+
+    return await apiClient.get(`admin/users${queryString}`)
   },
+
+  // getUsers: async (
+  //   page = 1,
+  //   perPage = 10,
+  //   search = null,
+  //   orderBy = null,
+  //   orderDirection = null,
+  // ) => {
+  //   const baseUrl = `/admin/users?page=${page}&perPage=${perPage}`
+  //   const queryString = generateQueryString(search, orderBy, orderDirection)
+
+  //   return await apiClient.get(baseUrl + queryString)
+  // },
 
   getAll() {
     return apiClient.get('admin/users/all')

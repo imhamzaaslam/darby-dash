@@ -1,15 +1,56 @@
 <template>
-  <VRow>
+  <!-- Toggle -->
+  <VRow class="mb-0">
     <VCol
       cols="12"
-      md="6"
-    />
-    <VCol
-      cols="12"
-      md="6"
-      class="mb-3"
+      md="7"
+      class="d-flex pb-0"
     >
-      <div class="d-flex justify-end mb-5">
+      <VBtnToggle
+        v-model="viewType"
+        class="d-toggle"
+        rounded="0"
+      >
+        <VIcon
+          icon="tabler-list"
+          class="me-1"
+          :class="{ 'bg-primary': viewType === 'list' }"
+          @click="viewType = 'list'"
+        />
+        <VIcon
+          icon="tabler-layout-grid"
+          :class="{ 'bg-primary': viewType === 'grid' }"
+          @click="viewType = 'grid'"
+        />
+      </VBtnToggle>
+      <VIcon
+        icon="tabler-filter"
+        class="bg-primary ms-2"
+        @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+      />
+    </VCol>
+    <VCol
+      cols="12"
+      md="3"
+      class="pb-0"
+    >
+      <div class="d-flex justify-end">
+        <AppAutocomplete
+          v-model="selectedRole"
+          placeholder="Select Type"
+          :items="rolesWithFirstOption('All Members')"
+          item-title="name"
+          item-value="id"
+          @update:model-value="onFilter"
+        />
+      </div>
+    </VCol>
+    <VCol
+      cols="12"
+      md="2"
+      class="pb-0"
+    >
+      <div class="d-flex justify-end">
         <VBtn
           prepend-icon="tabler-plus"
           @click="isAddMemberDrawerOpen = !isAddMemberDrawerOpen"
@@ -19,110 +60,196 @@
       </div>
     </VCol>
   </VRow>
-  <VCard>
-    <VCardText class="d-flex justify-space-between align-center flex-wrap gap-4">
-      <h3>
-        Manage Members
-      </h3>
-      <div style="inline-size: 272px;">
-        <AppTextField
-          v-model="search"
-          placeholder="Search Member"
-          @input="onFilter($event.target.value)"
-        />
-      </div>
-    </VCardText>
-
-    <VDivider />
-    <VDataTable
-      :headers="headers"
-      :items-per-page="options.itemsPerPage"
-      :items="getUsers"
-      item-value="name"
-      hide-default-footer
-      class="text-no-wrap"
-      @update:options="updateOptions"
+  <VRow class="mt-0 pt-0">
+    <VCol 
+      cols="12"
+      class="pt-0 ps-4"
     >
-      <template #item.name="{ item }">
-        <div class="d-flex align-center">
-          <VAvatar
-            size="36"
-            :class="item.avatar ? '' : 'text-white bg-primary'"
-            :variant="!item.avatar ? 'tonal' : ''"
-          >
-            <span>{{ avatarText(item.name_first + ' ' + item.name_last) }}</span>
-          </VAvatar>
-          <div class="d-flex flex-column ms-3">
-            <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ item.name_first }} {{ item.name_last }}</span>
-            <small class="mt-0 text-xs">
-              {{ roleStore.capitalizeFirstLetter(item.role) }}
-            </small>
-          </div>
-        </div>
-      </template>
-      <template #item.email="{ item }">
-        <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0">{{ item.email }}</span>
-        </div>
-      </template>
-      <template #item.state="{ item }">
-        <div class="d-flex gap-1">
-          <VChip
-            :color="getStatusColor(item.state)"
-            variant="outlined"
-            size="small"
-          >
-            {{ roleStore.capitalizeFirstLetter(item.state) }}
-          </VChip>
-        </div>
-      </template>
-      <template #item.created_at="{ item }">
-        <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0">{{ item.created_at }}</span>
-        </div>
-      </template>
+      <h3>Manage Members</h3>
+    </VCol>
+  </VRow>
 
-      <template #item.actions="{ item }">
-        <div class="d-flex">
-          <template v-if="item.email !== 'eric@darby.com'">  
-            <IconBtn @click="editMember(item)">
-              <VIcon
-                icon="tabler-edit"
-                color="info"
-              />
-            </IconBtn>
-            <IconBtn @click="deleteMember(item)">
-              <VIcon
-                icon="tabler-trash"
-                color="error"
-              />
-            </IconBtn>
-          </template>
-        </div>
-      </template>
-      <template #bottom>
-        <VCardText class="pt-2">
-          <div
-            v-if="isLoading"
-            class="text-center"
+  <!-- Skeleton Loader -->
+  <div v-if="getLoadStatus == 1">
+    <VRow
+      v-if="viewType === 'list'"
+      class="mb-4"
+    >
+      <ListViewSkeleton />
+    </VRow>
+    <VRow
+      v-else
+      class="mb-4"
+    >
+      <GridViewSkeleton /> 
+    </VRow>
+  </div>
+
+  <div v-else>
+    <VRow v-if="getUsers.length === 0">
+      <VCol cols="12">
+        <VCard class="px-3 py-3 text-center">
+          <span>No members found</span>
+        </VCard>
+      </VCol>
+    </VRow>
+    <VRow
+      v-else-if="viewType === 'list'"
+      class="mb-4"
+    >
+      <VCol
+        v-for="user in getUsers"
+        :key="user.id"
+        cols="12"
+      >
+        <VCard class="d-flex align-center ps-4 py-1">
+          <VCol cols="4">
+            <div class="d-flex align-center gap-x-3">
+              <VAvatar
+                size="34"
+                :class="user.avatar ? '' : 'text-white bg-primary'"
+                :variant="!user.avatar ? 'tonal' : ''"
+              >
+                <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+              </VAvatar>
+              <div>
+                <h6 class="text-h6 text-no-wrap">
+                  <span class="d-block">{{ user.name_first }} {{ user.name_last }}</span>
+                </h6>
+                <small>{{ roleStore.capitalizeFirstLetter(user.role) }}</small>
+              </div>
+            </div>
+          </VCol>
+          <VCol cols="4">
+            <div class="d-flex align-center">
+              <div class="d-flex flex-column ms-3">
+                <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ user.email }}</span>
+                <small class="mt-0">{{ user?.info?.phone }}</small>
+              </div>
+            </div>
+          </VCol>
+          <VCol cols="3">
+            <div class="d-flex flex-column ms-3">
+              <VChip
+                :color="getStatusColor(user.state)"
+                variant="outlined"
+                size="small"
+                class="user-state-chip"
+              >
+                {{ roleStore.capitalizeFirstLetter(user.state) }}
+              </VChip>
+            </div>
+          </VCol>
+          <VCol
+            cols="1"
+            class="ms-8"
           >
-            <VProgressCircular
-              :size="30"
-              width="3"
-              indeterminate
-              color="primary"
-            />
-          </div>
-        </VCardText>
-        <TablePagination
-          v-model:page="options.page"
-          :items-per-page="options.itemsPerPage"
-          :total-items="totalUsers"
-          @update:page="handlePageChange"
-        />
-      </template>
-    </VDataTable>
-  </VCard>
+            <IconBtn @click.prevent>
+              <VIcon icon="tabler-dots" />
+              <VMenu activator="parent">
+                <VList>
+                  <VList>
+                    <VListItem
+                      value="edit"
+                      @click="editMember(user)"
+                    >
+                      Edit
+                    </VListItem>
+                    <VListItem
+                      value="delete"
+                      @click="deleteMember(user)"
+                    >
+                      Delete
+                    </VListItem>
+                  </VList>
+                </VList>
+              </VMenu>
+            </IconBtn>
+          </VCol>
+        </VCard>
+      </VCol>
+    </VRow>
+
+    <!-- Grid View -->
+    <VRow v-else>
+      <VCol
+        v-for="user in getUsers"
+        :key="user.id"
+        cols="12"
+        md="4"
+      >
+        <VCard class="pt-2">
+          <VCardTitle>
+            <VRow>
+              <VCol cols="10">
+                <div class="d-flex align-center gap-x-3">
+                  <VAvatar
+                    size="36"
+                    :class="user.avatar ? '' : 'text-white bg-primary'"
+                    :variant="!user.avatar ? 'tonal' : ''"
+                  >
+                    <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                  </VAvatar>
+                  <div>
+                    <h6 class="text-h6 text-no-wrap">
+                      {{ user.name_first }} {{ user.name_last }}
+                    </h6>
+                  </div>
+                </div>
+              </VCol>
+              <VCol cols="2">
+                <IconBtn @click.prevent>
+                  <VIcon icon="tabler-dots-vertical" />
+                  <VMenu activator="parent">
+                    <VList>
+                      <VList>
+                        <VListItem
+                          value="edit"
+                          @click="editMember(user)"
+                        >
+                          Edit
+                        </VListItem>
+                        <VListItem
+                          value="delete"
+                          @click="deleteMember(user)"
+                        >
+                          Delete
+                        </VListItem>
+                      </VList>
+                    </VList>
+                  </VMenu>
+                </IconBtn>
+              </VCol>
+            </VRow>
+          </VCardTitle>
+          <VCardText class="px-3 pt-2">
+            <VRow class="d-flex align-center">
+              <VCol cols="8">
+                <div class="d-flex align-center mt-1 ms-1">
+                  <div class="d-flex flex-column ms-3">
+                    <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ user.email }}</span>
+                    <small class="mt-0">{{ roleStore.capitalizeFirstLetter(user.role) }}</small>
+                  </div>
+                </div>
+              </VCol>
+              <VCol cols="4">
+                <div class="d-flex align-end justify-end">
+                  <VChip
+                    :color="getStatusColor(user.state)"
+                    variant="outlined"
+                    size="small"
+                    class="user-state-chip"
+                  >
+                    {{ roleStore.capitalizeFirstLetter(user.state) }}
+                  </VChip>
+                </div>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
+  </div>
   <AddMemberDrawer
     v-model:is-drawer-open="isAddMemberDrawerOpen"
     :fetch-members="fetchMembers"
@@ -140,14 +267,25 @@
     :edit-member-details="editMemberDetails"
     :get-load-status="getLoadStatus"
   />
+  <FilterDrawer
+    v-model:is-filter-drawer-open="isFilterDrawerOpen"
+    :apply-filters="applyFilters"
+    :get-roles="rolesWithFirstOption('All Members')"
+    :selected-role="selectedRole"
+    :get-load-status="getLoadStatus"
+  />
 </template>
 
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
+import { useRouter, useRoute } from 'vue-router'
 import Swal from 'sweetalert2'
 import AddMemberDrawer from '@/pages/teams/_partials/add-member-drawer.vue'
 import EditMemberDrawer from '@/pages/teams/_partials/update-member-drawer.vue'
+import ListViewSkeleton from '@/pages/teams/_partials/list-view-skeleton.vue'
+import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
+import FilterDrawer from '@/pages/teams/_partials/filter-projects-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRoleStore } from "../../store/roles"
@@ -155,16 +293,21 @@ import { useUserStore } from "../../store/users"
 
 useHead({ title: `${layoutConfig.app.title} | Manage Members` })
 
+const router = useRouter()
+const route = useRoute()
 const toast = useToast()
 const roleStore = useRoleStore()
 const userStore = useUserStore()
 
 const editMemberDetails = ref({})
-
 const isAddMemberDrawerOpen = ref(false)
 const isEditMemberDrawerOpen = ref(false)
+const isFilterDrawerOpen = ref(false)
+const selectedRole = ref(null)
+const viewType = ref('list')
 const isLoading = ref(false)
-const search = ref('')
+const searchName = ref('')
+const searchEmail = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const headers = [
@@ -199,15 +342,18 @@ const headers = [
 ]
 
 onBeforeMount(async () => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const savedViewType = searchParams.get('view')
+  if (savedViewType && ['list', 'grid'].includes(savedViewType)) {
+    viewType.value = savedViewType
+  }
   await fetchRoles()
   await fetchMembers()
 })
 
 const fetchMembers = async () => {
   try {
-    if(getLoadStatus.value === 1) return
-
-    await userStore.getAll(options.value.page, options.value.itemsPerPage, search.value, options.value.orderBy, options.value.order)
+    await userStore.getAll(searchName.value, searchEmail.value, selectedRole.value)
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching members:', error)
@@ -215,6 +361,27 @@ const fetchMembers = async () => {
   finally {
     isLoading.value = false
   }
+}
+
+// const fetchMembers = async () => {
+//   try {
+//     if(getLoadStatus.value === 1) return
+
+//     await userStore.getAll(options.value.page, options.value.itemsPerPage, search.value, options.value.orderBy, options.value.order)
+//     isLoading.value = true
+//   } catch (error) {
+//     toast.error('Error fetching members:', error)
+//   }
+//   finally {
+//     isLoading.value = false
+//   }
+// }
+
+const applyFilters = async (name = '', email = null, roleId = null) => {
+  searchName.value = name
+  searchEmail.value = email
+  selectedRole.value = roleId
+  await fetchMembers()
 }
 
 const editMember = member => {
@@ -279,6 +446,28 @@ const getStatusColor = role => {
   return colors[role] ?? 'warning'
 }
 
+const rolesWithFirstOption = (firstOption = null) => {
+  let roles = [...roleStore.getRoles]
+  if (firstOption) {
+    roles.unshift({ id: null, name: firstOption })
+  }
+
+  return roles
+
+
+
+  // const projectTypes = computed(() => {
+  //   let types = [...projectTypeStore.getProjectTypes]
+  //   if (firstOption) {
+  //     types.unshift({ id: null, name: firstOption })
+  //   }
+    
+  //   return types
+  // })
+
+  // return projectTypes.value
+}
+
 const getRoles = computed(() => {
   return roleStore.getRoles
 })
@@ -309,9 +498,13 @@ const handlePageChange = async page => {
 }
 
 const onFilter = async value => {
-  options.value.page = 1
-  search.value = value
+  selectedRole.value = value
   await fetchMembers()
+
+
+  // options.value.page = 1
+  // search.value = value
+  // await fetchMembers()
 }
 
 const updateOptions = async updateOptions => {
@@ -321,11 +514,30 @@ const updateOptions = async updateOptions => {
 
   await fetchMembers()
 }
+
+watch([viewType], ([newViewType]) => {
+  router.push({
+    query: {
+      view: newViewType,
+    },
+  })
+})
 </script>
 
 <style scoped>
+.d-toggle{
+    border: unset !important;
+    padding: 0 !important;
+    align-items: unset !important;
+    block-size: unset !important;
+}
+
 .table-wrapper {
     inline-size: auto;
     overflow-x: auto;
+}
+
+.user-state-chip {
+  width: fit-content;
 }
 </style>

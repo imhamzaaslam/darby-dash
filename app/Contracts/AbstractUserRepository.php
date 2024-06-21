@@ -23,6 +23,11 @@ abstract class AbstractUserRepository implements AbstractUserRepositoryInterface
         return $this->model->where('uuid', $uuid)->first();
     }
 
+    public function getAllRecordsQuery(): Builder
+    {
+        return $this->model->query();
+    }
+
     public function getFirstByOrFail(string $key, $value): ?User
     {
         return $this->model->where($key, $value)->firstOrFail();

@@ -14,14 +14,14 @@ export const useUserStore = defineStore('users', {
   }),
   persist: true,
   actions: {
-    async getAll(page = 1, perPage = 10, search = null, orderBy = null, orderDirection = null) {
+    async getAll(searchName = null, searchEmail = null, roleId = null) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.getUsers(page, perPage, search, orderBy, orderDirection)
+        const response = await UserService.getUsers(searchName, searchEmail, roleId)
 
         this.users = response.data.data
-        this.usersCount = response.data.meta.total
+        // this.usersCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -29,6 +29,21 @@ export const useUserStore = defineStore('users', {
         console.error('getUsers error ', error)
       }
     },
+    // async getAll(page = 1, perPage = 10, search = null, orderBy = null, orderDirection = null) {
+    //   this.error = null
+    //   this.loadStatus = 1
+    //   try {
+    //     const response = await UserService.getUsers(page, perPage, search, orderBy, orderDirection)
+
+    //     this.users = response.data.data
+    //     this.usersCount = response.data.meta.total
+    //     this.loadStatus = 2
+    //   } catch (error) {
+    //     this.error = error
+    //     this.loadStatus = 3
+    //     console.error('getUsers error ', error)
+    //   }
+    // },
     async getByProjects(projectUuid) {
       this.error = null
       this.loadStatus = 1

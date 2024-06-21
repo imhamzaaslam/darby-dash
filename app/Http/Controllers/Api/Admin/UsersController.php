@@ -43,11 +43,17 @@ class UsersController extends Controller
     public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
         $users = $this->userRepository
-            ->hasInfo()
-            ->filtered($request->keyword ?? '')
-            // ->where('email', '!=', config('app.admin.email'))
+            ->getAllRecordsQuery()
+            ->filtered($request->name ?? '', $request->email ?? '', $request->roleId ?? null)
             ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
-            ->paginate($request->perPage ?? config('pagination.perPage', 10));
+            ->paginate($request->per_page ?? config('pagination.per_page', 10));
+
+        // $users = $this->userRepository
+        //     ->hasInfo()
+        //     ->filtered($request->keyword ?? '')
+        //     // ->where('email', '!=', config('app.admin.email'))
+        //     ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+        //     ->paginate($request->perPage ?? config('pagination.perPage', 10));
 
         return UserResource::collection($users);
     }

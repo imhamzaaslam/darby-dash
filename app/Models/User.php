@@ -214,22 +214,25 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         return $this->email_verified_at;
     }
 
-    function scopeFiltered(Builder $query, ?string $keyword): Builder
+    function scopeFiltered(Builder $query, ?string $name, ?string $email, ?string $roleId): Builder
     {
         $usersTable = (new User())->getTable();
-        $userInfosTable = (new UserInfo())->getTable();
 
-        return $query->when($keyword, function(Builder $query) use ($keyword, $usersTable, $userInfosTable) {
-            return $query->where("$usersTable.id", 'like', '%' . $keyword . '%')
-                ->orWhere("$usersTable.name_first", 'like', '%' . $keyword . '%')
-                ->orWhere("$usersTable.name_last", 'like', '%' . $keyword . '%')
-                ->orWhere("$usersTable.email", 'like', '%' . $keyword . '%')
-                ->orWhere("$usersTable.state", 'like', '%' . $keyword . '%')
-                ->orWhere("$usersTable.created_at", 'like', '%' . $keyword . '%');
-
-                // ->orWhereHas('roles', function (Builder $query) use ($keyword) {
-                //     $query->where('name', 'like', '%' . $keyword . '%');
-                // });
+        return $query->when($name, function (Builder $query) use ($name, $usersTable) {
+            $names = explode(" ", $name);
+            if (count($names) === 2) {
+                return $query->where("$usersTable.name_first", 'like', '%' . $names[0] . '%')
+                    ->where("$usersTable.name_last", 'like', '%' . $names[1] . '%');
+            } else {
+                return $query->where("$usersTable.name_first", 'like', '%' . $name . '%')
+                    ->orWhere("$usersTable.name_last", 'like', '%' . $name . '%');
+            }
+        })->when($email, function (Builder $query) use ($email, $usersTable) {
+            return $query->where("$usersTable.email", 'like', '%' . $email . '%');
+        })->when($roleId, function (Builder $query) use ($roleId) {
+            return $query->whereHas('roles', function (Builder $query) use ($roleId) {
+                $query->where('id', $roleId);
+            });
         });
     }
 
