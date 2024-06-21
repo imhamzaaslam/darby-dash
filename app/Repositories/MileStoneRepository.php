@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Contracts\AbstractEloquentRepository;
 use App\Contracts\MileStoneRepositoryInterface;
 use App\Models\Base;
@@ -19,6 +20,11 @@ class MileStoneRepository extends AbstractEloquentRepository implements MileSton
     public function __construct(MileStone $model)
     {
         parent::__construct($model);
+    }
+
+    public function getByProjectQuery(Project $project): Builder
+    {
+        return $this->model->where('project_id', $project->id);
     }
 
     public function create(Project $project, array $attributes): MileStone

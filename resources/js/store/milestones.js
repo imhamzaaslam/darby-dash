@@ -6,17 +6,19 @@ export const useMileStoneStore = defineStore('milestones', {
     milestones: [],
     milestone: null,
     loadStatus: 0,
+    mileStonesCount: 0,
     error: null,
   }),
   persist: true,
   actions: {
-    async getAll(projectUuid) {
+    async getAll(page = 1, perPage = 10, projectUuid) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await MileStoneService.getAll(projectUuid)
+        const response = await MileStoneService.getAll(page, perPage, projectUuid)
 
         this.milestones = response.data.data
+        this.mileStonesCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
         this.error = error
