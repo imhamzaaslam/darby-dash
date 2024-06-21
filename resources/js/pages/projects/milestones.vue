@@ -293,7 +293,6 @@
               label="Add Project List"
               placeholder="Select Project List"
               multiple
-              close-on-select="true"
               clearable
               clear-icon="tabler-x"
             />
@@ -410,7 +409,6 @@ import { useProjectListStore } from "@/store/project_lists"
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
 import sketch from '@images/icons/project-icons/sketch.png'
-import { nextTick } from 'vue'
 
 const mileStoneStore = useMileStoneStore()
 const projectStore = useProjectStore()
