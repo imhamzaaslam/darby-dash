@@ -38,8 +38,25 @@ export default {
     return apiClient.get('admin/users/all')
   },
 
-  getByProjects: async projectUuid => {
-    return await apiClient.get(`admin/projects/${projectUuid}/users`)
+  getByProjects: async (
+    page = 1,
+    perPage = 10,
+    searchName = null,
+    searchEmail = null,
+    roleId = null,
+    projectUuid,
+  ) => {
+    const baseUrl = `/admin/projects/${projectUuid}/users?page=${page}&per_page=${perPage}`
+
+    const queryParams = [
+      searchName && `name=${searchName}`,
+      searchEmail && `email=${searchEmail}`,
+      roleId && `roleId=${roleId}`,
+    ].filter(Boolean)
+
+    const queryString = queryParams.length ? `&${queryParams.join('&')}` : ''
+
+    return await apiClient.get(baseUrl + queryString)
   },
   
   getUser(uuid) {

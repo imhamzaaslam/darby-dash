@@ -26,6 +26,7 @@
           <VIcon
             icon="tabler-filter"
             class="bg-primary ms-1"
+            @click="isFilterDrawerOpen = !isFilterDrawerOpen"
           />
           <div class="ms-4 d-flex justify-center align-center">
             <VAvatar
@@ -41,7 +42,23 @@
       </VCol>
       <VCol
         cols="12"
-        md="5"
+        md="3"
+        class="pb-0"
+      >
+        <div class="d-flex justify-end">
+          <AppAutocomplete
+            v-model="selectedRole"
+            placeholder="Select Type"
+            :items="rolesWithFirstOption('All Members')"
+            item-title="name"
+            item-value="id"
+            @update:model-value="onFilter"
+          />
+        </div>
+      </VCol>
+      <VCol
+        cols="12"
+        md="2"
       >
         <div class="d-flex justify-end">
           <VBtn
@@ -79,7 +96,7 @@
 
     <div v-else>
       <!-- Skeleton Loader -->
-      <div v-if="getProjectLoadStatus === 1">
+      <div v-if="getProjectLoadStatus === 1 || getUserLoadStatus === 1">
         <VRow
           v-if="viewType === 'list'"
           class="mb-4"
@@ -226,7 +243,23 @@
         </VRow>
       </div>
     </div>
+
+    <TablePagination
+      v-if="getProjectLoadStatus !== 1 && getUserLoadStatus !== 1 && getUsersByProjects.length > 0"
+      v-model:page="options.page"
+      :items-per-page="options.itemsPerPage"
+      :total-items="totalUsers"
+      class="custom-pagination"
+      @update:page="handlePageChange"
+    />
   </div>
+  <FilterDrawer
+    v-model:is-filter-drawer-open="isFilterDrawerOpen"
+    :apply-filters="applyFilters"
+    :get-roles="rolesWithFirstOption('All Members')"
+    :selected-role="selectedRole"
+    :get-load-status="getProjectLoadStatus"
+  />
   <VDialog
     v-model="isAddMemberDialogueOpen"
     persistent
@@ -292,6 +325,7 @@ import { useHead } from '@unhead/vue'
 import Swal from 'sweetalert2'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
+import FilterDrawer from '@/pages/projects/_partials/filter-projects-drawer.vue'
 import Page2 from '../../../images/pages/2.png'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import { computed, onBeforeMount, ref } from 'vue'
@@ -314,6 +348,11 @@ const isAddMemberDialogueOpen = ref(false)
 const isLoading = ref(false)
 const selectedMembers = ref([])
 const newMembers = ref([])
+const isFilterDrawerOpen = ref(false)
+const searchName = ref('')
+const searchEmail = ref('')
+const selectedRole = ref(null)
+const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const projectId = computed(() => router.params.id)
 
@@ -374,8 +413,6 @@ const fetchProject = async () => {
 }
 
 const setSelectedMembers = async () => {
-  // v-model="project.member_ids"
-
   const project = projectStore.getProject
   const members = project.member_ids
 
@@ -388,7 +425,7 @@ const setSelectedMembers = async () => {
 
 const getByProjects = async () => {
   try {
-    await userStore.getByProjects(projectId.value)
+    await userStore.getByProjects(options.value.page, options.value.itemsPerPage, searchName.value, searchEmail.value, selectedRole.value, projectId.value)
   } catch (error) {
     toast.error('Error fetching members:', error)
   }
@@ -422,6 +459,34 @@ const deleteMember = async member => {
   }
 }
 
+const rolesWithFirstOption = (firstOption = null) => {
+  let roles = [...roleStore.getRoles]
+  if (firstOption) {
+    roles.unshift({ id: null, name: firstOption })
+  }
+
+  return roles
+}
+
+const handlePageChange = async page => {
+  options.value.page = page
+  await getByProjects()
+}
+
+const onFilter = async value => {
+  selectedRole.value = value
+  options.value.page = 1
+  await getByProjects()
+}
+
+const applyFilters = async (name = '', email = null, roleId = null) => {
+  searchName.value = name
+  searchEmail.value = email
+  selectedRole.value = roleId
+  options.value.page = 1
+  await getByProjects()
+}
+
 const getMembers = computed(() => {
   const members = userStore.getMembersList
 
@@ -436,11 +501,15 @@ const getUsersByProjects = computed(() => {
   return userStore.getUsersByProjects
 })
 
+const totalUsers = computed(() => {
+  return userStore.usersByProjectCount
+})
+
 const getErrors = computed(() => {
   return userStore.getErrors
 })
 
-const getLoadStatus = computed(() => {
+const getUserLoadStatus = computed(() => {
   return userStore.getLoadStatus
 })
 
@@ -507,5 +576,9 @@ watch(project, () => {
 
 .delete-icon:hover {
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.custom-pagination :deep(hr) {
+  display: none !important;
 }
 </style>

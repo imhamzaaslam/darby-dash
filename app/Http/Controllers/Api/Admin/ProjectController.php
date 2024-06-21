@@ -131,14 +131,21 @@ class ProjectController extends Controller
     /**
      * Get project users.
      *
+     * @param Request $request
      * @param string $uuid
      * @return AnonymousResourceCollection|JsonResponse
      */
-    public function users(string $uuid): AnonymousResourceCollection|JsonResponse
+    public function users(Request $request, string $uuid): AnonymousResourceCollection|JsonResponse
     {
-        $project = $this->projectRepository->getByUuid($uuid);
- 
-        return UserResource::collection($project->users);
+        $project = $this->projectRepository->getByUuidOrFail($uuid);
+
+        $users = $this->projectRepository
+            ->getProjectMembersQuery($project)
+            ->filtered($request->name ?? '', $request->email ?? '', $request->roleId ?? null)
+            ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+            ->paginate($request->per_page ?? config('pagination.per_page', 10));
+
+        return UserResource::collection($users);
     }
 
     /**

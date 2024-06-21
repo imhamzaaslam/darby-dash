@@ -38,6 +38,7 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return AnonymousResourceCollection|JsonResponse
      */
     public function index(Request $request): AnonymousResourceCollection|JsonResponse
@@ -47,13 +48,6 @@ class UsersController extends Controller
             ->filtered($request->name ?? '', $request->email ?? '', $request->roleId ?? null)
             ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
             ->paginate($request->per_page ?? config('pagination.per_page', 10));
-
-        // $users = $this->userRepository
-        //     ->hasInfo()
-        //     ->filtered($request->keyword ?? '')
-        //     // ->where('email', '!=', config('app.admin.email'))
-        //     ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
-        //     ->paginate($request->perPage ?? config('pagination.perPage', 10));
 
         return UserResource::collection($users);
     }

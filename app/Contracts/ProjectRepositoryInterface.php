@@ -5,9 +5,12 @@ namespace App\Contracts;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 interface ProjectRepositoryInterface
 {
+    public function getProjectMembersQuery(Project $project): Builder;
+
     public function create(array $attributes): Project;
 
     public function storeProjectMembers(Project $project, array $members): void;

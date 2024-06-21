@@ -6,6 +6,7 @@ export const useUserStore = defineStore('users', {
     users: [],
     user: null,
     usersByProject: [],
+    usersByProjectCount: 0,
     usersCount: 0,
     projectManagers: null,
     members: null,
@@ -44,13 +45,14 @@ export const useUserStore = defineStore('users', {
     //     console.error('getUsers error ', error)
     //   }
     // },
-    async getByProjects(projectUuid) {
+    async getByProjects(page = 1, perPage = 10, searchName = null, searchEmail = null, roleId = null, projectUuid) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.getByProjects(projectUuid)
+        const response = await UserService.getByProjects(page, perPage, searchName, searchEmail, roleId, projectUuid)
 
         this.usersByProject = response.data.data
+        this.usersByProjectCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
         this.error = error
