@@ -38,6 +38,10 @@ export default {
     return apiClient.get('admin/users/all')
   },
 
+  getAllByProject(projectUuid) {
+    return apiClient.get(`admin/projects/${projectUuid}/users/all`)
+  },
+  
   getByProjects: async (
     page = 1,
     perPage = 10,

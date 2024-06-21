@@ -149,6 +149,19 @@ class ProjectController extends Controller
     }
 
     /**
+     * Get project users.
+     *
+     * @param string $uuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function allUsers(string $uuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuid($uuid);
+ 
+        return UserResource::collection($project->users);
+    }
+
+    /**
      * Update project users.
      *
      * @param UpdateProjectUsersRequest $request

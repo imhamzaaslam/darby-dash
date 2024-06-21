@@ -125,7 +125,7 @@ const fetchProjectGuests = async () => {
   try {
     const projectUuid = route.params.id
 
-    await userStore.getByProjects(projectUuid)
+    await userStore.getAllByProject(projectUuid)
   } catch (error) {
     console.error('Error fetching guests', error)
   }
@@ -186,7 +186,7 @@ const setCalendarEvents = async () => {
 }
 
 const getProjectGuests = computed(() => {
-  return userStore.getUsersByProjects.map(member => ({
+  return userStore.getAllUsersByProjects.map(member => ({
     id: member.id,
     name: `${member.name_first} ${member.name_last} (${member.role})`,
   }))

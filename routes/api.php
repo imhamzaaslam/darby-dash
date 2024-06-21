@@ -75,6 +75,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             Route::prefix('{uuid}')->group(function () {
                 Route::get('/', [ProjectController::class, 'show']);
                 Route::get('/users', [ProjectController::class, 'users']);
+                Route::get('/users/all', [ProjectController::class, 'allUsers']);
                 Route::patch('/users', [ProjectController::class, 'updateUsers']);
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
