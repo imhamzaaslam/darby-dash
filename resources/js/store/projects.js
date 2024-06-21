@@ -7,20 +7,20 @@ export const useProjectStore = defineStore('projects', {
     projectsByType: [],
     project: null,
     progress: [],
-    usersCount: 0,
+    projectsCount: 0,
     loadStatus: 0,
     error: null,
   }),
   persist: true,
   actions: {
-    async getAll(search = null, projectTypeId = null, projectManagerId = null) {
+    async getAll(page = 1, perPage = 10, search = null, projectTypeId = null, projectManagerId = null) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ProjectService.getProjects(search, projectTypeId, projectManagerId)
+        const response = await ProjectService.getProjects(page, perPage, search, projectTypeId, projectManagerId)
 
         this.projects = response.data.data
-        // this.usersCount = response.data.meta.total
+        this.projectsCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
         this.error = error

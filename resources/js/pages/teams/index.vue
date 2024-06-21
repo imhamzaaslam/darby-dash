@@ -419,6 +419,17 @@ const rolesWithFirstOption = (firstOption = null) => {
   return roles
 }
 
+const handlePageChange = async page => {
+  options.value.page = page
+  await fetchMembers()
+}
+
+const onFilter = async value => {
+  selectedRole.value = value
+  options.value.page = 1
+  await fetchMembers()
+}
+
 const getRoles = computed(() => {
   return roleStore.getRoles
 })
@@ -442,17 +453,6 @@ const getStatusCode = computed(() => {
 const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
 })
-
-const handlePageChange = async page => {
-  options.value.page = page
-  await fetchMembers()
-}
-
-const onFilter = async value => {
-  selectedRole.value = value
-  options.value.page = 1
-  await fetchMembers()
-}
 
 watch([viewType], ([newViewType]) => {
   router.push({

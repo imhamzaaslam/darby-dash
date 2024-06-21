@@ -1,16 +1,24 @@
 import { apiClient } from './api'
 
 export default {
-  getProjects(search = null, projectTypeId = null, projectManagerId = null) {
+  getProjects(
+    page = 1,
+    perPage = 10,
+    search = null,
+    projectTypeId = null,
+    projectManagerId = null,
+  ) {
+    const baseUrl = `/admin/projects?page=${page}&per_page=${perPage}`
+
     const queryParams = [
       search && `keyword=${search}`,
       projectTypeId && `projectTypeId=${projectTypeId}`,
       projectManagerId && `projectManagerId=${projectManagerId}`,
     ].filter(Boolean)
   
-    const queryString = queryParams.length ? `?${queryParams.join('&')}` : ''
+    const queryString = queryParams.length ? `&${queryParams.join('&')}` : ''
 
-    return apiClient.get(`admin/projects${queryString}`)
+    return apiClient.get(baseUrl + queryString)
   },
   getProjectsByType(id) {
     return apiClient.get(`admin/projects/type/${id}`)
