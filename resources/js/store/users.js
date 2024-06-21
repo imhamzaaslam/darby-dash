@@ -14,14 +14,14 @@ export const useUserStore = defineStore('users', {
   }),
   persist: true,
   actions: {
-    async getAll(searchName = null, searchEmail = null, roleId = null) {
+    async getAll(page = 1, perPage = 10, searchName = null, searchEmail = null, roleId = null) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await UserService.getUsers(searchName, searchEmail, roleId)
+        const response = await UserService.getUsers(page, perPage, searchName, searchEmail, roleId)
 
         this.users = response.data.data
-        // this.usersCount = response.data.meta.total
+        this.usersCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
         this.error = error
