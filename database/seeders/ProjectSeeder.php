@@ -18,16 +18,14 @@ class ProjectSeeder extends Seeder
         $lists = [
             ['name' => 'Backlog', 'display_order' => 1],
         ];
-        $project_manager_id = 2;
         $firstProject = Project::create([
             'title' => 'Darby',
             'description' => 'Darby is a project management system.',
             'project_type_id' => 1,
-            'project_manager_id' => $project_manager_id,
             'est_hours' => 100,
             'est_budget' => 1000,
         ]);
-        $firstProjectMembers = [4, 5, 6];
+        $firstProjectMembers = [2, 4, 5, 6];
         foreach ($firstProjectMembers as $memberId) {
             ProjectMember::create([
                 'project_id' => $firstProject->id,
@@ -47,11 +45,10 @@ class ProjectSeeder extends Seeder
             'title' => 'Proborrower',
             'description' => 'Proborrower is a loan management system.',
             'project_type_id' => 1,
-            'project_manager_id' => $project_manager_id,
             'est_hours' => 200,
             'est_budget' => 2000,
         ]);
-        $secondProjectMembers = [4, 5];
+        $secondProjectMembers = [2, 4, 5];
         foreach ($secondProjectMembers as $memberId) {
             ProjectMember::create([
                 'project_id' => $secondProject->id,
@@ -71,11 +68,10 @@ class ProjectSeeder extends Seeder
             'title' => 'Testing',
             'description' => 'This is a testing project.',
             'project_type_id' => 1,
-            'project_manager_id' => $project_manager_id,
             'est_hours' => 300,
             'est_budget' => 3000,
         ]);
-        $thirdProjectMembers = [4, 5, 6];
+        $thirdProjectMembers = [2, 4, 5, 6];
         foreach ($thirdProjectMembers as $memberId) {
             ProjectMember::create([
                 'project_id' => $thirdProject->id,
@@ -95,11 +91,10 @@ class ProjectSeeder extends Seeder
             'title' => 'Happy Nest Media',
             'description' => 'Happy Nest Media is a media company.',
             'project_type_id' => 2,
-            'project_manager_id' => $project_manager_id,
             'est_hours' => 400,
             'est_budget' => 4000,
         ]);
-        $fourthProjectMembers = [4, 5];
+        $fourthProjectMembers = [2, 4, 5];
         foreach ($fourthProjectMembers as $memberId) {
             ProjectMember::create([
                 'project_id' => $fourthProject->id,
@@ -119,11 +114,10 @@ class ProjectSeeder extends Seeder
             'title' => 'Bigberry',
             'description' => 'Bigberry is a software company.',
             'project_type_id' => 2,
-            'project_manager_id' => $project_manager_id,
             'est_hours' => 500,
             'est_budget' => 5000,
         ]);
-        $fifthProjectMembers = [4, 5, 6];
+        $fifthProjectMembers = [2, 4, 5, 6];
         foreach ($fifthProjectMembers as $memberId) {
             ProjectMember::create([
                 'project_id' => $fifthProject->id,
@@ -143,11 +137,10 @@ class ProjectSeeder extends Seeder
             'title' => 'IdeaAffix',
             'description' => 'IdeaAffix is a project management system.',
             'project_type_id' => 3,
-            'project_manager_id' => $project_manager_id,
             'est_hours' => 600,
             'est_budget' => 6000,
         ]);
-        $sixthProjectMembers = [4, 5];
+        $sixthProjectMembers = [2, 4, 5];
         foreach ($sixthProjectMembers as $memberId) {
             ProjectMember::create([
                 'project_id' => $sixthProject->id,
