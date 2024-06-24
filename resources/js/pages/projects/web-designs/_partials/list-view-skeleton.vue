@@ -8,7 +8,7 @@
       class="d-flex ps-4 py-1 align-center"
       style="height: 80px;"
     >
-      <VCol cols="3">
+      <VCol cols="4">
         <div class="d-flex align-center">
           <VSkeletonLoader
             class="rounded-circle"
@@ -26,27 +26,21 @@
           </div>
         </div>
       </VCol>
-      <VCol cols="3">
+      <VCol cols="4">
         <VSkeletonLoader
           class="w-75"
           height="10px"
         />
       </VCol>
-      <VCol cols="3">
-        <VSkeletonLoader
-          class="w-50"
-          height="10px"
-        />
-      </VCol>
       <VCol cols="2">
         <VSkeletonLoader
-          class="w-50"
+          class="w-100"
           height="10px"
         />
       </VCol>
-      <VCol
-        cols="1"
-        class="ms-8"
+      <VCol 
+        cols="2"
+        class="d-flex justify-end"
       >
         <VSkeletonLoader
           class="w-25"

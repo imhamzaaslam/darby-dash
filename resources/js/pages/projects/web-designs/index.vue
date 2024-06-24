@@ -115,35 +115,13 @@
                     <h6 class="text-h6 text-no-wrap">
                       <span class="d-block">{{ project.title }}</span>
                     </h6>
-                    <small>{{ project.project_type }}</small>
                   </div>
                 </div>
               </VCol>
-              <VCol cols="5">
+              <VCol cols="4">
                 <div class="d-flex flex-column ms-3">
-                  <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team</span>
-                  
-                  <div v-if="project.project_members ? project.project_members.length > 0 : 0 ">
-                    <span
-                      v-for="(member, memberIndex) in project.project_members"
-                      :key="memberIndex"
-                    >
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span class="text-xs">{{ member['role'] }}</span>
-                      </VTooltip>
-                      <VChip
-                        class="me-1 mt-1"
-                        color="primary"
-                        size="small"
-                      >
-                        {{ member['name'] }}
-                      </VChip>
-                    </span>
-                  </div>
-                  <small v-else>No team members added yet.</small>
+                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
+                  <small>{{ project.project_type }}</small>
                 </div>
               </VCol>
               <VCol cols="2">
@@ -162,8 +140,8 @@
                 </div>
               </VCol>
               <VCol
-                cols="1"
-                class="ms-8"
+                cols="2"
+                class="d-flex justify-end"
               >
                 <IconBtn @click.prevent>
                   <VIcon icon="tabler-dots" />
@@ -268,37 +246,10 @@
               </VCardTitle>
               <VCardText class="px-3 pt-2">
                 <VRow>
-                  <!-- <VCol cols="8">
-                    <div class="d-flex flex-column mt-1 ms-2">
-                      <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team:</span>
-                      <small class="mt-0">{{ project.project_members }}</small>
-                    </div>
-                  </VCol> -->
                   <VCol cols="8">
                     <div class="d-flex flex-column ms-3">
-                      <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team</span>
-                      
-                      <div v-if="project.project_members ? project.project_members.length > 0 : 0 ">
-                        <span
-                          v-for="(member, memberIndex) in project.project_members"
-                          :key="memberIndex"
-                        >
-                          <VTooltip
-                            activator="parent"
-                            location="top"
-                          >
-                            <span class="text-xs">{{ member['role'] }}</span>
-                          </VTooltip>
-                          <VChip
-                            class="me-1 mt-1"
-                            color="primary"
-                            size="small"
-                          >
-                            {{ member['name'] }}
-                          </VChip>
-                        </span>
-                      </div>
-                      <small v-else>No team members added yet.</small>
+                      <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
+                      <small>{{ project.project_type }}</small>
                     </div>
                   </VCol>
                   <VCol cols="4">
