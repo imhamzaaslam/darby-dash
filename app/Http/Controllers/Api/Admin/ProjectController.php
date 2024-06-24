@@ -59,8 +59,11 @@ class ProjectController extends Controller
     {
         $validated = $request->validated();
 
-        $member_ids = $validated['member_ids'];
-        unset($validated['member_ids']);
+        $member_ids = [];
+        if (isset($validated['member_ids'])) {
+            $member_ids = $validated['member_ids'];
+            unset($validated['member_ids']);
+        }
 
         $project = $this->projectRepository->create($validated);
         if (count($member_ids) > 0) {
@@ -100,8 +103,11 @@ class ProjectController extends Controller
     {
         $validated = $request->validated();
 
-        $member_ids = $validated['member_ids'];
-        unset($validated['member_ids']);
+        $member_ids = [];
+        if (isset($validated['member_ids'])) {
+            $member_ids = $validated['member_ids'];
+            unset($validated['member_ids']);
+        }
 
         $project = $this->projectRepository->getByUuid($uuid);
 

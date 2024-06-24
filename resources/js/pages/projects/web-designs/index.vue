@@ -105,7 +105,7 @@
         >
           <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
             <VCard class="d-flex ps-4 py-1">
-              <VCol cols="3">
+              <VCol cols="4">
                 <div class="d-flex align-center gap-x-3">
                   <VAvatar
                     :size="34"
@@ -119,25 +119,31 @@
                   </div>
                 </div>
               </VCol>
-              <VCol cols="3">
-                <div class="d-flex align-center">
-                  <VAvatar
-                    size="36"
-                    color="primary"
-                    variant="tonal"
-                  >
-                    <span>{{ avatarText(project.project_manager) }}</span>
-                  </VAvatar>
-                  <div class="d-flex flex-column ms-3">
-                    <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
-                    <small class="mt-0">Project Manager</small>
-                  </div>
-                </div>
-              </VCol>
-              <VCol cols="3">
+              <VCol cols="5">
                 <div class="d-flex flex-column ms-3">
                   <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team</span>
-                  <small class="mt-0">{{ project.project_members }}</small>
+                  
+                  <div v-if="project.project_members ? project.project_members.length > 0 : 0 ">
+                    <span
+                      v-for="(member, memberIndex) in project.project_members"
+                      :key="memberIndex"
+                    >
+                      <VTooltip
+                        activator="parent"
+                        location="top"
+                      >
+                        <span class="text-xs">{{ member['role'] }}</span>
+                      </VTooltip>
+                      <VChip
+                        class="me-1 mt-1"
+                        color="primary"
+                        size="small"
+                      >
+                        {{ member['name'] }}
+                      </VChip>
+                    </span>
+                  </div>
+                  <small v-else>No team members added yet.</small>
                 </div>
               </VCol>
               <VCol cols="2">
@@ -262,23 +268,37 @@
               </VCardTitle>
               <VCardText class="px-3 pt-2">
                 <VRow>
-                  <VCol cols="8">
-                    <div class="d-flex align-center mt-1 ms-1">
-                      <VAvatar
-                        size="36"
-                        color="primary"
-                        variant="tonal"
-                      >
-                        <span>{{ avatarText(project.project_manager) }}</span>
-                      </VAvatar>
-                      <div class="d-flex flex-column ms-3">
-                        <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ project.project_manager }}</span>
-                        <small class="mt-0">Project Manager</small>
-                      </div>
-                    </div>
+                  <!-- <VCol cols="8">
                     <div class="d-flex flex-column mt-1 ms-2">
                       <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team:</span>
                       <small class="mt-0">{{ project.project_members }}</small>
+                    </div>
+                  </VCol> -->
+                  <VCol cols="8">
+                    <div class="d-flex flex-column ms-3">
+                      <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">Team</span>
+                      
+                      <div v-if="project.project_members ? project.project_members.length > 0 : 0 ">
+                        <span
+                          v-for="(member, memberIndex) in project.project_members"
+                          :key="memberIndex"
+                        >
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span class="text-xs">{{ member['role'] }}</span>
+                          </VTooltip>
+                          <VChip
+                            class="me-1 mt-1"
+                            color="primary"
+                            size="small"
+                          >
+                            {{ member['name'] }}
+                          </VChip>
+                        </span>
+                      </div>
+                      <small v-else>No team members added yet.</small>
                     </div>
                   </VCol>
                   <VCol cols="4">
@@ -316,7 +336,6 @@
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
     :get-members="getMembers"
-    :get-project-managers="getProjectManagers"
     :get-load-status="getLoadStatus"
   />
   <EditProjectDrawer
@@ -324,7 +343,6 @@
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
     :get-members="getMembers"
-    :get-project-managers="getProjectManagers"
     :edit-project-details="editProjectDetails"
     :get-load-status="getLoadStatus"
   />

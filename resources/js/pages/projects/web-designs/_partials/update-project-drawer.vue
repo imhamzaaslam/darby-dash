@@ -25,7 +25,7 @@
             @submit.prevent="submitEditProjectForm"
           >
             <VRow>
-              <VCol cols="12">
+              <VCol cols="6">
                 <AppTextField
                   v-model="props.editProjectDetails.title"
                   label="Title*"
@@ -46,47 +46,17 @@
                   @update:model-value="onProjectTypeChange"
                 />
               </VCol>
-
-              <VCol cols="6">
-                <AppAutocomplete
-                  v-model="selectedProjectManager"
-                  label="Project Manager*"
-                  placeholder="Select Project Manager"
-                  :rules="[requiredValidator]"
-                  :items="props.getProjectManagers"
-                  item-title="name"
-                  item-value="id"
-                  @update:model-value="onProjectManagerChange"
-                />
-              </VCol>
               <VCol cols="12">
                 <AppAutocomplete
                   v-model="props.editProjectDetails.member_ids"
                   :items="props.getMembers"
                   item-title="name"
                   item-value="id"
-                  label="Members*"
+                  label="Members"
                   placeholder="Select Members"
                   multiple
                   clearable
                   clear-icon="tabler-x"
-                />
-              </VCol>
-              <VCol cols="6">
-                <AppTextField
-                  v-model="props.editProjectDetails.est_hours"
-                  label="Estimated Hours*"
-                  :rules="[requiredValidator]"
-                  placeholder="Estimated Hours"
-                />
-              </VCol>
-
-              <VCol cols="6">
-                <AppTextField
-                  v-model="props.editProjectDetails.est_budget"
-                  label="Estimated Budget*"
-                  :rules="[requiredValidator]"
-                  placeholder="Estimated Budget"
                 />
               </VCol>
               <VCol cols="12">
@@ -166,16 +136,8 @@ function onProjectTypeChange(newValue) {
   props.editProjectDetails.project_type_id = newValue
 }
 
-function onProjectManagerChange(newValue) {
-  props.editProjectDetails.project_manager_id = newValue
-}
-
 const selectedType = computed(() => {
   return { id: props.editProjectDetails.project_type_id, name: props.editProjectDetails.project_type }
-})
-
-const selectedProjectManager = computed(() => {
-  return { id: props.editProjectDetails.project_manager_id, name: props.editProjectDetails.project_manager }
 })
 
 async function submitEditProjectForm() {
@@ -188,13 +150,10 @@ async function submitEditProjectForm() {
           uuid: props.editProjectDetails.uuid,
           title: props.editProjectDetails.title,
           project_type_id: props.editProjectDetails.project_type_id,
-          project_manager_id: props.editProjectDetails.project_manager_id,
           member_ids: props.editProjectDetails.member_ids,
-          est_hours: props.editProjectDetails.est_hours,
-          est_budget: props.editProjectDetails.est_budget,
         }
 
-        const res = await projectStore.update(payload)
+        await projectStore.update(payload)
 
         isLoading.value = true
         emit('update:isEditDrawerOpen', false)

@@ -25,7 +25,7 @@
             @submit.prevent="submitAddProjectForm"
           >
             <VRow>
-              <VCol cols="12">
+              <VCol cols="6">
                 <AppTextField
                   v-model="newProjectDetails.title"
                   label="Title*"
@@ -33,7 +33,6 @@
                   placeholder="Title"
                 />
               </VCol>
-
               <VCol cols="6">
                 <AppAutocomplete
                   v-model="newProjectDetails.project_type_id"
@@ -45,47 +44,17 @@
                   item-value="id"
                 />
               </VCol>
-
-              <VCol cols="6">
-                <AppAutocomplete
-                  v-model="newProjectDetails.project_manager_id"
-                  label="Project Manager*"
-                  placeholder="Select Project Manager"
-                  :rules="[requiredValidator]"
-                  :items="props.getProjectManagers"
-                  item-title="name"
-                  item-value="id"
-                />
-              </VCol>
               <VCol cols="12">
                 <AppAutocomplete
                   v-model="newProjectDetails.member_ids"
                   :items="props.getMembers"
                   item-title="name"
                   item-value="id"
-                  label="Members*"
-                  :rules="[requiredValidator]"
+                  label="Members"
                   placeholder="Select Members"
                   multiple
                   clearable
                   clear-icon="tabler-x"
-                />
-              </VCol>
-              <VCol cols="6">
-                <AppTextField
-                  v-model="newProjectDetails.est_hours"
-                  label="Estimated Hours*"
-                  :rules="[requiredValidator]"
-                  placeholder="Estimated Hours"
-                />
-              </VCol>
-
-              <VCol cols="6">
-                <AppTextField
-                  v-model="newProjectDetails.est_budget"
-                  label="Estimated Budget*"
-                  :rules="[requiredValidator]"
-                  placeholder="Estimated Budget"
                 />
               </VCol>
               <VCol cols="12">
@@ -141,7 +110,6 @@ const props = defineProps({
   fetchProjects: Function,
   getProjectTypes: Object,
   getMembers: Object,
-  getProjectManagers: Object,
   getLoadStatus: Number,
 })
 
@@ -156,10 +124,7 @@ const isLoading= ref(false)
 const newProjectDetails = ref({
   title: '',
   project_type_id: null,
-  project_manager_id: null,
   member_ids: [],
-  est_hours: '',
-  est_budget: '',
 })
 
 const handleDrawerModelValueUpdate = val => {
@@ -190,10 +155,7 @@ async function submitAddProjectForm() {
         newProjectDetails.value = {
           title: '',
           project_type_id: '',
-          project_manager_id: '',
           member_ids: [],
-          est_hours: '',
-          est_budget: '',
         }
       } catch (error) {
         toast.error('Failed to add project:', error)

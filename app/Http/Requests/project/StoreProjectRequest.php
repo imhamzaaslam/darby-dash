@@ -26,9 +26,9 @@ class StoreProjectRequest extends FormRequest
             'project_type_id' => 'required|exists:project_types,id',
             'title' => 'required|string|max:255',
             'description' => 'sometimes|string',
-            'project_manager_id' => 'sometimes|exists:users,id',
             'member_ids' => [
                 'sometimes',
+                'nullable',
                 'array',
                 function ($attribute, $value, $fail) {
                     $members = User::whereIn('id', $value)->get();
@@ -37,8 +37,8 @@ class StoreProjectRequest extends FormRequest
                     }
                 },
             ],
-            'est_hours' => 'sometimes|integer',
-            'est_budget' => 'sometimes|integer',
+            'est_hours' => 'sometimes|nullable|integer',
+            'est_budget' => 'sometimes|nullable|integer',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
             'status' => 'sometimes|in:active,inactive',

@@ -144,7 +144,10 @@
             cols="1"
             class="ms-8"
           >
-            <IconBtn @click.prevent>
+            <IconBtn
+              v-if="user.role !== 'Admin'"
+              @click.prevent
+            >
               <VIcon icon="tabler-dots" />
               <VMenu activator="parent">
                 <VList>
@@ -198,7 +201,10 @@
                 </div>
               </VCol>
               <VCol cols="2">
-                <IconBtn @click.prevent>
+                <IconBtn 
+                  v-if="user.role !== 'Admin'"
+                  @click.prevent
+                >
                   <VIcon icon="tabler-dots-vertical" />
                   <VMenu activator="parent">
                     <VList>

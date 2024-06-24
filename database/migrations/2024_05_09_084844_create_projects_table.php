@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('project_type_id')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('project_manager_id')->nullable();
             $table->integer('est_hours')->nullable();
             $table->integer('est_budget')->nullable();
             $table->date('start_date')->nullable();
