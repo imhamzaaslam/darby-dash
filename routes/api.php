@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Admin\MileStoneController;
 use App\Http\Controllers\Api\Admin\CalendarEventController;
 use App\Http\Controllers\Api\Admin\FileController;
 use App\Http\Controllers\Api\Admin\FolderController;
+use App\Http\Controllers\Api\Admin\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +156,16 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
         Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);
         Route::get('/statuses', [StatusController::class, 'index']);
+
+        Route::prefix('payments')->group(function () {
+            Route::get('/', [PaymentController::class, 'index']);
+            Route::post('/', [PaymentController::class, 'store']);
+            Route::prefix('{paymentUuid}')->group(function () {
+                Route::get('/', [PaymentController::class, 'show']);
+                Route::patch('/', [PaymentController::class, 'update']);
+                Route::delete('/', [PaymentController::class, 'delete']);
+            });
+        });
 
         // Route::prefix('project/{id}/tasks')->group(function () {
         //     Route::get('/', [TaskController::class, 'index']);

@@ -14,6 +14,8 @@ let adminAuthorizedPages = [
   'chat',
   'add-project-tasks',
   'tasks',
+  'account-setting',
+  'payment-setting',
 ]
 
 export default adminAuthorizedPages

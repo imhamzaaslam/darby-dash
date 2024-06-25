@@ -10,6 +10,7 @@ import TeamList from '../../../js/pages/teams/index.vue'
 import Calendar from '../../../js/pages/projects/calendar.vue'
 import Files from '../../../js/pages/projects/files.vue'
 import Chat from '../../../js/pages/projects/chat.vue'
+import Payments from '@/pages/payments/index.vue'
 import AddProjectTasks from '../../pages/projects/web-designs/_partials/addProjectTasks.vue'
 
 function recursiveLayouts(route) {
@@ -118,6 +119,14 @@ const router = createRouter({
         path: '/members',
         name: 'members-list',
         component: TeamList,
+        meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/payments',
+        name: 'payment-setting',
+        component: Payments,
         meta: { layout: 'default' },
       },
     ),

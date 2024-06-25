@@ -15,6 +15,7 @@ use App\Contracts\MileStoneRepositoryInterface;
 use App\Contracts\CalendarEventRepositoryInterface;
 use App\Contracts\FileRepositoryInterface;
 use App\Contracts\FolderRepositoryInterface;
+use App\Contracts\PaymentRepositoryInterface;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -28,6 +29,7 @@ use App\Models\MileStone;
 use App\Models\CalendarEvent;
 use App\Models\File;
 use App\Models\Folder;
+use App\Models\Payment;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
@@ -41,6 +43,7 @@ use App\Repositories\MileStoneRepository;
 use App\Repositories\CalendarEventRepository;
 use App\Repositories\FileRepository;
 use App\Repositories\FolderRepository;
+use App\Repositories\PaymentRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -113,6 +116,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             FolderRepositoryInterface::class,
             fn() => new FolderRepository(new Folder)
+        );
+        $this->app->bind(
+            PaymentRepositoryInterface::class,
+            fn() => new PaymentRepository(new Payment)
         );
     }
 
