@@ -57,6 +57,7 @@
                       class="no-arrows"
                       :rules="[requiredValidator]"
                       :error-messages="addingErrors.amount"
+                      autofocus
                     />
                   </VCol>
                 </VRow>
@@ -70,11 +71,12 @@
                       >
                         <AppTextField
                           v-model="card_number"
+                          v-mask="'#### #### #### ####'"
                           label="Card Number *"
                           placeholder="1234 1234 1234 1234"
-                          type="number"
+                          type="text"
                           class="no-arrows"
-                          :rules="[requiredValidator]"
+                          :rules="[requiredValidator, cardNumberValidator]"
                           :error-messages="addingErrors.card_number"
                         />
                       </VCol>
@@ -139,13 +141,27 @@
                   </VCol>
                 </VRow>
                 <VRow>
-                  <VCol
-                    cols="12"
-                    class="d-flex flex-wrap gap-4"
-                  >
-                    <VBtn type="submit">
-                      Save changes
-                    </VBtn>
+                  <VCol cols="12">
+                    <div class="d-flex justify-start">
+                      <VBtn
+                        type="submit"
+                        class="me-2"
+                        :disabled="getLoadStatus === 1"
+                        @click="piaViaCreditCardForm?.validate()"
+                      >
+                        <span v-if="getLoadStatus === 1">
+                          <VProgressCircular
+                            :size="16"
+                            width="3"
+                            indeterminate
+                          />
+                          Loading...
+                        </span>
+                        <span v-else>
+                          Save
+                        </span>
+                      </VBtn>
+                    </div>
                   </VCol>
                 </VRow>
               </VCol>
@@ -173,24 +189,31 @@
                   </VCol>
                 </VRow>
                 <VRow>
-                  <VCol
-                    cols="12"
-                    class="d-flex flex-wrap gap-4"
-                  >
-                    <VBtn type="submit">
-                      Save changes
-                    </VBtn>
+                  <VCol cols="12">
+                    <div class="d-flex justify-start">
+                      <VBtn
+                        type="submit"
+                        class="me-2"
+                        :disabled="getLoadStatus === 1"
+                        @click="piaViaOtherForm?.validate()"
+                      >
+                        <span v-if="getLoadStatus === 1">
+                          <VProgressCircular
+                            :size="16"
+                            width="3"
+                            indeterminate
+                          />
+                          Loading...
+                        </span>
+                        <span v-else>
+                          Save
+                        </span>
+                      </VBtn>
+                    </div>
                   </VCol>
                 </VRow>
-              </VCol>
-            </VRow>
-          </VForm>
-          <VForm v-if="selectedPaymentMethod === 'po'">
-            <VRow class="px-3">
-                <VCol cols="12 text-center">
-                    <h3>Do it later</h3>
-                </VCol>
-            </VRow>
+              </vcol>
+            </vrow>
           </VForm>
         </VCardText>
       </PerfectScrollbar>
@@ -204,15 +227,16 @@ import { VForm } from 'vuetify/components/VForm'
 import { ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { usePaymentStore } from "@/store/payments"
-  
+
 const props = defineProps({
   isDrawerOpen: {
     type: Boolean,
     required: true,
   },
-//   getErrors: Object,
-//   getStatusCode: Object,
-//   getLoadStatus: Number,
+  fetchPayments: Function,
+  getErrors: Object,
+  getStatusCode: Object,
+  getLoadStatus: Number,
 })
   
 const emit = defineEmits(['update:isDrawerOpen'])
@@ -222,7 +246,6 @@ const paymentStore = usePaymentStore()
 const paymentMethods = ref([
   { value: 'credit-card', label: 'Credit Card' },
   { value: 'cash', label: 'Cash' },
-  { value: 'po', label: 'Purchase Order' },
 ])
 
 const months = ref(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])
@@ -235,7 +258,7 @@ const selectedPaymentMethod = ref('credit-card')
 const amount = ref('')
 const card_number = ref('')
 const name_on_card = ref('')
-const card_exp_month = ref('07')
+const card_exp_month = ref()
 const card_exp_year = ref()
 const card_cvc = ref()
 
@@ -275,6 +298,7 @@ const submitCreditCardPaymentForm = async () => {
           isLoading.value = true
           emit('update:isDrawerOpen', false)
           toast.success('Payment added successfully', { timeout: 1000 })
+          await props.fetchPayments()
           resetFormFields('payViaCreditCardForm')
           isLoading.value = false
         }
@@ -306,6 +330,7 @@ const submitOtherPaymentForm = async () => {
           isLoading.value = true
           emit('update:isDrawerOpen', false)
           toast.success('Payment added successfully', { timeout: 1000 })
+          await props.fetchPayments()
           resetFormFields('payViaOtherForm')
           isLoading.value = false
         }
@@ -334,11 +359,15 @@ const resetFormFields = formName => {
   amount.value = null
   card_number.value = null
   name_on_card.value = null
-  card_exp_month.value = '07'
+  card_exp_month.value = null
   card_exp_year.value = null
   card_cvc.value = null
   resetErrors()
   emit('update:isDrawerOpen', false)
+}
+
+const handleDrawerModelValueUpdate = val => {
+  emit('update:isDrawerOpen', val)
 }
 
 const showError = () => {
@@ -347,6 +376,12 @@ const showError = () => {
   } else {
     addingErrors.value = props.getErrors
   }
+}
+
+const cardNumberValidator = value => {
+  const strippedValue = value.replace(/\s+/g, '')
+
+  return strippedValue.length === 16 || 'Card number must be 16 digits'
 }
 </script>
   

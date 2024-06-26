@@ -19,11 +19,22 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return AnonymousResourceCollection|JsonResponse
      */
-    public function index(): AnonymousResourceCollection|JsonResponse
+    public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
-        dd('here');
+        try {
+            $payments = $this->paymentRepository
+                ->getAllRecordsQuery()
+                ->filtered($request->keyword ?? '')
+                ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+                ->paginate($request->per_page ?? config('pagination.per_page', 10));
+            
+            return PaymentResource::collection($payments);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**

@@ -110,3 +110,9 @@ if (!function_exists('convertToDefaultFormat')) {
     }
 }
 
+if (!function_exists('format_date')) {
+    function format_date(string $date): string
+    {
+        return date('m/d/Y h:i a', strtotime($date));
+    }
+}
