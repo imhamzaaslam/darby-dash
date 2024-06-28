@@ -1,4 +1,5 @@
 <template>
+  <Loader v-if="loadStatus === 1" />
   <VRow>
     <VCol cols="12">
       <div class="d-flex justify-start align-center">
@@ -123,7 +124,7 @@
           </div>
           <div class="mb-2 mt-2 text-center">
             <h5 class="text-h3 mb-3 font-weight-medium">
-              {{ projectProgress.launchingDays }} Days
+              {{ projectProgress.launchingTime }}
             </h5>
           </div>
           <div class="text-center text-h6 mb-2 font-weight-medium">
@@ -500,6 +501,7 @@
 <script setup lang="js">
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
+import Loader from "@/components/Loader.vue"
 import avatar1 from '@images/avatars/avatar-1.png'
 import girlWithLaptop from '@images/illustrations/PM.png'
 import otherListImg from '@images/darby/other_list.svg?raw'
@@ -544,6 +546,10 @@ const projectProgress = computed(() => {
 
 const project = computed(() =>{
   return projectStore.getProject
+})
+
+const loadStatus = computed(() => {
+  return projectStore.getLoadStatus
 })
 
 watch(project, () => {

@@ -89,6 +89,37 @@ if (!function_exists('convertMinutesToDays')) {
     }
 }
 
+if(!function_exists('formatTimeInDaysHoursMinutes')) {
+    function formatTimeInDaysHoursMinutes(int $totalMinutes): string
+    {
+        if ($totalMinutes == 0) {
+            return '00h 00m';
+        }
+
+        $minutesPerHour = 60;
+        $hoursPerDay = 8;
+
+        $days = floor($totalMinutes / ($hoursPerDay * $minutesPerHour));
+        $hours = floor(($totalMinutes % ($hoursPerDay * $minutesPerHour)) / $minutesPerHour);
+        $minutes = $totalMinutes % $minutesPerHour;
+
+        $formattedTime = '';
+        if ($days > 0) {
+            if($hours == 0 && $minutes == 0) {
+                $formattedTime .= $days == 1 ? sprintf("%d day", $days) : sprintf("%d days", $days);
+            } else {
+                $formattedTime .= sprintf("%02dd", $days);
+                $formattedTime .= $hours > 0 ? sprintf(" %02dh", $hours) : '';
+                $formattedTime .= $minutes > 0 ? sprintf(" %02dm", $minutes) : '';
+            }
+        } else {
+            $formattedTime = sprintf("%02dh %02dm", $hours, $minutes);
+        }
+
+        return $formattedTime;
+    }
+}
+
 if (!function_exists('convertToDefaultFormat')) {
     function convertToDefaultFormat(string $input): string
     {

@@ -25,7 +25,7 @@ class ProjectProgressService
 
         return [
             'lists' => $lists,
-            'launchingDays' => $this->getLaunchingDays($project),
+            'launchingTime' => $this->getLaunchingTime($project),
             'launchingDate' => $this->getLaunchingDate($project),
             'overallProgress' => $this->getOverallProgress($project),
             'totalTasks' => $project->tasks->whereNull('parent_id')->count(),
@@ -64,24 +64,25 @@ class ProjectProgressService
 
     public function getLaunchingDays(Project $project): int
     {
-        $estTimes = $project->tasks()->pluck('est_time');
+        $estTimes = $project->uncompletedTasks()->pluck('est_time');
         $totalMinutes = $estTimes->sum();
         $launchingDays = convertMinutesToDays($totalMinutes);
         return $launchingDays;
     }
 
+    public function getLaunchingTime(Project $project): string
+    {
+        $estTimes = $project->uncompletedTasks()->pluck('est_time');
+        $totalMinutes = $estTimes->sum();
+        return formatTimeInDaysHoursMinutes($totalMinutes);
+    }
+
     public function getLaunchingDate(Project $project): string
     {
-        $tasks = $project->tasks()->count();
+        $tasks = $project->uncompletedTasks()->count();
         $launchingDays = $this->getLaunchingDays($project);
         if (!$launchingDays) {
-            if(!$tasks)
-            {
-                return 'No Launching Date';
-            }
-            else{
-                return 'Today';
-            }
+            return 'Today';
         }
 
         $currentDate = Carbon::now();

@@ -46,6 +46,11 @@ class Project extends Base
         return $this->hasMany(Task::class);
     }
 
+    public function uncompletedTasks()
+    {
+        return $this->hasMany(Task::class)->where('status', '!=', 3);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'project_members');
