@@ -1016,7 +1016,7 @@
           <VCard class="mb-5">
             <VCardTitle class="bg-primary">
               <div class="d-flex align-center">
-                <span class="text-h6 text-white">{{ status.name }} ({{ list.tasks.filter((task) => task.status == status.id).length }})</span>
+                <span class="text-h6 text-white">{{ status.name }} ({{ list.tasks.filter((task) => task.status.id == status.id).length }})</span>
               </div>
             </VCardTitle>
           </VCard>
@@ -1450,9 +1450,7 @@ onBeforeMount(async () => {
   await fetchStatus()
   await fetchProjectDetails()
   isLoading.value = false
-})
 
-onBeforeMount(() => {
   const searchParams = new URLSearchParams(window.location.search)
   const savedViewType = searchParams.get('view')
   if (savedViewType && ['list', 'grid'].includes(savedViewType)) {
