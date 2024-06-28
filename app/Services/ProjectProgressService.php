@@ -14,12 +14,13 @@ class ProjectProgressService
             $totalTasks = $list->tasks->count();
             $completedTasks = $list->tasks->where('status', 3)->count();
             $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
+            $allTasks = $list->tasks;
 
             return [
                 'name' => $list->name,
                 'totalTasks' => $totalTasks,
                 'progress' => $progress,
-                'status' => $this->getStatus($progress),
+                'status' => $this->getTaskBaseStatus($allTasks),
             ];
         });
 
@@ -59,6 +60,29 @@ class ProjectProgressService
         if ($progress == 0) {
             return 'pending';
         }
+        return 'inprogress';
+    }
+
+    private function getTaskBaseStatus($tasks): string
+    {
+        $totalTasks = $tasks->count();
+
+        if ($totalTasks == 0) {
+            return 'pending';
+        }
+
+        $completedTasks = $tasks->where('status', 3)->count();
+        $inprogressTasks = $tasks->where('status', 2)->count();
+        $pendingTasks = $tasks->where('status', 1)->count();
+
+        if ($totalTasks == $completedTasks) {
+            return 'completed';
+        }
+
+        if ($totalTasks == $pendingTasks) {
+            return 'pending';
+        }
+
         return 'inprogress';
     }
 
