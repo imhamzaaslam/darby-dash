@@ -1801,7 +1801,7 @@ const deleteProjectList = async list => {
       `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#F69636",
+      confirmButtonColor: "#a12592",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
@@ -2086,7 +2086,7 @@ watch(project, () => {
 }
 
 .task-card:hover {
-    border: 1px solid #f69636;
+    border: 1px solid #a12592;
 }
 .expanded-row, .expanded-td{
     padding: 0 !important;

@@ -86,7 +86,14 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
           to="/"
           class="app-logo app-title-wrapper"
         >
-          <VNodeRenderer v-if="!configStore.isVerticalNavCollapsed" :nodes="layoutConfig.app.logo" />
+          <VNodeRenderer
+            v-if="!hideTitleAndIcon"
+            :nodes="layoutConfig.app.logo"
+          />
+          <VNodeRenderer
+            v-else
+            :nodes="layoutConfig.app.logoHalf"
+          />
         </RouterLink>
 
         <!-- 👉 Vertical nav actions -->

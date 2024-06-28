@@ -521,7 +521,7 @@ const deleteImage = async file => {
     html: `<small>Do you want to delete this file?</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#F69636",
+    confirmButtonColor: "#a12592",
     cancelButtonColor: "#808390",
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
@@ -554,7 +554,7 @@ const deleteFolder = async folder => {
     html: `<p class="mb-0">Do you want to delete this <b>${folder.name}</b> folder?</p><small>All files inside this folder will also be deleted.</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#F69636",
+    confirmButtonColor: "#a12592",
     cancelButtonColor: "#808390",
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
