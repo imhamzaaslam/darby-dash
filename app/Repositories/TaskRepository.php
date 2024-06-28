@@ -49,6 +49,9 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
 
     public function delete(Task $task): bool
     {
+        // delete related entities
+        $task->subtasks()->delete();
+        $task->files()->delete();
         return $task->delete();
     }
 

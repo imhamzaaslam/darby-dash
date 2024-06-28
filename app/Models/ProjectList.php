@@ -23,4 +23,9 @@ class ProjectList extends Base
     {
         return $this->hasMany(Task::class, 'list_id')->whereNull('parent_id')->orderBy('display_order');
     }
+
+    public function allTasks()
+    {
+        return $this->hasMany(Task::class, 'list_id')->orderBy('display_order');
+    }
 }

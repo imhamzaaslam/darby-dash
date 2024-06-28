@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Base;
 use App\Services\ProjectProgressService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Base
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'uuid',
@@ -62,6 +64,16 @@ class Project extends Base
     public function folders()
     {
         return $this->hasMany(Folder::class);
+    }
+
+    public function milestones()
+    {
+        return $this->hasMany(Milestone::class);
+    }
+
+    public function calendarEvents()
+    {
+        return $this->hasMany(CalendarEvent::class);
     }
 
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder

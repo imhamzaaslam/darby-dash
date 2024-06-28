@@ -63,7 +63,62 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
 
     public function delete(Project $project): bool
     {
+        // Delete related entities
+        $this->deleteFolders($project);
+        $this->deleteProjectFiles($project);
+        $this->detachMembers($project);
+        $this->deleteLists($project);
+        $this->deleteMilestones($project);
+        $this->deleteCalendarEvents($project);
+
+        // Delete the project itself
         return $project->delete();
+    }
+
+    private function deleteFolders(Project $project)
+    {
+        $folders = $project->folders;
+        foreach ($folders as $folder) {
+            $folder->files()->delete();
+            $folder->delete();
+        }
+    }
+
+    private function deleteProjectFiles(Project $project)
+    {
+        $project->files()->delete();
+    }
+
+    private function detachMembers(Project $project)
+    {
+        $project->members()->detach();
+    }
+
+    private function deleteLists(Project $project)
+    {
+        $lists = $project->lists;
+        foreach ($lists as $list) {
+            $tasks = $list->allTasks;
+            foreach ($tasks as $task) {
+                $task->files()->delete();
+                $task->delete();
+            }
+            $list->delete();
+        }
+    }
+
+    private function deleteMilestones(Project $project)
+    {
+        $project->milestones()->delete();
+    }
+
+    private function deleteCalendarEvents(Project $project)
+    {
+        $calendarEvents = $project->calendarEvents;
+        foreach ($calendarEvents as $calendarEvent) {
+            $calendarEvent->guests()->detach();
+            $calendarEvent->delete();
+        }
     }
 
     public function updateProjectMembers(Project $project, array $members): void
