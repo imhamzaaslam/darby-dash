@@ -132,9 +132,11 @@
           v-for="(list, index) in getProjectLists"
           :key="index"
           class="px-4 py-4 mt-2"
-          @click="toggleRow(index)"
         >
-          <VRow>
+          <VRow 
+            class="cursor-pointer"
+            @click="toggleRow(index)"
+          >
             <VCol cols="8">
               <h6 class="text-h6 text-high-emphasis d-flex align-center">
                 <VIcon
