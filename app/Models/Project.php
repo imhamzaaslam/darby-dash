@@ -73,7 +73,7 @@ class Project extends Base
 
     public function milestones()
     {
-        return $this->hasMany(Milestone::class);
+        return $this->hasMany(MileStone::class);
     }
 
     public function calendarEvents()
