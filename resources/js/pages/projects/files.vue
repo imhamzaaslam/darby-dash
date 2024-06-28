@@ -626,7 +626,7 @@ watch(project, () => {
 <style scoped>
 .image-container {
   position: relative;
-  border: 2px solid #F48D27;
+  border: 2px solid #a12592;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -688,7 +688,7 @@ watch(project, () => {
 
 .progress-bar {
   height: 100%;
-  background-color: #F48D27;
+  background-color: #a12592;
   transition: width 0.6s ease;
   position: relative;
 }
