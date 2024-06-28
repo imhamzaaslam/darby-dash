@@ -382,7 +382,7 @@ const deleteProject = async project => {
       text: `Do you want to delete ${project.title}?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#F69636",
+      confirmButtonColor: "#a12592",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {

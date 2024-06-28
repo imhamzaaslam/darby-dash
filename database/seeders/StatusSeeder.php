@@ -17,9 +17,9 @@ class StatusSeeder extends Seeder
         DB::beginTransaction();
         try {
             $statuses = [
-                ['name' => 'To Do', 'color' => 'secondary', 'display_order' => 0],
-                ['name' => 'In Progress', 'color' => 'primary', 'display_order' => 1],
-                ['name' => 'Completed', 'color' => 'success', 'display_order' => 2],
+                ['name' => 'PENDING', 'color' => 'secondary', 'display_order' => 0],
+                ['name' => 'IN PROGRESS', 'color' => 'primary', 'display_order' => 1],
+                ['name' => 'COMPLTED', 'color' => 'success', 'display_order' => 2],
             ];
 
             foreach ($statuses as $status) {

@@ -14,18 +14,19 @@ class ProjectProgressService
             $totalTasks = $list->tasks->count();
             $completedTasks = $list->tasks->where('status', 3)->count();
             $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
+            $allTasks = $list->tasks;
 
             return [
                 'name' => $list->name,
                 'totalTasks' => $totalTasks,
                 'progress' => $progress,
-                'status' => $this->getStatus($progress),
+                'status' => $this->getTaskBaseStatus($allTasks),
             ];
         });
 
         return [
             'lists' => $lists,
-            'launchingDays' => $this->getLaunchingDays($project),
+            'launchingTime' => $this->getLaunchingTime($project),
             'launchingDate' => $this->getLaunchingDate($project),
             'overallProgress' => $this->getOverallProgress($project),
             'totalTasks' => $project->tasks->whereNull('parent_id')->count(),
@@ -62,26 +63,50 @@ class ProjectProgressService
         return 'inprogress';
     }
 
+    private function getTaskBaseStatus($tasks): string
+    {
+        $totalTasks = $tasks->count();
+
+        if ($totalTasks == 0) {
+            return 'pending';
+        }
+
+        $completedTasks = $tasks->where('status', 3)->count();
+        $inprogressTasks = $tasks->where('status', 2)->count();
+        $pendingTasks = $tasks->where('status', 1)->count();
+
+        if ($totalTasks == $completedTasks) {
+            return 'completed';
+        }
+
+        if ($totalTasks == $pendingTasks) {
+            return 'pending';
+        }
+
+        return 'inprogress';
+    }
+
     public function getLaunchingDays(Project $project): int
     {
-        $estTimes = $project->tasks()->pluck('est_time');
+        $estTimes = $project->uncompletedTasks()->pluck('est_time');
         $totalMinutes = $estTimes->sum();
         $launchingDays = convertMinutesToDays($totalMinutes);
         return $launchingDays;
     }
 
+    public function getLaunchingTime(Project $project): string
+    {
+        $estTimes = $project->uncompletedTasks()->pluck('est_time');
+        $totalMinutes = $estTimes->sum();
+        return formatTimeInDaysHoursMinutes($totalMinutes);
+    }
+
     public function getLaunchingDate(Project $project): string
     {
-        $tasks = $project->tasks()->count();
+        $tasks = $project->uncompletedTasks()->count();
         $launchingDays = $this->getLaunchingDays($project);
         if (!$launchingDays) {
-            if(!$tasks)
-            {
-                return 'No Launching Date';
-            }
-            else{
-                return 'Today';
-            }
+            return 'Today';
         }
 
         $currentDate = Carbon::now();

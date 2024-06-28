@@ -38,8 +38,20 @@ class ProjectListRepository extends AbstractEloquentRepository implements Projec
 
     public function delete(ProjectList $projectList): bool
     {
+        // delete related entities
+        $this->deleteTasks($projectList);
         return $projectList->delete();
     }
+
+    public function deleteTasks(ProjectList $projectList): void
+    {
+        $tasks = $projectList->allTasks;
+        foreach ($tasks as $task) {
+            $task->files()->delete();
+            $task->delete();
+        }
+    }
+
 
     public function getListTasks(ProjectList $projectList): Collection
     {

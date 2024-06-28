@@ -68,12 +68,6 @@ const showNavigation = computed(() => {
               :class="{ 'text-primary': $route.path === `/projects/web-designs/${projectId}` }"
             >Overview</span>
           </RouterLink>
-          <RouterLink :to="`/projects/${projectId}/files`">
-            <span
-              class="text-h6 me-8 inner-badge-text"
-              :class="{ 'text-primary': $route.path === `/projects/${projectId}/files` }"
-            >Files</span>
-          </RouterLink>
           <RouterLink :to="`/projects/${projectId}/tasks/add`">
             <span
               class="text-h6 me-8 inner-badge-text"
@@ -104,11 +98,11 @@ const showNavigation = computed(() => {
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/calendar` }"
             >Calendar</span>
           </RouterLink>
-          <RouterLink :to="`/projects/${projectId}/team`">
+          <RouterLink :to="`/projects/${projectId}/files`">
             <span
               class="text-h6 me-8 inner-badge-text"
-              :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
-            >Your Team</span>
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/files` }"
+            >Files</span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/chat`">
             <span
@@ -127,8 +121,14 @@ const showNavigation = computed(() => {
               -->
             </span>
           </RouterLink>
+          <RouterLink :to="`/projects/${projectId}/team`">
+            <span
+              class="text-h6 me-8 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
+            >Your Team</span>
+          </RouterLink>
         </div>
-
+        
         <VSpacer />
 
         <NavBarI18n

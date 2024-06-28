@@ -1,5 +1,5 @@
-export const staticPrimaryColor = '#f69636'
-export const staticPrimaryDarkenColor = '#f48d27'
+export const staticPrimaryColor = '#a12592'
+export const staticPrimaryDarkenColor = '#8f1f81'
 export const themes = {
   light: {
     dark: false,
@@ -14,14 +14,14 @@ export const themes = {
       'on-success': '#fff',
       'success-darken-1': '#24B364',
       'info': '#00BAD1',
-      'td-hover': '#fdeedf',
+      'td-hover': '#F0D9EB',
       'on-td-hover': '#2F2B3D',
       'on-info': '#fff',
       'info-darken-1': '#00A7BC',
       'warning': '#FF9F43',
       'on-warning': '#fff',
       'warning-darken-1': '#E68F3C',
-      'warning-light': '#fdeedf',
+      'warning-light': '#F0D9EB',
       'error': '#FF4C51',
       'on-error': '#fff',
       'error-darken-1': '#E64449',
@@ -99,7 +99,7 @@ export const themes = {
       'on-error': '#fff',
       'error-darken-1': '#E64449',
       'background': '#25293C',
-      'td-hover': '#fdeedf',
+      'td-hover': '#F0D9EB',
       'on-td-hover': '#2F2B3D',
       'on-background': '#E1DEF5',
       'surface': '#2F3349',

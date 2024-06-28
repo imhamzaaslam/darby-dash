@@ -25,7 +25,7 @@
 
     <script>
         const loaderColor = '#FFFFFF'
-        const primaryColor = '#f69636'
+        const primaryColor = '#a12592'
 
         if (loaderColor)
             document.documentElement.style.setProperty('--initial-loader-bg', loaderColor)

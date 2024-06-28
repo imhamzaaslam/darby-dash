@@ -521,7 +521,7 @@ const deleteImage = async file => {
     html: `<small>Do you want to delete this file?</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#F69636",
+    confirmButtonColor: "#a12592",
     cancelButtonColor: "#808390",
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
@@ -554,7 +554,7 @@ const deleteFolder = async folder => {
     html: `<p class="mb-0">Do you want to delete this <b>${folder.name}</b> folder?</p><small>All files inside this folder will also be deleted.</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#F69636",
+    confirmButtonColor: "#a12592",
     cancelButtonColor: "#808390",
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
@@ -626,7 +626,7 @@ watch(project, () => {
 <style scoped>
 .image-container {
   position: relative;
-  border: 2px solid #F48D27;
+  border: 2px solid #a12592;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -688,7 +688,7 @@ watch(project, () => {
 
 .progress-bar {
   height: 100%;
-  background-color: #F48D27;
+  background-color: #a12592;
   transition: width 0.6s ease;
   position: relative;
 }

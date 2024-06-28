@@ -133,14 +133,17 @@
           :key="index"
           class="px-4 py-4 mt-2"
         >
-          <VRow>
+          <VRow 
+            class="cursor-pointer"
+            @click="toggleRow(index)"
+          >
             <VCol cols="8">
               <h6 class="text-h6 text-high-emphasis d-flex align-center">
                 <VIcon
                   color="primary"
                   :icon="expandedRows[index] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
                   class="me-2"
-                  @click="toggleRow(index)"
+                  @click.stop="toggleRow(index)"
                 />
                 <div
                   class="d-flex align-center"
@@ -163,7 +166,7 @@
                   <span
                     v-else
                     class="cursor-pointer d-flex align-center"
-                    @click="startListEditing(list)"
+                    @click.stop="startListEditing(list)"
                   >
                     <VIcon
                       class="tabler-edit cursor-pointer"
@@ -182,7 +185,7 @@
                     color="primary"
                     variant="plain"
                     size="small"
-                    @click="activateQuickListTask(index)"
+                    @click.stop="activateQuickListTask(index)"
                   >
                     <VIcon icon="tabler-plus" />
                     Add Task
@@ -200,13 +203,14 @@
                 clearable
                 style="width:85%"
                 class="me-2"
+                @click.stop
               />
               <VBtn
                 v-if="getProjectLists? getProjectLists.length > 1 : 0"
                 icon
                 size="small"
                 color="error"
-                @click="deleteProjectList(list)"
+                @click.stop="deleteProjectList(list)"
               >
                 <VIcon icon="tabler-trash" />
                 <VTooltip
@@ -1797,7 +1801,7 @@ const deleteProjectList = async list => {
       `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#F69636",
+      confirmButtonColor: "#a12592",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
@@ -2082,7 +2086,7 @@ watch(project, () => {
 }
 
 .task-card:hover {
-    border: 1px solid #f69636;
+    border: 1px solid #a12592;
 }
 .expanded-row, .expanded-td{
     padding: 0 !important;

@@ -368,7 +368,7 @@ const deleteMember = async member => {
       text: `Do you want to delete ${member.name_first} ${member.name_last}?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#F69636",
+      confirmButtonColor: "#a12592",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {

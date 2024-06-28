@@ -38,6 +38,8 @@ class CalendarEventRepository extends AbstractEloquentRepository implements Cale
 
     public function delete(CalendarEvent $calendarEvent): bool
     {
+        // delete related entities
+        $calendarEvent->guests()->detach();
         return $calendarEvent->delete();
     }
 }

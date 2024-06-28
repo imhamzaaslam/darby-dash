@@ -222,7 +222,7 @@ const deleteFile = async file => {
     html: `<small>Do you want to delete this file?</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#F69636",
+    confirmButtonColor: "#a12592",
     cancelButtonColor: "#808390",
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
