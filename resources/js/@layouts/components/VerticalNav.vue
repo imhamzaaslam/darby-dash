@@ -125,6 +125,15 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
     <slot name="before-nav-items">
       <div class="vertical-nav-items-shadow" />
     </slot>
+    <RouterLink
+      to="/"
+      class="bottom-logo"
+    >
+      <VNodeRenderer
+        v-if="!hideTitleAndIcon"
+        :nodes="layoutConfig.app.watermarkLogo"
+      />
+    </RouterLink>
     <slot
       name="nav-items"
       :update-is-vertical-nav-scrolled="updateIsVerticalNavScrolled"
@@ -160,6 +169,13 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
     line-height: 1.5rem;
     text-transform: capitalize;
   }
+}
+.bottom-logo {
+  position: absolute;
+  bottom: 0px;
+  opacity: 0.4;
+  left: 42%;
+  transform: translateX(-50%);
 }
 </style>
 

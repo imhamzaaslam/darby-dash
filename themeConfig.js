@@ -17,6 +17,9 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     logoHalf: h('div', {
       innerHTML: `<img src="${logoHalf}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
     }),
+    watermarkLogo: h('div', {
+      innerHTML: `<img src="${logo}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`,
+    }),
     contentWidth: ContentWidth.Boxed,
     contentLayoutNav: AppContentLayoutNav.Vertical,
     overlayNavFromBreakpoint: breakpointsVuetify.md + 16, // 16 for scrollbar. Docs: https://next.vuetifyjs.com/en/features/display-and-platform/
