@@ -132,6 +132,7 @@
           v-for="(list, index) in getProjectLists"
           :key="index"
           class="px-4 py-4 mt-2"
+          @click="toggleRow(index)"
         >
           <VRow>
             <VCol cols="8">
@@ -140,7 +141,7 @@
                   color="primary"
                   :icon="expandedRows[index] ? 'tabler-chevron-down' : 'tabler-chevron-right'"
                   class="me-2"
-                  @click="toggleRow(index)"
+                  @click.stop="toggleRow(index)"
                 />
                 <div
                   class="d-flex align-center"
@@ -163,7 +164,7 @@
                   <span
                     v-else
                     class="cursor-pointer d-flex align-center"
-                    @click="startListEditing(list)"
+                    @click.stop="startListEditing(list)"
                   >
                     <VIcon
                       class="tabler-edit cursor-pointer"
@@ -182,7 +183,7 @@
                     color="primary"
                     variant="plain"
                     size="small"
-                    @click="activateQuickListTask(index)"
+                    @click.stop="activateQuickListTask(index)"
                   >
                     <VIcon icon="tabler-plus" />
                     Add Task
@@ -200,13 +201,14 @@
                 clearable
                 style="width:85%"
                 class="me-2"
+                @click.stop
               />
               <VBtn
                 v-if="getProjectLists? getProjectLists.length > 1 : 0"
                 icon
                 size="small"
                 color="error"
-                @click="deleteProjectList(list)"
+                @click.stop="deleteProjectList(list)"
               >
                 <VIcon icon="tabler-trash" />
                 <VTooltip
