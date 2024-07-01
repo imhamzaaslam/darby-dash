@@ -2,13 +2,14 @@ import { apiClient, generateQueryString } from './api'
 
 export default {
   getAll(
+    projectUuid,
     page = 1,
     perPage = 10,
     search = null,
     orderBy = 'id',
     order = 'desc',
   ) {
-    const baseUrl = `/admin/payments?page=${page}&per_page=${perPage}`
+    const baseUrl = `/admin/projects/${projectUuid}/payments?page=${page}&per_page=${perPage}`
 
     const queryParams = [
       search && `keyword=${search}`,
@@ -20,8 +21,8 @@ export default {
 
     return apiClient.get(baseUrl + queryString)
   },
-  create(payload) {
-    return apiClient.post(`admin/payments`, payload)
+  create(projectUuid, payload) {
+    return apiClient.post(`admin/projects/${projectUuid}/payments`, payload)
   },
   get(paymentUuid) {
     return apiClient.get(`admin/payments/${paymentUuid}`)

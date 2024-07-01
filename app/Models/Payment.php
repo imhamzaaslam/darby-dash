@@ -13,6 +13,7 @@ class Payment extends Base
 
     protected $fillable = [
         'user_id',
+        'project_id',
         'payment_method',
         'name_on_card',
         'card_number',

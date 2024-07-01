@@ -47,6 +47,14 @@ interface AbstractEloquentRepositoryInterface
      */
     public function getBy(string $key, mixed $value): Collection;
 
+    /**
+     * @param string $key
+     * @param array $values
+     *
+     * @return Collection
+     */
+    public function getRecordsQuery(string $key, mixed $value): Builder;
+
     public function getByIn(string $key, array $values): Collection;
 
     /**

@@ -11,7 +11,7 @@
       title="Add Payment Details"
       @cancel="$emit('update:isDrawerOpen', false)"
     />
-  
+    
     <VDivider />
     <!-- 👉 Payment Methods -->
     <VCard flat>
@@ -107,7 +107,7 @@
                           :error-messages="addingErrors.card_exp_month"
                         />
                       </VCol>
-
+  
                       <!-- 👉 Expiry year -->
                       <VCol
                         cols="6"
@@ -220,14 +220,15 @@
     </VCard>
   </VNavigationDrawer>
 </template>
-  
+    
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { ref } from 'vue'
 import { useToast } from "vue-toastification"
+import { useRouter } from 'vue-router'
 import { usePaymentStore } from "@/store/payments"
-
+  
 const props = defineProps({
   isDrawerOpen: {
     type: Boolean,
@@ -238,19 +239,22 @@ const props = defineProps({
   getStatusCode: Object,
   getLoadStatus: Number,
 })
-  
+    
 const emit = defineEmits(['update:isDrawerOpen'])
 const toast = useToast()
+const router = useRouter()
 const paymentStore = usePaymentStore()
+  
+const projectUuid = computed(() => router.currentRoute.value.params.id)
 
 const paymentMethods = ref([
   { value: 'credit-card', label: 'Credit Card' },
   { value: 'cash', label: 'Cash' },
 ])
-
+  
 const months = ref(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])
 const years = ref(Array.from({ length: 20 }, (_, i) => (new Date().getFullYear() + i).toString()))
-
+  
 const isLoading= ref(false)
 const piaViaCreditCardForm = ref(null)
 const piaViaOtherForm = ref(null)
@@ -261,7 +265,7 @@ const name_on_card = ref('')
 const card_exp_month = ref()
 const card_exp_year = ref()
 const card_cvc = ref()
-
+  
 const addingErrors = ref({
   payment_method: '',
   amount: '',
@@ -271,13 +275,13 @@ const addingErrors = ref({
   card_exp_year: '',
   card_cvc: '',
 })
-
+  
 const submitCreditCardPaymentForm = async () => {
   piaViaCreditCardForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
         resetErrors()
-
+  
         const paymentDetails = {
           payment_method: selectedPaymentMethod.value,
           amount: amount.value,
@@ -287,9 +291,9 @@ const submitCreditCardPaymentForm = async () => {
           card_exp_year: card_exp_year.value,
           card_cvc: card_cvc.value,
         }
-
-        await paymentStore.create(paymentDetails)
-
+  
+        await paymentStore.create(projectUuid.value, paymentDetails)
+  
         if(props.getErrors)
         {
           showError()
@@ -308,20 +312,20 @@ const submitCreditCardPaymentForm = async () => {
     }
   })
 }
-
+  
 const submitOtherPaymentForm = async () => {
   piaViaOtherForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
         resetErrors()
-
+  
         const paymentDetails = {
           payment_method: selectedPaymentMethod.value,
           amount: amount.value,
         }
-
-        await paymentStore.create(paymentDetails)
-
+  
+        await paymentStore.create(projectUuid.value, paymentDetails)
+  
         if(props.getErrors)
         {
           showError()
@@ -340,7 +344,7 @@ const submitOtherPaymentForm = async () => {
     }
   })
 }
-
+  
 const resetErrors = () => {
   addingErrors.value = {
     payment_method: '',
@@ -352,7 +356,7 @@ const resetErrors = () => {
     card_cvc: '',
   }
 }
-
+  
 const resetFormFields = formName => {
   formName.value?.reset()
   selectedPaymentMethod.value = 'credit-card'
@@ -365,11 +369,11 @@ const resetFormFields = formName => {
   resetErrors()
   emit('update:isDrawerOpen', false)
 }
-
+  
 const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
 }
-
+  
 const showError = () => {
   if (props.getStatusCode === 500) {
     toast.error('Something went wrong. Please try again later.')
@@ -377,26 +381,26 @@ const showError = () => {
     addingErrors.value = props.getErrors
   }
 }
-
+  
 const cardNumberValidator = value => {
   const strippedValue = value.replace(/\s+/g, '')
-
+  
   return strippedValue.length === 16 || 'Card number must be 16 digits'
 }
 </script>
+    
+  <style lang="scss">
+  .v-navigation-drawer__content {
+      overflow-y: hidden !important;
+  }
+  /* Hide the up and down arrows for number inputs */
+  .no-arrows input::-webkit-outer-spin-button,
+  .no-arrows input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   
-<style lang="scss">
-.v-navigation-drawer__content {
-    overflow-y: hidden !important;
-}
-/* Hide the up and down arrows for number inputs */
-.no-arrows input::-webkit-outer-spin-button,
-.no-arrows input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.no-arrows input {
-  -moz-appearance: textfield;
-}
-</style>
+  .no-arrows input {
+    -moz-appearance: textfield;
+  }
+  </style>

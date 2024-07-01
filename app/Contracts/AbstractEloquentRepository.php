@@ -52,6 +52,15 @@ abstract class AbstractEloquentRepository implements AbstractEloquentRepositoryI
         return $this->model->where($key, $value)->get();
     }
 
+    public function getRecordsQuery(string $key, mixed $value, int $limit = 0): Builder
+    {
+        if ($limit !== 0) {
+            return $this->model->where($key, $value)->take($limit);
+        }
+
+        return $this->model->where($key, $value);
+    }
+
     public function getByIn(string $key, array $values): Collection
     {
         return $this->model->whereIn($key, $values)->get();

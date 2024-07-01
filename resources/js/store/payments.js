@@ -11,11 +11,11 @@ export const usePaymentStore = defineStore('payments', {
   }),
   persist: true,
   actions: {
-    async getAll(page = 1, perPage = 10, search = null, orderBy = 'id', order = 'desc') {
+    async getAll(projectUuid, page = 1, perPage = 10, search = null, orderBy = 'id', order = 'desc') {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await PaymentService.getAll(page, perPage, search, orderBy, order)
+        const response = await PaymentService.getAll(projectUuid, page, perPage, search, orderBy, order)
     
         this.payments = response.data.data
         this.paymentsCount = response.data.meta.total
@@ -26,11 +26,11 @@ export const usePaymentStore = defineStore('payments', {
         console.error('getPayments error ', error)
       }
     },
-    async create(paymentUuid, payload) {
+    async create(projectUuid, payload) {
       this.error = null
       this.loadStatus = 1
       try {
-        await PaymentService.create(paymentUuid, payload)
+        await PaymentService.create(projectUuid, payload)
     
         this.loadStatus = 2
       } catch (error) {

@@ -127,6 +127,12 @@ const showNavigation = computed(() => {
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
             >Your Team</span>
           </RouterLink>
+          <RouterLink :to="`/projects/${projectId}/payments`">
+            <span
+              class="text-h6 me-8 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/payments` }"
+            >Payments</span>
+          </RouterLink>
         </div>
         
         <VSpacer />

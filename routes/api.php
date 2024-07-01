@@ -119,6 +119,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::get('/', [FileController::class, 'index']);
                     Route::post('/', [FileController::class, 'store']);
                 });
+
+                Route::prefix('payments')->group(function () {
+                    Route::get('/', [PaymentController::class, 'index']);
+                    Route::post('/', [PaymentController::class, 'store']);
+                });
             });
         });
         Route::prefix('milestones')->group(function () {
@@ -157,14 +162,10 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::get('/calendar-filters', [CalendarFilterController::class, 'index']);
         Route::get('/statuses', [StatusController::class, 'index']);
 
-        Route::prefix('payments')->group(function () {
-            Route::get('/', [PaymentController::class, 'index']);
-            Route::post('/', [PaymentController::class, 'store']);
-            Route::prefix('{paymentUuid}')->group(function () {
-                Route::get('/', [PaymentController::class, 'show']);
-                Route::patch('/', [PaymentController::class, 'update']);
-                Route::delete('/', [PaymentController::class, 'delete']);
-            });
+        Route::prefix('payments/{paymentUuid}')->group(function () {
+            Route::get('/', [PaymentController::class, 'show']);
+            Route::patch('/', [PaymentController::class, 'update']);
+            Route::delete('/', [PaymentController::class, 'delete']);
         });
 
         // Route::prefix('project/{id}/tasks')->group(function () {

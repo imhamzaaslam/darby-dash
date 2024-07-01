@@ -7,6 +7,7 @@ use App\Contracts\PaymentRepositoryInterface;
 use App\Models\Base;
 use App\Models\Payment;
 use App\Models\User;
+use App\Models\Project;
 
 class PaymentRepository extends AbstractEloquentRepository implements PaymentRepositoryInterface
 {
@@ -20,9 +21,10 @@ class PaymentRepository extends AbstractEloquentRepository implements PaymentRep
         parent::__construct($model);
     }
 
-    public function create(array $data): Payment
+    public function create(Project $project, array $data): Payment
     {
         $data['user_id'] = auth()->id();
+        $data['project_id'] = $project->id;
         return $this->model->create($data);
     }
 

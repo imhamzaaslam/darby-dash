@@ -78,19 +78,6 @@
             <VListItemTitle>Profile</VListItemTitle>
           </VListItem>
 
-          <!-- 👉 Payments -->
-          <VListItem to="/payments">
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="tabler-file-dollar"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Payments</VListItemTitle>
-          </VListItem>
-
           <!-- 👉 Logout -->
           <VListItem @click="logout">
             <template #prepend>

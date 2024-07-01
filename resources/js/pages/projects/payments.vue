@@ -32,7 +32,7 @@
         />
       </div>
     </VCardText>
-
+  
     <VDivider />
     <VDataTable
       :headers="headers"
@@ -84,7 +84,7 @@
           <span class="text-sm text-truncate mb-0">{{ item.created_at }}</span>
         </div>
       </template>
-
+  
       <template #bottom>
         <VCardText class="pt-2">
           <div
@@ -117,30 +117,33 @@
     :get-load-status="getLoadStatus"
   />
 </template>
-
+  
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
-import AddPaymentDrawer from '@/pages/payments/_partials/add-payment-drawer.vue'
+import AddPaymentDrawer from '@/pages/projects/_partials/add-payment-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { debounce } from 'lodash'
+import { useRouter } from 'vue-router'
 import { usePaymentStore } from "@/store/payments"
-
+  
 useHead({ title: `${layoutConfig.app.title} | Payments` })
-
+  
 onBeforeMount(async () => {
   await fetchPayments()
 })
-
+  
 const paymentStore = usePaymentStore()
 const toast = useToast()
-
+const router = useRouter()
+  
+const projectUuid = computed(() => router.currentRoute.value.params.id)
 const isAddPaymentDrawerOpen = ref(false)
 const isLoading = ref(false)
 const search = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
-
+  
 const headers = [
   { title: 'Type', key: 'type', sortable: true },
   { title: 'Name', key: 'name', sortable: true },
@@ -151,35 +154,35 @@ const headers = [
   { title: 'Transaction ID', key: 'transaction_id', sortable: true },
   { title: 'Created At', key: 'created_at', sortable: true },
 ]
-
+  
 const fetchPayments = async () => {
   try {
     isLoading.value = true
-    await paymentStore.getAll(options.value.page, options.value.itemsPerPage, search.value, options.value.orderBy, options.value.order)
+    await paymentStore.getAll(projectUuid.value, options.value.page, options.value.itemsPerPage, search.value, options.value.orderBy, options.value.order)
   } catch (error) {
     toast.error(error.message)
   } finally {
     isLoading.value = false
   }
 }
-
+  
 const handlePageChange = async page => {
   options.value.page = page
   await fetchPayments()
 }
-
+  
 const onFilter = async value => {
   options.value.page = 1
   search.value = value
   await fetchPayments()
 }
-
+  
 const debouncedFilter = debounce(onFilter, 300)
-
+  
 const onInput = value => {
   debouncedFilter(value)
 }
-
+  
 const updateOptions = async updateOptions => {
   const sortKeyMap = {
     type: 'payment_method',
@@ -191,40 +194,41 @@ const updateOptions = async updateOptions => {
     transaction_id: 'transaction_id',
     created_at: 'created_at',
   }
-
+  
   const sortByKey = updateOptions.sortBy[0]?.key
   if (sortByKey && sortKeyMap[sortByKey]) {
     options.value.orderBy = sortKeyMap[sortByKey]
   }
-  
+    
   options.value.order = updateOptions.sortBy[0]?.order
   await fetchPayments()
 }
-
+  
 const getPayments = computed(() => {
   return paymentStore.getPayments
 })
-
+  
 const getErrors = computed(() => {
   return paymentStore.getErrors
 })
-
+  
 const totalPayments = computed(() => {
   return paymentStore.getPaymentsCount
 })
-
+  
 const getStatusCode = computed(() => {
   return paymentStore.getStatusCode
 })
-
+  
 const getLoadStatus = computed(() => {
   return paymentStore.getLoadStatus
 })
 </script>
-
-<style scoped>
-.table-wrapper {
-    inline-size: auto;
-    overflow-x: auto;
-}
-</style>
+  
+  <style scoped>
+  .table-wrapper {
+      inline-size: auto;
+      overflow-x: auto;
+  }
+  </style>
+  

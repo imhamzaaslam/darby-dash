@@ -15,11 +15,6 @@ export default [
     to: { name: 'members-list' },
   },
   {
-    title: 'Payments',
-    icon: { icon: 'tabler-file-dollar' },
-    to: { name: 'payment-setting' },
-  },
-  {
     title: 'Logout',
     icon: { icon: 'tabler-logout' },
     to: { name: 'logout' },
