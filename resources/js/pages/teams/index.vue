@@ -266,6 +266,8 @@
     @update:page="handlePageChange"
   />
   <AddMemberDrawer
+    v-if="isAddMemberDrawerOpen"
+
     v-model:is-drawer-open="isAddMemberDrawerOpen"
     :fetch-members="fetchMembers"
     :get-roles="getRoles"
@@ -274,6 +276,7 @@
     :get-load-status="getLoadStatus"
   />
   <EditMemberDrawer
+    v-if="isEditMemberDrawerOpen"
     v-model:is-edit-drawer-open="isEditMemberDrawerOpen"
     :fetch-members="fetchMembers"
     :get-roles="getRoles"
@@ -283,6 +286,7 @@
     :get-load-status="getLoadStatus"
   />
   <FilterDrawer
+    v-if="isFilterDrawerOpen"
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
     :apply-filters="applyFilters"
     :get-roles="rolesWithFirstOption('All Members')"

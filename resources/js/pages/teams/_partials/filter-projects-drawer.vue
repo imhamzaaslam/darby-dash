@@ -28,6 +28,7 @@
                   v-model="filterDetails.name"
                   label="Name"
                   placeholder="Search by Name"
+                  autofocus
                 />
               </VCol>
 

@@ -283,6 +283,7 @@
     />
   </div>
   <AddProjectDrawer
+    v-if="isAddProjectDrawerOpen"
     v-model:is-drawer-open="isAddProjectDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
@@ -290,6 +291,7 @@
     :get-load-status="getLoadStatus"
   />
   <EditProjectDrawer
+    v-if="isEditProjectDrawerOpen"
     v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
@@ -298,6 +300,7 @@
     :get-load-status="getLoadStatus"
   />
   <FilterDrawer
+    v-if="isFilterDrawerOpen"
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
     :apply-filters="applyFilters"
     :get-project-types="projectTypesWithFirstOption('All Projects')"

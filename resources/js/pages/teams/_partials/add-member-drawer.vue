@@ -32,6 +32,7 @@
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.name_first"
                   placeholder="First Name"
+                  autofocus
                 />
               </VCol>
 

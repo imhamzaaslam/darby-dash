@@ -28,6 +28,7 @@
                   v-model="filterDetails.searchQuery"
                   label="Name"
                   placeholder="Project Name"
+                  autofocus
                 />
               </VCol>
 

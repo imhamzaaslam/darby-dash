@@ -38,6 +38,7 @@
       </VLayout>
     </VCard>
     <CalendarEventHandler
+      v-if="isEventHandlerSidebarActive"
       v-model:isDrawerOpen="isEventHandlerSidebarActive"
       :event="event"
       :get-project-guests="getProjectGuests"

@@ -31,6 +31,7 @@
                   label="Title*"
                   :rules="[requiredValidator]"
                   placeholder="Title"
+                  autofocus
                 />
               </VCol>
               <VCol cols="6">

@@ -286,6 +286,7 @@
             clearable
             clear-icon="tabler-x"
             :rules="[requiredValidator]"
+            autofocus
           />
         </VCardText>
 
