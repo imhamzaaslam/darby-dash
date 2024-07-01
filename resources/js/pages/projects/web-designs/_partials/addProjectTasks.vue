@@ -23,10 +23,10 @@
           :class="{ 'bg-primary': viewType === 'grid' }"
           @click="viewType = 'grid'"
         />
-        <VIcon
+        <!-- <VIcon
           icon="tabler-filter"
           class="bg-primary ms-1 me-2"
-        />
+        /> -->
         <div class="ms-2 d-flex justify-center align-center">
           <VAvatar
             :size="30"
