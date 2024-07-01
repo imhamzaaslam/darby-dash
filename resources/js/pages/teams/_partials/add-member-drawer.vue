@@ -27,12 +27,12 @@
             <VRow>
               <VCol cols="6">
                 <AppTextField
+                  ref="focusInput"
                   v-model="newMemberDetails.name_first"
                   label="First Name *"
                   :rules="[requiredValidator]"
                   :error-messages="addingErrors.name_first"
                   placeholder="First Name"
-                  autofocus
                 />
               </VCol>
 
@@ -167,7 +167,7 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useToast } from "vue-toastification"
 import { useUserStore } from "../../../store/users"
 
@@ -187,6 +187,7 @@ const emit = defineEmits(['update:isDrawerOpen'])
 const toast = useToast()
 const userStore = useUserStore()
 
+const focusInput = ref(null)
 const addMemberForm = ref()
 const isLoading= ref(false)
 const isPasswordVisible = ref(false)
@@ -275,6 +276,17 @@ const showError = () => {
 const resetErrors = () => {
   addingErrors.value = Object.fromEntries(Object.keys(addingErrors.value).map(key => [key, '']))
 }
+
+watch(() => props.isDrawerOpen, val => {
+  if (val) {
+    nextTick(() => {
+      const inputEl = focusInput.value.$el.querySelector('input')
+      if (inputEl) {
+        inputEl.focus()
+      }
+    })
+  }
+})
 </script>
 
   <style lang="scss">

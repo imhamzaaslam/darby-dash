@@ -27,11 +27,11 @@
             <VRow>
               <VCol cols="6">
                 <AppTextField
+                  ref="focusInput"
                   v-model="props.editProjectDetails.title"
                   label="Title*"
                   :rules="[requiredValidator]"
                   placeholder="Title"
-                  autofocus
                 />
               </VCol>
 
@@ -100,7 +100,7 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../../store/projects"
 
@@ -121,6 +121,7 @@ const emit = defineEmits(['update:isEditDrawerOpen'])
 const toast = useToast()
 const projectStore = useProjectStore()
 
+const focusInput = ref(null)
 const editProjectForm = ref()
 const isLoading= ref(false)
 
@@ -167,6 +168,17 @@ async function submitEditProjectForm() {
     }
   })
 }
+
+watch(() => props.isEditDrawerOpen, val => {
+  if (val) {
+    nextTick(() => {
+      const inputEl = focusInput.value.$el.querySelector('input')
+      if (inputEl) {
+        inputEl.focus()
+      }
+    })
+  }
+})
 </script>
 
     <style lang="scss">

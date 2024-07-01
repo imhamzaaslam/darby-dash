@@ -8,7 +8,7 @@
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      title="Filter Projects"
+      title="Filter Members"
       @cancel="$emit('update:isFilterDrawerOpen', false)"
     />
 
@@ -25,10 +25,10 @@
               <!-- Search filter -->
               <VCol cols="12">
                 <AppTextField
+                  ref="focusInput"
                   v-model="filterDetails.name"
                   label="Name"
                   placeholder="Search by Name"
-                  autofocus
                 />
               </VCol>
 
@@ -92,7 +92,7 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 const props = defineProps({
   isFilterDrawerOpen: {
@@ -107,9 +107,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:isFilterDrawerOpen'])
 
-watch(() => props.selectedRole, val => {
-  filterDetails.value.roleId = val
-})
+const focusInput = ref(null)
 
 const filterDetails = ref({
   name: '',
@@ -134,6 +132,21 @@ const resetFilters = () => {
     roleId: null,
   }
 }
+
+watch([() => props.selectedRole, () => props.isFilterDrawerOpen], ([newSelectedRole, newIsFilterDrawerOpen]) => {
+  if (newSelectedRole !== filterDetails.value.roleId) {
+    filterDetails.value.roleId = newSelectedRole
+  }
+
+  if (newIsFilterDrawerOpen) {
+    nextTick(() => {
+      const inputEl = focusInput.value.$el.querySelector('input')
+      if (inputEl) {
+        inputEl.focus()
+      }
+    })
+  }
+})
 </script>
 
 <style lang="scss">

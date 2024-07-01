@@ -49,6 +49,7 @@
                 <VRow>
                   <VCol cols="3">
                     <AppTextField
+                      ref="focusInput"
                       v-model="amount"
                       prepend-inner-icon="tabler-currency-dollar"
                       label="Amount to Pay *"
@@ -57,7 +58,6 @@
                       class="no-arrows"
                       :rules="[requiredValidator]"
                       :error-messages="addingErrors.amount"
-                      autofocus
                     />
                   </VCol>
                 </VRow>
@@ -224,7 +224,7 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRouter } from 'vue-router'
 import { usePaymentStore } from "@/store/payments"
@@ -245,6 +245,7 @@ const toast = useToast()
 const router = useRouter()
 const paymentStore = usePaymentStore()
   
+const focusInput = ref(null)
 const projectUuid = computed(() => router.currentRoute.value.params.id)
 
 const paymentMethods = ref([
@@ -387,6 +388,19 @@ const cardNumberValidator = value => {
   
   return strippedValue.length === 16 || 'Card number must be 16 digits'
 }
+
+watch(() => props.isDrawerOpen, val => {
+  if (val) {
+    nextTick(() => {
+      if (selectedPaymentMethod.value === 'credit-card') {
+        const inputEl = focusInput.value.$el.querySelector('input')
+        if (inputEl) {
+          inputEl.focus()
+        }
+      }
+    })
+  }
+})
 </script>
     
   <style lang="scss">

@@ -109,7 +109,6 @@
     </VDataTable>
   </VCard>
   <AddPaymentDrawer 
-    v-if="isAddPaymentDrawerOpen"
     v-model:is-drawer-open="isAddPaymentDrawerOpen"
     :fetch-payments="fetchPayments"
     :get-errors="getErrors"

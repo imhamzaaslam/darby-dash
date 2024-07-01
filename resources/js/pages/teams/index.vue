@@ -266,8 +266,6 @@
     @update:page="handlePageChange"
   />
   <AddMemberDrawer
-    v-if="isAddMemberDrawerOpen"
-
     v-model:is-drawer-open="isAddMemberDrawerOpen"
     :fetch-members="fetchMembers"
     :get-roles="getRoles"
@@ -276,7 +274,6 @@
     :get-load-status="getLoadStatus"
   />
   <EditMemberDrawer
-    v-if="isEditMemberDrawerOpen"
     v-model:is-edit-drawer-open="isEditMemberDrawerOpen"
     :fetch-members="fetchMembers"
     :get-roles="getRoles"
@@ -286,7 +283,6 @@
     :get-load-status="getLoadStatus"
   />
   <FilterDrawer
-    v-if="isFilterDrawerOpen"
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
     :apply-filters="applyFilters"
     :get-roles="rolesWithFirstOption('All Members')"
@@ -304,7 +300,7 @@ import AddMemberDrawer from '@/pages/teams/_partials/add-member-drawer.vue'
 import EditMemberDrawer from '@/pages/teams/_partials/update-member-drawer.vue'
 import ListViewSkeleton from '@/pages/teams/_partials/list-view-skeleton.vue'
 import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
-import FilterDrawer from '@/pages/teams/_partials/filter-projects-drawer.vue'
+import FilterDrawer from '@/pages/teams/_partials/filter-members-drawer.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRoleStore } from "../../store/roles"

@@ -25,10 +25,10 @@
               <!-- Search filter -->
               <VCol cols="12">
                 <AppTextField
+                  ref="focusInput"
                   v-model="filterDetails.searchQuery"
                   label="Name"
                   placeholder="Project Name"
-                  autofocus
                 />
               </VCol>
 
@@ -95,7 +95,7 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 const props = defineProps({
   isFilterDrawerOpen: {
@@ -111,9 +111,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:isFilterDrawerOpen'])
 
-watch(() => props.selectedProjectType, (val) => {
-  filterDetails.value.project_type_id = val
-})
+const focusInput = ref(null)
 
 const filterDetails = ref({
   searchQuery: '',
@@ -138,6 +136,21 @@ const resetFilters = () => {
     project_manager_id: null,
   }
 }
+
+watch([() => props.selectedProjectType, () => props.isFilterDrawerOpen], ([newSelectedProjectType, newIsFilterDrawerOpen]) => {
+  if (newSelectedProjectType !== filterDetails.value.project_type_id) {
+    filterDetails.value.project_type_id = newSelectedProjectType
+  }
+
+  if (newIsFilterDrawerOpen) {
+    nextTick(() => {
+      const inputEl = focusInput.value.$el.querySelector('input')
+      if (inputEl) {
+        inputEl.focus()
+      }
+    });
+  }
+})
 </script>
 
 <style lang="scss">
