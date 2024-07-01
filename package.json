@@ -26,6 +26,7 @@
     "@tiptap/starter-kit": "2.2.4",
     "@tiptap/vue-3": "2.2.4",
     "@unhead/vue": "^1.9.13",
+    "@vueform/multiselect": "^2.6.8",
     "@vueuse/core": "10.9.0",
     "@vueuse/math": "10.9.0",
     "apexcharts": "3.46.0",

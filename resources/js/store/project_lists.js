@@ -32,7 +32,7 @@ export const useProjectListStore = defineStore('project_lists', {
       try {
         const response = await ProjectListService.getWithoutMileStone(projectId)
 
-        this.projectListsForDropDown = response.data.data.map(list => ({ id: list.id, name: list.name }))
+        this.projectListsForDropDown = response.data.data.map(list => ({ label: list.name, value: list.id }))
         this.loadStatus = 2
       } catch (error) {
         this.error = error

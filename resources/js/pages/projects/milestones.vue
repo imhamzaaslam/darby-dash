@@ -275,7 +275,7 @@
           @submit.prevent="submitAddMileStoneForm"
         >
           <VCardText>
-            <VTextField
+            <AppTextField
               v-model="mileStoneForm.name"
               autofocus
               label="Name*"
@@ -285,7 +285,18 @@
             />
           </VCardText>
           <VCardText>
-            <AppAutocomplete
+            <label>Select List</label>
+            <Multiselect
+              v-model="mileStoneForm.projectListIds"
+              mode="tags"
+              placeholder="Select Project List"
+              close-on-select
+              searchable
+              :options="projectListsForDropDown"
+            />
+            
+            <!--
+              <AppAutocomplete
               v-model="mileStoneForm.projectListIds"
               :items="projectListsForDropDown"
               item-title="name"
@@ -295,7 +306,8 @@
               multiple
               clearable
               clear-icon="tabler-x"
-            />
+              /> 
+            -->
           </VCardText>
 
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
@@ -342,7 +354,7 @@
           @submit.prevent="submitEditMileStoneForm"
         >
           <VCardText>
-            <VTextField
+            <AppTextField
               v-model="editMileStoneFormData.name"
               autofocus
               label="Name*"
@@ -352,7 +364,16 @@
             />
           </VCardText>
           <VCardText>
-            <AppAutocomplete
+            <label>Select List</label>
+            <Multiselect
+              v-model="editMileStoneFormData.projectListIds"
+              mode="tags"
+              placeholder="Select Project List"
+              close-on-select
+              searchable
+              :options="editProjectList"
+            />
+            <!-- <AppAutocomplete
               v-model="editMileStoneFormData.projectListIds"
               :items="editProjectList"
               item-title="name"
@@ -362,7 +383,7 @@
               multiple
               clearable
               clear-icon="tabler-x"
-            />
+            /> -->
           </VCardText>
 
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
@@ -399,6 +420,8 @@
 <script setup lang="js">
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
+import Swal from 'sweetalert2'
+import Multiselect from '@vueform/multiselect'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import Page2 from '../../../images/pages/2.png'
@@ -483,10 +506,25 @@ const submitAddMileStoneForm = async () => {
 
 const deleteMileStone = async data => {
   try {
-    await mileStoneStore.delete(data.uuid)
-    toast.success('MileStone deleted successfully')
-    await getMileStones()
-    await getListsWithoutMileStones()
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      html: `Do you want to delete MileStone: <strong>${data.name}</strong>?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#a12592",
+      cancelButtonColor: "#808390",
+      confirmButtonText: "Yes, delete it!",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+      },
+    })
+
+    if (confirmDelete.isConfirmed) {
+      await mileStoneStore.delete(data.uuid)
+      toast.success('MileStone deleted successfully')
+      await getMileStones()
+      await getListsWithoutMileStones()
+    }
   } catch (error) {
     console.error('Error deleting member:', error)
     toast.error('Failed to delete member:', error.message || error)
@@ -511,7 +549,7 @@ const handlePageChange = async page => {
 }
 
 const editMileStone = async data => {
-  const comibineList = data.lists.map(list => ({ id: list.id, name: list.name }))
+  const comibineList = data.lists.map(list => ({ label: list.name, value: list.id }))
 
   const projectListFromDropdown = projectListStore.getProjectListsForDropDown
 
@@ -523,7 +561,7 @@ const editMileStone = async data => {
   editMileStoneFormData.value = {
     uuid: data.uuid,
     name: data.name,
-    projectListIds: data.lists.map(list => ({ id: list.id, name: list.name })),
+    projectListIds: data.lists.map(list => (list.id)),
   }
 
   editProjectList.value = newList
