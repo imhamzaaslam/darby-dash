@@ -385,6 +385,67 @@
                     </VMenu>
                   </td>
                   <td>
+                    <VMenu
+                      v-model="inputHours[item.id]"
+                      transition="scale-transition"
+                      offset-y
+                      :close-on-content-click="false"
+                      class="p-0"
+                    >
+                      <template #activator="{ props }">
+                        <VChip
+                          color="primary"
+                          size="small"
+                          v-bind="props"
+                          class="cursor-pointer"
+                        >
+                          <VIcon
+                            size="x-small"
+                            class="tabler-clock me-1"
+                          />
+                          <small>{{ item.est_time || 'Set EST Time' }}</small>
+                        </VChip>
+                      </template>
+                      <VList class="pt-0">
+                        <VListItem class="time-field-list">
+                          <AppTextField
+                            v-model="inputHours[item.id].hours"
+                            label="Hours"
+                            min="0"
+                            class="time-field me-2"
+                            density="compact"
+                            autofocus
+                          />
+                          <AppTextField
+                            v-model="inputHours[item.id].minutes"
+                            label="Minutes"
+                            min="0"
+                            max="59"
+                            class="time-field"
+                            density="compact"
+                          />
+                        </VListItem>
+                        <VListItem class="me-3">
+                          <VBtn
+                            color="primary"
+                            size="x-small"
+                            class="me-2"
+                          >
+                            Save
+                          </VBtn>
+                          <VBtn
+                            color="secondary"
+                            size="x-small"
+                            @click="inputHours[item.id] = false"
+                          >
+                            Cancel
+                          </VBtn>
+                        </VListItem>
+                      </VList>
+                    </VMenu>
+                  </td>
+
+                  <!-- <td>
                     <div v-if="!isEditingHours[item.id]">
                       <VChip
                         color="primary"
@@ -446,7 +507,7 @@
                         </VTooltip>
                       </VIcon>
                     </div>
-                  </td>
+                  </td> -->
                   <td>
                     <VChip
                       color="primary"
@@ -1424,7 +1485,9 @@ const dueDateMenu = ref([])
 const selectedList = ref(null)
 const isEditingHours = ref([])
 const inputHours = ref([])
+const inputMinutes = ref([])
 const inputHoursRef = ref([])
+const inputMinutesRef = ref([])
 
 const isLoading = ref(false)
 
@@ -2110,5 +2173,15 @@ watch(project, () => {
 
 .align-center-important {
   align-items: center !important;
+}
+
+.time-field-list :deep(.v-list-item__content) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-field-list :deep(.v-list-item__content .time-field) {
+  width: 85px;
 }
 </style>
