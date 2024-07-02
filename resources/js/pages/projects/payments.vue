@@ -1,15 +1,26 @@
 <template>
-  <VRow>
+  <VRow class=mb-2>
     <VCol
       cols="12"
-      md="6"
-    />
-    <VCol
-      cols="12"
-      md="6"
-      class="mb-3"
+      md="7"
+      class="d-flex"
     >
-      <div class="d-flex justify-end mb-5">
+      <div class="d-flex justify-center align-center">
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+    <VCol
+      cols="12"
+      md="5"
+    >
+      <div class="d-flex justify-end">
         <VBtn
           prepend-icon="tabler-plus"
           @click="isAddPaymentDrawerOpen = !isAddPaymentDrawerOpen"
@@ -126,14 +137,16 @@ import { useToast } from "vue-toastification"
 import { debounce } from 'lodash'
 import { useRouter } from 'vue-router'
 import { usePaymentStore } from "@/store/payments"
-  
-useHead({ title: `${layoutConfig.app.title} | Payments` })
+import { useProjectStore } from "@/store/projects"
+import sketch from '@images/icons/project-icons/sketch.png'
   
 onBeforeMount(async () => {
+  await fetchProject()
   await fetchPayments()
 })
   
 const paymentStore = usePaymentStore()
+const projectStore = useProjectStore()
 const toast = useToast()
 const router = useRouter()
   
@@ -153,6 +166,10 @@ const headers = [
   { title: 'Transaction ID', key: 'transaction_id', sortable: true },
   { title: 'Created At', key: 'created_at', sortable: true },
 ]
+
+const fetchProject = async () => {
+  await projectStore.show(projectUuid)
+}
   
 const fetchPayments = async () => {
   try {
@@ -214,6 +231,10 @@ const getErrors = computed(() => {
 const totalPayments = computed(() => {
   return paymentStore.getPaymentsCount
 })
+
+const project = computed(() =>{
+  return projectStore.getProject
+})
   
 const getStatusCode = computed(() => {
   return paymentStore.getStatusCode
@@ -221,6 +242,10 @@ const getStatusCode = computed(() => {
   
 const getLoadStatus = computed(() => {
   return paymentStore.getLoadStatus
+})
+
+watch(project, () => {
+  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title} - Payments` })
 })
 </script>
   

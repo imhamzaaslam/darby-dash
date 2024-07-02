@@ -94,10 +94,7 @@
           </VCard>
         </VCol>
       </VRow>
-      <VRow
-        v-else-if="viewType === 'list'"
-        class="mb-4"
-      >
+      <VRow v-else-if="viewType === 'list'">
         <VCol
           v-for="project in getProjects"
           :key="project.id"
