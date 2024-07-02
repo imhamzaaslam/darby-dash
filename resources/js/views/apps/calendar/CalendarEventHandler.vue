@@ -23,6 +23,7 @@ const props = defineProps({
     type: null,
     required: true,
   },
+  setCalendarEvents: Function,
 })
 
 const emit = defineEmits([
@@ -30,7 +31,6 @@ const emit = defineEmits([
   'addEvent',
   'updateEvent',
   'removeEvent',
-  'refreshCalendar',
 ])
 
 const formatDate = date => {
@@ -82,15 +82,16 @@ const handleSubmit = async () => {
       guests_ids: event.value.extendedProps.guests,
     })
 
+    const onComplete = () => {
+      props.setCalendarEvents()
+      toast.success('Event processed successfully', { timeout: 1000 })
+    }
+
     try {
       if ('id' in event.value) {
-        emit('updateEvent', eventDetails.value)
-        emit('refreshCalendar')
-        toast.success('Event Updated successfully', { timeout: 1000 })
+        emit('updateEvent', eventDetails.value, onComplete)
       } else {
-        emit('addEvent', eventDetails.value)
-        emit('refreshCalendar')
-        toast.success('Event added successfully', { timeout: 1000 })
+        emit('addEvent', eventDetails.value, onComplete)
       }
       emit('update:isDrawerOpen', false)
     } catch (error) {

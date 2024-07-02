@@ -91,21 +91,24 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
 
 
   // 👉 Add event
-  const addEvent = _event => {
-    store.create(_event)
+  const addEvent = async (_event, callback) => {
+    try {
+      await store.create(_event)
+      if (callback) callback()
+    } catch (error) {
+      console.error('Error creating event:', error)
+    }
   }
 
-
   // 👉 Update event
-  const updateEvent = async _event => {
+  const updateEvent = async (_event, callback) => {
     try {
       await store.update(_event)
+      if (callback) callback()
     } catch (error) {
       console.error('Error updating event:', error)
     }
   }
-
-
 
   // 👉 Remove event
   const removeEvent = event => {

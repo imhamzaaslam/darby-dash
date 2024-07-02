@@ -44,10 +44,10 @@
       :get-project-guests="getProjectGuests"
       :get-load-status="getLoadStatus"
       :project-uuid="route.params.id"
+      :set-calendar-events="setCalendarEvents"
       @add-event="addEvent"
       @update-event="updateEvent"
       @remove-event="removeEvent"
-      @refresh-calendar="setCalendarEvents"
     />
   </div>
 </template>
