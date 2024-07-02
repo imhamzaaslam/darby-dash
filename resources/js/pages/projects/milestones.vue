@@ -359,14 +359,14 @@
             <AppTextField
               v-model="editMileStoneFormData.name"
               autofocus
-              label="Name*"
+              label="Milestone Name*"
               placeholder="Enter MileStone Name"
               clearable
               :rules="[requiredValidator]"
             />
           </VCardText>
           <VCardText>
-            <label>Select List</label>
+            <label>Select Project List</label>
             <Multiselect
               v-model="editMileStoneFormData.projectListIds"
               mode="tags"
@@ -374,6 +374,8 @@
               close-on-select
               searchable
               :options="editProjectList"
+              class="bg-background multiselect-purple"
+              style="color: #000 !important;"
             />
             <!--
               <AppAutocomplete
