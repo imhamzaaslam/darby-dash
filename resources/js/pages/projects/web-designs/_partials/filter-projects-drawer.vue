@@ -135,6 +135,7 @@ const resetFilters = () => {
     project_type_id: null,
     project_manager_id: null,
   }
+  filter()
 }
 
 watch([() => props.selectedProjectType, () => props.isFilterDrawerOpen], ([newSelectedProjectType, newIsFilterDrawerOpen]) => {

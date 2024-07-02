@@ -131,6 +131,7 @@ const resetFilters = () => {
     email: '',
     roleId: null,
   }
+  filter()
 }
 
 watch([() => props.selectedRole, () => props.isFilterDrawerOpen], ([newSelectedRole, newIsFilterDrawerOpen]) => {

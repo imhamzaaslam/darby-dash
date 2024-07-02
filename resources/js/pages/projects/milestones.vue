@@ -105,7 +105,7 @@
             :key="index"
             cols="12"
           >
-            <VCard class="d-flex py-1">
+            <VCard class="d-flex py-1 list-side-border">
               <VCol
                 cols="3"
                 class="mt-2"

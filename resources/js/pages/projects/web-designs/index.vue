@@ -104,7 +104,7 @@
           cols="12"
         >
           <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
-            <VCard class="d-flex ps-4 py-1">
+            <VCard class="d-flex ps-4 py-1 list-side-border">
               <VCol cols="4">
                 <div class="d-flex align-center gap-x-3">
                   <VAvatar

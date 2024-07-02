@@ -117,7 +117,7 @@
             :key="member.id"
             cols="12"
           >
-            <VCard class="d-flex align-center ps-4 py-1">
+            <VCard class="d-flex align-center ps-4 py-1 list-side-border">
               <VCol cols="4">
                 <div class="d-flex align-center">
                   <VAvatar
