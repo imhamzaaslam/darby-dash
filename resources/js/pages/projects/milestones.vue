@@ -278,14 +278,14 @@
             <AppTextField
               v-model="mileStoneForm.name"
               autofocus
-              label="Name*"
-              placeholder="Enter MileStone Name"
+              label="Milestone Name*"
+              placeholder="Enter Milestone Name"
               clearable
               :rules="[requiredValidator]"
             />
           </VCardText>
           <VCardText>
-            <label>Select List</label>
+            <label>Select Project List</label>
             <Multiselect
               v-model="mileStoneForm.projectListIds"
               mode="tags"
@@ -293,6 +293,8 @@
               close-on-select
               searchable
               :options="projectListsForDropDown"
+              class="bg-background multiselect-purple"
+              style="color: #000 !important;"
             />
             
             <!--
@@ -373,7 +375,8 @@
               searchable
               :options="editProjectList"
             />
-            <!-- <AppAutocomplete
+            <!--
+              <AppAutocomplete
               v-model="editMileStoneFormData.projectListIds"
               :items="editProjectList"
               item-title="name"
@@ -383,7 +386,8 @@
               multiple
               clearable
               clear-icon="tabler-x"
-            /> -->
+              /> 
+            -->
           </VCardText>
 
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
@@ -661,5 +665,11 @@ watch(project, () => {
 
 .custom-pagination :deep(div) {
   padding-top: 0px !important;
+}
+
+.multiselect-purple {
+  --ms-tag-bg: #a12592;
+  --ms-border-color: #a12592;
+  --ms-border-color-active: #a12592 !important;
 }
 </style>

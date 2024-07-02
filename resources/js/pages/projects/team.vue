@@ -111,10 +111,7 @@
       </div>
 
       <div v-else>
-        <VRow
-          v-if="viewType === 'list'"
-          class="mb-4"
-        >
+        <VRow v-if="viewType === 'list'">
           <VCol
             v-for="member in getUsersByProjects"
             :key="member.id"
@@ -269,7 +266,7 @@
     <DialogCloseBtn @click="isAddMemberDialogueOpen = !isAddMemberDialogueOpen" />
 
     <!-- Dialog Content -->
-    <VCard title="Add Member">
+    <VCard title="Add Team Member">
       <VForm
         ref="addMemberForm"
         @submit.prevent="submitAddMemberForm"

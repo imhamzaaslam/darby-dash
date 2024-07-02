@@ -60,14 +60,14 @@
                   </VAvatar>
                   <VAvatar
                     v-else-if="data.status == 'inprogress'"
-                    color="warning"
+                    color="primary"
                     size="x-large"
                   >
                     <span class="text-sm">{{ data.progress }}%</span>
                   </VAvatar>
                   <VAvatar
                     v-else-if="data.status == 'pending'"
-                    color="info"
+                    color="secondary"
                     size="x-large"
                   >
                     <VIcon
@@ -76,7 +76,7 @@
                     />
                   </VAvatar>
                 </div>
-                <div class="text-center text-h6 font-weight-medium">
+                <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
                   <small v-if="data.status == 'completed'">
                     Completed
                   </small>
@@ -103,7 +103,7 @@
                 <div class="mb-6">
                   <h5
                     class="text-h5 mb-4 font-weight-medium"
-                    style="color: #616161;"
+                    color="secondary"
                   >
                     Other List Appear Here
                   </h5>
@@ -119,8 +119,18 @@
     <VCol cols="3">
       <VCard class="logistics-card-statistics cursor-pointer p-1">
         <VCardText>
-          <div class="text-body-1 text-center">
+          <div class="text-body-1 text-center d-flex align-center justify-center">
             Project Launch Date
+            <VIcon
+              class="tabler-info-circle ms-1"
+              color="primary"
+            />
+            <VTooltip
+              activator="parent"
+              location="top"
+            >
+              <span class="text-xs">Based on pending & inprogress tasks</span>
+            </VTooltip>
           </div>
           <div class="mb-2 mt-2 text-center">
             <h5 class="text-h3 mb-3 font-weight-medium">
@@ -149,8 +159,8 @@
             <VListItem
               v-for="instructor in [
                 { active: 'success', name: 'Jordan Stevenson', profession: 'Business Intelligence', totalCourses: 3, avatar: avatar1 },
-                { active: 'warning', name: 'Bentlee Emblin', profession: 'Digital Marketing', totalCourses: 2, avatar: avatar1 },
-                { active: 'warning', name: 'Benedetto Rossiter', profession: 'UI/UX Design', totalCourses: 1, avatar: avatar1 },
+                { active: 'primary', name: 'Bentlee Emblin', profession: 'Digital Marketing', totalCourses: 2, avatar: avatar1 },
+                { active: 'primary', name: 'Benedetto Rossiter', profession: 'UI/UX Design', totalCourses: 1, avatar: avatar1 },
                 { active: 'secondary', name: 'Beverlie Krabbe', profession: 'Vue', totalCourses: 8, avatar: avatar1 },
               ]"
               :key="instructor.name"
@@ -178,7 +188,7 @@
               <template #append>
                 <span class="p-0">
                   <VBadge
-                    color="error"
+                    color="primary"
                     :content="instructor.totalCourses"
                   />
                 </span>
@@ -224,7 +234,7 @@
                 </VProgressCircular>
               </template>
               <VListItemTitle
-                class="font-weight-medium mb-1 cursor-pointer"
+                class="font-weight-medium mb-1 cursor-pointer text-primary"
                 @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
               >
                 {{ data.name }}
@@ -234,7 +244,7 @@
               <template #append>
                 <VBtn
                   variant="tonal"
-                  color="default"
+                  color="primary"
                   class="rounded-sm"
                   size="30"
                   @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
@@ -259,7 +269,7 @@
                 <VCardText class="d-flex align-center">
                   <VIcon
                     size="40"
-                    color="info"
+                    color="primary"
                     icon="tabler-info-circle"
                     class="me-4"
                   />
@@ -534,9 +544,9 @@ const getColor = progress => {
   if (progress == 'completed') {
     return 'success'
   } else if (progress == 'inprogress') {
-    return 'warning'
+    return 'primary'
   } else {
-    return 'info'
+    return 'secondary'
   }
 }
 

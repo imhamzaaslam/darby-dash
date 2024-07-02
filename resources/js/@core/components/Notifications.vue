@@ -52,7 +52,7 @@ const toggleReadUnread = (isSeen, Id) => {
     <VBadge
       v-bind="props.badgeProps"
       :model-value="props.notifications.some(n => !n.isSeen)"
-      color="error"
+      color="primary"
       dot
       offset-x="2"
       offset-y="3"

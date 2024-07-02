@@ -132,6 +132,7 @@
           v-for="(list, index) in getProjectLists"
           :key="index"
           class="px-4 py-4 mt-2"
+          :style="{ borderLeft: expandedRows[index] ? '4px solid transparent' : '4px solid rgb(var(--v-global-theme-primary))' }"
         >
           <VRow 
             class="cursor-pointer"
