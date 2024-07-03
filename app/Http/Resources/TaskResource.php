@@ -31,6 +31,8 @@ class TaskResource extends JsonResource
             'start_date' => $this->start_date,
             'due_date' => $this->due_date,
             'est_time' => $this->est_time ? convertToHoursAndMinutes($this->est_time) : NULL,
+            'est_time_hours' => $this->est_time ? floor($this->est_time / 60) : NULL,
+            'est_time_minutes' => $this->est_time ? $this->est_time % 60 : NULL,
             'display_order' => $this->display_order,
             'files_count' => $this->files->count(),
             'created_at' => $this->created_at,

@@ -407,14 +407,4 @@ watch(() => props.isDrawerOpen, val => {
   .v-navigation-drawer__content {
       overflow-y: hidden !important;
   }
-  /* Hide the up and down arrows for number inputs */
-  .no-arrows input::-webkit-outer-spin-button,
-  .no-arrows input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
-  .no-arrows input {
-    -moz-appearance: textfield;
-  }
   </style>

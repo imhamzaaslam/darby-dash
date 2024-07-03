@@ -386,7 +386,7 @@
                   </td>
                   <td>
                     <VMenu
-                      v-model="inputHours[item.id]"
+                      v-model="inputTimeRef[item.id]"
                       transition="scale-transition"
                       offset-y
                       :close-on-content-click="false"
@@ -398,6 +398,7 @@
                           size="small"
                           v-bind="props"
                           class="cursor-pointer"
+                          @click="setInputTime(item)"
                         >
                           <VIcon
                             size="x-small"
@@ -409,19 +410,21 @@
                       <VList class="pt-0">
                         <VListItem class="time-field-list">
                           <AppTextField
-                            v-model="inputHours[item.id].hours"
+                            v-model="inputHoursRef[item.id]"
                             label="Hours"
+                            type="number"
                             min="0"
-                            class="time-field me-2"
+                            class="time-field me-2 no-arrows"
                             density="compact"
                             autofocus
                           />
                           <AppTextField
-                            v-model="inputHours[item.id].minutes"
+                            v-model="inputMinutesRef[item.id]"
                             label="Minutes"
+                            type="number"
                             min="0"
                             max="59"
-                            class="time-field"
+                            class="time-field no-arrows"
                             density="compact"
                           />
                         </VListItem>
@@ -430,13 +433,25 @@
                             color="primary"
                             size="x-small"
                             class="me-2"
+                            :disabled="isSavingTime"
+                            @click="saveTime(item)"
                           >
-                            Save
+                            <span v-if="isSavingTime">
+                              <VProgressCircular
+                                :size="16"
+                                width="3"
+                                indeterminate
+                              />
+                              Loading...
+                            </span>
+                            <span v-else>
+                              Save
+                            </span>
                           </VBtn>
                           <VBtn
                             color="secondary"
                             size="x-small"
-                            @click="inputHours[item.id] = false"
+                            @click="inputTimeRef[item.id] = false"
                           >
                             Cancel
                           </VBtn>
@@ -444,70 +459,6 @@
                       </VList>
                     </VMenu>
                   </td>
-
-                  <!-- <td>
-                    <div v-if="!isEditingHours[item.id]">
-                      <VChip
-                        color="primary"
-                        size="small"
-                        @click="enableEditingHours(item)"
-                      >
-                        <VIcon
-                          size="x-small"
-                          class="tabler-clock me-1"
-                        />
-                        <small>{{ item.est_time || 'Set EST Time' }}</small>
-                        <VTooltip
-                          activator="parent"
-                          location="top"
-                        >
-                          <small>Example 03h 45m</small>
-                        </VTooltip>
-                      </VChip>
-                    </div>
-                    <div
-                      v-else
-                      class="d-flex align-items-center"
-                    >
-                      <VTextField
-                        :ref="el => inputHoursRef[item.id] = el"
-                        v-model="inputHours[item.id]"
-                        v-mask="'##h ##m'"
-                        placeholder="03h 45m"
-                        density="compact"
-                        :style="{ width: '100px' }"
-                        @input="validateMinutes($event, item)"
-                        @blur="saveHours(item)"
-                        @keyup.enter="saveHours(item)"
-                      />
-                      <VIcon
-                        size="x-small"
-                        color="success"
-                        class="ms-2 mt-2 tabler-check"
-                        @click="saveHours(item)"
-                      >
-                        <VTooltip
-                          activator="parent"
-                          location="top"
-                        >
-                          <small>Save</small>
-                        </VTooltip>
-                      </VIcon>
-                      <VIcon
-                        size="x-small"
-                        color="error"
-                        class="ms-1 mt-2 tabler-x"
-                        @click="cancelHoursEdit(item)"
-                      >
-                        <VTooltip
-                          activator="parent"
-                          location="top"
-                        >
-                          <small>Cancel</small>
-                        </VTooltip>
-                      </VIcon>
-                    </div>
-                  </td> -->
                   <td>
                     <VChip
                       color="primary"
@@ -642,67 +593,79 @@
                       </VMenu>
                     </td>
                     <td>
-                      <div v-if="!isEditingHours[subtask.id]">
-                        <VChip
-                          color="primary"
-                          size="small"
-                          @click="enableEditingHours(subtask)"
-                        >
-                          <VIcon
-                            size="x-small"
-                            class="tabler-clock me-1"
-                          />
-                          <small>{{ subtask.est_time || 'Set EST Time' }}</small>
-                          <VTooltip
-                            activator="parent"
-                            location="top"
-                          >
-                            <small>Example 03h 45m</small>
-                          </VTooltip>
-                        </VChip>
-                      </div>
-                      <div
-                        v-else
-                        class="d-flex align-items-center"
+                      <VMenu
+                        v-model="inputTimeRef[subtask.id]"
+                        transition="scale-transition"
+                        offset-y
+                        :close-on-content-click="false"
+                        class="p-0"
                       >
-                        <VTextField
-                          :ref="el => inputHoursRef[subtask.id] = el"
-                          v-model="inputHours[subtask.id]"
-                          v-mask="'##h ##m'"
-                          placeholder="03h 45m"
-                          density="compact"
-                          :style="{ width: '100px' }"
-                          @input="validateMinutes($event, subtask)"
-                          @blur="saveHours(subtask)"
-                          @keyup.enter="saveHours(subtask)"
-                        />
-                        <VIcon
-                          size="x-small"
-                          color="success"
-                          class="ms-2 mt-2 tabler-check"
-                          @click="saveHours(subtask)"
-                        >
-                          <VTooltip
-                            activator="parent"
-                            location="top"
+                        <template #activator="{ props }">
+                          <VChip
+                            color="primary"
+                            size="small"
+                            v-bind="props"
+                            class="cursor-pointer"
+                            @click="setInputTime(subtask)"
                           >
-                            <small>Save</small>
-                          </VTooltip>
-                        </VIcon>
-                        <VIcon
-                          size="x-small"
-                          color="error"
-                          class="ms-1 mt-2 tabler-x"
-                          @click="cancelHoursEdit(subtask)"
-                        >
-                          <VTooltip
-                            activator="parent"
-                            location="top"
-                          >
-                            <small>Cancel</small>
-                          </VTooltip>
-                        </VIcon>
-                      </div>
+                            <VIcon
+                              size="x-small"
+                              class="tabler-clock me-1"
+                            />
+                            <small>{{ subtask.est_time || 'Set EST Time' }}</small>
+                          </VChip>
+                        </template>
+                        <VList class="pt-0">
+                          <VListItem class="time-field-list">
+                            <AppTextField
+                              v-model="inputHoursRef[subtask.id]"
+                              label="Hours"
+                              type="number"
+                              min="0"
+                              class="time-field me-2 no-arrows"
+                              density="compact"
+                              autofocus
+                            />
+                            <AppTextField
+                              v-model="inputMinutesRef[subtask.id]"
+                              label="Minutes"
+                              type="number"
+                              min="0"
+                              max="59"
+                              class="time-field no-arrows"
+                              density="compact"
+                            />
+                          </VListItem>
+                          <VListItem class="me-3">
+                            <VBtn
+                              color="primary"
+                              size="x-small"
+                              class="me-2"
+                              :disabled="isSavingTime"
+                              @click="saveTime(subtask)"
+                            >
+                              <span v-if="isSavingTime">
+                                <VProgressCircular
+                                  :size="16"
+                                  width="3"
+                                  indeterminate
+                                />
+                                Loading...
+                              </span>
+                              <span v-else>
+                                Save
+                              </span>
+                            </VBtn>
+                            <VBtn
+                              color="secondary"
+                              size="x-small"
+                              @click="inputTimeRef[subtask.id] = false"
+                            >
+                              Cancel
+                            </VBtn>
+                          </VListItem>
+                        </VList>
+                      </VMenu>
                     </td>
                     <td>
                       <VChip
@@ -1488,11 +1451,10 @@ const isDragging = ref(false)
 const statusMenu = ref([])
 const dueDateMenu = ref([])
 const selectedList = ref(null)
-const isEditingHours = ref([])
-const inputHours = ref([])
-const inputMinutes = ref([])
+const inputTimeRef = ref([])
 const inputHoursRef = ref([])
 const inputMinutesRef = ref([])
+const isSavingTime = ref(null)
 
 const isLoading = ref(false)
 
@@ -1808,12 +1770,6 @@ function cancelQuickKanbanSubTask(index) {
   quickKanbanSubTaskName.value = ''
 }
 
-const cancelHoursEdit = item => {
-  isEditingHours.value[item.id] = false
-
-  inputHours.value[item.id] = item.est_time
-}
-
 function startEditing(task) {
   editingTask.value = { ...task, project_uuid: projectId.value }
   isEditTaskDrawerOpen.value = true
@@ -1937,18 +1893,6 @@ const startListEditing = list => {
   })
 }
 
-const enableEditingHours = item => {
-  isEditingHours.value[item.id] = true
-  inputHours.value[item.id] = item.est_time
-  nextTick(() => {
-    const inputRef = inputHoursRef.value[item.id]
-    if (inputRef && inputRef.focus) {
-      inputRef.focus()
-      inputRef.select()
-    }
-  })
-}
-
 const saveListTitle = async list => {
   try {
     isListEditing.value[list.id] = false
@@ -2055,16 +1999,31 @@ const updateStatus = async (item, status) => {
   }
 }
 
-const saveHours = async item => {
-  try {
-    isEditingHours.value[item.id] = false
+const setInputTime = item => {
+  inputHoursRef.value[item.id] = item.est_time_hours
+  inputMinutesRef.value[item.id] = item.est_time_minutes
+}
 
-    const time = inputHours.value[item.id]
-    if (item.est_time === time) {
+const saveTime = async item => {
+
+  try {
+    console.log(inputHoursRef.value[item.id])
+
+    const hours = inputHoursRef.value[item.id]
+    const minutes = inputMinutesRef.value[item.id]
+
+    if(!hours && !minutes)
+    {
+      toast.error('Please enter hours or minutes')
+
       return
     }
 
-    item.est_time = time
+    isSavingTime.value = true
+
+    const time = `${hours ? hours : '00'}h ${minutes ? minutes : '00'}m`
+
+    item.name = `${item.name}`
 
     const payload = {
       est_time: time,
@@ -2073,8 +2032,11 @@ const saveHours = async item => {
     await projectTaskStore.updateAttributes(item.uuid, payload)
     fetchProjectLists()
     toast.success('Task EST time updated successfully', { timeout: 1000 })
+    inputTimeRef.value[item.id] = false
   } catch (error) {
     toast.error('Failed to update task est time:', error)
+  } finally {
+    isSavingTime.value = false
   }
 }
 
