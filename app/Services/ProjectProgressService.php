@@ -43,12 +43,15 @@ class ProjectProgressService
             return $list->tasks->where('status', 3)->count();
         });
         $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
+        $allTasks = $mileStone->lists->map(function ($list) {
+            return $list->tasks;
+        })->flatten();
 
         return [
             'totalTasks' => $totalTasks,
             'completedTasks' => $completedTasks,
             'progress' => $progress,
-            'status' => $this->getStatus($progress),
+            'status' => $this->getTaskBaseStatus($allTasks),
         ];
     }
 

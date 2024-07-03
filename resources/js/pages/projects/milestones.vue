@@ -7,28 +7,6 @@
         md="7"
         class="d-flex"
       >
-        <!--
-          <VBtnToggle
-          v-model="viewType"
-          class="d-toggle align-center-important"
-          rounded="0"
-          >
-          <VIcon
-          icon="tabler-list"
-          class="me-1"
-          :class="{ 'bg-primary': viewType === 'list' }"
-          @click="viewType = 'list'"
-          />
-          <VIcon
-          icon="tabler-layout-grid"
-          :class="{ 'bg-primary': viewType === 'grid' }"
-          @click="viewType = 'grid'"
-          />
-          <VIcon
-          icon="tabler-filter"
-          class="bg-primary ms-1"
-          />
-        -->
         <div class="d-flex justify-center align-center">
           <VAvatar
             :size="30"
@@ -167,7 +145,7 @@
               >
                 <VChip
                   variant="outlined"
-                  :color="data.status === 'done' ? 'success' : 'warning'"
+                  :color="getStatusColor(data.mileStoneProgress.status)"
                   size="small"
                 >
                   <span>{{ capitalizeFirstLetter(data.mileStoneProgress.status) }}</span>
@@ -236,7 +214,7 @@
                         </span>
                         <VChip
                           variant="outlined"
-                          :color="data.status === 'done' ? 'success' : 'warning'"
+                          :color="getStatusColor(data.mileStoneProgress.status)"
                           size="small"
                           class="mt-3 position-absolute user_role"
                         >
@@ -593,6 +571,16 @@ const submitEditMileStoneForm = async () => {
       }
     }
   })
+}
+
+const getStatusColor = status => {
+  if (status === 'completed') {
+    return 'success'
+  } else if (status === 'inprogress') {
+    return 'warning'
+  } else {
+    return 'secondary'
+  }
 }
 
 const mileStoneLoadStatus = computed(() => {
