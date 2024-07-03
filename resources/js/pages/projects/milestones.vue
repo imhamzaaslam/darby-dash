@@ -76,7 +76,7 @@
       <div v-else>
         <VRow
           v-if="viewType === 'list'"
-          class="mb-4"
+          class="mb-2"
         >
           <VCol
             v-for="(data, index) in getProjectMileStone"
