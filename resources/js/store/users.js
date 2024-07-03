@@ -11,6 +11,7 @@ export const useUserStore = defineStore('users', {
     usersCount: 0,
     projectManagers: null,
     members: null,
+    memberListsForDropDown: [],
     loadStatus: 0,
     error: null,
   }),
@@ -162,6 +163,20 @@ export const useUserStore = defineStore('users', {
         console.error('getMembers error ', error)
       }
     },
+    async getMembersForDropDown() {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await UserService.getAll()
+
+        this.memberListsForDropDown = response.data.data.map(member => ({ label: member.name_first+ " " + member.name_last+ " (" + member.role + ")", value: member.id }))
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getMembers error ', error)
+      }
+    },
     async updateUserImage(avatar, uuid) {
       this.error = null
       this.loadStatus = 1
@@ -197,6 +212,7 @@ export const useUserStore = defineStore('users', {
     getAllUsersByProjects: state => state.allUsersByProject,
     getProjectManagersList: state => state.projectManagers,
     getMembersList: state => state.members,
+    getMemberListsForDropDown: state => state.memberListsForDropDown,
     getErrors: state => state?.error?.response?.data?.errors || state?.error?.response?.data?.message,
     getStatusCode: state => state.error?.response?.status,
   },

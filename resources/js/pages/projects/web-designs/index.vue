@@ -437,7 +437,7 @@ const fetchMembers = async () => {
   try {
     isLoading.value = true
 
-    await userStore.getMembers()
+    await userStore.getMembersForDropDown()
   } catch (error) {
     toast.error('Failed to get members:', error.message || error)
   }
@@ -497,7 +497,7 @@ const projectManagersWithFirstOption = (firstOption = null) => {
 }
 
 const getMembers = computed(() => {
-  return userStore.getMembersList
+  return userStore.getMemberListsForDropDown
 })
 
 const getErrors = computed(() => {

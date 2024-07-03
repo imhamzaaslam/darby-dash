@@ -48,16 +48,16 @@
                 />
               </VCol>
               <VCol cols="12">
-                <AppAutocomplete
+                <label>Select Members</label>
+                <Multiselect
                   v-model="props.editProjectDetails.member_ids"
-                  :items="props.getMembers"
-                  item-title="name"
-                  item-value="id"
-                  label="Members"
+                  mode="tags"
                   placeholder="Select Members"
-                  multiple
-                  clearable
-                  clear-icon="tabler-x"
+                  close-on-select
+                  searchable
+                  :options="props.getMembers"
+                  class="bg-background multiselect-purple"
+                  style="color: #000 !important;"
                 />
               </VCol>
               <VCol cols="12">
@@ -101,6 +101,7 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { ref, nextTick } from 'vue'
+import Multiselect from '@vueform/multiselect'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../../store/projects"
 
