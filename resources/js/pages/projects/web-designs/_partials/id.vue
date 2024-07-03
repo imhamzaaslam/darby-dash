@@ -583,10 +583,10 @@ watch(project, () => {
     margin-bottom: 25px;
 }
 .logistics-card-statistics{
-  border-block-end: 3px solid rgba(var(--v-theme-success), var(--v-disabled-opacity));
+  border-block-end: 3px solid rgba(var(--v-theme-primary), var(--v-disabled-opacity));
 }
 .logistics-card-statistics:hover {
-  border-bottom: 3px solid rgba(var(--v-theme-success));
+  border-bottom: 3px solid rgba(var(--v-theme-primary));
 }
 .horizontal-scroll {
   overflow-x: auto;
