@@ -27,6 +27,7 @@
             <VRow>
               <VCol cols="12">
                 <AppTextField
+                  ref="focusInput"
                   v-model="props.editingTask.name"
                   label="Title*"
                   :rules="[requiredValidator]"
@@ -180,6 +181,7 @@ const toast = useToast()
 const projectTaskStore = useProjectTaskStore()
 const fileStore = useFileStore()
 
+const focusInput = ref(null)
 const editTaskForm = ref()
 const isLoading= ref(false)
 const fileInputRef = ref(null)
@@ -292,6 +294,17 @@ const fetchFiles = async () => {
 
 const taskFiles = computed(() => {
   return projectTaskStore.getTaskFiles
+})
+
+watch(() => props.isEditTaskDrawerOpen, val => {
+  if (val) {
+    nextTick(() => {
+      const inputEl = focusInput.value.$el.querySelector('input')
+      if (inputEl) {
+        inputEl.focus()
+      }
+    })
+  }
 })
 </script>
 

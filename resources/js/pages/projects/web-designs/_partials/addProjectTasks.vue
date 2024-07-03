@@ -166,11 +166,11 @@
                   <span
                     v-else
                     class="cursor-pointer d-flex align-center"
-                    @click.stop="startListEditing(list)"
                   >
                     <VIcon
                       class="tabler-edit cursor-pointer"
                       color="primary"
+                      @click.stop="startListEditing(list)"
                     />
                     <VTooltip
                       activator="parent"
@@ -545,8 +545,14 @@
                     v-for="subtask in item.subtasks"
                     :key="subtask.id"
                     width="100%"
+                    :class="{ 'bg-td-hover': showAddSubtaskIcon === subtask.uuid }"
+                    @mouseenter="showAddSubtaskIcon = subtask.uuid"
+                    @mouseleave="showAddSubtaskIcon = null"
                   >
-                    <td>
+                    <td
+                      class="cursor-pointer"
+                      @click.stop="startEditing(subtask)"
+                    >
                       <VIcon
                         class="tabler-playstation-circle"
                         size="x-small"
@@ -1407,7 +1413,6 @@
     </div>
   </div>
   <EditTaskDrawer
-    v-if="isEditTaskDrawerOpen"
     v-model:is-edit-task-drawer-open="isEditTaskDrawerOpen"
     :fetch-project-tasks="fetchProjectTasks"
     :editing-task="editingTask"
