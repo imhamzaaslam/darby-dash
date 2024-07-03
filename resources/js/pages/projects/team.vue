@@ -63,7 +63,7 @@
         <div class="d-flex justify-end">
           <VBtn
             prepend-icon="tabler-plus"
-            @click="isAddMemberDialogueOpen = !isAddMemberDialogueOpen"
+            @click="(isAddMemberDialogueOpen = !isAddMemberDialogueOpen, isMultiselectValid = true)"
           >
             New Member
           </VBtn>
@@ -114,7 +114,7 @@
         <VRow v-if="viewType === 'list'">
           <VCol
             v-for="member in getUsersByProjects"
-            :key="member.id"
+            :key="member.value"
             cols="12"
           >
             <VCard class="d-flex align-center ps-4 py-1 list-side-border">
@@ -181,7 +181,7 @@
         <VRow v-else>
           <VCol
             v-for="member in getUsersByProjects"
-            :key="member.id"
+            :key="member.value"
             cols="12"
             md="4"
           >
@@ -272,19 +272,27 @@
         @submit.prevent="submitAddMemberForm"
       >
         <VCardText>
-          <AppAutocomplete
+          <label>Select Members*</label>
+          <Multiselect
+            ref="focusInput"
             v-model="newMembers"
-            :items="getMembers"
-            item-title="name"
-            item-value="id"
-            label="Members*"
+            mode="tags"
             placeholder="Select Members"
-            multiple
-            clearable
-            clear-icon="tabler-x"
-            :rules="[requiredValidator]"
-            autofocus
+            close-on-select
+            searchable
+            :options="getMembers"
+            :class="{'is-invalid': !isMultiselectValid}"
+            class="bg-background multiselect-purple"
+            style="color: #000 !important;"
+            @blur="validateMultiselect"
+            @update:model-value="isMultiselectValid = true"
           />
+          <div
+            v-if="!isMultiselectValid"
+            class="text-error"
+          >
+            Please select at least one member.
+          </div>
         </VCardText>
 
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
@@ -321,6 +329,7 @@
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import Swal from 'sweetalert2'
+import Multiselect from '@vueform/multiselect'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import FilterDrawer from '@/pages/projects/_partials/filter-members-drawer.vue'
@@ -340,6 +349,7 @@ const userStore = useUserStore()
 const roleStore = useRoleStore()
 const router = useRoute()
 
+const focusInput = ref()
 const viewType = ref('list')
 const addMemberForm = ref()
 const isAddMemberDialogueOpen = ref(false)
@@ -351,6 +361,7 @@ const searchName = ref('')
 const searchEmail = ref('')
 const selectedRole = ref(null)
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
+const isMultiselectValid = ref(true)
 
 const projectId = computed(() => router.params.id)
 
@@ -361,34 +372,38 @@ onBeforeMount(async () => {
   await setSelectedMembers()
 })
 
+const validateMultiselect = () => {
+  isMultiselectValid.value = newMembers.value.length > 0
+}
+
 async function submitAddMemberForm() {
-  addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
-    if(isValid){
-      try {
-        const payload = {
-          uuid: projectId.value,
-          member_ids: [...selectedMembers.value, ...newMembers.value],
-        }
+  validateMultiselect()
 
-        await projectStore.updateMember(payload)
-
-        isAddMemberDialogueOpen.value = false
-        toast.success('Member added successfully', { timeout: 1000 })
-
-        await getByProjects()
-        await fetchProject()
-        await setSelectedMembers()
-      } catch (error) {
-        console.error('Error adding member:', error)
-        toast.error('Failed to add member:', error.message || error)
+  if(isMultiselectValid.value){
+    try {
+      const payload = {
+        uuid: projectId.value,
+        member_ids: [...selectedMembers.value, ...newMembers.value],
       }
+
+      await projectStore.updateMember(payload)
+
+      isAddMemberDialogueOpen.value = false
+      toast.success('Member added successfully', { timeout: 1000 })
+
+      await getByProjects()
+      await fetchProject()
+      await setSelectedMembers()
+    } catch (error) {
+      console.error('Error adding member:', error)
+      toast.error('Failed to add member:', error.message || error)
     }
-  })
+  }
 }
 
 const fetchMembers = async () => {
   try {
-    await userStore.getMembers()
+    await userStore.getMembersForDropDown()
     isLoading.value = true
   } catch (error) {
     toast.error('Error fetching members:', error)
@@ -486,9 +501,9 @@ const applyFilters = async (name = '', email = null, roleId = null) => {
 }
 
 const getMembers = computed(() => {
-  const members = userStore.getMembersList
+  const members = userStore.getMemberListsForDropDown
 
-  return members.filter(member => !selectedMembers.value.includes(member.id))
+  return members.filter(member => !selectedMembers.value.includes(member.value))
 })
 
 const project = computed(() =>{
@@ -515,8 +530,19 @@ const getProjectLoadStatus = computed(() => {
   return projectStore.getLoadStatus
 })
 
-watch(project, () => {
-  useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title} - Team` })
+watch([project, isAddMemberDialogueOpen], ([newProject, newDialogueState]) => {
+  if (newProject) {
+    useHead({ title: `${layoutConfig.app.title} | ${newProject?.title} - Team` })
+  }
+
+  if (newDialogueState) {
+    nextTick(() => {
+      const inputEl = focusInput.value?.$el?.querySelector('input')
+      if (inputEl) {
+        inputEl.focus()
+      }
+    })
+  }
 })
 </script>
 
