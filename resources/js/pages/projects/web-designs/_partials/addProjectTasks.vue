@@ -411,8 +411,11 @@
                         <VListItem class="time-field-list">
                           <AppTextField
                             v-model="inputHoursRef[item.id]"
+                            v-mask="'##'"
                             label="Hours"
                             type="number"
+                            suffix="h"
+                            placeholder="00"
                             min="0"
                             class="time-field me-2 no-arrows"
                             density="compact"
@@ -420,8 +423,11 @@
                           />
                           <AppTextField
                             v-model="inputMinutesRef[item.id]"
+                            v-mask="'##'"
                             label="Minutes"
                             type="number"
+                            suffix="m"
+                            placeholder="00"
                             min="0"
                             max="59"
                             class="time-field no-arrows"
@@ -619,8 +625,11 @@
                           <VListItem class="time-field-list">
                             <AppTextField
                               v-model="inputHoursRef[subtask.id]"
+                              v-mask="'##'"
                               label="Hours"
                               type="number"
+                              suffix="h"
+                              placeholder="00"
                               min="0"
                               class="time-field me-2 no-arrows"
                               density="compact"
@@ -630,6 +639,8 @@
                               v-model="inputMinutesRef[subtask.id]"
                               label="Minutes"
                               type="number"
+                              suffix="m"
+                              placeholder="00"
                               min="0"
                               max="59"
                               class="time-field no-arrows"
@@ -2150,5 +2161,9 @@ watch(project, () => {
 
 .time-field-list :deep(.v-list-item__content .time-field) {
   width: 85px;
+}
+
+.time-field-list :deep(.v-text-field__suffix) {
+  color: lightgray;
 }
 </style>
