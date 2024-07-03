@@ -13,3 +13,13 @@
 .no-arrows input {
   -moz-appearance: textfield;
 }
+
+.multiselect-purple {
+  --ms-tag-bg: #a12592;
+  --ms-border-color: #a12592;
+  --ms-border-color-active: #a12592 !important;
+}
+
+.multiselect-purple.is-active {
+  box-shadow: unset !important;
+}

@@ -668,10 +668,4 @@ watch(project, () => {
 .custom-pagination :deep(div) {
   padding-top: 0px !important;
 }
-
-.multiselect-purple {
-  --ms-tag-bg: #a12592;
-  --ms-border-color: #a12592;
-  --ms-border-color-active: #a12592 !important;
-}
 </style>
