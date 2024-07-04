@@ -27,6 +27,7 @@ class UpdateTaskRequest extends FormRequest
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
             'est_time' => 'sometimes|nullable',
+            'assignees' => 'sometimes|nullable|array',
         ];
     }
 }

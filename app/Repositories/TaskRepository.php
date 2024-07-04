@@ -43,6 +43,9 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
             $minutes = (int)explode('m', explode('h', $attributes['est_time'])[1])[0];
             $attributes['est_time'] = $hours * 60 + $minutes;
         }
+        if (isset($attributes['assignees'])) {
+            $task->assignees()->sync($attributes['assignees']);
+        }
         return $task->fill($attributes)->save();
     }
 
