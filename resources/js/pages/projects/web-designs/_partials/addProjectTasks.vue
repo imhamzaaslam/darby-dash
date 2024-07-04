@@ -414,6 +414,7 @@
                             </VListItemAvatar>
                             <VListItemTitle class="ms-2">
                               {{ user.name_first + ' ' + user.name_last }}
+                              <p class="text-xs mb-0">{{ user.role }}</p>
                             </VListItemTitle>
                           </VListItem>
                         </template>
@@ -445,6 +446,7 @@
                                 </VListItemAvatar>
                                 <VListItemTitle class="ms-2">
                                   {{ user.name_first + ' ' + user.name_last }}
+                                  <p class="text-xs mb-0">{{ user.role }}</p>
                                 </VListItemTitle>
                                 <VIcon
                                   v-if="showDeleteIcon === user.id"
