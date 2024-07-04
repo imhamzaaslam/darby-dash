@@ -96,6 +96,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::patch('/', [TaskController::class, 'updateByProject']);
                     Route::post('/order', [TaskController::class, 'updateProjectTasksOrder']);
                     Route::delete('/', [TaskController::class, 'deleteByProject']);
+                    Route::get('/members', [TaskController::class, 'getMembersForTask']);
                 });
                 Route::get('/progress', [ProjectProgressController::class, 'index']);
 
@@ -145,6 +146,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [TaskController::class, 'updateAttributes']);
                 Route::get('/files', [TaskController::class, 'getFiles']);
                 Route::post('/files', [TaskController::class, 'storeFiles']);
+                Route::post('/assign', [TaskController::class, 'assign']);
+                Route::post('/unassign', [TaskController::class, 'unassign']);
             });
         });
 

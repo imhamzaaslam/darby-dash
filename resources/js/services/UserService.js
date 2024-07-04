@@ -21,6 +21,18 @@ export default {
     return await apiClient.get(baseUrl + queryString)
   },
 
+  fetchMembersForTask: async (projectUuid, taskUuid, search) => {
+    const baseUrl = `/admin/projects/${projectUuid}/task/${taskUuid}/members`
+
+    const queryParams = [
+      search && `keyword=${search}`,
+    ].filter(Boolean)
+
+    const queryString = queryParams.length ? `?${queryParams.join('&')}` : ''
+
+    return await apiClient.get(baseUrl + queryString)
+  },
+
   // getUsers: async (
   //   page = 1,
   //   perPage = 10,

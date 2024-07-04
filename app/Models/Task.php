@@ -52,6 +52,6 @@ class Task extends Base
 
     public function assignees()
     {
-        return $this->belongsToMany(User::class, 'task_assignees');
+        return $this->belongsToMany(User::class, 'task_assignees')->withTimestamps();
     }
 }

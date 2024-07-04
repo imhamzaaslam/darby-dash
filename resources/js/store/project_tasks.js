@@ -137,6 +137,32 @@ export const useProjectTaskStore = defineStore('project_tasks', {
         console.error('updateAttributes error ', error)
       }
     },
+    async assignTask(taskUuid, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await ProjectTaskService.assignTask(taskUuid, payload)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('assignTask error ', error)
+      }
+    },
+    async removeAssignee(taskUuid, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await ProjectTaskService.removeAssignee(taskUuid, payload)
+  
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('removeAssignee error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

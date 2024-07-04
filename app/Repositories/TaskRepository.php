@@ -81,4 +81,25 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         return $task;
     }
 
+    public function getMembersForTask(Project $project, Task $task, string $keyword = null): Collection
+    {
+        $projectMembers = $project->members;
+
+        $taskAssignees = $task->assignees;
+
+        if ($keyword) {
+            $projectMembers = $projectMembers->filter(function ($member) use ($keyword) {
+                return str_contains($member->name, $keyword) || str_contains($member->email, $keyword);
+            });
+        }
+
+        return $projectMembers->diff($taskAssignees);
+    }
+
+    public function assginMember(Task $task, array $attributes): bool
+    {
+        $previousAssginees = $task->assignees->pluck('id')->toArray();
+        $task->assignees()->sync(array_merge($previousAssginees, [$attributes['assignee']]));
+        return true;
+    }
 }

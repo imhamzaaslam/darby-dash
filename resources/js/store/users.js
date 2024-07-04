@@ -12,6 +12,7 @@ export const useUserStore = defineStore('users', {
     projectManagers: null,
     members: null,
     memberListsForDropDown: [],
+    memberListsForTask: [],
     loadStatus: 0,
     error: null,
   }),
@@ -177,6 +178,20 @@ export const useUserStore = defineStore('users', {
         console.error('getMembers error ', error)
       }
     },
+    async fetchMembersForTask(projectUuid, taskUuid, search) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await UserService.fetchMembersForTask(projectUuid, taskUuid, search)
+
+        this.memberListsForTask = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('fetchMembersForTask error ', error)
+      }
+    },  
     async updateUserImage(avatar, uuid) {
       this.error = null
       this.loadStatus = 1
@@ -213,6 +228,7 @@ export const useUserStore = defineStore('users', {
     getProjectManagersList: state => state.projectManagers,
     getMembersList: state => state.members,
     getMemberListsForDropDown: state => state.memberListsForDropDown,
+    getMembersForTask: state => state.memberListsForTask,
     getErrors: state => state?.error?.response?.data?.errors || state?.error?.response?.data?.message,
     getStatusCode: state => state.error?.response?.status,
   },

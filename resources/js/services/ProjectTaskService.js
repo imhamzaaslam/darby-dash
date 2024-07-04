@@ -38,4 +38,10 @@ export default {
   updateAttributes(taskUuid, payload) {
     return apiClient.patch(`admin/task/${taskUuid}`, payload)
   },
+  assignTask(taskUuid, payload) {
+    return apiClient.post(`admin/task/${taskUuid}/assign`, payload)
+  },
+  removeAssignee(taskUuid, payload) {
+    return apiClient.post(`admin/task/${taskUuid}/unassign`, payload)
+  },
 }

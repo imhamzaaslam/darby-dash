@@ -12,9 +12,11 @@ use App\Http\Requests\task\StoreTaskRequest;
 use App\Http\Requests\task\UpdateTaskRequest;
 use App\Http\Requests\task\StoreTaskByProjectRequest;
 use App\Http\Requests\task\StoreProjectTasksOrderRequest;
+use App\Http\Requests\task\AssignTaskRequest;
 use App\Http\Requests\file\StoreFileRequest;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\FileResource;
+use App\Http\Resources\UserResource;
 use App\Services\FileResolverService;
 use App\Services\FileUploadService;
 use App\Models\Task;
@@ -274,5 +276,56 @@ class TaskController extends Controller
         return (new TaskResource($task))
             ->response()
             ->setStatusCode(200);
+    }
+
+    /**
+     * Get members by task.
+     *
+     * Request $request
+     * @param string $projectUuid
+     * @param string $taskUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function getMembersForTask(Request $request, string $projectUuid, string $taskUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+
+        $members = $this->taskRepository->getMembersForTask($project, $task, $request->query('keyword'));
+
+        return UserResource::collection($members);
+    }
+
+    /**
+     * Assign task to user.
+     *
+     * @param AssignTaskRequest $request
+     * @param string $taskUuid
+     * @return JsonResponse
+     */
+    public function assign(AssignTaskRequest $request, string $taskUuid): JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $validated = $request->validated();
+
+        $this->taskRepository->assginMember($task, $validated);
+
+        return response()->json(['message' => 'Task assigned successfully']);
+    }
+
+    /**
+     * Unassign task from user.
+     *
+     * @param string $taskUuid
+     * @return JsonResponse
+     */
+    public function unassign(AssignTaskRequest $request, string $taskUuid): JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $validated = $request->validated();
+
+        $task->assignees()->detach($validated['assignee']);
+
+        return response()->json(['message' => 'Task unassigned successfully']);
     }
 }

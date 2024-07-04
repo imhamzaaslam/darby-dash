@@ -23,10 +23,12 @@
           :class="{ 'bg-primary': viewType === 'grid' }"
           @click="viewType = 'grid'"
         />
-        <!-- <VIcon
+        <!--
+          <VIcon
           icon="tabler-filter"
           class="bg-primary ms-1 me-2"
-        /> -->
+          /> 
+        -->
         <div class="ms-2 d-flex justify-center align-center">
           <VAvatar
             :size="30"
@@ -321,6 +323,150 @@
                         {{ item?.files_count }}
                       </span>
                     </span>
+                  </td>
+                  <td>
+                    <VMenu
+                      v-model="menu[item.id]"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                    >
+                      <template #activator="{ props }">
+                        <div class="v-avatar-group demo-avatar-group">
+                          <div
+                            v-for="(user, index) in item.assignees.slice(0, 2)"
+                            :key="index"
+                          >
+                            <VAvatar :size="30">
+                              <VAvatar
+                                size="25"
+                                class="text-white bg-primary"
+                                variant="tonal"
+                                v-bind="props"
+                              >
+                                <small>{{ avatarText(user.name_first + ' ' + user.name_last) }}</small>
+                              </VAvatar>
+                              <VTooltip
+                                activator="parent"
+                                location="top"
+                              >
+                                <span>{{ user.name_first + ' ' + user.name_last }}</span>
+                              </VTooltip>
+                            </VAvatar>
+                          </div>
+                          <VAvatar
+                            v-if="item.assignees.length > 2"
+                            :size="30"
+                            v-bind="props"
+                          >
+                            <VAvatar
+                              size="25"
+                              class="text-white bg-primary"
+                              variant="tonal"
+                              v-bind="props"
+                            >
+                              <small>+{{ item.assignees.length - 2 }}</small>
+                            </VAvatar>
+                          </VAvatar>
+                        </div>
+
+                        <VChip
+                          v-if="!item.assignees.length"
+                          color=""
+                          size="small"
+                          v-bind="props"
+                          class="cursor-pointer"
+                          rounded="md"
+                        >
+                          <VIcon
+                            icon="tabler-user-plus"
+                            size="small"
+                            class="text-primary"
+                          />
+                        </VChip>
+                      </template>
+                      <VList class="assignee-list">
+                        <VTextField
+                          v-model="searchUser"
+                          label="Search"
+                          placeholder="Search name or email"
+                          class="mx-4"
+                          dense
+                          hide-details
+                          autofocus
+                          @input="onMemberSearchInpt(item)"
+                        />
+                        <template v-if="filteredUsers.length > 0 && !usersLoading && searchUser">
+                          <VListItem
+                            v-for="user in filteredUsers"
+                            :key="user.id"
+                            class="assignee-list-item"
+                            @click="assignTask(user, item)"
+                          >
+                            <VListItemAvatar>
+                              <VAvatar
+                                size="34"
+                                class="text-white bg-primary"
+                                variant="tonal"
+                              >
+                                <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                              </VAvatar>
+                            </VListItemAvatar>
+                            <VListItemTitle class="ms-2">
+                              {{ user.name_first + ' ' + user.name_last }}
+                            </VListItemTitle>
+                          </VListItem>
+                        </template>
+                        <template v-else>
+                          <div 
+                            v-if="usersLoading"
+                            class="members-loading"
+                          >
+                            <div class="dots-loader" />
+                          </div>
+                          <div v-else>
+                            <div v-if="item.assignees.length > 0 && !searchUser">
+                              <VListItem
+                                v-for="user in item.assignees"
+                                :key="user.id"
+                                class="assignee-list-item"
+                                @mouseenter="showDeleteIcon = user.id"
+                                @mouseleave="showDeleteIcon = null"
+                                :disabled="isAssigneeRemoving"
+                              >
+                                <VListItemAvatar>
+                                  <VAvatar
+                                    size="34"
+                                    class="text-white bg-primary"
+                                    variant="tonal"
+                                  >
+                                    <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                                  </VAvatar>
+                                </VListItemAvatar>
+                                <VListItemTitle class="ms-2">
+                                  {{ user.name_first + ' ' + user.name_last }}
+                                </VListItemTitle>
+                                <VIcon
+                                  v-if="showDeleteIcon === user.id"
+                                  icon="tabler-circle-x-filled"
+                                  color="error"
+                                  class="cursor-pointer member-delete-icon"
+                                  @click.stop="removeAssignee(user, item)"
+                                />
+                              </VListItem>
+                            </div>
+                            <div v-else>
+                              <VListItem class="assignee-search-list-item">
+                                <VListItemTitle>
+                                  <small v-if="searchUser && filteredUsers.length === 0 && !usersLoading">No Member found</small>
+                                  <small v-else>Search Team Members...</small>
+                                </VListItemTitle>
+                              </VListItem>
+                            </div>
+                          </div>
+                        </template>
+                      </VList>
+                    </VMenu>
                   </td>
                   <td>
                     <VMenu
@@ -1408,11 +1554,13 @@ import { useProjectStore } from "../../../../store/projects"
 import { useProjectTaskStore } from "../../../../store/project_tasks"
 import { useListTaskStore } from "@/store/list_tasks"
 import { useStatusStore } from "@/store/status"
+import { useUserStore } from "@/store/users"
 import { useProjectListStore } from "../../../../store/project_lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useTheme } from 'vuetify'
 import { VIcon } from 'vuetify/lib/components/index.mjs'
+import { debounce } from 'lodash'
 import sketch from '@images/icons/project-icons/sketch.png'
 import Loader from "@/components/Loader.vue"
 
@@ -1423,6 +1571,7 @@ const projectTaskStore = useProjectTaskStore()
 const listTaskStore = useListTaskStore()
 const projectListStore = useProjectListStore()
 const statusStore = useStatusStore()
+const userStore = useUserStore()
 const router = useRouter()
 
 const viewType = ref('list')
@@ -1466,6 +1615,13 @@ const inputTimeRef = ref([])
 const inputHoursRef = ref([])
 const inputMinutesRef = ref([])
 const isSavingTime = ref(null)
+const searchUser = ref('')
+const usersLoading = ref(false)
+const isAssigneeRemoving = ref(false)
+const menu = ref([])
+const selectedAssignee = ref(null)
+const filteredUsers = ref([])
+const showDeleteIcon = ref(null)
 
 const isLoading = ref(false)
 
@@ -1885,6 +2041,7 @@ function toggleSubtasks(index){
 
 const headers = [
   { title: 'Task Name', key: 'name', sortable: false, width: '60%' },
+  { title: 'Assignee', key: 'assignee', sortable: false },
   { title: 'Status', key: 'status',  sortable: false },
   { title: 'Due Date', key: 'due_date', sortable: false },
   { title: 'EST Time', key: 'est_time', sortable: false },
@@ -1961,7 +2118,6 @@ const updateTaskOrder = async taskUpdateData => {
   }
 }
 
-
 const expandedRows = ref([])
 
 const toggleRow = (index, isIteration = false) => {
@@ -2018,8 +2174,6 @@ const setInputTime = item => {
 const saveTime = async item => {
 
   try {
-    console.log(inputHoursRef.value[item.id])
-
     const hours = inputHoursRef.value[item.id]
     const minutes = inputMinutesRef.value[item.id]
 
@@ -2074,6 +2228,70 @@ const closeDueDateMenu = async item => {
     toast.success('Task status updated successfully', { timeout: 1000 })
   } catch (error) {
     toast.error('Failed to update task status:', error)
+  }
+}
+
+const fetchMembers = async task => {
+  try {
+    if (!searchUser.value) {
+      filteredUsers.value = []
+      usersLoading.value = false
+
+      return
+    }
+
+    usersLoading.value = true
+    
+    await userStore.fetchMembersForTask(projectId.value, task.uuid, searchUser.value)
+    filteredUsers.value = userStore.getMembersForTask
+  } catch (error) {
+    console.error('Error fetching members:', error)
+    toast.error('Failed to fetch members:', error)
+  } finally {
+    usersLoading.value = false
+  }
+}
+
+const debouncedFilter = debounce(fetchMembers, 300)
+  
+const onMemberSearchInpt = task => {
+  debouncedFilter(task)
+}
+
+const assignTask = async (user, task) => {
+  try {
+    menu.value[task.id] = false
+
+    const payload = {
+      assignee: user.id,
+    }
+
+    await projectTaskStore.assignTask(task.uuid, payload)
+    fetchProjectLists()
+    filteredUsers.value = []
+    searchUser.value = ''
+    toast.success('Task assigned successfully', { timeout: 1000 })
+  } catch (error) {
+    toast.error('Failed to assign task:', error)
+  }
+}
+
+const removeAssignee = async (user, task) => {
+  try {
+    showDeleteIcon.value = false
+    isAssigneeRemoving.value = true
+
+    const payload = {
+      assignee: user.id,
+    }
+
+    await projectTaskStore.removeAssignee(task.uuid, payload)
+    await fetchProjectLists()
+    toast.success('Assignee removed successfully', { timeout: 1000 })
+  } catch (error) {
+    toast.error('Failed to remove assignee:', error)
+  } finally {
+    isAssigneeRemoving.value = false
   }
 }
 
@@ -2151,6 +2369,43 @@ watch(project, () => {
 
 .align-center-important {
   align-items: center !important;
+}
+
+.assignee-list {
+  width: 250px;
+  overflow-x: hidden !important;
+  max-height: 300px !important;
+}
+
+.assignee-list-item {
+  width: 240px;
+  overflow: hidden !important;
+}
+
+.assignee-list-item :deep(.v-list-item__content) {
+  display: flex;
+  align-items: center;
+}
+
+.assignee-search-list-item {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.members-loading {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.member-delete-icon {
+  position: absolute;
+  left: 37px;
+  top: 2px;
+  font-size: 18px;
 }
 
 .time-field-list :deep(.v-list-item__content) {

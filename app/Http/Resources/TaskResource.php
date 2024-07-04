@@ -35,6 +35,7 @@ class TaskResource extends JsonResource
             'est_time_minutes' => $this->est_time ? $this->est_time % 60 : NULL,
             'display_order' => $this->display_order,
             'files_count' => $this->files->count(),
+            'assignees' => UserResource::collection($this->assignees),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
