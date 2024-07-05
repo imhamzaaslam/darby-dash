@@ -568,6 +568,7 @@
                             class="time-field me-2 no-arrows"
                             density="compact"
                             autofocus
+                            @keydown.enter="saveTime(item)"
                           />
                           <AppTextField
                             v-model="inputMinutesRef[item.id]"
@@ -580,6 +581,7 @@
                             max="59"
                             class="time-field no-arrows"
                             density="compact"
+                            @keydown.enter="saveTime(item)"
                           />
                         </VListItem>
                         <VListItem class="me-3">
@@ -686,6 +688,152 @@
                     </td>
                     <td>
                       <VMenu
+                        v-model="menu[subtask.id]"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                      >
+                        <template #activator="{ props }">
+                          <div class="v-avatar-group demo-avatar-group">
+                            <div
+                              v-for="(user, index) in subtask.assignees.slice(0, 2)"
+                              :key="index"
+                            >
+                              <VAvatar :size="30">
+                                <VAvatar
+                                  size="25"
+                                  class="text-white bg-primary"
+                                  variant="tonal"
+                                  v-bind="props"
+                                >
+                                  <small>{{ avatarText(user.name_first + ' ' + user.name_last) }}</small>
+                                </VAvatar>
+                                <VTooltip
+                                  activator="parent"
+                                  location="top"
+                                >
+                                  <span>{{ user.name_first + ' ' + user.name_last }}</span>
+                                </VTooltip>
+                              </VAvatar>
+                            </div>
+                            <VAvatar
+                              v-if="subtask.assignees.length > 2"
+                              :size="30"
+                              v-bind="props"
+                            >
+                              <VAvatar
+                                size="25"
+                                class="text-white bg-primary"
+                                variant="tonal"
+                                v-bind="props"
+                              >
+                                <small>+{{ subtask.assignees.length - 2 }}</small>
+                              </VAvatar>
+                            </VAvatar>
+                          </div>
+
+                          <VChip
+                            v-if="!subtask.assignees.length"
+                            color=""
+                            size="small"
+                            v-bind="props"
+                            class="cursor-pointer"
+                            rounded="md"
+                          >
+                            <VIcon
+                              icon="tabler-user-plus"
+                              size="small"
+                              class="text-primary"
+                            />
+                          </VChip>
+                        </template>
+                        <VList class="assignee-list">
+                          <VTextField
+                            v-model="searchUser"
+                            label="Search"
+                            placeholder="Search name or email"
+                            class="mx-4"
+                            dense
+                            hide-details
+                            autofocus
+                            @input="onMemberSearchInpt(subtask)"
+                          />
+                          <template v-if="filteredUsers.length > 0 && !usersLoading && searchUser">
+                            <VListItem
+                              v-for="user in filteredUsers"
+                              :key="user.id"
+                              class="assignee-list-item"
+                              @click="assignTask(user, subtask)"
+                            >
+                              <VListItemAvatar>
+                                <VAvatar
+                                  size="34"
+                                  class="text-white bg-primary"
+                                  variant="tonal"
+                                >
+                                  <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                                </VAvatar>
+                              </VListItemAvatar>
+                              <VListItemTitle class="ms-2">
+                                {{ user.name_first + ' ' + user.name_last }}
+                                <p class="text-xs mb-0">{{ user.role }}</p>
+                              </VListItemTitle>
+                            </VListItem>
+                          </template>
+                          <template v-else>
+                            <div 
+                              v-if="usersLoading"
+                              class="members-loading"
+                            >
+                              <div class="dots-loader" />
+                            </div>
+                            <div v-else>
+                              <div v-if="subtask.assignees.length > 0 && !searchUser">
+                                <VListItem
+                                  v-for="user in subtask.assignees"
+                                  :key="user.id"
+                                  class="assignee-list-item"
+                                  @mouseenter="showDeleteIcon = user.id"
+                                  @mouseleave="showDeleteIcon = null"
+                                  :disabled="isAssigneeRemoving"
+                                >
+                                  <VListItemAvatar>
+                                    <VAvatar
+                                      size="34"
+                                      class="text-white bg-primary"
+                                      variant="tonal"
+                                    >
+                                      <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                                    </VAvatar>
+                                  </VListItemAvatar>
+                                  <VListItemTitle class="ms-2">
+                                    {{ user.name_first + ' ' + user.name_last }}
+                                    <p class="text-xs mb-0">{{ user.role }}</p>
+                                  </VListItemTitle>
+                                  <VIcon
+                                    v-if="showDeleteIcon === user.id"
+                                    icon="tabler-circle-x-filled"
+                                    color="error"
+                                    class="cursor-pointer member-delete-icon"
+                                    @click.stop="removeAssignee(user, subtask)"
+                                  />
+                                </VListItem>
+                              </div>
+                              <div v-else>
+                                <VListItem class="assignee-search-list-item">
+                                  <VListItemTitle>
+                                    <small v-if="searchUser && filteredUsers.length === 0 && !usersLoading">No Member found</small>
+                                    <small v-else>Search Team Members...</small>
+                                  </VListItemTitle>
+                                </VListItem>
+                              </div>
+                            </div>
+                          </template>
+                        </VList>
+                      </VMenu>
+                    </td>
+                    <td>
+                      <VMenu
                         v-model="statusMenu[subtask.id]"
                         :close-on-content-click="false"
                         transition="scale-transition"
@@ -782,6 +930,7 @@
                               class="time-field me-2 no-arrows"
                               density="compact"
                               autofocus
+                              @keydown.enter="saveTime(subtask)"
                             />
                             <AppTextField
                               v-model="inputMinutesRef[subtask.id]"
@@ -793,6 +942,7 @@
                               max="59"
                               class="time-field no-arrows"
                               density="compact"
+                              @keydown.enter="saveTime(subtask)"
                             />
                           </VListItem>
                           <VListItem class="me-3">
