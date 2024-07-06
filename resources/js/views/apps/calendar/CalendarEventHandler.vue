@@ -159,6 +159,7 @@ const dialogModelValueUpdate = val => {
       <template #beforeClose>
         <IconBtn
           v-show="event.id"
+          color="error"
           @click="removeEvent"
         >
           <VIcon
