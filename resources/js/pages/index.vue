@@ -32,10 +32,10 @@
                   cols="12"
                   class="text-center"
                 >
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects:<strong> {{ data.total_projects }} | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks:<strong> {{ data.total_tasks }} | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Members:<strong> {{ data.total_members }} | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File:<strong> {{ data.total_files }} </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects: <strong> {{ data.total_projects }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks: <strong> {{ data.total_tasks }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Members: <strong> {{ data.total_members }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File: <strong> {{ data.total_files }} </strong></small>
                 </VCol>
               </VRow>
             </VCardText>
