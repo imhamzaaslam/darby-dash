@@ -431,49 +431,77 @@
   <VRow>
     <VCol cols="6">
       <VCard>
-        <VCardItem title="Meet with PM">
-          <template #append>
-            <MoreBtn />
-          </template>
-        </VCardItem>
-        <VCardText>
-          <VRow>
-            <VCol cols="6">
-              <div class="d-flex justify-center  align-start pb-0 px-3 pt-3 mb-3 bg-light-primary rounded">
-                <VImg
-                  :src="girlWithLaptop"
-                  width="145"
-                  height="140"
-                />
-              </div>
-            </VCol>
-            <VCol cols="6">
-              <div>
-                <div class="d-flex justify-space-between my-2 flex-wrap">
-                  <div class="d-flex gap-x-3 align-center">
-                    <div>
-                      <h6 class="text-h5 text-high-emphasis">
-                        Jennifer Lawrence
-                      </h6>
-                      <div class="text-sm text-high-emphasis">
-                        Web Dev PM
+        <!-- // check if project_manager is not null/ -->
+        <template v-if="project?.project_manager">
+          <VCardItem title="Meet with PM">
+            <template #append>
+              <MoreBtn />
+            </template>
+          </VCardItem>
+          <VCardText>
+            <VRow>
+              <VCol cols="6">
+                <div 
+                  class="d-flex justify-center align-center pb-0 px-3 bg-light-primary rounded"
+                  style="height: 140px;"
+                >
+                  <h6 class="text-h1 text-primary">
+                    {{ avatarText(project?.project_manager?.name_first + ' . ' + project?.project_manager?.name_last) }}
+                  </h6>
+                </div>
+              </VCol>
+              <VCol cols="6">
+                <div>
+                  <div class="d-flex justify-space-between my-2 flex-wrap">
+                    <div class="d-flex gap-x-3 align-center">
+                      <div>
+                        <h6 class="text-h5 text-high-emphasis">
+                          {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }}
+                        </h6>
+                        <div class="text-sm text-high-emphasis">
+                          hamza@gmail.com
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div class="my-2">
+                    <VBtn
+                      size="small"
+                      rounded="pill"
+                      color="primary"
+                    >
+                      Schedule Meeting
+                    </VBtn>
+                  </div>
                 </div>
-                <div class="my-2">
-                  <VBtn
-                    size="small"
-                    rounded="pill"
-                    color="primary"
-                  >
-                    Schedule Meeting
-                  </VBtn>
-                </div>
-              </div>
-            </VCol>
-          </VRow>
-        </VCardText>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </template>
+        <!-- // else show the below -->
+        <template v-else>
+          <VCardItem title="No Project Manager Assigned">
+            <template #append>
+              <MoreBtn />
+            </template>
+          </VCardItem>
+          <VCardText>
+            <div class="text-center py-10">
+              <p class="text-body-2 text-high-emphasis">
+                Currently, there is no project manager assigned to this project.
+              </p>
+              <RouterLink to="/projects/web-designs">
+                <VBtn
+                  size="small"
+                  rounded="pill"
+                  color="primary"
+                >
+                  Assign Project Manager
+                </VBtn>
+              </RouterLink>
+            </div>
+          </VCardText>
+        </template>
       </VCard>
     </VCol>
     <VCol cols="6">

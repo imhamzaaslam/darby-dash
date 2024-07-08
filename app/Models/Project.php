@@ -36,6 +36,13 @@ class Project extends Base
         return $this->belongsToMany(User::class, 'project_members')->with('roles');
     }
 
+    public function projectManager()
+    {
+        return $this->members->first(function ($member) {
+            return $member->roles->contains('id', 2);
+        });
+    }
+
     public function lists()
     {
         return $this->hasMany(ProjectList::class)->orderBy('display_order', 'asc');
