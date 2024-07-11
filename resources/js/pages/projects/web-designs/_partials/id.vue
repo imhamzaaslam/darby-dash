@@ -441,6 +441,16 @@
           <VCardText>
             <VRow>
               <VCol cols="6">
+                <div class="d-flex justify-center  align-start pb-0 px-3 pt-3 mb-3 bg-light-primary rounded">
+                  <VImg
+                    :src="girlWithLaptop"
+                    width="145"
+                    height="140"
+                  />
+                </div>
+              </VCol>
+
+              <!-- <VCol cols="6">
                 <div 
                   class="d-flex justify-center align-center pb-0 px-3 bg-light-primary rounded"
                   style="height: 140px;"
@@ -449,7 +459,8 @@
                     {{ avatarText(project?.project_manager?.name_first + ' . ' + project?.project_manager?.name_last) }}
                   </h6>
                 </div>
-              </VCol>
+              </VCol> -->
+
               <VCol cols="6">
                 <div>
                   <div class="d-flex justify-space-between my-2 flex-wrap">
@@ -464,7 +475,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="my-2">
+                  <div class="my-5">
                     <VBtn
                       size="small"
                       rounded="pill"
