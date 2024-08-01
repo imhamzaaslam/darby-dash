@@ -1,4 +1,4 @@
-let adminAuthorizedPages = [
+let authenticatedPages = [
   'root',
   'members-list',
   'web-designs-list',
@@ -18,6 +18,5 @@ let adminAuthorizedPages = [
   'payment-setting',
   'roles',
 ]
-  
-export default adminAuthorizedPages
-  
+
+export default authenticatedPages

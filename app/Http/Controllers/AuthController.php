@@ -32,6 +32,7 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
+        $user->role = $user->getRoleNames()->first();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->plainTextToken;
 

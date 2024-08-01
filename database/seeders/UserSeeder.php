@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser);
-        $demoUser->assignRole(Role::where('name', 'admin')->first());
+        $demoUser->assignRole(Role::where('name', 'Super Admin')->first());
 
         $demoUser2 = User::create([
             'uuid'              => $faker->uuid,
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser2);
-        $demoUser2->assignRole(Role::where('name', 'project manager')->first());
+        $demoUser2->assignRole(Role::where('name', 'Project Manager')->first());
 
         $demoUser3 = User::create([
             'uuid'              => $faker->uuid,
@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser3);
-        $demoUser3->assignRole(Role::where('name', 'viewer')->first());
+        $demoUser3->assignRole(Role::where('name', 'Client User')->first());
 
         $demoUser4 = User::create([
             'uuid'              => $faker->uuid,
@@ -69,7 +69,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser4);
-        $demoUser4->assignRole(Role::where('name', 'developer')->first());
+        $demoUser4->assignRole(Role::where('name', 'Staff User')->first());
 
         $demoUser5 = User::create([
             'uuid'              => $faker->uuid,
@@ -82,7 +82,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser5);
-        $demoUser5->assignRole(Role::where('name', 'developer')->first());
+        $demoUser5->assignRole(Role::where('name', 'Staff User')->first());
 
         $demoUser6 = User::create([
             'uuid'              => $faker->uuid,
@@ -95,13 +95,7 @@ class UserSeeder extends Seeder
         ]);
 
         $this->addDummyInfo($faker, $demoUser6);
-        $demoUser6->assignRole(Role::where('name', 'developer')->first());
-
-        // User::factory(20)->create()->each(function ($user) use ($faker) {
-        //     $this->addDummyInfo($faker, $user);
-        //     $role = $user->id % 2 === 0 ? Role::where('name', 'project manager')->first() : Role::where('name', 'developer')->first();
-        //     $user->assignRole($role);
-        // });
+        $demoUser6->assignRole(Role::where('name', 'Staff User')->first());
     }
 
     /**
