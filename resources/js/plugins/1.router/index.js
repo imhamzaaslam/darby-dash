@@ -16,17 +16,6 @@ import Payments from '@/pages/projects/payments.vue'
 import AddProjectTasks from '../../pages/projects/web-designs/_partials/addProjectTasks.vue'
 import Roles from '@/pages/roles/index.vue'
 
-function recursiveLayouts(route) {
-  if (route.children) {
-    for (let i = 0; i < route.children.length; i++)
-      route.children[i] = recursiveLayouts(route.children[i])
-
-    return route
-  }
-
-  return setupLayouts([route])[0]
-}
-
 const requireAuth = () => {
   const authStore = useAuthStore()
 
@@ -38,6 +27,17 @@ const isAuthorized = to => {
 
   return (authStore.isAdmin && adminAuthorizedPages.includes(to.name)) || 
          (authStore.isManager && projectManagerAuthorizedPages.includes(to.name))
+}
+
+function recursiveLayouts(route) {
+  if (route.children) {
+    for (let i = 0; i < route.children.length; i++)
+      route.children[i] = recursiveLayouts(route.children[i])
+
+    return route
+  }
+
+  return setupLayouts([route])[0]
 }
 
 const router = createRouter({
@@ -150,20 +150,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
-
   if (authenticatedPages.includes(to.name)) {
-    if (requireAuth()) {
-      if (isAuthorized(to)) {
-        return next()
-      } else {
-        return next({ name: 'root' })
-      }
-    } else {
+    if (!requireAuth()) {
       return next({ name: 'login' })
+    }
+
+    if (!isAuthorized(to)) {
+      return next({ name: 'root' })
     }
   }
 
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
   if (to.name == 'login' && user) {
     return next({ name: 'root' })
   }

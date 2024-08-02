@@ -9,9 +9,11 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\project\StoreProjectRequest;
 use App\Http\Requests\project\UpdateProjectUsersRequest;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -27,6 +29,9 @@ class ProjectController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
+        $user = Auth::user();
+        $this->authorize('viewAll', Project::class);
+       
         $projects = $this->projectRepository
             ->getAllRecordsQuery()
             ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)
