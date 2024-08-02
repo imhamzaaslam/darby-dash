@@ -6,6 +6,7 @@
 
 import axios from "axios"
 import { useAuthStore } from "../store/auth"
+import { router } from "@/plugins/1.router"
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -40,6 +41,10 @@ apiClient.interceptors.response.use(
 
     if (error.response && [401, 419].includes(error.response.status) && store.getUserFromLocalStorage) {
       store.logout()
+    }
+
+    if (error.response && error.response.status === 403) {
+      router.push({ name: 'authorization-error' })
     }
 
     return Promise.reject(error)

@@ -135,9 +135,7 @@ const getImageUrl = path => {
 }
 
 
-const userDetails = computed(() => {
-  console.log('user is', userStore.getUser?.name_first + ' ' + userStore.getUser?.name_last)
-  
+const userDetails = computed(() => {  
   return userStore.getUser
 })
 </script>

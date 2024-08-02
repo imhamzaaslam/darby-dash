@@ -98,7 +98,6 @@
     "eslint-plugin-unicorn": "50.0.1",
     "eslint-plugin-vue": "9.22.0",
     "laravel-vite-plugin": "1.0",
-    "msw": "2.2.2",
     "postcss-html": "1.6.0",
     "postcss-scss": "4.0.9",
     "sass": "1.71.1",

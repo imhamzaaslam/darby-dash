@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     // initialize state from local storage to enable user to stay logged in
     user: getUserFromLocalStorage(),
+    authUser: null,
     authenticated: false,
     token: null,
     loadStatus: 0,
@@ -24,6 +25,8 @@ export const useAuthStore = defineStore('auth', {
         this.loadStatus = 2
         this.authenticated = true
         this.token = res.data.accessToken
+
+        this.authUser = res.data
 
         return res
       } catch (error) {
@@ -72,9 +75,9 @@ export const useAuthStore = defineStore('auth', {
     getUser: state => state.user,
     isAuthenticated: state => state.authenticated,
     getErrors: state => state.error,
-    isAdmin: state => state.user?.roles?.indexOf('admin') >= 0,
-    isCustomer: state => state.user?.roles?.indexOf('customer') >= 0,
-    getRole: state => state.user?.roles[0],
+    isAdmin: state => state.authUser?.user?.roles[0].name == 'Super Admin',
+    isManager: state => state.authUser?.user?.roles[0].name == 'Project Manager',
+    getRole: state => state.authUser?.user?.roles[0],
     getUserFromLocalStorage: () => getUserFromLocalStorage(),
   },
 })

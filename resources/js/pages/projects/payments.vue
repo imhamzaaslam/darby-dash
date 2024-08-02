@@ -168,7 +168,7 @@ const headers = [
 ]
 
 const fetchProject = async () => {
-  await projectStore.show(projectUuid)
+  await projectStore.show(projectUuid.value)
 }
   
 const fetchPayments = async () => {
