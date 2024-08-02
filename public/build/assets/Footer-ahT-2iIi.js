@@ -1,0 +1,5 @@
+<<<<<<<< HEAD:public/build/assets/Footer-CFkogQP0.js
+import{_ as t,o as s,c as a,d as e,t as r,v as n}from"./main-S05MAQn_.js";const c={},o={class:"h-100 d-flex align-center justify-md-space-between justify-center"},i={class:"d-flex align-center text-medium-emphasis"},l=e("a",{href:"#",target:"_blank",rel:"noopener noreferrer",class:"text-primary ms-1"},"DarbyDash",-1);function _(d,f){return s(),a("div",o,[e("span",i,[r(" © "+n(new Date().getFullYear())+" Made With By ",1),l])])}const p=t(c,[["render",_]]);export{p as default};
+========
+import{_ as t,o as s,c as a,d as e,t as r,v as n}from"./main-DfHDtGwb.js";const c={},o={class:"h-100 d-flex align-center justify-md-space-between justify-center"},i={class:"d-flex align-center text-medium-emphasis"},l=e("a",{href:"#",target:"_blank",rel:"noopener noreferrer",class:"text-primary ms-1"},"DarbyDash",-1);function _(d,f){return s(),a("div",o,[e("span",i,[r(" © "+n(new Date().getFullYear())+" Made With By ",1),l])])}const p=t(c,[["render",_]]);export{p as default};
+>>>>>>>> master:public/build/assets/Footer-ahT-2iIi.js
