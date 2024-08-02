@@ -35,6 +35,7 @@ export const useProjectStore = defineStore('projects', {
         const response = await ProjectService.getProjectsByType(id)
 
         this.projectsByType = response.data.data
+        
         // this.usersCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {

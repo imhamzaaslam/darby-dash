@@ -24,4 +24,9 @@ class MileStone extends Base
     {
         return $this->hasMany(ProjectList::class, 'milestone_id');
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

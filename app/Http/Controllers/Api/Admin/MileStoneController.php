@@ -28,6 +28,7 @@ class MileStoneController extends Controller
     public function index(Request $request, string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('delete', $project);
         $mileStones = $this->mileStoneRepository
             ->getByProjectQuery($project)
             ->paginate($request->per_page ?? config('pagination.per_page', 10));
@@ -45,6 +46,7 @@ class MileStoneController extends Controller
     public function store(StoreMileStoneRequest $request, string $projectUuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('create', $project);
         $validated = $request->validated();
 
         $payload = [
@@ -70,6 +72,8 @@ class MileStoneController extends Controller
     public function update(StoreMileStoneRequest $request, string $mileStoneUuid): JsonResponse
     {
         $mileStone = $this->mileStoneRepository->getByUuidOrFail($mileStoneUuid);
+        $project = $mileStone->project;
+        $this->authorize('update', $project);
         $validated = $request->validated();
 
         $payload = [
@@ -93,6 +97,8 @@ class MileStoneController extends Controller
     public function delete(string $mileStoneUuid): JsonResponse
     {
         $mileStone = $this->mileStoneRepository->getByUuidOrFail($mileStoneUuid);
+        $project = $mileStone->project;
+        $this->authorize('delete', $project);
         $this->mileStoneRepository->delete($mileStone);
 
         return response()->json(['message' => 'MileStone deleted successfully'], 200);

@@ -14,6 +14,7 @@ import Files from '../../../js/pages/projects/files.vue'
 import Chat from '../../../js/pages/projects/chat.vue'
 import Payments from '@/pages/projects/payments.vue'
 import AddProjectTasks from '../../pages/projects/web-designs/_partials/addProjectTasks.vue'
+import AuthorizationError from '@/pages/errors/authorization-error.vue'
 import Roles from '@/pages/roles/index.vue'
 
 const requireAuth = () => {
@@ -142,6 +143,14 @@ const router = createRouter({
         path: '/roles',
         name: 'roles',
         component: Roles,
+        meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/403',
+        name: 'authorization-error',
+        component: AuthorizationError,
         meta: { layout: 'default' },
       },
     ),

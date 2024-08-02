@@ -43,6 +43,8 @@ class TaskController extends Controller
     public function index(string $listUuid): AnonymousResourceCollection|JsonResponse
     {
         $projectList = $this->projectListRepository->getByUuidOrFail($listUuid);
+        $project = $projectList->project;
+        $this->authorize('view', $project);
         $tasks = $this->projectListRepository->getListTasks($projectList);
 
         return TaskResource::collection($tasks);
@@ -58,6 +60,8 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request, string $listUuid): JsonResponse
     {
         $list = $this->projectListRepository->getByUuidOrFail($listUuid);
+        $project = $list->project;
+        $this->authorize('view', $project);
         $validated = $request->validated();
 
         $res = $this->taskRepository->create($list, $validated);
@@ -79,6 +83,8 @@ class TaskController extends Controller
     public function update(StoreTaskRequest $request, string $listUuid, string $taskUuid): Response|JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $validated = $request->validated();
 
         $this->taskRepository->update($task, $validated);
@@ -98,6 +104,8 @@ class TaskController extends Controller
     public function delete(string $listUuid, string $taskUuid): JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
 
         $this->taskRepository->delete($task);
 
@@ -113,6 +121,7 @@ class TaskController extends Controller
     public function fetchUnlistedTasks(string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
         $tasks = $this->taskRepository->fetchUnlistedTasks($project);
 
         return TaskResource::collection($tasks);
@@ -127,6 +136,7 @@ class TaskController extends Controller
     public function getByProject(string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
         $tasks = $this->taskRepository->getByProject($project);
 
         return TaskResource::collection($tasks);
@@ -142,6 +152,7 @@ class TaskController extends Controller
     public function storeByProject(StoreTaskByProjectRequest $request, string $projectUuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
         $validated = $request->validated();
 
         $task = $this->taskRepository->createByProject($project, $validated);
@@ -162,6 +173,8 @@ class TaskController extends Controller
     public function updateByProject(StoreTaskByProjectRequest $request, string $projectUuid, string $taskUuid): Response|JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $validated = $request->validated();
 
         $this->taskRepository->update($task, $validated);
@@ -181,6 +194,8 @@ class TaskController extends Controller
     public function getFiles(Request $request, string $taskUuid): AnonymousResourceCollection|JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $fileResolver = $this->fileResolverService->resolve($request->segments(), $taskUuid);
 
         $files = $this->fileRepository->getAllByMorph($fileResolver['morph_type'], $fileResolver['morph_id']);
@@ -198,6 +213,8 @@ class TaskController extends Controller
     public function storeFiles(Request $request, string $taskUuid): AnonymousResourceCollection|JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $files = $request->file('files');
 
         $fileResolver = $this->fileResolverService->resolve($request->segments(), $taskUuid);
@@ -235,6 +252,8 @@ class TaskController extends Controller
     public function updateProjectTasksOrder(StoreProjectTasksOrderRequest $request, string $projectUuid, string $taskUuid): Response|JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $validated = $request->validated();
         $this->taskRepository->updateTasksOrder($task, $validated);
 
@@ -253,6 +272,8 @@ class TaskController extends Controller
     public function deleteByProject(string $projectUuid, string $taskUuid): JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
 
         $this->taskRepository->delete($task);
 
@@ -269,6 +290,8 @@ class TaskController extends Controller
     public function updateAttributes(UpdateTaskRequest $request, string $taskUuid): Response|JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $validated = $request->validated();
 
         $this->taskRepository->update($task, $validated);
@@ -289,6 +312,7 @@ class TaskController extends Controller
     public function getMembersForTask(Request $request, string $projectUuid, string $taskUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
 
         $members = $this->taskRepository->getMembersForTask($project, $task, $request->query('keyword'));
@@ -306,6 +330,8 @@ class TaskController extends Controller
     public function assign(AssignTaskRequest $request, string $taskUuid): JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $validated = $request->validated();
 
         $this->taskRepository->assginMember($task, $validated);
@@ -322,6 +348,8 @@ class TaskController extends Controller
     public function unassign(AssignTaskRequest $request, string $taskUuid): JsonResponse
     {
         $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
         $validated = $request->validated();
 
         $task->assignees()->detach($validated['assignee']);

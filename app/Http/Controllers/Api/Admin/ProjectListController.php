@@ -27,6 +27,7 @@ class ProjectListController extends Controller
     public function index(string $uuid): AnonymousResourceCollection
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('view', $project);
         $projectLists  = $this->projectListRepository->getProjectLists($project);
         
         return ProjectListResource::collection($projectLists);
@@ -42,6 +43,7 @@ class ProjectListController extends Controller
     public function store(StoreProjectListRequest $request, string $uuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('create', $project);
         $validated = $request->validated();
 
         $attributes = [
@@ -67,6 +69,7 @@ class ProjectListController extends Controller
     public function update(StoreProjectListRequest $request, string $uuid, string $listUuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('update', $project);
         $projectList = $this->projectListRepository->getByUuidOrFail($listUuid);
 
         $validated = $request->validated();
@@ -92,6 +95,8 @@ class ProjectListController extends Controller
      */
     public function delete(string $uuid, string $ListUuid): JsonResponse
     {
+        $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('delete', $project);
         $projectList = $this->projectListRepository->getByUuidOrFail($ListUuid);
         $this->projectListRepository->delete($projectList);
 
@@ -107,6 +112,7 @@ class ProjectListController extends Controller
     public function getListWithoutMilestone(string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
         $projectLists = $this->projectListRepository->getListWithoutMilestone($project);
 
         return ProjectListResource::collection($projectLists);

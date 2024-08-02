@@ -27,6 +27,7 @@ class CalendarEventController extends Controller
     public function index(string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
         $calendarEvents = $this->calendarEventRepository->getBy('project_id', $project->id);
 
         return CalendarEventResource::collection($calendarEvents);
@@ -42,6 +43,7 @@ class CalendarEventController extends Controller
     public function store(StoreCalendarEventRequest $request, string $projectUuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('create', $project);
         $validated = $request->validated();
 
         $res = $this->calendarEventRepository->create($project, $validated);
@@ -63,6 +65,8 @@ class CalendarEventController extends Controller
      */
     public function update(StoreCalendarEventRequest $request, string $projectUuid, string $calendarEventUuid): JsonResponse
     {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('update', $project);
         $calendarEvent = $this->calendarEventRepository->getByUuidOrFail($calendarEventUuid);
         $validated = $request->validated();
 
@@ -82,6 +86,8 @@ class CalendarEventController extends Controller
      */
     public function delete(string $projectUuid, string $calendarEventUuid): JsonResponse
     {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('delete', $project);
         $calendarEvent = $this->calendarEventRepository->getByUuidOrFail($calendarEventUuid);
         $this->calendarEventRepository->delete($calendarEvent);
 

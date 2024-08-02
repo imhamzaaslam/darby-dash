@@ -30,6 +30,13 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
         return User::whereIn('id', $projectMembers);
     }
 
+    public function getUserProjectsQuery(User $user): Builder
+    {
+        $projectIds = ProjectMember::where('user_id', $user->id)->pluck('project_id');
+
+        return Project::whereIn('id', $projectIds);
+    }
+
     public function create(array $attributes): Project
     {
         return $this->model->create($attributes);

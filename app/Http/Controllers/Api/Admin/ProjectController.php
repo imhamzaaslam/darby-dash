@@ -31,12 +31,20 @@ class ProjectController extends Controller
     {
         $user = Auth::user();
         $this->authorize('viewAll', Project::class);
-       
-        $projects = $this->projectRepository
-            ->getAllRecordsQuery()
-            ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)
-            ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
-            ->paginate($request->per_page ?? config('pagination.per_page', 10));
+
+        if ($user->hasRole('Project Manager')) {
+            $projects = $this->projectRepository
+                ->getUserProjectsQuery($user)
+                ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)
+                ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+                ->paginate($request->per_page ?? config('pagination.per_page', 10));
+        } else {
+            $projects = $this->projectRepository
+                ->getAllRecordsQuery()
+                ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)
+                ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+                ->paginate($request->per_page ?? config('pagination.per_page', 10));
+        }
 
         return ProjectResource::collection($projects);
     }
@@ -62,6 +70,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request): JsonResponse
     {
+        $this->authorize('create', Project::class);
         $validated = $request->validated();
 
         $member_ids = [];
@@ -91,6 +100,7 @@ class ProjectController extends Controller
     public function show(string $uuid): ProjectResource|JsonResponse
     {
         $project = $this->projectRepository->getByUuid($uuid);
+        $this->authorize('view', $project);
 
         return (new ProjectResource($project))
             ->response()
@@ -106,6 +116,8 @@ class ProjectController extends Controller
      */
     public function update(StoreProjectRequest $request, string $uuid): JsonResponse
     {
+        $project = $this->projectRepository->getByUuid($uuid);
+        $this->authorize('update', $project);
         $validated = $request->validated();
 
         $member_ids = [];
@@ -113,8 +125,6 @@ class ProjectController extends Controller
             $member_ids = $validated['member_ids'];
             unset($validated['member_ids']);
         }
-
-        $project = $this->projectRepository->getByUuid($uuid);
 
         $this->projectRepository->update($project, $validated);
         $this->projectRepository->updateProjectMembers($project, $member_ids);
@@ -133,6 +143,7 @@ class ProjectController extends Controller
     public function delete(string $uuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('delete', $project);
 
         $this->projectRepository->delete($project);
 
@@ -149,6 +160,7 @@ class ProjectController extends Controller
     public function users(Request $request, string $uuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('view', $project);
 
         $users = $this->projectRepository
             ->getProjectMembersQuery($project)
@@ -168,6 +180,7 @@ class ProjectController extends Controller
     public function allUsers(string $uuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuid($uuid);
+        $this->authorize('view', $project);
  
         return UserResource::collection($project->users);
     }
@@ -182,6 +195,7 @@ class ProjectController extends Controller
     public function updateUsers(UpdateProjectUsersRequest $request, string $uuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('update', $project);
 
         $member_ids = $request->member_ids;
 
@@ -200,6 +214,7 @@ class ProjectController extends Controller
     public function deleteUser(string $uuid, string $userUuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('update', $project);
         $user = $this->userRepository->getByUuidOrFail($userUuid);
 
         $this->projectRepository->deleteProjectMember($project, $user);

@@ -11,6 +11,8 @@ interface ProjectRepositoryInterface
 {
     public function getProjectMembersQuery(Project $project): Builder;
 
+    public function getUserProjectsQuery(User $user): Builder;
+
     public function create(array $attributes): Project;
 
     public function storeProjectMembers(Project $project, array $members): void;
