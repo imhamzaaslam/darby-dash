@@ -41,7 +41,6 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        dd($user->hasRole('Project Manager'), $project->members->contains($user));
         return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
     }
 

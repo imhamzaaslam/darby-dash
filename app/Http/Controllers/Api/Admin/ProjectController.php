@@ -102,8 +102,6 @@ class ProjectController extends Controller
         $project = $this->projectRepository->getByUuid($uuid);
         $this->authorize('view', $project);
 
-        dd('here');
-
         return (new ProjectResource($project))
             ->response()
             ->setStatusCode(200);
