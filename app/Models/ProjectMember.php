@@ -11,4 +11,9 @@ class ProjectMember extends Base
 {
     use HasFactory;
     use SoftDeletes;
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

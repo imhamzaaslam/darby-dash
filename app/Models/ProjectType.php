@@ -20,17 +20,39 @@ class ProjectType extends Base
 
     public function projects()
     {
-        return $this->hasMany(Project::class);
+        if(auth()->user()->hasRole('Super Admin')){
+            return $this->hasMany(Project::class);
+        }else{
+            return $this->hasMany(Project::class)->whereHas('members', function ($query) {
+                $query->where('user_id', auth()->id());
+            });
+        }
     }
 
     public function tasks()
     {
-        return $this->hasManyThrough(Task::class, Project::class)->whereNull('parent_id');
+        if(auth()->user()->hasRole('Super Admin')){
+            return $this->hasManyThrough(Task::class, Project::class)->whereNull('parent_id');
+        }else{
+            return $this->hasManyThrough(Task::class, Project::class)->whereNull('parent_id')->whereHas('project', function ($query) {
+                $query->whereHas('members', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            });
+        }
     }
 
     public function members()
     {
-        return $this->hasManyThrough(ProjectMember::class, Project::class);
+        if(auth()->user()->hasRole('Super Admin')){
+            return $this->hasManyThrough(ProjectMember::class, Project::class);
+        }else{
+            return $this->hasManyThrough(ProjectMember::class, Project::class)->whereHas('project', function ($query) {
+                $query->whereHas('members', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            });
+        }
     }
 
     public function getAllFiles()
@@ -53,6 +75,4 @@ class ProjectType extends Base
 
         return $files;
     }
-
-    // return $this->morphMany(File::class, 'fileable');
 }
