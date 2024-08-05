@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route to view logs using Laravel Log Viewer package
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
 Route::get('{any?}', function() {
     return view('application');
 })->where('any', '.*');
