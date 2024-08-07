@@ -40,3 +40,8 @@
     50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
     66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
 }
+
+div:where(.swal2-icon).swal2-warning {
+  border-color: #a12592 !important;
+  color: #a12592 !important;
+}

@@ -24,8 +24,17 @@ class ProjectProgressService
             ];
         });
 
+        $completedLists = $lists->filter(function ($list) {
+            return $list['status'] == 'completed';
+        });
+        $otherLists = $lists->filter(function ($list) {
+            return $list['status'] != 'completed';
+        });
+        $sortedList = $otherLists->merge($completedLists);
+
+
         return [
-            'lists' => $lists,
+            'lists' => $sortedList,
             'launchingTime' => $this->getLaunchingTime($project),
             'launchingDate' => $this->getLaunchingDate($project),
             'overallProgress' => $this->getOverallProgress($project),

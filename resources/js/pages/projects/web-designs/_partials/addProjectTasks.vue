@@ -211,7 +211,9 @@
                 v-if="getProjectLists? getProjectLists.length > 1 : 0"
                 icon
                 size="small"
-                color="error"
+                :color="focusDeleteListId === list.id ? 'error' : 'grey-500'"
+                @mouseenter="focusDeleteListId = list.id"
+                @mouseleave="focusDeleteListId = null"
                 @click.stop="deleteProjectList(list)"
               >
                 <VIcon icon="tabler-trash" />
@@ -512,7 +514,7 @@
                       <template #activator="{ props }">
                         <VChip
                           class="cursor-pointer"
-                          :color="item.due_date ? 'error' : 'primary'"
+                          style="background: #d7e3fb;"
                           size="small"
                           v-bind="props"
                         >
@@ -1774,6 +1776,7 @@ const menu = ref([])
 const selectedAssignee = ref(null)
 const filteredUsers = ref([])
 const showDeleteIcon = ref(null)
+const focusDeleteListId = ref(null)
 
 const isLoading = ref(false)
 

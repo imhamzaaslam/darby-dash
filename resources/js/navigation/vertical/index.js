@@ -24,11 +24,11 @@ const routes = [
   //   icon: { icon: 'tabler-shield-check' },
   //   to: { name: 'roles' },
   // },
-  {
-    title: 'Logout',
-    icon: { icon: 'tabler-logout' },
-    to: { name: 'logout' },
-  },
+  // {
+  //   title: 'Logout',
+  //   icon: { icon: 'tabler-logout' },
+  //   to: { name: 'logout' },
+  // },
 ]
 
 // Filter out any `false` values in the array

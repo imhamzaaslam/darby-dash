@@ -375,8 +375,8 @@ const editProject = project => {
 const deleteProject = async project => {
   try {
     const confirmDelete = await Swal.fire({
-      title: "Are you sure?",
-      text: `Do you want to delete ${project.title}?`,
+      title: "Are you certain about deleting this project?",
+      text: `Once it’s gone, it’s gone.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#a12592",
@@ -384,6 +384,17 @@ const deleteProject = async project => {
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
         document.querySelector('.swal2-confirm').blur()
+        
+        const title = document.querySelector('.swal2-title')
+        if (title) {
+          title.style.fontSize = '18px'
+        }
+
+        // Apply custom styles to text
+        const text = document.querySelector('.swal2-html-container')
+        if (text) {
+          text.style.marginTop = '8px'
+        }
       },
     })
 
