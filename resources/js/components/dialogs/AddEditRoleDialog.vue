@@ -1,86 +1,86 @@
 <script setup>
 import { VForm } from 'vuetify/components/VForm'
+import { useRoleStore } from "@/store/roles"
+import { ref, onMounted, watch, computed } from 'vue'
+import { useToast } from "vue-toastification"
 
 const props = defineProps({
-  rolePermissions: {
-    type: Object,
-    required: false,
-    default: () => ({
-      name: '',
-      permissions: [],
-    }),
-  },
   isDialogVisible: {
     type: Boolean,
+    required: true,
+  },
+  roleId: {
+    type: Number,
+    required: true,
+  },
+  roleName: {
+    type: String,
     required: true,
   },
 })
 
 const emit = defineEmits([
   'update:isDialogVisible',
-  'update:rolePermissions',
 ])
 
-const permissions = ref([
-  {
-    name: 'User Management',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'Content Management',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'Disputes Management',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'Database Management',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'Financial Management',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'Reporting',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'API Control',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'Repository Management',
-    read: false,
-    write: false,
-    create: false,
-  },
-  {
-    name: 'Payroll',
-    read: false,
-    write: false,
-    create: false,
-  },
-])
+const toast = useToast()
+const roleStore = useRoleStore()
 
+const permissions = ref([])
 const isSelectAll = ref(false)
-const role = ref('')
+const isIndeterminate = ref(false)
+const role = ref(props.roleName)
+const isFetchingPermissions = ref(false)
 const refPermissionForm = ref()
+
+onMounted(async () => {
+  await fetchRolePermissions()
+})
+
+const fetchRolePermissions = async () => {
+  try {
+    isFetchingPermissions.value = true
+    await roleStore.getPermissions(props.roleId)
+  } catch (error) {
+    toast.error('Failed to fetch role permissions')
+  } finally {
+    isFetchingPermissions.value = false
+  }
+}
+
+const updateAllPermissions = () => {
+  permissions.value.forEach(permission => {
+    permission.create = isSelectAll.value
+    permission.view = isSelectAll.value
+    permission.edit = isSelectAll.value
+    permission.delete = isSelectAll.value
+  })
+}
+
+const onSubmit = async () => {
+  const payload = permissions.value.map(permission => {
+    return {
+      name: permission.name,
+      create: permission.create,
+      view: permission.view,
+      edit: permission.edit,
+      delete: permission.delete,
+    }
+  })
+
+  try {
+    await roleStore.updateRolePermissions(props.roleId, payload)
+    toast.success('Role permissions updated successfully')
+    emit('update:isDialogVisible', false)
+  } catch (error) {
+    toast.error('Failed to update role permissions')
+  }
+}
+
+const onReset = () => {
+  emit('update:isDialogVisible', false)
+  refPermissionForm.value?.reset()
+}
 
 const checkedCount = computed(() => {
   let counter = 0
@@ -90,63 +90,26 @@ const checkedCount = computed(() => {
         counter++
     })
   })
-  
+
   return counter
 })
 
-const isIndeterminate = computed(() => checkedCount.value > 0 && checkedCount.value < permissions.value.length * 3)
-
-watch(isSelectAll, val => {
-  permissions.value = permissions.value.map(permission => ({
-    ...permission,
-    read: val,
-    write: val,
-    create: val,
-  }))
-})
-watch(isIndeterminate, () => {
-  if (!isIndeterminate.value)
-    isSelectAll.value = false
-})
-watch(permissions, () => {
-  if (checkedCount.value === permissions.value.length * 3)
-    isSelectAll.value = true
-}, { deep: true })
-watch(props, () => {
-  if (props.rolePermissions && props.rolePermissions.permissions.length) {
-    role.value = props.rolePermissions.name
-    permissions.value = permissions.value.map(permission => {
-      const rolePermission = props.rolePermissions?.permissions.find(item => item.name === permission.name)
-      if (rolePermission) {
-        return {
-          ...permission,
-          ...rolePermission,
-        }
-      }
-      
-      return permission
-    })
-  }
+const loadStatus = computed(() => {
+  return roleStore.getLoadStatus
 })
 
-const onSubmit = () => {
-  const rolePermissions = {
-    name: role.value,
-    permissions: permissions.value,
-  }
+watch(() => roleStore.getRolePermissions, newPermissions => {
+  permissions.value = newPermissions
+}, { immediate: true })
 
-  emit('update:rolePermissions', rolePermissions)
-  emit('update:isDialogVisible', false)
-  isSelectAll.value = false
-  refPermissionForm.value?.reset()
-}
+watch(() => checkedCount.value, count => {
+  const totalPermissions = permissions.value.length * 4
 
-const onReset = () => {
-  emit('update:isDialogVisible', false)
-  isSelectAll.value = false
-  refPermissionForm.value?.reset()
-}
+  isIndeterminate.value = count > 0 && count < totalPermissions
+  isSelectAll.value = count === totalPermissions
+})
 </script>
+
 
 <template>
   <VDialog
@@ -159,13 +122,9 @@ const onReset = () => {
 
     <VCard class="pa-sm-10 pa-2">
       <VCardText>
-        <!-- 👉 Title -->
         <h4 class="text-h4 text-center mb-2">
-          {{ props.rolePermissions.name ? 'Edit' : 'Add New' }} Role
-        </h4>
-        <p class="text-body-1 text-center mb-6">
           Set Role Permissions
-        </p>
+        </h4>
 
         <!-- 👉 Form -->
         <VForm ref="refPermissionForm">
@@ -174,15 +133,23 @@ const onReset = () => {
             v-model="role"
             label="Role Name"
             placeholder="Enter Role Name"
+            disabled
           />
 
-          <h5 class="text-h5 my-6">
-            Role Permissions
-          </h5>
-
           <!-- 👉 Role Permissions -->
-
-          <VTable class="permission-table text-no-wrap mb-6">
+          <div 
+            v-if="isFetchingPermissions"
+            class="mt-6 mb-6 d-flex justify-center"
+          >
+            <VProgressCircular
+              color="primary"
+              indeterminate
+            />
+          </div>
+          <VTable
+            v-else
+            class="permission-table text-no-wrap mb-6 mt-6"
+          >
             <!-- 👉 Admin  -->
             <tr>
               <td>
@@ -190,12 +157,13 @@ const onReset = () => {
                   Administrator Access
                 </h6>
               </td>
-              <td colspan="3">
+              <td colspan="4">
                 <div class="d-flex justify-end">
                   <VCheckbox
                     v-model="isSelectAll"
-                    v-model:indeterminate="isIndeterminate"
+                    :indeterminate="isIndeterminate"
                     label="Select All"
+                    @change="updateAllPermissions"
                   />
                 </div>
               </td>
@@ -215,24 +183,32 @@ const onReset = () => {
                 <td>
                   <div class="d-flex justify-end">
                     <VCheckbox
-                      v-model="permission.read"
-                      label="Read"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-end">
-                    <VCheckbox
-                      v-model="permission.write"
-                      label="Write"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-end">
-                    <VCheckbox
                       v-model="permission.create"
                       label="Create"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-end">
+                    <VCheckbox
+                      v-model="permission.view"
+                      label="View"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-end">
+                    <VCheckbox
+                      v-model="permission.edit"
+                      label="Edit"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-end">
+                    <VCheckbox
+                      v-model="permission.delete"
+                      label="Delete"
                     />
                   </div>
                 </td>
@@ -242,10 +218,22 @@ const onReset = () => {
 
           <!-- 👉 Actions button -->
           <div class="d-flex align-center justify-center gap-4">
-            <VBtn @click="onSubmit">
-              Submit
+            <VBtn
+              :disabled="loadStatus === 1"
+              @click="onSubmit"
+            >
+              <span v-if="loadStatus === 1 && !isFetchingPermissions">
+                <VProgressCircular
+                  :size="16"
+                  width="3"
+                  indeterminate
+                />
+                Loading...
+              </span>
+              <span v-else>
+                Submit
+              </span>
             </VBtn>
-
             <VBtn
               color="secondary"
               variant="tonal"
@@ -259,6 +247,7 @@ const onReset = () => {
     </VCard>
   </VDialog>
 </template>
+
 
 <style lang="scss">
 .permission-table {

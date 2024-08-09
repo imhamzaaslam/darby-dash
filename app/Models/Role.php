@@ -195,4 +195,10 @@ class Role extends Base implements RoleContract
 
         return $this->permissions->contains($permission->getKeyName(), $permission->getKey());
     }
+
+    // get totalUsers using model_has_roles
+    public function getUsers()
+    {
+        return $this->belongsToMany(User::class, 'model_has_roles', 'role_id', 'model_id');
+    }
 }

@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
     authUser: null,
     authenticated: false,
     token: null,
+    loginUserPermissions: [],
     loadStatus: 0,
     error: null,
   }),
@@ -27,6 +28,8 @@ export const useAuthStore = defineStore('auth', {
         this.token = res.data.accessToken
 
         this.authUser = res.data
+
+        this.loginUserPermissions = res.data.permissions
 
         return res
       } catch (error) {
@@ -77,7 +80,12 @@ export const useAuthStore = defineStore('auth', {
     getErrors: state => state.error,
     isAdmin: state => state.authUser?.user?.roles[0].name == 'Super Admin',
     isManager: state => state.authUser?.user?.roles[0].name == 'Project Manager',
+    isStaff: state => state.authUser?.user?.roles[0].name == 'Staff User',
+    isClient: state => state.authUser?.user?.roles[0].name == 'Staff User',
     getRole: state => state.authUser?.user?.roles[0],
     getUserFromLocalStorage: () => getUserFromLocalStorage(),
+    checkPermission: state => permission => {
+      return state.loginUserPermissions.includes(permission)
+    },
   },
 })

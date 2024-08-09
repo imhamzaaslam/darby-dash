@@ -16,7 +16,7 @@ let authenticatedPages = [
   'tasks',
   'account-setting',
   'payment-setting',
-  'roles',
+  'roles-setting',
 ]
 
 export default authenticatedPages

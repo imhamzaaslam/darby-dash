@@ -17,6 +17,7 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => ucwords($this->name),
+            'total_users' => $this->getUsers()->count(),
         ];
     }
 }

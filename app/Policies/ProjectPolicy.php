@@ -29,7 +29,7 @@ class ProjectPolicy
      */
     public function viewAll(User $user): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager');
+        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') || $user->hasRole('Client User') || $user->hasRole('Staff User');
     }
 
     /**
@@ -41,7 +41,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
+        return $user->hasRole('Super Admin') || $project->members->contains($user);
     }
 
     /**

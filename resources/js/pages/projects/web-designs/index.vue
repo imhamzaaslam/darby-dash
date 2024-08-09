@@ -4,7 +4,7 @@
     <VRow class="mb-0">
       <VCol
         cols="12"
-        md="7"
+        :md="!(authStore.isAdmin || authStore.isManager) ? 9 : 7"
         class="d-flex pb-0"
       >
         <VBtnToggle
@@ -47,6 +47,7 @@
         </div>
       </VCol>
       <VCol
+        v-if="authStore.isAdmin || authStore.isManager"
         cols="12"
         md="2"
         class="pb-0"
@@ -156,7 +157,7 @@
                       >
                         View
                       </VListItem>
-                      <VList>
+                      <template v-if="authStore.isAdmin || authStore.isManager">
                         <VListItem
                           value="edit"
                           @click="editProject(project)"
@@ -169,7 +170,7 @@
                         >
                           Delete
                         </VListItem>
-                      </VList>
+                      </template>
                     </VList>
                   </VMenu>
                 </IconBtn>
@@ -221,7 +222,7 @@
                           >
                             View
                           </VListItem>
-                          <VList>
+                          <template v-if="authStore.isAdmin || authStore.isManager">
                             <VListItem
                               value="edit"
                               @click="editProject(project)"
@@ -234,7 +235,7 @@
                             >
                               Delete
                             </VListItem>
-                          </VList>
+                          </template>
                         </VList>
                       </VMenu>
                     </IconBtn>
@@ -319,6 +320,7 @@ import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../store/projects"
 import { useProjectTypeStore } from "../../../store/project_types"
 import { useUserStore } from "../../../store/users"
+import { useAuthStore } from '@/store/auth'
 import { useRoute } from 'vue-router'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Projects` })
@@ -334,6 +336,7 @@ const toast = useToast()
 const projectStore = useProjectStore()
 const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
+const authStore = useAuthStore()
 const route = useRoute()
 
 const totalRecords = ref(0)

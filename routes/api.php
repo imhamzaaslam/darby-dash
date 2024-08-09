@@ -52,6 +52,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     });
 
     Route::get('/roles', [RoleController::class, 'index']);
+    Route::get('/roles/{id}/permissions', [RoleController::class, 'getPermissions']);
+    Route::patch('/roles/{id}/permissions', [RoleController::class, 'updatePermissions']);
 
     Route::prefix('admin')->group(function () {
         Route::prefix('users')->group(function () {

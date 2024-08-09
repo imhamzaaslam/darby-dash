@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/auth'
 import authenticatedPages from './authenticatedPages'
 import adminAuthorizedPages from './adminAuthorizedPages'
 import projectManagerAuthorizedPages from './projectManagerAuthorizedPages'
+import staffAuthorizedPages from './staffAuthorizedPages'
 import WebDesignsList from '../../../js/pages/projects/web-designs/index.vue'
 import WebDesign from '../../../js/pages/projects/web-designs/_partials/id.vue'
 import Team from '../../../js/pages/projects/team.vue'
@@ -27,7 +28,8 @@ const isAuthorized = to => {
   const authStore = useAuthStore()
 
   return (authStore.isAdmin && adminAuthorizedPages.includes(to.name)) || 
-         (authStore.isManager && projectManagerAuthorizedPages.includes(to.name))
+         (authStore.isManager && projectManagerAuthorizedPages.includes(to.name)) ||
+          (authStore.isStaff && staffAuthorizedPages.includes(to.name))
 }
 
 function recursiveLayouts(route) {
@@ -141,7 +143,7 @@ const router = createRouter({
     recursiveLayouts(
       {
         path: '/roles',
-        name: 'roles',
+        name: 'roles-setting',
         component: Roles,
         meta: { layout: 'default' },
       },

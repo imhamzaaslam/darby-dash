@@ -21,9 +21,14 @@ class RolesAndPermissionsSeeder extends Seeder
     private function permissions(): array
     {
         return [
-            'user' => ['add', 'view', 'update', 'delete'],
-            'project' => ['add', 'view', 'update', 'delete'],
-            'task' => ['add', 'view', 'update', 'delete'],
+            'user' => ['create', 'view', 'edit', 'delete'],
+            'project' => ['create', 'view', 'edit', 'delete'],
+            'task' => ['create', 'view', 'edit', 'delete'],
+            'milestone' => ['create', 'view', 'edit', 'delete'],
+            'calendar' => ['create', 'view', 'edit', 'delete'],
+            'file' => ['create', 'view', 'edit', 'delete'],
+            'team' => ['create', 'view', 'edit', 'delete'],
+            'payment' => ['create', 'view', 'edit', 'delete'],
         ];
     }
 
@@ -31,21 +36,41 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         return [
             'Super Admin' => [
-                'user' => ['add', 'view', 'update', 'delete'],
-                'project' => ['add', 'view', 'update', 'delete'],
-                'task' => ['add', 'view', 'update', 'delete'],
+                'user' => ['create', 'view', 'edit', 'delete'],
+                'project' => ['create', 'view', 'edit', 'delete'],
+                'task' => ['create', 'view', 'edit', 'delete'],
+                'milestone' => ['create', 'view', 'edit', 'delete'],
+                'calendar' => ['create', 'view', 'edit', 'delete'],
+                'file' => ['create', 'view', 'edit', 'delete'],
+                'team' => ['create', 'view', 'edit', 'delete'],
+                'payment' => ['create', 'view', 'edit', 'delete'],
             ],
             'Project Manager' => [
-                'project' => ['add', 'view', 'update', 'delete'],
-                'task' => ['add', 'view', 'update', 'delete'],
+                'project' => ['create', 'view', 'edit', 'delete'],
+                'task' => ['create', 'view', 'edit', 'delete'],
+                'milestone' => ['create', 'view', 'edit', 'delete'],
+                'calendar' => ['create', 'view', 'edit', 'delete'],
+                'file' => ['create', 'view', 'edit', 'delete'],
+                'team' => ['create', 'view', 'edit', 'delete'],
+                'payment' => ['create', 'view', 'edit', 'delete'],
             ],
             'Client User' => [
                 'project' => ['view'],
-                'task' => ['view', 'update'],
+                'task' => ['view'],
+                'milestone' => ['view'],
+                'calendar' => ['view'],
+                'file' => ['view'],
+                'team' => ['view'],
+                'payment' => ['view'],
             ],
             'Staff User' => [
-                'task' => ['view', 'update'],
                 'project' => ['view'],
+                'task' => ['view'],
+                'milestone' => ['view'],
+                'calendar' => ['view'],
+                'file' => ['view'],
+                'team' => ['view'],
+                'payment' => ['view'],
             ]
         ];
     }

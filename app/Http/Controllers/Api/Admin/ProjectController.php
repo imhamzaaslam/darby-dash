@@ -32,15 +32,15 @@ class ProjectController extends Controller
         $user = Auth::user();
         $this->authorize('viewAll', Project::class);
 
-        if ($user->hasRole('Project Manager')) {
+        if ($user->hasRole('Super Admin')) {
             $projects = $this->projectRepository
-                ->getUserProjectsQuery($user)
+                ->getAllRecordsQuery()
                 ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)
                 ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
                 ->paginate($request->per_page ?? config('pagination.per_page', 10));
         } else {
             $projects = $this->projectRepository
-                ->getAllRecordsQuery()
+                ->getUserProjectsQuery($user)
                 ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)
                 ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
                 ->paginate($request->per_page ?? config('pagination.per_page', 10));

@@ -31,15 +31,6 @@ class AuthController extends Controller
             ],401);
         }
 
-        if(!Auth::user()->hasRole(['Super Admin', 'Project Manager']))
-        {
-            Auth::logout();
-            return response()->json([
-                'success' => false,
-                'message' => 'Currently we are not supporting this role.'
-            ],401);
-        }
-
         $user = $request->user();
         $user->role = $user->getRoleNames()->first();
         $tokenResult = $user->createToken('Personal Access Token');
@@ -49,7 +40,8 @@ class AuthController extends Controller
             'success' => true,
             'accessToken' =>$token,
             'token_type' => 'Bearer',
-            'user' => $user
+            'user' => $user,
+            'permissions' => $user->getAllPermissions()->pluck('name')
         ]);
     }
 

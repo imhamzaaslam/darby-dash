@@ -16,7 +16,7 @@ let adminAuthorizedPages = [
   'tasks',
   'account-setting',
   'payment-setting',
-  'roles',
+  'roles-setting',
 ]
   
 export default adminAuthorizedPages
