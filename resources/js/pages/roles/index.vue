@@ -1,6 +1,7 @@
 <template>
+  <Loader v-if="isRoleFetching" />
   <VRow class="mt-0 pt-0">
-    <VCol 
+    <VCol
       cols="12"
       class="pt-0 ps-4"
     >
@@ -64,18 +65,27 @@
 
 <script setup>
 import { useRoleStore } from "@/store/roles"
+import Loader from "@/components/Loader.vue"
 
 const roleStore = useRoleStore()
+
+const isRoleFetching = ref(false)
 
 onMounted(async () => {
   await fetchRoles()
 })
 
 const fetchRoles = async () => {
-  await roleStore.getAll()
+  try {
+    isRoleFetching.value = true
+    await roleStore.getAll()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isRoleFetching.value = false
+  }
 }
 
-// use computed to get all role data
 const roles = computed(() => {
   return roleStore.getRolesFullData
 })
