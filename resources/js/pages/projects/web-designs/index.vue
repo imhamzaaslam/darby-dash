@@ -4,7 +4,7 @@
     <VRow class="mb-0">
       <VCol
         cols="12"
-        :md="!(authStore.isAdmin || authStore.isManager) ? 9 : 7"
+        :md="!(authStore.hasPermission('project-create')) ? 9 : 7"
         class="d-flex pb-0"
       >
         <VBtnToggle
@@ -47,7 +47,7 @@
         </div>
       </VCol>
       <VCol
-        v-if="authStore.isAdmin || authStore.isManager"
+        v-if="authStore.hasPermission('project-create')"
         cols="12"
         md="2"
         class="pb-0"
@@ -157,20 +157,20 @@
                       >
                         View
                       </VListItem>
-                      <template v-if="authStore.isAdmin || authStore.isManager">
-                        <VListItem
-                          value="edit"
-                          @click="editProject(project)"
-                        >
-                          Edit
-                        </VListItem>
-                        <VListItem
-                          value="delete"
-                          @click="deleteProject(project)"
-                        >
-                          Delete
-                        </VListItem>
-                      </template>
+                      <VListItem
+                        v-if="authStore.hasPermission('project-edit')"
+                        value="edit"
+                        @click="editProject(project)"
+                      >
+                        Edit
+                      </VListItem>
+                      <VListItem
+                        v-if="authStore.hasPermission('project-delete')"
+                        value="delete"
+                        @click="deleteProject(project)"
+                      >
+                        Delete
+                      </VListItem>
                     </VList>
                   </VMenu>
                 </IconBtn>
@@ -222,20 +222,20 @@
                           >
                             View
                           </VListItem>
-                          <template v-if="authStore.isAdmin || authStore.isManager">
-                            <VListItem
-                              value="edit"
-                              @click="editProject(project)"
-                            >
-                              Edit
-                            </VListItem>
-                            <VListItem
-                              value="delete"
-                              @click="deleteProject(project)"
-                            >
-                              Delete
-                            </VListItem>
-                          </template>
+                          <VListItem
+                            v-if="authStore.hasPermission('project-edit')"
+                            value="edit"
+                            @click="editProject(project)"
+                          >
+                            Edit
+                          </VListItem>
+                          <VListItem
+                            v-if="authStore.hasPermission('project-delete')"
+                            value="delete"
+                            @click="deleteProject(project)"
+                          >
+                            Delete
+                          </VListItem>
                         </VList>
                       </VMenu>
                     </IconBtn>
