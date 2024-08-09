@@ -60,6 +60,45 @@
                   style="color: #000 !important;"
                 />
               </VCol>
+              <VCol cols="4">
+                <AppTextField
+                  v-model="props.editProjectDetails.budget_amount"
+                  label="Project Budget*"
+                  :rules="[requiredValidator]"
+                  placeholder="0.00"
+                  type="number"
+                  class="no-arrows"
+                  prepend-inner-icon="tabler-currency-dollar"
+                />
+              </VCol>
+              <VCol
+                cols="8"
+                class="d-flex align-center"
+              >
+                <div class="d-flex">
+                  <!-- Input Field -->
+                  <AppTextField
+                    v-model="props.editProjectDetails.bucks_share"
+                    label="Darby Bucks Share*"
+                    :rules="[requiredValidator]"
+                    placeholder="0.00"
+                    type="number"
+                    class="no-arrows me-1"
+                    :prepend-inner-icon="props.editProjectDetails.bucks_share_type === 'fixed' ? 'tabler-currency-dollar' : 'tabler-percentage'"
+                  />
+
+                  <!-- Dropdown to Select Type -->
+                  <AppSelect
+                    v-model="props.editProjectDetails.bucks_share_type"
+                    :items="budgetTypes"
+                    class="budget-type-select"
+                    label="Share Type"
+                    :rules="[requiredValidator]"
+                    dense
+                    hide-details
+                  />
+                </div>
+              </VCol>
               <VCol cols="12">
                 <div class="d-flex justify-start">
                   <VBtn
@@ -135,6 +174,11 @@ const resetForm = () => {
   emit('update:isEditDrawerOpen', false)
 }
 
+const budgetTypes = [
+  { title: 'Fixed', value: 'fixed' },
+  { title: 'Percentage', value: 'percentage' },
+]
+
 function onProjectTypeChange(newValue) {
   props.editProjectDetails.project_type_id = newValue
 }
@@ -154,6 +198,23 @@ async function submitEditProjectForm() {
           title: props.editProjectDetails.title,
           project_type_id: props.editProjectDetails.project_type_id,
           member_ids: props.editProjectDetails.member_ids,
+          budget_amount: props.editProjectDetails.budget_amount,
+          bucks_share: props.editProjectDetails.bucks_share,
+          bucks_share_type: props.editProjectDetails.bucks_share_type,
+        }
+
+        if (payload.bucks_share_type === 'fixed') {
+          if (parseFloat(payload.bucks_share) > parseFloat(payload.budget_amount)) {
+            toast.error('Darby Bucks Share cannot be greater than Project Budget')
+
+            return
+          }
+        } else {
+          if (parseFloat(payload.bucks_share) > 100) {
+            toast.error('Darby Bucks Share cannot be greater than 100%')
+
+            return
+          }
         }
 
         await projectStore.update(payload)

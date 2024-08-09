@@ -63,7 +63,7 @@
       </VCol>
     </VRow>
     <VRow class="mt-0 pt-0">
-      <VCol 
+      <VCol
         cols="12"
         class="pt-0 ps-4"
       >
@@ -83,10 +83,10 @@
         v-else
         class="mb-4"
       >
-        <GridViewSkeleton /> 
+        <GridViewSkeleton />
       </VRow>
     </div>
-    
+
     <div v-else>
       <VRow v-if="getProjects.length === 0">
         <VCol cols="12">
@@ -387,7 +387,7 @@ const deleteProject = async project => {
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
         document.querySelector('.swal2-confirm').blur()
-        
+
         const title = document.querySelector('.swal2-title')
         if (title) {
           title.style.fontSize = '18px'
@@ -486,7 +486,7 @@ const projectTypesWithFirstOption = (firstOption = null) => {
     if (firstOption) {
       types.unshift({ id: null, name: firstOption })
     }
-    
+
     return types
   })
 
@@ -503,7 +503,7 @@ const projectManagersWithFirstOption = (firstOption = null) => {
     if (firstOption) {
       managers.unshift({ id: null, name: firstOption })
     }
-    
+
     return managers
   })
 

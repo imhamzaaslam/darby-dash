@@ -191,6 +191,19 @@ async function submitAddProjectForm() {
   addProjectForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
+        if (newProjectDetails.value.bucks_share_type === 'fixed') {
+          if (parseFloat(newProjectDetails.value.bucks_share) > parseFloat(newProjectDetails.value.budget_amount)) {
+            toast.error('Darby Bucks Share cannot be greater than Project Budget')
+
+            return
+          }
+        } else {
+          if (parseFloat(newProjectDetails.value.bucks_share) > 100) {
+            toast.error('Darby Bucks Share cannot be greater than 100%')
+
+            return
+          }
+        }
         const res = await projectStore.create(newProjectDetails.value)
 
         isLoading.value = true
