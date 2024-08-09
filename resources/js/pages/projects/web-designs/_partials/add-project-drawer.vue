@@ -19,7 +19,7 @@
         :options="{ wheelPropagation: false }"
         class="h-100"
       >
-        <VCardText style="block-size: calc(100vh - 5rem);">
+        <VCardText style="block-size: calc(100vh - 80px);">
           <VForm
             ref="addProjectForm"
             @submit.prevent="submitAddProjectForm"
@@ -58,6 +58,46 @@
                   style="color: #000 !important;"
                 />
               </VCol>
+              <VCol cols="4">
+                <AppTextField
+                  v-model="newProjectDetails.budget_amount"
+                  label="Project Budget*"
+                  :rules="[requiredValidator]"
+                  placeholder="0.00"
+                  type="number"
+                  class="no-arrows"
+                  prepend-inner-icon="tabler-currency-dollar"
+                />
+              </VCol>
+              <VCol
+                cols="8"
+                class="d-flex align-center"
+              >
+                <div class="d-flex">
+                  <!-- Input Field -->
+                  <AppTextField
+                    v-model="newProjectDetails.bucks_share"
+                    label="Darby Bucks Share*"
+                    :rules="[requiredValidator]"
+                    placeholder="0.00"
+                    type="number"
+                    class="no-arrows me-1"
+                    :prepend-inner-icon="newProjectDetails.bucks_share_type === 'fixed' ? 'tabler-currency-dollar' : 'tabler-percentage'"
+                  />
+
+                  <!-- Dropdown to Select Type -->
+                  <AppSelect
+                    v-model="newProjectDetails.bucks_share_type"
+                    :items="budgetTypes"
+                    class="budget-type-select"
+                    label="Share Type"
+                    :rules="[requiredValidator]"
+                    dense
+                    hide-details
+                  />
+                </div>
+              </VCol>
+
               <VCol cols="12">
                 <div class="d-flex justify-start">
                   <VBtn
@@ -128,7 +168,15 @@ const newProjectDetails = ref({
   title: '',
   project_type_id: null,
   member_ids: [],
+  budget_amount: '',
+  bucks_share: '',
+  bucks_share_type: 'fixed',
 })
+
+const budgetTypes = [
+  { title: 'Fixed', value: 'fixed' },
+  { title: 'Percentage', value: 'percentage' },
+]
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
@@ -159,6 +207,9 @@ async function submitAddProjectForm() {
           title: '',
           project_type_id: '',
           member_ids: [],
+          budget_amount: '',
+          bucks_share: '',
+          bucks_share_type: 'fixed',
         }
       } catch (error) {
         toast.error('Failed to add project:', error)

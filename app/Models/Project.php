@@ -23,7 +23,10 @@ class Project extends Base
         'est_budget',
         'start_date',
         'end_date',
-        'status'
+        'status',
+        'budget_amount',
+        'bucks_share',
+        'bucks_share_type',
     ];
 
     public function projectType()
