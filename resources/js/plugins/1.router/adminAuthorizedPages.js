@@ -17,7 +17,7 @@ let adminAuthorizedPages = [
   'account-setting',
   'payment-setting',
   'roles-setting',
+  'bucks-setting',
 ]
-  
+
 export default adminAuthorizedPages
-  

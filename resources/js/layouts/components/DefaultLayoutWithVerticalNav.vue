@@ -8,6 +8,7 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
 import NavBarI18n from '@core/components/I18n.vue'
 import { useRoute } from 'vue-router'
 import { useProjectStore } from "@/store/projects"
+import { useAuthStore } from "@/store/auth"
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
@@ -19,6 +20,7 @@ const refLoadingIndicator = ref(null)
 const $route = useRoute()
 
 const projectStore = useProjectStore()
+const authStore = useAuthStore()
 const projectId = ref(null)
 const projectType = ref(null)
 
@@ -146,7 +148,14 @@ const project = computed(() =>{
           v-if="showNavigation"
           class="text-h6 font-weight-bold me-4"
         >
-          Darby Bucks <span class="text-primary">${{ project?.darby_bucks_amount }}</span>
+          <span v-if="authStore.isAdmin || authStore.isManager">
+            <RouterLink :to="`/projects/${projectId}/bucks`">
+              Darby Bucks <span class="text-primary">${{ project?.darby_bucks_amount }}</span>
+            </RouterLink>
+          </span>
+          <span v-else>
+            Darby Bucks <span class="text-primary">${{ project?.darby_bucks_amount }}</span>
+          </span>
         </span>
         <NavBarNotifications class="me-2" />
         <UserProfile />

@@ -17,6 +17,7 @@ import Payments from '@/pages/projects/payments.vue'
 import AddProjectTasks from '../../pages/projects/web-designs/_partials/addProjectTasks.vue'
 import AuthorizationError from '@/pages/errors/authorization-error.vue'
 import Roles from '@/pages/roles/index.vue'
+import BucksSetting from '@/pages/projects/bucks.vue'
 
 const requireAuth = () => {
   const authStore = useAuthStore()
@@ -27,7 +28,7 @@ const requireAuth = () => {
 const isAuthorized = to => {
   const authStore = useAuthStore()
 
-  return (authStore.isAdmin && adminAuthorizedPages.includes(to.name)) || 
+  return (authStore.isAdmin && adminAuthorizedPages.includes(to.name)) ||
          (authStore.isManager && projectManagerAuthorizedPages.includes(to.name)) ||
           (authStore.isStaff && staffAuthorizedPages.includes(to.name))
 }
@@ -146,6 +147,15 @@ const router = createRouter({
         name: 'roles-setting',
         component: Roles,
         meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/projects/:id/bucks',
+        name: 'bucks-setting',
+        component: BucksSetting,
+        meta: { layout: 'default' },
+        props: true,
       },
     ),
     recursiveLayouts(

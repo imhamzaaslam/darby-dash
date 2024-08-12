@@ -12,7 +12,7 @@ let projectManagerAuthorizedPages = [
   'tasks',
   'account-setting',
   'payment-setting',
+  'bucks-setting',
 ]
-  
+
 export default projectManagerAuthorizedPages
-  
