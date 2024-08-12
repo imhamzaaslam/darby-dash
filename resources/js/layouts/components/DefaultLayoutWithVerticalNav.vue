@@ -7,6 +7,7 @@ import NavBarNotifications from '@/layouts/components/NavBarNotifications.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import NavBarI18n from '@core/components/I18n.vue'
 import { useRoute } from 'vue-router'
+import { useProjectStore } from "@/store/projects"
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
@@ -17,6 +18,7 @@ const refLoadingIndicator = ref(null)
 
 const $route = useRoute()
 
+const projectStore = useProjectStore()
 const projectId = ref(null)
 const projectType = ref(null)
 
@@ -39,6 +41,10 @@ const showNavigation = computed(() => {
   return $route.params.id !== undefined
 })
 // !SECTION
+
+const project = computed(() =>{
+  return projectStore.getProject
+})
 </script>
 
 <template>
@@ -140,7 +146,7 @@ const showNavigation = computed(() => {
           v-if="showNavigation"
           class="text-h6 font-weight-bold me-4"
         >
-          Darby Bucks <span class="text-primary">$200</span>
+          Darby Bucks <span class="text-primary">${{ project?.darby_bucks_amount }}</span>
         </span>
         <NavBarNotifications class="me-2" />
         <UserProfile />
