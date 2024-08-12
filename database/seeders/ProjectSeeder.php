@@ -24,6 +24,9 @@ class ProjectSeeder extends Seeder
             'project_type_id' => 1,
             'est_hours' => 100,
             'est_budget' => 1000,
+            'budget_amount' => 10000,
+            'bucks_share' => 100,
+            'bucks_share_type' => 'fixed',
         ]);
         $firstProjectMembers = [2, 4, 5, 6];
         foreach ($firstProjectMembers as $memberId) {
@@ -47,6 +50,9 @@ class ProjectSeeder extends Seeder
             'project_type_id' => 1,
             'est_hours' => 200,
             'est_budget' => 2000,
+            'budget_amount' => 20000,
+            'bucks_share' => 10,
+            'bucks_share_type' => 'percentage',
         ]);
         $secondProjectMembers = [2, 4, 5];
         foreach ($secondProjectMembers as $memberId) {
@@ -70,6 +76,9 @@ class ProjectSeeder extends Seeder
             'project_type_id' => 1,
             'est_hours' => 300,
             'est_budget' => 3000,
+            'budget_amount' => 30000,
+            'bucks_share' => 200,
+            'bucks_share_type' => 'fixed',
         ]);
         $thirdProjectMembers = [2, 4, 5, 6];
         foreach ($thirdProjectMembers as $memberId) {
@@ -93,6 +102,9 @@ class ProjectSeeder extends Seeder
             'project_type_id' => 2,
             'est_hours' => 400,
             'est_budget' => 4000,
+            'budget_amount' => 40000,
+            'bucks_share' => 15,
+            'bucks_share_type' => 'percentage',
         ]);
         $fourthProjectMembers = [2, 4, 5];
         foreach ($fourthProjectMembers as $memberId) {
@@ -116,6 +128,9 @@ class ProjectSeeder extends Seeder
             'project_type_id' => 2,
             'est_hours' => 500,
             'est_budget' => 5000,
+            'budget_amount' => 50000,
+            'bucks_share' => 15,
+            'bucks_share_type' => 'percentage',
         ]);
         $fifthProjectMembers = [2, 4, 5, 6];
         foreach ($fifthProjectMembers as $memberId) {
@@ -139,6 +154,9 @@ class ProjectSeeder extends Seeder
             'project_type_id' => 3,
             'est_hours' => 600,
             'est_budget' => 6000,
+            'budget_amount' => 60000,
+            'bucks_share' => 150,
+            'bucks_share_type' => 'fixed',
         ]);
         $sixthProjectMembers = [2, 4, 5];
         foreach ($sixthProjectMembers as $memberId) {
