@@ -134,14 +134,14 @@ const showNavigation = computed(() => {
             >Payments</span>
           </RouterLink>
         </div>
-        
         <VSpacer />
 
-        <NavBarI18n
-          v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"
-          :languages="themeConfig.app.i18n.langConfig"
-        />
-        <span class="text-h6 font-weight-bold me-4">Darby Bucks <span class="text-primary">$200</span></span>
+        <span
+          v-if="showNavigation"
+          class="text-h6 font-weight-bold me-4"
+        >
+          Darby Bucks <span class="text-primary">$200</span>
+        </span>
         <NavBarNotifications class="me-2" />
         <UserProfile />
       </div>
@@ -167,6 +167,6 @@ const showNavigation = computed(() => {
 
 <style lang="scss" scoped>
 .inner-badge-text{
-    font-size: 0.85rem!important;
+    font-size: .85rem!important;
 }
 </style>
