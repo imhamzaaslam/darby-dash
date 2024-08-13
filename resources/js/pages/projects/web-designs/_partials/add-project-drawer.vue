@@ -170,7 +170,7 @@ const newProjectDetails = ref({
   member_ids: [],
   budget_amount: '',
   bucks_share: '',
-  bucks_share_type: 'fixed',
+  bucks_share_type: 'percentage',
 })
 
 const budgetTypes = [

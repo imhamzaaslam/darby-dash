@@ -91,6 +91,11 @@ class Project extends Base
         return $this->hasMany(CalendarEvent::class);
     }
 
+    public function projectBucks()
+    {
+        return $this->hasMany(ProjectBucks::class);
+    }
+
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder
     {
         $projectsTable = (new Project())->getTable();

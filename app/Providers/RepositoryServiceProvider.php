@@ -16,6 +16,7 @@ use App\Contracts\CalendarEventRepositoryInterface;
 use App\Contracts\FileRepositoryInterface;
 use App\Contracts\FolderRepositoryInterface;
 use App\Contracts\PaymentRepositoryInterface;
+use App\Contracts\ProjectBucksRepositoryInterface;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -30,6 +31,7 @@ use App\Models\CalendarEvent;
 use App\Models\File;
 use App\Models\Folder;
 use App\Models\Payment;
+use App\Models\ProjectBucks;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
@@ -44,6 +46,7 @@ use App\Repositories\CalendarEventRepository;
 use App\Repositories\FileRepository;
 use App\Repositories\FolderRepository;
 use App\Repositories\PaymentRepository;
+use App\Repositories\ProjectBucksRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -120,6 +123,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             PaymentRepositoryInterface::class,
             fn() => new PaymentRepository(new Payment)
+        );
+        $this->app->bind(
+            ProjectBucksRepositoryInterface::class,
+            fn() => new ProjectBucksRepository(new ProjectBucks)
         );
     }
 

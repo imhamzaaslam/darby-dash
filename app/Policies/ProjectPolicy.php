@@ -20,7 +20,7 @@ class ProjectPolicy
     {
         return $user->hasRole('Super Admin');
     }
-    
+
     /**
      * Determine whether the user can view all models.
      *
@@ -75,6 +75,18 @@ class ProjectPolicy
      * @return bool
      */
     public function delete(User $user, Project $project): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
+    }
+
+    /**
+     * Determine whether the user can view bucks.
+     *
+     * @param User $user
+     * @param Project $project
+     * @return bool
+     */
+    public function viewbucks(User $user, Project $project): bool
     {
         return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
     }

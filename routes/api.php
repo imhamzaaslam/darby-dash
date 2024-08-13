@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Admin\CalendarEventController;
 use App\Http\Controllers\Api\Admin\FileController;
 use App\Http\Controllers\Api\Admin\FolderController;
 use App\Http\Controllers\Api\Admin\PaymentController;
+use App\Http\Controllers\Api\Admin\ProjectBucksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
                 Route::delete('/user/{userUuid}', [ProjectController::class, 'deleteUser']);
+
+                Route::get('/bucks', [ProjectBucksController::class, 'index']);
 
                 Route::get('/lists', [ProjectListController::class, 'index']);
                 Route::post('/list', [ProjectListController::class, 'store']);
