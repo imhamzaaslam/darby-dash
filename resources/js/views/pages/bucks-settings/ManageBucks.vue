@@ -76,78 +76,92 @@ const onSubmit = () => {
                 <VRow>
                   <VCol cols="12">
                     <h6 class="text-h6 font-weight-medium">
-                      Account Details
+                      Super Admin
                     </h6>
                     <p class="mb-0">
                       Manage Bucks for Super Admin
                     </p>
                   </VCol>
                 </VRow>
-                <VRow class="d-flex justify-center align-center">
+                <VRow class="d-flex align-center">
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      value="First Step"
-                      label="Step Name"
+                      value="Tash Name"
+                      label="Task Name"
                       readonly
                       disabled
+                      class="me-2" 
                     />
                   </VCol>
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      label="Allocate Bucks"
-                      type="number"
-                      placeholder="0"
-                      min="0"
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
                     />
                   </VCol>
-
                   <VCol
                     cols="12"
-                    md="2"
-                    class="mt-4"
+                    md="4"
+                    class="d-flex align-center mt-4"
                   >
-                    <VBtn color="primary">
-                      Save
+                    <VBtn
+                      color="success"
+                      class="mr-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
                     </VBtn>
                   </VCol>
                 </VRow>
-                <VRow class="d-flex justify-center align-center">
+                <VRow class="d-flex align-center">
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      value="First Step"
-                      label="Step Name"
+                      value="Tash Name"
+                      label="Task Name"
                       readonly
                       disabled
+                      class="me-2" 
                     />
                   </VCol>
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      label="Allocate Bucks"
-                      type="number"
-                      placeholder="0"
-                      min="0"
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
                     />
                   </VCol>
-
                   <VCol
                     cols="12"
-                    md="2"
-                    class="mt-4"
+                    md="4"
+                    class="d-flex align-center mt-4"
                   >
-                    <VBtn color="primary">
-                      Save
+                    <VBtn
+                      color="success"
+                      class="me-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
                     </VBtn>
                   </VCol>
                 </VRow>
@@ -163,76 +177,89 @@ const onSubmit = () => {
                       Manage Bucks for Project Manager
                     </p>
                   </VCol>
-
-                  <VRow class="d-flex justify-center align-center">
-                    <VCol
-                      cols="12"
-                      md="5"
-                    >
-                      <AppTextField
-                        value="First Step"
-                        label="Step Name"
-                        readonly
-                        disabled
-                      />
-                    </VCol>
-                    <VCol
-                      cols="12"
-                      md="5"
-                    >
-                      <AppTextField
-                        label="Allocate Bucks"
-                        type="number"
-                        placeholder="0"
-                        min="0"
-                      />
-                    </VCol>
-
-                    <VCol
-                      cols="12"
-                      md="2"
-                      class="mt-4"
-                    >
-                      <VBtn color="primary">
-                        Save
-                      </VBtn>
-                    </VCol>
-                  </VRow>
-                  <VRow class="d-flex justify-center align-center">
-                    <VCol
-                      cols="12"
-                      md="5"
-                    >
-                      <AppTextField
-                        value="First Step"
-                        label="Step Name"
-                        readonly
-                        disabled
-                      />
-                    </VCol>
-                    <VCol
-                      cols="12"
-                      md="5"
-                    >
-                      <AppTextField
-                        label="Allocate Bucks"
-                        type="number"
-                        placeholder="0"
-                        min="0"
-                      />
-                    </VCol>
-
-                    <VCol
-                      cols="12"
-                      md="2"
-                      class="mt-4"
-                    >
-                      <VBtn color="primary">
-                        Save
-                      </VBtn>
-                    </VCol>
-                  </VRow>
                 </vrow>
+                <VRow class="d-flex align-center">
+                  <VCol
+                    cols="12"
+                    md="4"
+                  >
+                    <AppTextField
+                      value="Tash Name"
+                      label="Task Name"
+                      readonly
+                      disabled
+                      class="me-2" 
+                    />
+                  </VCol>
+                  <VCol
+                    cols="12"
+                    md="4"
+                  >
+                    <AppTextField
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
+                    />
+                  </VCol>
+                  <VCol
+                    cols="12"
+                    md="4"
+                    class="d-flex align-center mt-4"
+                  >
+                    <VBtn
+                      color="success"
+                      class="me-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
+                    </VBtn>
+                  </VCol>
+                </VRow>
+                <VRow class="d-flex align-center">
+                  <VCol
+                    cols="12"
+                    md="4"
+                  >
+                    <AppTextField
+                      value="Tash Name"
+                      label="Task Name"
+                      readonly
+                      disabled
+                      class="me-2" 
+                    />
+                  </VCol>
+                  <VCol
+                    cols="12"
+                    md="4"
+                  >
+                    <AppTextField
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
+                    />
+                  </VCol>
+                  <VCol
+                    cols="12"
+                    md="4"
+                    class="d-flex align-center mt-4"
+                  >
+                    <VBtn
+                      color="success"
+                      class="me-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
+                    </VBtn>
+                  </VCol>
+                </VRow>
               </VWindowItem>
 
               <VWindowItem>
@@ -246,71 +273,85 @@ const onSubmit = () => {
                     </p>
                   </VCol>
                 </VRow>
-                <VRow class="d-flex justify-center align-center">
+                <VRow class="d-flex align-center">
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      value="First Step"
-                      label="Step Name"
+                      value="Tash Name"
+                      label="Task Name"
                       readonly
                       disabled
+                      class="me-2" 
                     />
                   </VCol>
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      label="Allocate Bucks"
-                      type="number"
-                      placeholder="0"
-                      min="0"
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
                     />
                   </VCol>
-
                   <VCol
                     cols="12"
-                    md="2"
-                    class="mt-4"
+                    md="4"
+                    class="d-flex align-center mt-4"
                   >
-                    <VBtn color="primary">
-                      Save
+                    <VBtn
+                      color="success"
+                      class="me-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
                     </VBtn>
                   </VCol>
                 </VRow>
-                <VRow class="d-flex justify-center align-center">
+                <VRow class="d-flex align-center">
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      value="First Step"
-                      label="Step Name"
+                      value="Tash Name"
+                      label="Task Name"
                       readonly
                       disabled
+                      class="me-2" 
                     />
                   </VCol>
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      label="Allocate Bucks"
-                      type="number"
-                      placeholder="0"
-                      min="0"
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
                     />
                   </VCol>
-
                   <VCol
                     cols="12"
-                    md="2"
-                    class="mt-4"
+                    md="4"
+                    class="d-flex align-center mt-4"
                   >
-                    <VBtn color="primary">
-                      Save
+                    <VBtn
+                      color="success"
+                      class="me-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
                     </VBtn>
                   </VCol>
                 </VRow>
@@ -327,71 +368,85 @@ const onSubmit = () => {
                     </p>
                   </VCol>
                 </VRow>
-                <VRow class="d-flex justify-center align-center">
+                <VRow class="d-flex align-center">
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      value="First Step"
-                      label="Step Name"
+                      value="Tash Name"
+                      label="Task Name"
                       readonly
                       disabled
+                      class="me-2" 
                     />
                   </VCol>
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      label="Allocate Bucks"
-                      type="number"
-                      placeholder="0"
-                      min="0"
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
                     />
                   </VCol>
-
                   <VCol
                     cols="12"
-                    md="2"
-                    class="mt-4"
+                    md="4"
+                    class="d-flex align-center mt-4"
                   >
-                    <VBtn color="primary">
-                      Save
+                    <VBtn
+                      color="success"
+                      class="me-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
                     </VBtn>
                   </VCol>
                 </VRow>
-                <VRow class="d-flex justify-center align-center">
+                <VRow class="d-flex align-center">
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      value="First Step"
-                      label="Step Name"
+                      value="Tash Name"
+                      label="Task Name"
                       readonly
                       disabled
+                      class="me-2" 
                     />
                   </VCol>
                   <VCol
                     cols="12"
-                    md="5"
+                    md="4"
                   >
                     <AppTextField
-                      label="Allocate Bucks"
-                      type="number"
-                      placeholder="0"
-                      min="0"
+                      value="$10"
+                      label="Bucks Amount"
+                      readonly
+                      disabled
+                      class="me-2" 
                     />
                   </VCol>
-
                   <VCol
                     cols="12"
-                    md="2"
-                    class="mt-4"
+                    md="4"
+                    class="d-flex align-center mt-4"
                   >
-                    <VBtn color="primary">
-                      Save
+                    <VBtn
+                      color="success"
+                      class="me-2"
+                    >
+                      Approve
+                    </VBtn>
+                    <VBtn color="error">
+                      Reject
                     </VBtn>
                   </VCol>
                 </VRow>
