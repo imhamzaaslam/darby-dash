@@ -90,4 +90,16 @@ class ProjectPolicy
     {
         return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
     }
+    
+    /**
+     * Determine whether the user can update bucks.
+     *
+     * @param User $user
+     * @param Project $project
+     * @return bool
+     */
+    public function updatebucks(User $user, Project $project): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
+    }
 }

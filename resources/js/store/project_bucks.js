@@ -23,6 +23,22 @@ export const useProjectBucksStore = defineStore('project_bucks', {
         console.error('getProjects error ', error)
       }
     },
+    async updateProjectBucks(projectUuid, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectBucksService.updateRoleShare(projectUuid, payload)
+
+        this.bucksDetails = response.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updateRoleShare error ', error)
+        
+        return error
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

@@ -10,7 +10,16 @@
           Total Amount: <span class="font-weight-medium text-primary">${{ projectBucks?.project?.budget_amount }}</span>
         </h4>
         <h4>
-          Bucks Shares: <span class="font-weight-medium text-primary">${{ projectBucks?.project?.bucks_share }}</span>
+          Bucks Share: <span class="font-weight-medium text-primary">
+            {{ projectBucks?.project?.bucks_share_type === 'fixed' 
+              ? '$' + projectBucks?.project?.bucks_share 
+              : projectBucks?.project?.bucks_share + '%' 
+            }} 
+            <small v-if="projectBucks?.project?.bucks_share_type !== 'fixed'">
+              (${{ projectBucks?.project?.darby_bucks_amount }})
+            </small>
+          </span>
+          <!-- Bucks Share: <span class="font-weight-medium text-primary">{{ projectBucks?.project?.bucks_share_type === 'fixed' ? '$' + projectBucks?.project?.bucks_share : projectBucks?.project?.bucks_share + '%' + ' ($' + projectBucks?.project?.darby_bucks_amount + ')' }}</span> -->
         </h4>
         <h4>
           Share Type: <span class="font-weight-medium text-primary">{{ projectBucks?.project?.bucks_share_type }}</span>
@@ -30,24 +39,78 @@
           <span class="text-sm text-truncate mb-0">{{ item.role_name }}</span>
         </div>
       </template>
-      <template #item.percentage="{ item }">
+      <template #item.share="{ item }">
         <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0">{{ item.bucks_share_type === 'percentage' ? item.bucks_share + '%' : '$' + item.bucks_share }}</span>
+          <template v-if="editingRole?.role_id === item.role_id">
+            <div class="d-flex gap-1 align-center">
+              <VTextField
+                v-model="editingRole.bucks_share"
+                prepend-inner-icon="tabler-currency-dollar"
+                placeholder="0.00"
+                type="number"
+                class="no-arrows"
+                autofocus
+                density="compact"
+                @keydown.enter="saveShare"
+                @keydown.esc="editingRole = null"
+              />
+              <div>
+                <VBtn
+                  color="success"
+                  icon
+                  size="x-small"
+                  @click="saveShare"
+                >
+                  <VIcon
+                    size="large"
+                    icon="tabler-check"
+                  />
+                </VBtn>
+                <VTooltip
+                  activator="parent"
+                  location="top"
+                >
+                  <span class="text-xs">Save</span>
+                </VTooltip>
+              </div>
+              <div>
+                <VBtn
+                  color="error"
+                  icon
+                  size="x-small"
+                  @click="editingRole = null"
+                >
+                  <VIcon
+                    size="large"
+                    icon="tabler-x"
+                  />
+                </VBtn>
+                <VTooltip
+                  activator="parent"
+                  location="top"
+                >
+                  <span class="text-xs">Cancel</span>
+                </VTooltip>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <span class="text-sm text-truncate mb-0">{{ item.bucks_share_type === 'percentage' ? item.bucks_share + '%' : '$' + item.bucks_share }}</span>
+          </template>
         </div>
       </template>
       <template #item.actions="{ item }">
-        <div class="d-flex gap-1">
+        <div class="d-flex justify-center">
           <VBtn
             color="primary"
+            icon
             size="small"
             @click="editRole(item)"
           >
             <VIcon
               icon="tabler-edit"
               size="18"
-              class="me-1"
             />
-            <span class="d-none d-sm-block">Edit</span>
           </VBtn>
         </div>
       </template>
@@ -55,6 +118,15 @@
         <div class="mb-4" />
       </template>
     </VDataTable>
+    <div class="mt-2 mb-4 px-4">
+      <VAlert
+        color="primary"
+        variant="tonal"
+        class="text-center"
+      >
+        <b>Remaining Bucks: </b> {{ projectBucks?.project?.bucks_share_type === 'fixed' ? '$' + projectBucks?.remaining_bucks : projectBucks?.remaining_bucks + '%' }}
+      </VAlert>
+    </div>
   </VCard>
 </template>
 
@@ -73,25 +145,21 @@ const projectBucksStore = useProjectBucksStore()
 const route = useRoute()
 const toast = useToast()
 const projectUuid = route.params.id
-
-// Static data for roles
-const bucksData = ref([
-  { role: 'Admin', percentage: 40 },
-  { role: 'Project Manager', percentage: 30 },
-  { role: 'Staff', percentage: 20 },
-  { role: 'Client', percentage: 10 },
-])
+const editingRole = ref(null)
+const editRoleShare = ref(null)
 
 const headers = [
   {
     title: 'Role',
     key: 'role',
     sortable: false,
+    width: '50%',
   },
   {
-    title: 'Percentage',
-    key: 'percentage',
+    title: 'Share',
+    key: 'share',
     sortable: false,
+    width: '50%',
   },
   {
     title: 'Actions',
@@ -109,8 +177,38 @@ const fetchProjectBucks = async () => {
 }
 
 function editRole(item) {
-  // Logic for editing the role
-  console.log('Editing role:', item)
+  editingRole.value = item
+  editRoleShare.value = item.bucks_share
+}
+
+const saveShare = async () => {
+  if (editingRole.value.bucks_share === '') {
+    toast.error('Please enter a valid share amount')
+    
+    return
+  }
+ 
+  let remainingBucks = parseInt(projectBucks.value?.remaining_bucks) + parseInt(editRoleShare.value)
+  let share = parseInt(editingRole.value.bucks_share)
+  
+  if (share > remainingBucks) {
+    toast.error('Share amount exceeds remaining bucks')
+    
+    return
+  }
+
+  
+  projectBucksStore.updateProjectBucks(projectUuid, {
+    roleId: editingRole.value.role_id,
+    shares: editingRole.value.bucks_share,
+  })
+  
+  if(getErrors.value) {
+    toast.error('Something went wrong. Please try again later')
+  } else {
+    editingRole.value = null
+    toast.success('Role share updated successfully')
+  }
 }
 
 const projectBucks = computed(() =>{
@@ -119,6 +217,11 @@ const projectBucks = computed(() =>{
 
 const loadStatus = computed(() => {
   return projectBucksStore.getLoadStatus
+})
+
+const getErrors = computed(() => {
+  // show error message in toast
+  return projectBucksStore.getErrors
 })
 </script>
 

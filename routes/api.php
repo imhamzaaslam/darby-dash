@@ -84,8 +84,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
                 Route::delete('/user/{userUuid}', [ProjectController::class, 'deleteUser']);
-
-                Route::get('/bucks', [ProjectBucksController::class, 'index']);
+                
+                Route::prefix('bucks')->group(function () {
+                    Route::get('/', [ProjectBucksController::class, 'index']);
+                    Route::patch('/', [ProjectBucksController::class, 'update']);
+                });
 
                 Route::get('/lists', [ProjectListController::class, 'index']);
                 Route::post('/list', [ProjectListController::class, 'store']);

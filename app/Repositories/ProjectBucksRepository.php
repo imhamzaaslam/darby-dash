@@ -23,19 +23,40 @@ class ProjectBucksRepository extends AbstractEloquentRepository implements Proje
         parent::__construct($model);
     }
 
-    public function index(Project $project): array
+    public function index(Project $project): Collection
     {
-        $roles = Role::all();
-        $shares = [];
+        $roles = Role::where('name', '!=', 'Super Admin')->get();
+        $shares = collect();
         foreach ($roles as $role) {
             $projectBuck = $project->projectBucks->where('role_id', $role->id)->first();
-            $shares[] = [
+            $shares->push([
                 'role_id' => $role->id,
                 'role_name' => $role->name,
                 'bucks_share' => $projectBuck ? $projectBuck->shares : 0,
                 'bucks_share_type' => $project->bucks_share_type,
-            ];
+            ]);
         }
         return $shares;
+    }
+    
+    public function update(Project $project, array $data): ProjectBucks
+    {
+        $projectBuck = $project->projectBucks->where('role_id', $data['roleId'])->first();
+        if ($projectBuck) {
+            $projectBuck->update([
+                'shares' => $data['shares'],
+            ]);
+            return $projectBuck;
+        }
+        return $project->projectBucks()->create([
+            'role_id' => $data['roleId'],
+            'shares' => $data['shares'],
+        ]);
+    }
+    
+    public function getRoleShare(Project $project, int $roleId): int
+    {
+        $projectBuck = $project->projectBucks->where('role_id', $roleId)->first();
+        return $projectBuck ? $projectBuck->shares : 0;
     }
 }
