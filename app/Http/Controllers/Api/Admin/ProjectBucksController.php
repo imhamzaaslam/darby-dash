@@ -7,6 +7,7 @@ use App\Contracts\ProjectBucksRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\ProjectResource;
 use App\Models\ProjectBucks;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -32,14 +33,12 @@ class ProjectBucksController extends Controller
 
         $bucks = $this->projectBucksRepository->index($project);
         
-        // check if project bucks_share_type is fixed or percentage then find remaining bucks accordingly
-        // if($project->bucks_share_type === 'fixed') {
-        //     $remainingBucks = $project->bucks_share - $bucks->sum('bucks_share');
-        // } else {
-        //     $remainingBucks = $project->bucks_share - ($bucks->sum('bucks_share') * $project->budget_amount / 100);
-        // }
-        
-        $remainingBucks = $project->bucks_share - $bucks->sum('bucks_share');
+        if($project->bucks_share_type === 'fixed') {
+            $remainingBucks = round($project->bucks_share - $bucks->sum('bucks_share'), 2);
+        } else {
+            $bucks_share = $project->bucks_share * $project->budget_amount / 100;
+            $remainingBucks = round($bucks_share - $bucks->sum('bucks_share'), 2);
+        }
 
         $project = new ProjectResource($project);
 
@@ -63,12 +62,17 @@ class ProjectBucksController extends Controller
         $this->authorize('updatebucks', $project);
         
         // Step 1: Validate the roleId
-        $request->validate(['roleId' => 'required|exists:roles,id']);
+        $request->validate(['roleId' => 'required|in:' . implode(',', Role::where('name', '!=', 'Super Admin')->pluck('id')->toArray())]);
         
         // Step 2: Calculate remainingBucks
         $roleShare = $this->projectBucksRepository->getRoleShare($project, $request->roleId);
         $bucks = $this->projectBucksRepository->index($project);
-        $remainingBucks = $project->bucks_share - $bucks->sum('bucks_share') + $roleShare;
+        if($project->bucks_share_type === 'fixed') {
+            $remainingBucks = $project->bucks_share - $bucks->sum('bucks_share') + $roleShare;
+        } else {
+            $bucks_share = $project->bucks_share * $project->budget_amount / 100;
+            $remainingBucks = $bucks_share - $bucks->sum('bucks_share') + $roleShare;
+        }
         
         // Step 3: Validate the shares field
         $request->validate(['shares' => 'required|numeric|min:0|max:' . $remainingBucks]);

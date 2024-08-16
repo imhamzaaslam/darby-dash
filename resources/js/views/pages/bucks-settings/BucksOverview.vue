@@ -16,10 +16,9 @@
               : projectBucks?.project?.bucks_share + '%' 
             }} 
             <small v-if="projectBucks?.project?.bucks_share_type !== 'fixed'">
-              (${{ projectBucks?.project?.darby_bucks_amount }})
+              (${{ projectBucks?.project?.bucks_share_amount }})
             </small>
           </span>
-          <!-- Bucks Share: <span class="font-weight-medium text-primary">{{ projectBucks?.project?.bucks_share_type === 'fixed' ? '$' + projectBucks?.project?.bucks_share : projectBucks?.project?.bucks_share + '%' + ' ($' + projectBucks?.project?.darby_bucks_amount + ')' }}</span> -->
         </h4>
         <h4>
           Share Type: <span class="font-weight-medium text-primary">{{ projectBucks?.project?.bucks_share_type }}</span>
@@ -53,6 +52,7 @@
                 density="compact"
                 @keydown.enter="saveShare"
                 @keydown.esc="editingRole = null"
+                @input="limitTwoDecimals"
               />
               <div>
                 <VBtn
@@ -95,7 +95,7 @@
             </div>
           </template>
           <template v-else>
-            <span class="text-sm text-truncate mb-0">{{ item.bucks_share_type === 'percentage' ? item.bucks_share + '%' : '$' + item.bucks_share }}</span>
+            <span class="text-sm text-truncate mb-0">${{ item.bucks_share }}</span>
           </template>
         </div>
       </template>
@@ -124,7 +124,7 @@
         variant="tonal"
         class="text-center"
       >
-        <b>Remaining Bucks: </b> {{ projectBucks?.project?.bucks_share_type === 'fixed' ? '$' + projectBucks?.remaining_bucks : projectBucks?.remaining_bucks + '%' }}
+        <b>Remaining Bucks: </b>${{ projectBucks?.remaining_bucks }}
       </VAlert>
     </div>
   </VCard>
@@ -181,15 +181,17 @@ function editRole(item) {
   editRoleShare.value = item.bucks_share
 }
 
+const parseAndRound = value => Math.round(parseFloat(value) * 100) / 100
+
 const saveShare = async () => {
   if (editingRole.value.bucks_share === '') {
     toast.error('Please enter a valid share amount')
     
     return
   }
- 
-  let remainingBucks = parseInt(projectBucks.value?.remaining_bucks) + parseInt(editRoleShare.value)
-  let share = parseInt(editingRole.value.bucks_share)
+  
+  let remainingBucks = parseAndRound(projectBucks.value?.remaining_bucks) + parseAndRound(editRoleShare.value)
+  let share = parseAndRound(editingRole.value.bucks_share)
   
   if (share > remainingBucks) {
     toast.error('Share amount exceeds remaining bucks')
@@ -197,8 +199,7 @@ const saveShare = async () => {
     return
   }
 
-  
-  projectBucksStore.updateProjectBucks(projectUuid, {
+  await projectBucksStore.updateProjectBucks(projectUuid, {
     roleId: editingRole.value.role_id,
     shares: editingRole.value.bucks_share,
   })
@@ -208,6 +209,15 @@ const saveShare = async () => {
   } else {
     editingRole.value = null
     toast.success('Role share updated successfully')
+  }
+}
+
+const limitTwoDecimals = event => {
+  const value = event.target.value
+  const parts = value.split('.')
+  
+  if(parts.length > 1 && parts[1].length > 2) {
+    event.target.value = parts[0] + '.' + parts[1].slice(0, 2)
   }
 }
 

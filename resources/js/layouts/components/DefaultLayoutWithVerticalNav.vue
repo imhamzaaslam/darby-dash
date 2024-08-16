@@ -150,11 +150,11 @@ const project = computed(() =>{
         >
           <span v-if="authStore.isAdmin || authStore.isManager">
             <RouterLink :to="`/projects/${projectId}/bucks`">
-              Darby Bucks <span class="text-primary">${{ project?.darby_bucks_amount }}</span>
+              Darby Bucks <span class="text-primary">${{ project?.bucks_share_amount }}</span>
             </RouterLink>
           </span>
           <span v-else>
-            Darby Bucks <span class="text-primary">${{ project?.darby_bucks_amount }}</span>
+            Darby Bucks <span class="text-primary">${{ project?.bucks_share_amount }}</span>
           </span>
         </span>
         <NavBarNotifications class="me-2" />

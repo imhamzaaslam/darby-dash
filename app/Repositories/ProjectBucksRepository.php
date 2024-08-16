@@ -32,7 +32,7 @@ class ProjectBucksRepository extends AbstractEloquentRepository implements Proje
             $shares->push([
                 'role_id' => $role->id,
                 'role_name' => $role->name,
-                'bucks_share' => $projectBuck ? $projectBuck->shares : 0,
+                'bucks_share' => $projectBuck ? round($projectBuck->shares, 2) : 0,
                 'bucks_share_type' => $project->bucks_share_type,
             ]);
         }
