@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('project_type_id')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->integer('est_hours')->nullable();
-            $table->integer('est_budget')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');

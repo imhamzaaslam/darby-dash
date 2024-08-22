@@ -29,8 +29,6 @@ class ProjectResource extends JsonResource
             }),
             'project_manager' => $this->projectManager(),
             'member_ids' => $this->members->pluck('id'),
-            'est_hours' => $this->est_hours ?? 'N/A',
-            'est_budget' => $this->est_budget ?? 'N/A',
             'budget_amount' => round($this->budget_amount, 2),
             'bucks_share' => round($this->bucks_share, 2),
             'bucks_share_type' => $this->bucks_share_type,
