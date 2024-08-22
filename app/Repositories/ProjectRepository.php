@@ -42,9 +42,16 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
         return $this->model->create($attributes);
     }
 
-    public function storeProjectMembers(Project $project, array $members): void
+    public function storeProjectMembers(Project $project, array $member_ids): void
     {
-        $project->members()->sync($members);
+        foreach ($member_ids as $member_id) {
+            $role_id = User::find($member_id)->roles->first()->id;
+            ProjectMember::create([
+                'project_id' => $project->id,
+                'user_id' => $member_id,
+                'role_id' => $role_id
+            ]);
+        }
     }
 
     public function createBacklogList(Project $project): void

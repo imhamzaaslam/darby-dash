@@ -76,17 +76,20 @@
               <VCol cols="12">
                 <label>Select Staff Members</label>
                 <Multiselect
-                  v-model="newProjectDetails.member_ids"
+                  v-model="newProjectDetails.staff_ids"
                   mode="tags"
                   placeholder="Select Members"
                   close-on-select
                   searchable
-                  :options="props.getMembersList"
+                  :options="props.getStaffList"
                   class="bg-background multiselect-purple"
                   style="color: #000 !important;"
                 />
               </VCol>
-              <VCol cols="4">
+              <VCol 
+                md="6"
+                cols="12"
+              >
                 <AppTextField
                   v-model="newProjectDetails.budget_amount"
                   label="Project Budget*"
@@ -98,7 +101,8 @@
                 />
               </VCol>
               <VCol
-                cols="8"
+                md="6"
+                cols="12"
                 class="d-flex align-center"
               >
                 <div class="d-flex">
@@ -110,11 +114,11 @@
                     placeholder="0.00"
                     type="number"
                     class="no-arrows me-1"
-                    :prepend-inner-icon="newProjectDetails.bucks_share_type === 'fixed' ? 'tabler-currency-dollar' : 'tabler-percentage'"
+                    prepend-inner-icon="tabler-percentage"
                   />
 
                   <!-- Dropdown to Select Type -->
-                  <AppSelect
+                  <!-- <AppSelect
                     v-model="newProjectDetails.bucks_share_type"
                     :items="budgetTypes"
                     class="budget-type-select"
@@ -122,7 +126,7 @@
                     :rules="[requiredValidator]"
                     dense
                     hide-details
-                  />
+                  /> -->
                 </div>
               </VCol>
 
@@ -179,7 +183,7 @@ const props = defineProps({
   },
   fetchProjects: Function,
   getProjectTypes: Object,
-  getMembersList: Object,
+  getStaffList: Object,
   getClients: Object,
   getProjectManagersList: Object,
   getLoadStatus: Number,
@@ -199,10 +203,9 @@ const newProjectDetails = ref({
   project_manager_id: null,
   title: '',
   project_type_id: null,
-  member_ids: [],
+  staff_ids: [],
   budget_amount: '',
   bucks_share: '',
-  bucks_share_type: 'percentage',
 })
 
 const budgetTypes = [
@@ -223,38 +226,51 @@ async function submitAddProjectForm() {
   addProjectForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-        if (newProjectDetails.value.bucks_share_type === 'fixed') {
-          if (parseFloat(newProjectDetails.value.bucks_share) > parseFloat(newProjectDetails.value.budget_amount)) {
-            toast.error('Darby Bucks Share cannot be greater than Project Budget')
+        // if (newProjectDetails.value.bucks_share_type === 'fixed') {
+        //   if (parseFloat(newProjectDetails.value.bucks_share) > parseFloat(newProjectDetails.value.budget_amount)) {
+        //     toast.error('Darby Bucks Share cannot be greater than Project Budget')
 
-            return
-          }
-        } else {
-          if (parseFloat(newProjectDetails.value.bucks_share) > 100) {
-            toast.error('Darby Bucks Share cannot be greater than 100%')
+        //     return
+        //   }
+        // } else {
+        //   if (parseFloat(newProjectDetails.value.bucks_share) > 100) {
+        //     toast.error('Darby Bucks Share cannot be greater than 100%')
 
-            return
-          }
+        //     return
+        //   }
+        // }
+        if (parseFloat(newProjectDetails.value.bucks_share) > 100) {
+          toast.error('Darby Bucks Share cannot be greater than 100%')
+
+          return
         }
-        const res = await projectStore.create(newProjectDetails.value)
-
+        
         isLoading.value = true
-        emit('update:isDrawerOpen', false)
-        toast.success('Project added successfully', { timeout: 1000 })
-        await props.fetchProjects()
+        await projectStore.create(newProjectDetails.value)
+        
+        // check if getErrors.value then show message
+        if (projectStore.getErrors) {
+          toast.error('Failed to add project:', projectStore.getErrors)
+          isLoading.value = false
+          
+          return
+        } else {
+          emit('update:isDrawerOpen', false)
+          toast.success('Project added successfully', { timeout: 1000 })
+          await props.fetchProjects()
 
-        const newProjectID = projectStore.getProject.uuid
+          const newProjectID = projectStore.getProject.uuid
 
-        router.push({ name: 'add-project-tasks', params: { id: newProjectID } })
+          router.push({ name: 'add-project-tasks', params: { id: newProjectID } })
 
-        isLoading.value = false
-        newProjectDetails.value = {
-          title: '',
-          project_type_id: '',
-          member_ids: [],
-          budget_amount: '',
-          bucks_share: '',
-          bucks_share_type: 'fixed',
+          isLoading.value = false
+          newProjectDetails.value = {
+            title: '',
+            project_type_id: '',
+            staff_ids: [],
+            budget_amount: '',
+            bucks_share: '',
+          }
         }
       } catch (error) {
         toast.error('Failed to add project:', error)

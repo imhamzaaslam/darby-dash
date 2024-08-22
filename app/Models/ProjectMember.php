@@ -11,6 +11,13 @@ class ProjectMember extends Base
 {
     use HasFactory;
     use SoftDeletes;
+    
+    protected $fillable = [
+        'uuid',
+        'project_id',
+        'user_id',
+        'role_id',
+    ];
 
     public function project()
     {

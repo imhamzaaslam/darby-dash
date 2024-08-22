@@ -72,11 +72,19 @@ class ProjectController extends Controller
     {
         $this->authorize('create', Project::class);
         $validated = $request->validated();
-
+    
         $member_ids = [];
-        if (isset($validated['member_ids'])) {
-            $member_ids = $validated['member_ids'];
-            unset($validated['member_ids']);
+        if(isset($validated['client_id'])) {
+            $member_ids[] = $validated['client_id'];
+            unset($validated['client_id']);
+        }
+        if(isset($validated['project_manager_id'])) {
+            $member_ids[] = $validated['project_manager_id'];
+            unset($validated['project_manager_id']);
+        }
+        if(isset($validated['staff_ids'])) {
+            $member_ids = array_merge($member_ids, $validated['staff_ids']);
+            unset($validated['staff_ids']);
         }
 
         $project = $this->projectRepository->create($validated);

@@ -15,7 +15,7 @@ interface ProjectRepositoryInterface
 
     public function create(array $attributes): Project;
 
-    public function storeProjectMembers(Project $project, array $members): void;
+    public function storeProjectMembers(Project $project, array $member_ids): void;
 
     public function createBacklogList(Project $project): void;
 

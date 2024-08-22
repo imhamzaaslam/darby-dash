@@ -284,7 +284,7 @@
     v-model:is-drawer-open="isAddProjectDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
-    :get-members-list="getMemberListsForDropDown"
+    :get-staff-list="getStaffListsForDropDown"
     :get-clients="getClients"
     :get-project-managers-list="getProjectManagers"
     :get-load-status="getLoadStatus"
@@ -293,7 +293,7 @@
     v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
-    :get-members="getMemberListsForDropDown"
+    :get-members="getStaffListsForDropDown"
     :edit-project-details="editProjectDetails"
     :get-load-status="getLoadStatus"
   />
@@ -329,10 +329,6 @@ useHead({ title: `${layoutConfig.app.title} | Manage Projects` })
 onBeforeMount(async () => {
   await fetchProjects()
   await fetchProjectTypes()
-  
-  // await fetchProjectManagers()
-  
-  await fetchMembersForDropDown()
   await fetchMembers()
   totalRecords.value = totalProjects.value
 })
@@ -358,12 +354,11 @@ const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const fetchProjects = async () => {
   try {
-    await projectStore.getAll(options.value.page, options.value.itemsPerPage, search.value, selectedProjectType.value, selectedProjectManagerId.value)
     isLoading.value = true
+    await projectStore.getAll(options.value.page, options.value.itemsPerPage, search.value, selectedProjectType.value, selectedProjectManagerId.value)
   } catch (error) {
     toast.error('Error fetching projects:', error)
-  }
-  finally {
+  } finally {
     isLoading.value = false
   }
 }
@@ -439,18 +434,6 @@ const fetchProjectTypes = async () => {
   }
 }
 
-const fetchMembersForDropDown = async () => {
-  try {
-    isLoading.value = true
-
-    await userStore.getMembersForDropDown()
-  } catch (error) {
-    toast.error('Failed to get members:', error.message || error)
-  } finally {
-    isLoading.value = false
-  }
-}
-
 const fetchMembers = async () => {
   try {
     isLoading.value = true
@@ -520,16 +503,11 @@ const projectManagersWithFirstOption = computed(() => {
   return managers
 })
 
-const getMemberListsForDropDown = computed(() => {
+const getStaffListsForDropDown = computed(() => {
   let members = userStore.getMembersList
-  // get project manager and staff
   let staff = members.filter(member => member.role === USER_ROLES.STAFF)
   
   return staff.map(staff => ({ label: staff.name_first + " " + staff.name_last, value: staff.id }))
-  
-  // this.memberListsForDropDown = response.data.data.map(member => ({ label: member.name_first+ " " + member.name_last+ " (" + member.role + ")", value: member.id }))
-  
-  // return userStore.getMemberListsForDropDown
 })
 
 const getErrors = computed(() => {

@@ -23,25 +23,27 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'client_id' => 'required|exists:users,id',
             'project_type_id' => 'required|exists:project_types,id',
             'title' => 'required|string|max:255',
             'description' => 'sometimes|string',
-            'member_ids' => [
+            'project_manager_id' => 'required|exists:users,id',
+            'staff_ids' => [
                 'sometimes',
                 'nullable',
                 'array',
                 function ($attribute, $value, $fail) {
-                    $members = User::whereIn('id', $value)->get();
-                    if (count($value) !== $members->count()) {
-                        $fail('One or more member ids are invalid.');
+                    $staffs = User::whereIn('id', $value)->get();
+                    if (count($value) !== $staffs->count()) {
+                        $fail('One or more staff ids are invalid.');
                     }
                 },
             ],
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
             'status' => 'sometimes|in:active,inactive',
-            'budget_amount' => 'sometimes|nullable',
-            'bucks_share' => 'sometimes|nullable',
+            'budget_amount' => 'required',
+            'bucks_share' => 'required',
             'bucks_share_type' => 'sometimes|nullable|in:fixed,percentage',
         ];
     }

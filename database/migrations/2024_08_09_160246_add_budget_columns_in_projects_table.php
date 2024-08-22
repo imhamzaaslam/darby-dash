@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->string('budget_amount')->nullable()->after('status');
             $table->string('bucks_share')->nullable()->after('budget_amount');
-            $table->enum('bucks_share_type', ['fixed', 'percentage'])->default('fixed')->nullable()->after('bucks_share');
+            $table->enum('bucks_share_type', ['fixed', 'percentage'])->default('percentage')->nullable()->after('bucks_share');
         });
     }
 
