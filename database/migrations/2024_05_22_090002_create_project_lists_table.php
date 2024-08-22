@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('display_order')->default(0);
             $table->integer('is_deletable')->default(1);
+            $table->foreignId('milestone_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('deleted_by')->nullable()->constrained('users')->onDelete('set null');

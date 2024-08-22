@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('name');
             $table->text('description')->nullable();
             $table->integer('status')->default(1);
+            $table->integer('est_time')->after('status')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('due_date')->nullable();
             $table->integer('display_order')->default(0);

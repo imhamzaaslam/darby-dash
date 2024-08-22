@@ -19,8 +19,6 @@ class Project extends Base
         'project_type_id',
         'title',
         'description',
-        'est_hours',
-        'est_budget',
         'start_date',
         'end_date',
         'status',
