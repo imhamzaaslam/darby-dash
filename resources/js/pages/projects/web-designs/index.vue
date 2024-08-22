@@ -284,14 +284,16 @@
     v-model:is-drawer-open="isAddProjectDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
-    :get-members="getMembers"
+    :get-members-list="getMemberListsForDropDown"
+    :get-clients="getClients"
+    :get-project-managers-list="getProjectManagers"
     :get-load-status="getLoadStatus"
   />
   <EditProjectDrawer
     v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
-    :get-members="getMembers"
+    :get-members="getMemberListsForDropDown"
     :edit-project-details="editProjectDetails"
     :get-load-status="getLoadStatus"
   />
@@ -300,7 +302,7 @@
     :apply-filters="applyFilters"
     :get-project-types="projectTypesWithFirstOption('All Projects')"
     :selected-project-type="selectedProjectType"
-    :get-project-managers="projectManagersWithFirstOption('-- Select --')"
+    :get-project-managers="projectManagersWithFirstOption"
     :get-load-status="getLoadStatus"
   />
 </template>
@@ -327,7 +329,10 @@ useHead({ title: `${layoutConfig.app.title} | Manage Projects` })
 onBeforeMount(async () => {
   await fetchProjects()
   await fetchProjectTypes()
-  await fetchProjectManagers()
+  
+  // await fetchProjectManagers()
+  
+  await fetchMembersForDropDown()
   await fetchMembers()
   totalRecords.value = totalProjects.value
 })
@@ -434,15 +439,14 @@ const fetchProjectTypes = async () => {
   }
 }
 
-const fetchProjectManagers = async () => {
+const fetchMembersForDropDown = async () => {
   try {
     isLoading.value = true
 
-    await userStore.getProjectManagers()
+    await userStore.getMembersForDropDown()
   } catch (error) {
-    toast.error('Failed to get project managers:', error.message || error)
-  }
-  finally {
+    toast.error('Failed to get members:', error.message || error)
+  } finally {
     isLoading.value = false
   }
 }
@@ -451,11 +455,10 @@ const fetchMembers = async () => {
   try {
     isLoading.value = true
 
-    await userStore.getMembersForDropDown()
+    await userStore.getMembers()
   } catch (error) {
     toast.error('Failed to get members:', error.message || error)
-  }
-  finally {
+  } finally {
     isLoading.value = false
   }
 }
@@ -471,13 +474,26 @@ const onFilter = async value => {
   await fetchProjects()
 }
 
-
 const getProjects = computed(() => {
   return projectStore.getProjects
 })
 
 const getProjectTypes = computed(() => {
   return projectTypeStore.getProjectTypes
+})
+
+const getClients = computed(() => {
+  let members = userStore.getMembersList
+  let clients = members.filter(member => member.role === USER_ROLES.CLIENT)
+  
+  return clients.map(client => ({ id: client.id, name: client.name_first + " " + client.name_last }))
+})
+
+const getProjectManagers = computed(() => {
+  let members = userStore.getMembersList
+  let projectManagers = members.filter(member => member.role === USER_ROLES.PROJECT_MANAGER)
+  
+  return projectManagers.map(manager => ({ id: manager.id, name: manager.name_first + " " + manager.name_last }))
 })
 
 const projectTypesWithFirstOption = (firstOption = null) => {
@@ -493,25 +509,27 @@ const projectTypesWithFirstOption = (firstOption = null) => {
   return projectTypes.value
 }
 
-const getProjectManagers = computed(() => {
-  return userStore.getProjectManagersList
+const projectManagersWithFirstOption = computed(() => {
+  let members = userStore.getMembersList
+  let projectManagers = members.filter(member => member.role === USER_ROLES.PROJECT_MANAGER)
+  
+  let managers = projectManagers.map(manager => ({ id: manager.id, name: manager.name_first + " " + manager.name_last }))
+  
+  managers.unshift({ id: null, name: '-- Select --' })
+  
+  return managers
 })
 
-const projectManagersWithFirstOption = (firstOption = null) => {
-  const projectManagers = computed(() => {
-    let managers = [...userStore.getProjectManagersList]
-    if (firstOption) {
-      managers.unshift({ id: null, name: firstOption })
-    }
-
-    return managers
-  })
-
-  return projectManagers.value
-}
-
-const getMembers = computed(() => {
-  return userStore.getMemberListsForDropDown
+const getMemberListsForDropDown = computed(() => {
+  let members = userStore.getMembersList
+  // get project manager and staff
+  let staff = members.filter(member => member.role === USER_ROLES.STAFF)
+  
+  return staff.map(staff => ({ label: staff.name_first + " " + staff.name_last, value: staff.id }))
+  
+  // this.memberListsForDropDown = response.data.data.map(member => ({ label: member.name_first+ " " + member.name_last+ " (" + member.role + ")", value: member.id }))
+  
+  // return userStore.getMemberListsForDropDown
 })
 
 const getErrors = computed(() => {

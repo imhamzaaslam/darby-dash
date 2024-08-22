@@ -25,16 +25,25 @@
             @submit.prevent="submitAddProjectForm"
           >
             <VRow>
-              <VCol cols="6">
-                <AppTextField
-                  ref="focusInput"
-                  v-model="newProjectDetails.title"
-                  label="Title*"
+              <VCol 
+                md="6" 
+                cols="12"
+              >
+                <AppAutocomplete
+                  ref="focusField"
+                  v-model="newProjectDetails.client_id"
+                  label="Client*"
+                  placeholder="Select Client"
                   :rules="[requiredValidator]"
-                  placeholder="Title"
+                  :items="props.getClients"
+                  item-title="name"
+                  item-value="id"
                 />
               </VCol>
-              <VCol cols="6">
+              <VCol
+                md="6" 
+                cols="12"
+              >
                 <AppAutocomplete
                   v-model="newProjectDetails.project_type_id"
                   label="Project Type*"
@@ -45,15 +54,34 @@
                   item-value="id"
                 />
               </VCol>
+              <VCol cols="6">
+                <AppTextField
+                  v-model="newProjectDetails.title"
+                  label="Title*"
+                  :rules="[requiredValidator]"
+                  placeholder="Title"
+                />
+              </VCol>
+              <VCol cols="6">
+                <AppAutocomplete
+                  v-model="newProjectDetails.project_manager_id"
+                  label="Project Manager*"
+                  placeholder="Select Project Manager"
+                  :rules="[requiredValidator]"
+                  :items="props.getProjectManagersList"
+                  item-title="name"
+                  item-value="id"
+                />
+              </VCol>
               <VCol cols="12">
-                <label>Select Members</label>
+                <label>Select Staff Members</label>
                 <Multiselect
                   v-model="newProjectDetails.member_ids"
                   mode="tags"
                   placeholder="Select Members"
                   close-on-select
                   searchable
-                  :options="props.getMembers"
+                  :options="props.getMembersList"
                   class="bg-background multiselect-purple"
                   style="color: #000 !important;"
                 />
@@ -151,7 +179,9 @@ const props = defineProps({
   },
   fetchProjects: Function,
   getProjectTypes: Object,
-  getMembers: Object,
+  getMembersList: Object,
+  getClients: Object,
+  getProjectManagersList: Object,
   getLoadStatus: Number,
 })
 
@@ -160,11 +190,13 @@ const toast = useToast()
 const router = useRouter()
 const projectStore = useProjectStore()
 
-const focusInput = ref(null)
+const focusField = ref(null)
 const addProjectForm = ref()
 const isLoading= ref(false)
 
 const newProjectDetails = ref({
+  client_id: null,
+  project_manager_id: null,
   title: '',
   project_type_id: null,
   member_ids: [],
@@ -234,7 +266,7 @@ async function submitAddProjectForm() {
 watch(() => props.isDrawerOpen, val => {
   if (val) {
     nextTick(() => {
-      const inputEl = focusInput.value.$el.querySelector('input')
+      const inputEl = focusField.value.$el.querySelector('input')
       if (inputEl) {
         inputEl.focus()
       }
