@@ -23,7 +23,7 @@ interface ProjectRepositoryInterface
 
     public function delete(Project $project): bool;
 
-    public function updateProjectMembers(Project $project, array $members): void;
+    public function updateProjectMembers(Project $project, array $member_ids): void;
 
     public function deleteProjectMember(Project $project, User $user): void;
 }

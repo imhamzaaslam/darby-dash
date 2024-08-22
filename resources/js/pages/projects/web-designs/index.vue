@@ -293,8 +293,10 @@
     v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
     :fetch-projects="fetchProjects"
     :get-project-types="getProjectTypes"
-    :get-members="getStaffListsForDropDown"
+    :get-staff-list="getStaffListsForDropDown"
     :edit-project-details="editProjectDetails"
+    :get-clients="getClients"
+    :get-project-managers-list="getProjectManagers"
     :get-load-status="getLoadStatus"
   />
   <FilterDrawer

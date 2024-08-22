@@ -54,7 +54,10 @@
                   item-value="id"
                 />
               </VCol>
-              <VCol cols="6">
+              <VCol
+                md="6"
+                cols="12"
+              >
                 <AppTextField
                   v-model="newProjectDetails.title"
                   label="Title*"
@@ -62,7 +65,10 @@
                   placeholder="Title"
                 />
               </VCol>
-              <VCol cols="6">
+              <VCol
+                md="6"
+                cols="12"
+              >
                 <AppAutocomplete
                   v-model="newProjectDetails.project_manager_id"
                   label="Project Manager*"
@@ -103,31 +109,30 @@
               <VCol
                 md="6"
                 cols="12"
-                class="d-flex align-center"
               >
-                <div class="d-flex">
-                  <!-- Input Field -->
-                  <AppTextField
-                    v-model="newProjectDetails.bucks_share"
-                    label="Darby Bucks Share*"
-                    :rules="[requiredValidator]"
-                    placeholder="0.00"
-                    type="number"
-                    class="no-arrows me-1"
-                    prepend-inner-icon="tabler-percentage"
-                  />
+                <!-- Input Field -->
+                <AppTextField
+                  v-model="newProjectDetails.bucks_share"
+                  label="Darby Bucks Share*"
+                  :rules="[requiredValidator]"
+                  placeholder="0.00"
+                  type="number"
+                  class="no-arrows me-1"
+                  prepend-inner-icon="tabler-percentage"
+                />
 
-                  <!-- Dropdown to Select Type -->
-                  <!-- <AppSelect
-                    v-model="newProjectDetails.bucks_share_type"
-                    :items="budgetTypes"
-                    class="budget-type-select"
-                    label="Share Type"
-                    :rules="[requiredValidator]"
-                    dense
-                    hide-details
-                  /> -->
-                </div>
+                <!-- Dropdown to Select Type -->
+                <!--
+                  <AppSelect
+                  v-model="newProjectDetails.bucks_share_type"
+                  :items="budgetTypes"
+                  class="budget-type-select"
+                  label="Share Type"
+                  :rules="[requiredValidator]"
+                  dense
+                  hide-details
+                  /> 
+                -->
               </VCol>
 
               <VCol cols="12">
@@ -208,10 +213,10 @@ const newProjectDetails = ref({
   bucks_share: '',
 })
 
-const budgetTypes = [
-  { title: 'Fixed', value: 'fixed' },
-  { title: 'Percentage', value: 'percentage' },
-]
+// const budgetTypes = [
+//   { title: 'Fixed', value: 'fixed' },
+//   { title: 'Percentage', value: 'percentage' },
+// ]
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
@@ -248,9 +253,8 @@ async function submitAddProjectForm() {
         isLoading.value = true
         await projectStore.create(newProjectDetails.value)
         
-        // check if getErrors.value then show message
-        if (projectStore.getErrors) {
-          toast.error('Failed to add project:', projectStore.getErrors)
+        if(projectStore.getErrors) {
+          toast.error('Failed to add project')
           isLoading.value = false
           
           return

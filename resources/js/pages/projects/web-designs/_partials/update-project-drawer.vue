@@ -25,44 +25,79 @@
             @submit.prevent="submitEditProjectForm"
           >
             <VRow>
-              <VCol cols="6">
-                <AppTextField
-                  ref="focusInput"
-                  v-model="props.editProjectDetails.title"
-                  label="Title*"
+              <VCol 
+                md="6" 
+                cols="12"
+              >
+                <AppAutocomplete
+                  ref="focusField"
+                  v-model="projectDetails.client_id"
+                  label="Client*"
+                  placeholder="Select Client"
                   :rules="[requiredValidator]"
-                  placeholder="Title"
+                  :items="props.getClients"
+                  item-title="name"
+                  item-value="id"
                 />
               </VCol>
-
-              <VCol cols="6">
+              <VCol
+                md="6"
+                cols="12"
+              >
                 <AppAutocomplete
-                  v-model="selectedType"
+                  v-model="projectDetails.project_type_id"
                   label="Project Type*"
                   placeholder="Select Project Type"
                   :rules="[requiredValidator]"
                   :items="props.getProjectTypes"
                   item-title="name"
                   item-value="id"
-                  @update:model-value="onProjectTypeChange"
+                />
+              </VCol>
+              <VCol
+                md="6"
+                cols="12"
+              >
+                <AppTextField
+                  v-model="projectDetails.title"
+                  label="Title*"
+                  :rules="[requiredValidator]"
+                  placeholder="Title"
+                />
+              </VCol>
+              <VCol
+                md="6"
+                cols="12"
+              >
+                <AppAutocomplete
+                  v-model="projectDetails.project_manager_id"
+                  label="Project Manager*"
+                  placeholder="Select Project Manager"
+                  :rules="[requiredValidator]"
+                  :items="props.getProjectManagersList"
+                  item-title="name"
+                  item-value="id"
                 />
               </VCol>
               <VCol cols="12">
-                <label>Select Members</label>
+                <label>Select Staff Members</label>
                 <Multiselect
-                  v-model="props.editProjectDetails.member_ids"
+                  v-model="projectDetails.staff_ids"
                   mode="tags"
                   placeholder="Select Members"
                   close-on-select
-                  searchable
-                  :options="props.getMembers"
+                  searchabler
+                  :options="props.getStaffList"
                   class="bg-background multiselect-purple"
                   style="color: #000 !important;"
                 />
               </VCol>
-              <VCol cols="4">
+              <VCol
+                md="6"
+                cols="12"
+              >
                 <AppTextField
-                  v-model="props.editProjectDetails.budget_amount"
+                  v-model="projectDetails.budget_amount"
                   label="Project Budget*"
                   :rules="[requiredValidator]"
                   placeholder="0.00"
@@ -72,32 +107,32 @@
                 />
               </VCol>
               <VCol
-                cols="8"
-                class="d-flex align-center"
+                md="6"
+                cols="12"
               >
-                <div class="d-flex">
-                  <!-- Input Field -->
-                  <AppTextField
-                    v-model="props.editProjectDetails.bucks_share"
-                    label="Darby Bucks Share*"
-                    :rules="[requiredValidator]"
-                    placeholder="0.00"
-                    type="number"
-                    class="no-arrows me-1"
-                    :prepend-inner-icon="props.editProjectDetails.bucks_share_type === 'fixed' ? 'tabler-currency-dollar' : 'tabler-percentage'"
-                  />
+                <!-- Input Field -->
+                <AppTextField
+                  v-model="projectDetails.bucks_share"
+                  label="Darby Bucks Share*"
+                  :rules="[requiredValidator]"
+                  placeholder="0.00"
+                  type="number"
+                  class="no-arrows me-1"
+                  prepend-inner-icon="tabler-percentage"
+                />
 
-                  <!-- Dropdown to Select Type -->
+                <!-- Dropdown to Select Type -->
+                <!--
                   <AppSelect
-                    v-model="props.editProjectDetails.bucks_share_type"
-                    :items="budgetTypes"
-                    class="budget-type-select"
-                    label="Share Type"
-                    :rules="[requiredValidator]"
-                    dense
-                    hide-details
-                  />
-                </div>
+                  v-model="props.editProjectDetails.bucks_share_type"
+                  :items="budgetTypes"
+                  class="budget-type-select"
+                  label="Share Type"
+                  :rules="[requiredValidator]"
+                  dense
+                  hide-details
+                  /> 
+                -->
               </VCol>
               <VCol cols="12">
                 <div class="d-flex justify-start">
@@ -151,9 +186,11 @@ const props = defineProps({
   },
   fetchProjects: Function,
   getProjectTypes: Object,
-  getMembers: Object,
+  getClients: Object,
+  getStaffList: Object,
   getProjectManagers: Object,
   editProjectDetails: Object,
+  getProjectManagersList: Object,
   getLoadStatus: Number,
 })
 
@@ -161,9 +198,19 @@ const emit = defineEmits(['update:isEditDrawerOpen'])
 const toast = useToast()
 const projectStore = useProjectStore()
 
-const focusInput = ref(null)
+const focusField = ref(null)
 const editProjectForm = ref()
 const isLoading= ref(false)
+
+const projectDetails = ref({
+  client_id: null,
+  project_manager_id: null,
+  title: '',
+  project_type_id: null,
+  staff_ids: [],
+  budget_amount: '',
+  bucks_share: '',
+})
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isEditDrawerOpen', val)
@@ -174,56 +221,48 @@ const resetForm = () => {
   emit('update:isEditDrawerOpen', false)
 }
 
-const budgetTypes = [
-  { title: 'Fixed', value: 'fixed' },
-  { title: 'Percentage', value: 'percentage' },
-]
-
-function onProjectTypeChange(newValue) {
-  props.editProjectDetails.project_type_id = newValue
-}
-
-const selectedType = computed(() => {
-  return { id: props.editProjectDetails.project_type_id, name: props.editProjectDetails.project_type }
-})
+// const budgetTypes = [
+//   { title: 'Fixed', value: 'fixed' },
+//   { title: 'Percentage', value: 'percentage' },
+// ]
 
 async function submitEditProjectForm() {
   editProjectForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-
-        const payload = {
-          id: props.editProjectDetails.id,
-          uuid: props.editProjectDetails.uuid,
-          title: props.editProjectDetails.title,
-          project_type_id: props.editProjectDetails.project_type_id,
-          member_ids: props.editProjectDetails.member_ids,
-          budget_amount: props.editProjectDetails.budget_amount,
-          bucks_share: props.editProjectDetails.bucks_share,
-          bucks_share_type: props.editProjectDetails.bucks_share_type,
+        const payload = projectDetails.value
+        if (typeof payload.client_id === 'object') {
+          payload.client_id = payload.client_id.id
         }
-
-        if (payload.bucks_share_type === 'fixed') {
-          if (parseFloat(payload.bucks_share) > parseFloat(payload.budget_amount)) {
-            toast.error('Darby Bucks Share cannot be greater than Project Budget')
-
-            return
-          }
-        } else {
-          if (parseFloat(payload.bucks_share) > 100) {
-            toast.error('Darby Bucks Share cannot be greater than 100%')
-
-            return
-          }
+        if (typeof payload.project_manager_id === 'object') {
+          payload.project_manager_id = payload.project_manager_id.id
         }
+        if (typeof payload.project_type_id === 'object') {
+          payload.project_type_id = payload.project_type_id.id
+        }
+        payload.id = props.editProjectDetails.id
+        payload.uuid = props.editProjectDetails.uuid
+        
+        if (parseFloat(payload.bucks_share) > 100) {
+          toast.error('Darby Bucks Share cannot be greater than 100%')
 
-        await projectStore.update(payload)
+          return
+        }
 
         isLoading.value = true
-        emit('update:isEditDrawerOpen', false)
-        toast.success('Project updated successfully', { timeout: 1000 })
-        await props.fetchProjects()
-        isLoading.value = false
+        await projectStore.update(payload)
+        
+        if(projectStore.getErrors) {
+          toast.error('Failed to add project')
+          isLoading.value = false
+          
+          return
+        } else {
+          emit('update:isEditDrawerOpen', false)
+          toast.success('Project updated successfully', { timeout: 1000 })
+          await props.fetchProjects()
+          isLoading.value = false 
+        }
       } catch (error) {
         toast.error('Failed to update project:', error.message || error)
       }
@@ -231,16 +270,42 @@ async function submitEditProjectForm() {
   })
 }
 
-watch(() => props.isEditDrawerOpen, val => {
-  if (val) {
-    nextTick(() => {
-      const inputEl = focusInput.value.$el.querySelector('input')
-      if (inputEl) {
-        inputEl.focus()
-      }
-    })
-  }
-})
+watch(
+  () => [props.editProjectDetails, props.isEditDrawerOpen],
+  ([editProjectDetails, isEditDrawerOpen]) => {
+    if (editProjectDetails && isEditDrawerOpen) {
+      let members = editProjectDetails.project_members
+      let client = members.find(member => member.role == USER_ROLES.CLIENT)
+      let clientId = client?.id
+      projectDetails.value.client_id = props.getClients.find(client => client.id == clientId)
+      
+      let projectManager = members.find(member => member.role == USER_ROLES.PROJECT_MANAGER)
+      let projectManagerId = projectManager?.id
+      projectDetails.value.project_manager_id = props.getProjectManagersList.find(manager => manager.id == projectManagerId)
+      
+      let staffs = members.filter(member => member.role == USER_ROLES.STAFF)
+      projectDetails.value.staff_ids = staffs
+        .map(staff => props.getStaffList.find(staffMember => staffMember.value === staff.id)?.value)
+        .filter(id => id !== undefined)
+      
+      let projectTypeId = editProjectDetails?.project_type_id
+      projectDetails.value.project_type_id = props.getProjectTypes.find(type => type.id == projectTypeId)
+      
+      projectDetails.value.title = editProjectDetails?.title
+      projectDetails.value.budget_amount = editProjectDetails?.budget_amount
+      projectDetails.value.bucks_share = editProjectDetails?.bucks_share
+    }
+    
+    if (isEditDrawerOpen) {
+      nextTick(() => {
+        const inputEl = focusField.value.$el.querySelector('input')
+        if (inputEl) {
+          inputEl.focus()
+        }
+      })
+    }
+  },
+)
 </script>
 
     <style lang="scss">

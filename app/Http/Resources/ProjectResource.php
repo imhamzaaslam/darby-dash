@@ -23,6 +23,7 @@ class ProjectResource extends JsonResource
             'project_type' => $this->projectType->name ?? 'N/A',
             'project_members' => $this->members->map(function ($member) {
                 return [
+                    'id' => $member->id,
                     'name' => $member->name_first,
                     'role' => $member->roles->first()->name ?? 'N/A',
                 ];
