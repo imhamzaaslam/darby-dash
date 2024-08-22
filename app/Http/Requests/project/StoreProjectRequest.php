@@ -37,6 +37,8 @@ class StoreProjectRequest extends FormRequest
                     }
                 },
             ],
+            'est_hours' => 'sometimes|nullable|integer',
+            'est_budget' => 'sometimes|nullable|integer',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
             'status' => 'sometimes|in:active,inactive',

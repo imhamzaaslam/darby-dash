@@ -17,17 +17,11 @@ return new class extends Migration
             $table->string('project_type_id')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->integer('est_hours')->nullable();
+            $table->integer('est_budget')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->string('budget_amount')->nullable();
-            $table->string('bucks_share')->nullable();
-            $table->enum('bucks_share_type', ['fixed', 'percentage'])->default('fixed')->nullable();
-            $table->integer('display_order')->default(0);
-            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('deleted_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

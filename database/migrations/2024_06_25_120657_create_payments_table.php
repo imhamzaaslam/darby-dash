@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('project_id')->nullable()->constrained()->onDelete('cascade');            
             $table->string('payment_method');
             $table->string('name_on_card')->nullable();
             $table->string('card_number')->nullable();
