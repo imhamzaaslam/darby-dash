@@ -325,6 +325,21 @@
                         {{ item?.files_count }}
                       </span>
                     </span>
+                    <VIcon
+                      v-if="item.is_bucks_allowed"
+                      color="primary"
+                      variant="text"
+                      class="tabler-coin"
+                      rounded
+                      size="small"
+                    >
+                      <VTooltip
+                        activator="parent"
+                        location="top"
+                      >
+                        <span class="text-xs">Bucks Task</span>
+                      </VTooltip>
+                    </VIcon>
                   </td>
                   <td>
                     <VMenu
@@ -2252,13 +2267,6 @@ const assignTask = async (user, task) => {
 
 const removeAssignee = async (user, task) => {
   try {
-    if(task.is_bucks_allowed)
-    {
-      toast.error('You have to remove bucks first to remove assignee')
-      
-      return
-    }
-    
     showDeleteIcon.value = false
     isAssigneeRemoving.value = true
 

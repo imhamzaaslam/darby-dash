@@ -387,7 +387,7 @@ class TaskController extends Controller
         $this->authorize('view', $project);
         $validated = $request->validated();
 
-        $this->taskRepository->updateBucksTasks($task, $validated);
+        $this->taskRepository->update($task, $validated);
 
         return (new TaskResource($task))
             ->response()

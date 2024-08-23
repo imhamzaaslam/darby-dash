@@ -54,11 +54,53 @@
         </VChip>
       </template>
       <template #item.actions="{ item }">
-        <VBtn
+        <div class="d-flex gap-1">
+          <span>
+            <VBtn
+              color="success"
+              icon
+              size="x-small"
+              :disabled="approvalUpdating || item.approval_status == 'approved' || item.status.name !== 'COMPLETED'"
+              @click="approveTask(item)"
+            >
+              <VIcon
+                size="large"
+                icon="tabler-check"
+              />
+            </VBtn>
+            <VTooltip
+              activator="parent"
+              location="top"
+            >
+              <span class="text-xs">Approve</span>
+            </VTooltip>
+          </span>
+          <span>
+            <VBtn
+              color="error"
+              icon
+              size="x-small"
+              :disabled="approvalUpdating || item.approval_status == 'rejected' || item.status.name !== 'COMPLETED'"
+              @click="rejectTask(item)"
+            >
+              <VIcon
+                size="large"
+                icon="tabler-x"
+              />
+            </VBtn>
+            <VTooltip
+              activator="parent"
+              location="top"
+            >
+              <span class="text-xs">Reject</span>
+            </VTooltip>
+          </span>
+        </div>
+        <!-- <VBtn
           color="success"
           class="me-2"
           size="small"
-          :disabled="approvalUpdating || item.approval_status === 'approved'"
+          :disabled="approvalUpdating || item.approval_status == 'approved' || item.status.name !== 'completed'"
           @click="approveTask(item)"
         >
           Approve
@@ -66,11 +108,11 @@
         <VBtn
           color="error"
           size="small"
-          :disabled="approvalUpdating || item.approval_status === 'rejected'"
+          :disabled="approvalUpdating || item.approval_status == 'rejected' || item.status.name !== 'completed'"
           @click="rejectTask(item)"
         >
           Reject
-        </VBtn>
+        </VBtn> -->
       </template>  
       <template #bottom>
         <VCardText class="pt-2">

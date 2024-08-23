@@ -59,15 +59,10 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
                 }
             }
         }
-        if(!isset($attributes['is_bucks_allowed'])) {
+        if(isset($attributes['is_bucks_allowed']) && $attributes['is_bucks_allowed'] == 0) {
             TaskAssignee::where('task_id', $task->id)->update(['bucks_amount' => null]);
         }
         
-        return $task->fill($attributes)->save();
-    }
-    
-    public function updateBucksTasks(Task $task, array $attributes): bool
-    {   
         return $task->fill($attributes)->save();
     }
 

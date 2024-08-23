@@ -19,7 +19,7 @@ class StatusSeeder extends Seeder
             $statuses = [
                 ['name' => 'PENDING', 'color' => 'secondary', 'display_order' => 0],
                 ['name' => 'IN PROGRESS', 'color' => 'primary', 'display_order' => 1],
-                ['name' => 'COMPLTED', 'color' => 'success', 'display_order' => 2],
+                ['name' => 'COMPLETED', 'color' => 'success', 'display_order' => 2],
             ];
 
             foreach ($statuses as $status) {

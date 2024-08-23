@@ -14,8 +14,6 @@ interface TaskRepositoryInterface
     public function create(ProjectList $list, array $attributes): Task;
 
     public function update(Task $task, array $attributes): bool;
-    
-    public function updateBucksTasks(Task $task, array $attributes): bool;
 
     public function delete(Task $task): bool;
 
