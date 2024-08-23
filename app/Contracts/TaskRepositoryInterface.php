@@ -14,6 +14,8 @@ interface TaskRepositoryInterface
     public function create(ProjectList $list, array $attributes): Task;
 
     public function update(Task $task, array $attributes): bool;
+    
+    public function updateBucksTasks(Task $task, array $attributes): bool;
 
     public function delete(Task $task): bool;
 
@@ -28,5 +30,7 @@ interface TaskRepositoryInterface
     public function getMembersForTask(Project $project, Task $task, string $keyword = null): Collection;
 
     public function assginMember(Task $task, array $attributes): bool;
+    
+    public function fetchBucksTasks(Project $project): Collection;
 }
 

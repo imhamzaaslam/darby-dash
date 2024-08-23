@@ -88,6 +88,10 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::prefix('bucks')->group(function () {
                     Route::get('/', [ProjectBucksController::class, 'index']);
                     Route::patch('/', [ProjectBucksController::class, 'update']);
+                    Route::get('/tasks', [TaskController::class, 'fetchBucksTasks']);
+                    Route::prefix('tasks/{taskId}')->group(function () {
+                        Route::patch('/', [TaskController::class, 'updateBucksTask']);
+                    });
                 });
 
                 Route::get('/lists', [ProjectListController::class, 'index']);

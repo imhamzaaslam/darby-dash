@@ -37,10 +37,10 @@ class TaskResource extends JsonResource
             'display_order' => $this->display_order,
             'files_count' => $this->files->count(),
             'assignees' => UserResource::collection($this->assignees),
-            'bucks_amount' => $this->bucks_amount,
             'is_bucks_allowed' => $this->is_bucks_allowed ? true : false,
             'remaining_bucks' => $this->getRoleWiseRemainingBucks(),
             'assignees_bucks' => $this->getAssigneesBucks(),
+            'approval_status' => $this->approval_status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

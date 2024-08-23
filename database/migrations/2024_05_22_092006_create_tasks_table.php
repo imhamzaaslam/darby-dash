@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean('is_bucks_allowed')->default(false);
             $table->timestamp('start_date')->nullable();
             $table->timestamp('due_date')->nullable();
+            $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->integer('display_order')->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');

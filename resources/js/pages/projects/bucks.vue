@@ -66,7 +66,7 @@ const tabs = [
     tab: 'bucks-overview',
   },
   {
-    title: 'Manage Bucks',
+    title: 'Manage Tasks',
     icon: 'tabler-coin',
     tab: 'manage-bucks',
   },

@@ -13,6 +13,7 @@ use App\Http\Requests\task\UpdateTaskRequest;
 use App\Http\Requests\task\StoreTaskByProjectRequest;
 use App\Http\Requests\task\StoreProjectTasksOrderRequest;
 use App\Http\Requests\task\AssignTaskRequest;
+use App\Http\Requests\task\UpdateBucksTaskRequest;
 use App\Http\Requests\file\StoreFileRequest;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\FileResource;
@@ -355,5 +356,41 @@ class TaskController extends Controller
         $task->assignees()->detach($validated['assignee']);
 
         return response()->json(['message' => 'Task unassigned successfully']);
+    }
+    
+    /**
+     * Get tasks by project.
+     * 
+     * @param string $projectUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function fetchBucksTasks(string $projectUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
+        $tasks = $this->taskRepository->fetchBucksTasks($project);
+
+        return TaskResource::collection($tasks);
+    }
+    
+    /**
+     * Update bucks task.
+     *
+     * @param UpdateTaskRequest $request
+     * @param string $taskUuid
+     * @return Response|JsonResponse
+     */
+    public function updateBucksTask(UpdateBucksTaskRequest $request, string $projectUuid, string $taskId): Response|JsonResponse
+    {
+        $task = $this->taskRepository->getFirstByOrFail('id', $taskId);
+        $project = $task->project;
+        $this->authorize('view', $project);
+        $validated = $request->validated();
+
+        $this->taskRepository->updateBucksTasks($task, $validated);
+
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(200);
     }
 }

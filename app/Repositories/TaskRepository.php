@@ -65,6 +65,11 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         
         return $task->fill($attributes)->save();
     }
+    
+    public function updateBucksTasks(Task $task, array $attributes): bool
+    {   
+        return $task->fill($attributes)->save();
+    }
 
     public function delete(Task $task): bool
     {
@@ -118,5 +123,10 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         $previousAssginees = $task->assignees->pluck('id')->toArray();
         $task->assignees()->sync(array_merge($previousAssginees, [$attributes['assignee']]));
         return true;
+    }
+    
+    public function fetchBucksTasks(Project $project): Collection
+    {
+        return $this->model->where(['project_id' => $project->id, 'is_bucks_allowed' => 1])->get();
     }
 }
