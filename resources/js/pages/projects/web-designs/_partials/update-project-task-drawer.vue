@@ -65,10 +65,11 @@
               >
                 <VSwitch
                   v-model="props.editingTask.is_bucks_allowed"
-                  label="Give Bucks"
+                  :label="props.editingTask.assignees?.length == 0 ? 'Give Bucks (Assignee required)' : 'Give Bucks'"
                   inset
                   class="me-4"
                   hide-details
+                  :disabled="props.editingTask.assignees?.length == 0"
                 />
                 <VTextField
                   v-if="props.editingTask.is_bucks_allowed"
@@ -76,7 +77,7 @@
                   type="number"
                   label="Bucks"
                   prepend-inner-icon="tabler-currency-dollar"
-                  suffix="($100 remaining)"
+                  :suffix="`($${props.editingTask.remaining_bucks} remaining)`"
                   class="flex-grow-1 no-arrows"
                   outlined
                   dense
@@ -214,7 +215,6 @@ const isLoading= ref(false)
 const fileInputRef = ref(null)
 const isViewerOpen = ref(false)
 const selectedFile = ref(null)
-const isBucksEnabled = ref(false)
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isEditTaskDrawerOpen', val)
@@ -287,16 +287,30 @@ async function submitEditTaskForm() {
           description: props.editingTask.description,
           start_date: props.editingTask.start_date,
           due_date: props.editingTask.due_date,
+          is_bucks_allowed: props.editingTask.is_bucks_allowed,
+          bucks_amount: props.editingTask.bucks_amount,
+        }
+        
+        if (payload.is_bucks_allowed && !payload.bucks_amount) {
+          toast.error('Please enter bucks amount') 
+          
+          return
         }
 
-        const res = await projectTaskStore.update(payload)
-
         isLoading.value = true
-        emit('update:isEditTaskDrawerOpen', false)
-        toast.success('Task updated successfully', { timeout: 1000 })
-        await props.fetchProjectLists()
-        await props.fetchProjectTasks()
-        isLoading.value = false
+        
+        const res = await projectTaskStore.update(payload)
+        
+        if(projectTaskStore.getErrors){
+          toast.error('Failed to update task')
+          isLoading.value = false
+        } else {
+          emit('update:isEditTaskDrawerOpen', false)
+          toast.success('Task updated successfully', { timeout: 1000 })
+          await props.fetchProjectLists()
+          await props.fetchProjectTasks()
+          isLoading.value = false
+        }
       } catch (error) {
         toast.error('Failed to update task:', error.message || error)
       }

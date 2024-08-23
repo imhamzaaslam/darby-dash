@@ -50,6 +50,9 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         if(isset($attributes['start_date'])) {
             $attributes['start_date'] = Carbon::parse($attributes['start_date']);
         }
+        if (isset($attributes['is_bucks_allowed']) && isset($attributes['bucks_amount'])) {
+            $attributes['bucks_amount'] = number_format($attributes['bucks_amount'], 2);
+        }
         
         return $task->fill($attributes)->save();
     }

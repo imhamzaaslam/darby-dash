@@ -76,6 +76,6 @@ class Task extends Base
         $assignedTasksIds = TaskAssignee::whereIn('user_id', $allRoleBasedUsersIds)->pluck('task_id')->unique();
         $allocateBucks = Task::whereIn('id', $assignedTasksIds)->where('is_bucks_allowed', true)->sum('bucks_amount');
         
-        return $assignBucksShares - $allocateBucks;
+        return number_format($assignBucksShares - $allocateBucks, 2);
     }
 }

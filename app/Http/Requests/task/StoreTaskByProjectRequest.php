@@ -29,6 +29,8 @@ class StoreTaskByProjectRequest extends FormRequest
             'status' => 'sometimes|nullable|exists:statuses,id',
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
+            'is_bucks_allowed' => 'sometimes|boolean',
+            'bucks_amount' => 'sometimes|nullable|numeric',
         ];
     }
 }

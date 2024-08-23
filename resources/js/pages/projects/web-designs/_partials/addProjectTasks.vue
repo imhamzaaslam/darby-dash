@@ -2249,6 +2249,13 @@ const assignTask = async (user, task) => {
 
 const removeAssignee = async (user, task) => {
   try {
+    if(task.is_bucks_allowed)
+    {
+      toast.error('You have to remove bucks first to remove assignee')
+      
+      return
+    }
+    
     showDeleteIcon.value = false
     isAssigneeRemoving.value = true
 
