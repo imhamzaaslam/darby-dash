@@ -58,6 +58,33 @@
                   clearable
                 />
               </VCol>
+              <!-- Bucks Section -->
+              <VCol
+                cols="12"
+                class="d-flex align-center"
+              >
+                <VSwitch
+                  v-model="isBucksEnabled"
+                  label="Give Bucks"
+                  inset
+                  class="me-4"
+                  hide-details
+                />
+                <VTextField
+                  v-if="isBucksEnabled"
+                  v-model="bucks"
+                  type="number"
+                  label="Bucks"
+                  prepend-inner-icon="tabler-currency-dollar"
+                  suffix="($100 remaining)"
+                  class="flex-grow-1 no-arrows"
+                  outlined
+                  dense
+                  hide-details
+                  autofocus
+                />
+              </VCol>
+                            
               <VCol cols="12 pb-0">
                 <input
                   ref="fileInputRef"
@@ -187,6 +214,7 @@ const isLoading= ref(false)
 const fileInputRef = ref(null)
 const isViewerOpen = ref(false)
 const selectedFile = ref(null)
+const isBucksEnabled = ref(false)
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isEditTaskDrawerOpen', val)

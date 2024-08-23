@@ -20,6 +20,9 @@ return new class extends Migration
             $table->longText('name');
             $table->text('description')->nullable();
             $table->integer('status')->default(1);
+            $table->integer('est_time')->nullable();
+            $table->boolean('is_bucks_allowed')->default(false);
+            $table->decimal('bucks_amount', 8, 2)->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('due_date')->nullable();
             $table->integer('display_order')->default(0);
