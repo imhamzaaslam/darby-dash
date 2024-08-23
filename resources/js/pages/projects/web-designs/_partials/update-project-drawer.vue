@@ -84,7 +84,7 @@
                 <Multiselect
                   v-model="projectDetails.staff_ids"
                   mode="tags"
-                  placeholder="Select Members"
+                  placeholder="Select Staff Members"
                   close-on-select
                   searchabler
                   :options="props.getStaffList"

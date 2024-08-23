@@ -42,7 +42,7 @@
               </VCol>
               <VCol cols="6">
                 <AppDateTimePicker
-                  v-model="props.editingTask.created_at"
+                  v-model="props.editingTask.start_date"
                   label="Start Date"
                   placeholder="Select Date"
                   :config="{ dateFormat: 'm/d/Y' }"
@@ -257,7 +257,7 @@ async function submitEditTaskForm() {
           name: props.editingTask.name,
           project_uuid: props.editingTask.project_uuid,
           description: props.editingTask.description,
-          start_date: props.editingTask.created_at,
+          start_date: props.editingTask.start_date,
           due_date: props.editingTask.due_date,
         }
 

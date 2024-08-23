@@ -618,14 +618,6 @@
                     </VMenu>
                   </td>
                   <td>
-                    <VChip
-                      color="primary"
-                      size="small"
-                    >
-                      {{ formatDate(item.created_at) }}
-                    </VChip>
-                  </td>
-                  <td>
                     <IconBtn @click.prevent>
                       <VIcon icon="tabler-dots" />
                       <VMenu activator="parent">
@@ -979,14 +971,6 @@
                       </VMenu>
                     </td>
                     <td>
-                      <VChip
-                        color="primary"
-                        size="small"
-                      >
-                        {{ formatDate(subtask.created_at) }}
-                      </VChip>
-                    </td>
-                    <td>
                       <IconBtn @click.prevent>
                         <VIcon icon="tabler-dots" />
                         <VMenu activator="parent">
@@ -1163,173 +1147,6 @@
           </VRow>
         </VCard>
       </div>
-    </VCol>
-    <VCol cols="12">
-      <div v-if="getProjectTasks? getProjectTasks.length > 0 : 0">
-        <VCard
-          v-for="(task, index) in getProjectTasks"
-          :key="index"
-          class="px-2 py-1 mt-2"
-          @click="startEditing(task)"
-        >
-          <VRow>
-            <VCol
-              cols="6"
-              class="mt-2"
-            >
-              <VIcon
-                class="tabler-playstation-circle"
-                color="primary"
-              />
-              <span class="ms-2">{{ task.name.length > 50 ? task.name.substring(0, 50) + '...' : task.name }}</span>
-            </VCol>
-            <VCol
-              cols="5"
-              class="mt-2"
-            >
-              <div class="float-right">
-                <VChip
-                  color="secondary"
-                  size="small"
-                  class="ms-2"
-                >
-                  {{ task.status.name }}
-                </VChip>
-                <VChip
-                  v-if="task.due_date"
-                  color="error"
-                  size="small"
-                  class="ms-2"
-                >
-                  {{ formatDate(task.due_date) }}
-                  <VTooltip
-                    activator="parent"
-                    location="top"
-                  >
-                    <span>Task is due on {{ formatDate(task.due_date) }}</span>
-                  </VTooltip>
-                </VChip>
-                <VChip
-                  color="primary"
-                  size="small"
-                  class="ms-2"
-                >
-                  {{ formatDate(task.created_at) }}
-                  <VTooltip
-                    activator="parent"
-                    location="top"
-                  >
-                    <span>Created on {{ formatDate(task.created_at) }}</span>
-                  </VTooltip>
-                </VChip>
-              </div>
-            </VCol>
-            <VCol cols="1">
-              <!-- Actions Menu -->
-              <IconBtn class="ms-2">
-                <VIcon icon="tabler-dots" />
-                <VMenu activator="parent">
-                  <VList>
-                    <VListItem @click="startEditing(task)">
-                      Edit
-                    </VListItem>
-                    <VListItem @click="deleteTask(task)">
-                      Delete
-                    </VListItem>
-                  </VList>
-                </VMenu>
-              </IconBtn>
-            </VCol>
-          </VRow>
-        </VCard>
-      </div>
-      <div
-        v-else
-        class="text-center"
-      >
-        <div
-          v-if="!showAddTaskField && !(getProjectLists ? getProjectLists.length > 0 : 0)"
-          class="mt-12"
-          v-html="NoTaskInList"
-        />
-        <span v-if="!showAddTaskField && !(getProjectLists ? getProjectLists.length > 0 : 0)">No tasks added yet.</span>
-      </div>
-      <VBtn
-        v-if="!showAddTaskField && getProjectTasks? getProjectTasks.length > 0 : 0"
-        color="primary"
-        variant="plain"
-        size="small"
-        @click="activateQuickAdd"
-      >
-        <VIcon icon="tabler-plus" />
-        Add Task
-      </VBtn>
-      <VCard
-        v-if="showAddTaskField"
-        class="px-2 py-2 mt-2"
-      >
-        <VRow>
-          <VCol cols="8">
-            <!-- Drag Icon -->
-            <div class="d-flex align-center">
-              <VIcon
-                class="tabler-playstation-circle me-2"
-                color="primary"
-              />
-              <VTextField
-                ref="quickTaskInput"
-                v-model="quickTaskName"
-                placeholder="Task Name"
-                style="margin-top: -7px;"
-                variant="plain"
-                hide-details
-                dense
-                @keydown.enter="addQuickTask"
-              />
-            </div>
-          </VCol>
-          <VCol cols="4">
-            <div class="float-right">
-              <VIcon
-                class="tabler-calendar me-1"
-                color="primary"
-              >
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
-                  <span>Select Due Date</span>
-                </VTooltip>
-                <AppDateTimePicker v-model="dueDate" />
-              </VIcon>
-              <VIcon
-                class="tabler-circle-check me-1"
-                color="primary"
-                @click="addQuickTask"
-              >
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
-                  <span>Save</span>
-                </VTooltip>
-              </VIcon>
-              <VIcon
-                class="tabler-x"
-                color="primary"
-                @click="cancelQuickTask"
-              >
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
-                  <span>Cancel</span>
-                </VTooltip>
-              </VIcon>
-            </div>
-          </VCol>
-        </VRow>
-      </VCard>
     </VCol>
   </VRow>
   <!-- Kanban View -->
@@ -1782,7 +1599,7 @@ const isLoading = ref(false)
 
 const projectId = computed(() => router.currentRoute.value.params.id)
 
-const formatDate = date => moment(date).format('MMM DD, YYYY')
+const formatDate = date => moment(date).format('MM/DD/YYYY')
 
 const validateMinutes = (event, item) => {
   const inputValue = event.target.value
@@ -2200,7 +2017,6 @@ const headers = [
   { title: 'Status', key: 'status',  sortable: false },
   { title: 'Due Date', key: 'due_date', sortable: false },
   { title: 'EST Time', key: 'est_time', sortable: false },
-  { title: 'Start Date', key: 'created_at', sortable: false },
   { title: 'Action', key: 'action', sortable: false },
 ]
 

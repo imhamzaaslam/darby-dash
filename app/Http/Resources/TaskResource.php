@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 
 class TaskResource extends JsonResource
 {
@@ -28,7 +29,7 @@ class TaskResource extends JsonResource
             ],
             'project_id' => $this->project_id,
             'list_id' => $this->list_id,
-            'start_date' => $this->start_date,
+            'start_date' => $this->start_date ? Carbon::parse($this->start_date)->format('m/d/Y') : NULL,
             'due_date' => $this->due_date,
             'est_time' => $this->est_time ? convertToHoursAndMinutes($this->est_time) : NULL,
             'est_time_hours' => $this->est_time ? floor($this->est_time / 60) : NULL,

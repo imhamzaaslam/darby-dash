@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\Project;
 use App\Models\ProjectList;
 use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 class TaskRepository extends AbstractEloquentRepository implements TaskRepositoryInterface
 {
@@ -46,6 +47,10 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         if (isset($attributes['assignees'])) {
             $task->assignees()->sync($attributes['assignees']);
         }
+        if(isset($attributes['start_date'])) {
+            $attributes['start_date'] = Carbon::parse($attributes['start_date']);
+        }
+        
         return $task->fill($attributes)->save();
     }
 
