@@ -17,5 +17,6 @@ class TaskAssignee extends Base
         'task_id',
         'user_id',
         'display_order',
+        'bucks_amount',
     ];
 }

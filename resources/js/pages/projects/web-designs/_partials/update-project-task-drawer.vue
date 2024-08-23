@@ -61,7 +61,7 @@
               <!-- Bucks Section -->
               <VCol
                 cols="12"
-                class="d-flex align-center"
+                class="d-flex align-center pb-0"
               >
                 <VSwitch
                   v-model="props.editingTask.is_bucks_allowed"
@@ -71,20 +71,29 @@
                   hide-details
                   :disabled="props.editingTask.assignees?.length == 0"
                 />
-                <VTextField
-                  v-if="props.editingTask.is_bucks_allowed"
-                  v-model="props.editingTask.bucks_amount"
-                  type="number"
-                  label="Bucks"
-                  prepend-inner-icon="tabler-currency-dollar"
-                  :suffix="`($${props.editingTask.remaining_bucks} remaining)`"
-                  class="flex-grow-1 no-arrows"
-                  outlined
-                  dense
-                  hide-details
-                  autofocus
-                />
               </VCol>
+              
+              <template v-if="props.editingTask.is_bucks_allowed">
+                <VCol
+                  v-for="(assignee, index) in props.editingTask.assignees_bucks"
+                  :key="index"
+                  md="6"
+                  cols="12"
+                >
+                  <VTextField
+                    v-model="assignee.bucks_amount"
+                    type="number"
+                    :label="`${assignee.user_name} (${assignee.role_name})`"
+                    prepend-inner-icon="tabler-currency-dollar"
+                    :suffix="`($${getRemainingBucks(assignee.role_id)} remaining)`"
+                    class="flex-grow-1 no-arrows"
+                    outlined
+                    dense
+                    hide-details
+                    :autofocus="index === 0"
+                  />
+                </VCol>
+              </template>
                             
               <VCol cols="12 pb-0">
                 <input
@@ -196,6 +205,7 @@ const props = defineProps({
   fetchProjectTasks: Function,
   fetchProjectLists: Function,
   editingTask: Object,
+  usersAssignedBucks: Array,
   getLoadStatus: Number,
 })
 
@@ -279,7 +289,8 @@ async function submitEditTaskForm() {
   editTaskForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-
+        isLoading.value = true
+        
         const payload = {
           uuid: props.editingTask.uuid,
           name: props.editingTask.name,
@@ -288,16 +299,34 @@ async function submitEditTaskForm() {
           start_date: props.editingTask.start_date,
           due_date: props.editingTask.due_date,
           is_bucks_allowed: props.editingTask.is_bucks_allowed,
-          bucks_amount: props.editingTask.bucks_amount,
         }
-        
-        if (payload.is_bucks_allowed && !payload.bucks_amount) {
-          toast.error('Please enter bucks amount') 
+      
+        if(payload.is_bucks_allowed) {
+          const roleIds = [...new Set(props.editingTask.assignees_bucks.map(assignee => assignee.role_id))]
+          for (const roleId of roleIds) {
+            const assigneeBucks = props.editingTask.assignees_bucks.filter(assignee => assignee.role_id === roleId)
+            const bucksAmount = assigneeBucks.reduce((acc, assignee) => acc + parseFloat(assignee.bucks_amount), 0)
+            const remainingBucks = getRemainingBucks(roleId)
+            if (bucksAmount > remainingBucks) {
+              toast.error('Bucks amount should not be greater than remaining bucks amount.') 
+              return
+            }
+          }
           
-          return
+          payload.assignees_bucks = props.editingTask.assignees_bucks
         }
-
-        isLoading.value = true
+        const roleIds = [...new Set(props.editingTask.assignees_bucks.map(assignee => assignee.role_id))]
+        for (const roleId of roleIds) {
+          const assigneeBucks = props.editingTask.assignees_bucks.filter(assignee => assignee.role_id === roleId)
+          const bucksAmount = assigneeBucks.reduce((acc, assignee) => acc + parseFloat(assignee.bucks_amount), 0)
+          const remainingBucks = getRemainingBucks(roleId)
+          if (bucksAmount > remainingBucks) {
+            toast.error('Bucks amount should not be greater than remaining bucks amount.') 
+            this.isLoading = false
+            
+            return
+          }
+        }
         
         const res = await projectTaskStore.update(payload)
         
@@ -332,6 +361,12 @@ const getImageUrl = path => {
 
 const fetchFiles = async () => {
   await projectTaskStore.fetchFiles(props.editingTask.uuid)
+}
+
+const getRemainingBucks = roleId => {
+  const assignee = props.editingTask.remaining_bucks?.find(assignee => assignee.role_id === roleId)
+
+  return assignee ? assignee.remaining_bucks : 0.00
 }
 
 const taskFiles = computed(() => {

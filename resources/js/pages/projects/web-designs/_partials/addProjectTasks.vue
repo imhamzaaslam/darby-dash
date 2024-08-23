@@ -1508,6 +1508,7 @@
     :fetch-project-tasks="fetchProjectTasks"
     :editing-task="editingTask"
     :fetch-project-lists="fetchProjectLists"
+    :users-assigned-bucks="usersAssignedBucks"
     :get-load-status="getLoadStatus"
   />
 </template>
@@ -1544,6 +1545,7 @@ const projectListStore = useProjectListStore()
 const statusStore = useStatusStore()
 const userStore = useUserStore()
 const router = useRouter()
+const usersAssignedBucks = ref(null)
 
 const viewType = ref('list')
 
@@ -1911,6 +1913,7 @@ function cancelQuickKanbanSubTask(index) {
 
 function startEditing(task) {
   editingTask.value = { ...task, project_uuid: projectId.value }
+  usersAssignedBucks.value = task.assignees_bucks
   isEditTaskDrawerOpen.value = true
 }
 

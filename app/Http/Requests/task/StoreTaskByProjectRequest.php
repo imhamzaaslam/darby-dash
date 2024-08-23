@@ -30,7 +30,7 @@ class StoreTaskByProjectRequest extends FormRequest
             'start_date' => 'sometimes|nullable|date',
             'due_date' => 'sometimes|nullable|date',
             'is_bucks_allowed' => 'sometimes|boolean',
-            'bucks_amount' => 'sometimes|nullable|numeric',
+            'assignees_bucks' => 'sometimes|nullable|array',
         ];
     }
 }

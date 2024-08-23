@@ -27,7 +27,6 @@ class Task extends Base
         'due_date',
         'est_time',
         'is_bucks_allowed',
-        'bucks_amount',
     ];
 
     protected $casts = [
@@ -59,23 +58,50 @@ class Task extends Base
         return $this->belongsToMany(User::class, 'task_assignees')->withTimestamps();
     }
     
-    public function remaingBucks()
+    public function getRoleWiseRemainingBucks()
     {
         $assignees = $this->assignees;
         $roleIds = $assignees->map(function ($assignee) {
             return $assignee->roles->first()->id;
         });
         
-        // getting shares based on all assigned users roles
-        $assignBucksShares = $this->project->projectBucks->whereIn('role_id', $roleIds)->sum('shares');
-        
-        $allRoleBasedUsersIds = User::whereHas('roles', function ($query) use ($roleIds) {
-            $query->whereIn('role_id', $roleIds);
-        })->pluck('id');
-        
-        $assignedTasksIds = TaskAssignee::whereIn('user_id', $allRoleBasedUsersIds)->pluck('task_id')->unique();
-        $allocateBucks = Task::whereIn('id', $assignedTasksIds)->where('is_bucks_allowed', true)->sum('bucks_amount');
-        
-        return number_format($assignBucksShares - $allocateBucks, 2);
+        $roleBasedBucks = [];
+        foreach ($roleIds as $roleId) {
+            // get all users with this role
+            $users = User::whereHas('roles', function ($query) use ($roleId) {
+                $query->where('role_id', $roleId);
+            })->get();
+            
+            // get assgin bucks shares for this role, and sum of allocated bucks
+            $assignBucksShares = $this->project->projectBucks->where('role_id', $roleId)->pluck('shares')->first();
+            $allocatedBucks = TaskAssignee::whereIn('user_id', $users->pluck('id'))->sum('bucks_amount');
+            
+            $roleBasedBucks[] = [
+                'role_id' => $roleId,
+                'role_name' => Role::find($roleId)->name,
+                'total_bucks' => $assignBucksShares,
+                'allocated_bucks' => $allocatedBucks,
+                'remaining_bucks' => number_format($assignBucksShares - $allocatedBucks, 2),
+            ];
+        }
+        return $roleBasedBucks;
+    }
+    
+    public function getAssigneesBucks()
+    {
+        $assignees = $this->assignees;
+        $assigneesBucks = [];
+        foreach ($assignees as $assignee) {
+            $allocatedBucks = TaskAssignee::where(['task_id' => $this->id, 'user_id' => $assignee->id])->pluck('bucks_amount')->first();
+            
+            $assigneesBucks[] = [
+                'id' => $assignee->id,
+                'user_name' => $assignee->name_first . ' ' . $assignee->name_last,
+                'bucks_amount' => $allocatedBucks ? number_format($allocatedBucks, 2) : '',
+                'role_id' => $assignee->roles->first()->id,
+                'role_name' => $assignee->roles->first()->name,
+            ];
+        }
+        return $assigneesBucks;
     }
 }

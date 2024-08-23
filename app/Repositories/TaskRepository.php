@@ -6,6 +6,7 @@ use App\Contracts\AbstractEloquentRepository;
 use App\Contracts\TaskRepositoryInterface;
 use App\Models\Base;
 use App\Models\Task;
+use App\Models\TaskAssignee;
 use App\Models\Project;
 use App\Models\ProjectList;
 use Illuminate\Support\Collection;
@@ -50,8 +51,16 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         if(isset($attributes['start_date'])) {
             $attributes['start_date'] = Carbon::parse($attributes['start_date']);
         }
-        if (isset($attributes['is_bucks_allowed']) && isset($attributes['bucks_amount'])) {
-            $attributes['bucks_amount'] = number_format($attributes['bucks_amount'], 2);
+        if (isset($attributes['is_bucks_allowed']) && isset($attributes['assignees_bucks'])) {
+            foreach ($attributes['assignees_bucks'] as $assignee) {
+                $taskAssignee = TaskAssignee::where(['task_id' => $task->id, 'user_id' => $assignee['id']])->first();
+                if ($taskAssignee) {
+                    $taskAssignee->update(['bucks_amount' => $assignee['bucks_amount']]);
+                }
+            }
+        }
+        if(!isset($attributes['is_bucks_allowed'])) {
+            TaskAssignee::where('task_id', $task->id)->update(['bucks_amount' => null]);
         }
         
         return $task->fill($attributes)->save();

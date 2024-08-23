@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid();
             $table->foreignId('task_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->decimal('bucks_amount', 8, 2)->nullable();
             $table->integer('display_order')->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
