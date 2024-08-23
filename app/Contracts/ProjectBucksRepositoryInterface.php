@@ -12,5 +12,5 @@ interface ProjectBucksRepositoryInterface
 
     public function update(Project $project, array $data): ProjectBucks;
     
-    public function getRoleShare(Project $project, int $roleId): int;
+    public function getRoleShare(Project $project, int $roleId): string;
 }

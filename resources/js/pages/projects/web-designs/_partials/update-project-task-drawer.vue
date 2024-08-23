@@ -64,15 +64,15 @@
                 class="d-flex align-center"
               >
                 <VSwitch
-                  v-model="isBucksEnabled"
+                  v-model="props.editingTask.is_bucks_allowed"
                   label="Give Bucks"
                   inset
                   class="me-4"
                   hide-details
                 />
                 <VTextField
-                  v-if="isBucksEnabled"
-                  v-model="bucks"
+                  v-if="props.editingTask.is_bucks_allowed"
+                  v-model="props.editingTask.bucks_amount"
                   type="number"
                   label="Bucks"
                   prepend-inner-icon="tabler-currency-dollar"

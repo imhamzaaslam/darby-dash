@@ -32,7 +32,7 @@ class ProjectBucksRepository extends AbstractEloquentRepository implements Proje
             $shares->push([
                 'role_id' => $role->id,
                 'role_name' => $role->name,
-                'bucks_share' => $projectBuck ? round($projectBuck->shares, 2) : 0,
+                'bucks_share' => $projectBuck ? number_format($projectBuck->shares, 2) : '0.00',
                 'bucks_share_type' => $project->bucks_share_type,
             ]);
         }
@@ -42,6 +42,7 @@ class ProjectBucksRepository extends AbstractEloquentRepository implements Proje
     public function update(Project $project, array $data): ProjectBucks
     {
         $projectBuck = $project->projectBucks->where('role_id', $data['roleId'])->first();
+        $data['shares'] = number_format($data['shares'], 2); 
         if ($projectBuck) {
             $projectBuck->update([
                 'shares' => $data['shares'],
@@ -54,9 +55,9 @@ class ProjectBucksRepository extends AbstractEloquentRepository implements Proje
         ]);
     }
     
-    public function getRoleShare(Project $project, int $roleId): int
+    public function getRoleShare(Project $project, int $roleId): string
     {
         $projectBuck = $project->projectBucks->where('role_id', $roleId)->first();
-        return $projectBuck ? $projectBuck->shares : 0;
+        return $projectBuck ? number_format($projectBuck->shares, 2) : '0.00';
     }
 }

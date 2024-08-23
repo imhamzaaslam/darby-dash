@@ -37,6 +37,9 @@ class TaskResource extends JsonResource
             'display_order' => $this->display_order,
             'files_count' => $this->files->count(),
             'assignees' => UserResource::collection($this->assignees),
+            'is_bucks_allowed' => $this->is_bucks_allowed,
+            'bucks_amount' => $this->bucks_amount,
+            'remaining_bucks' => $this->remaingBucks(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -34,10 +34,10 @@ class ProjectBucksController extends Controller
         $bucks = $this->projectBucksRepository->index($project);
         
         if($project->bucks_share_type === 'fixed') {
-            $remainingBucks = round($project->bucks_share - $bucks->sum('bucks_share'), 2);
+            $remainingBucks = number_format($project->bucks_share - $bucks->sum('bucks_share'), 2);
         } else {
             $bucks_share = $project->bucks_share * $project->budget_amount / 100;
-            $remainingBucks = round($bucks_share - $bucks->sum('bucks_share'), 2);
+            $remainingBucks = number_format($bucks_share - $bucks->sum('bucks_share'), 2);
         }
 
         $project = new ProjectResource($project);
@@ -66,12 +66,15 @@ class ProjectBucksController extends Controller
         
         // Step 2: Calculate remainingBucks
         $roleShare = $this->projectBucksRepository->getRoleShare($project, $request->roleId);
-        $bucks = $this->projectBucksRepository->index($project);
+        
+        $bucks = $this->projectBucksRepository->index($project);        
         if($project->bucks_share_type === 'fixed') {
             $remainingBucks = $project->bucks_share - $bucks->sum('bucks_share') + $roleShare;
+            $remainingBucks = number_format($remainingBucks, 2);
         } else {
             $bucks_share = $project->bucks_share * $project->budget_amount / 100;
             $remainingBucks = $bucks_share - $bucks->sum('bucks_share') + $roleShare;
+            $remainingBucks = number_format($remainingBucks, 2);
         }
         
         // Step 3: Validate the shares field

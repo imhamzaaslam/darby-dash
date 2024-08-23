@@ -78,7 +78,7 @@
                   color="error"
                   icon
                   size="x-small"
-                  @click="editingRole = null"
+                  @click="cancelEdit"
                 >
                   <VIcon
                     size="large"
@@ -181,6 +181,12 @@ function editRole(item) {
   editRoleShare.value = item.bucks_share
 }
 
+watch(editingRole, newRole => {
+  if (newRole && newRole.bucks_share == 0) {
+    newRole.bucks_share = ''
+  }
+})
+
 const parseAndRound = value => Math.round(parseFloat(value) * 100) / 100
 
 const saveShare = async () => {
@@ -210,6 +216,13 @@ const saveShare = async () => {
     editingRole.value = null
     toast.success('Role share updated successfully')
   }
+}
+
+const cancelEdit = () => {
+  if (editingRole.value.bucks_share == '') {
+    editingRole.value.bucks_share = '0.00'
+  }
+  editingRole.value = null
 }
 
 const limitTwoDecimals = event => {
