@@ -45,3 +45,19 @@ div:where(.swal2-icon).swal2-warning {
   border-color: #a12592 !important;
   color: #a12592 !important;
 }
+
+@keyframes vertical-spin-pause {
+  0% {
+    transform: rotateY(0deg);
+  }
+  60% {
+    transform: rotateY(360deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.vertical-spin-pause {
+  animation: vertical-spin-pause 3s linear infinite; /* Total duration is 5 seconds (3s spin + 2s pause) */
+}

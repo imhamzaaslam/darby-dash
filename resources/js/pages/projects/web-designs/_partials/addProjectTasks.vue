@@ -251,6 +251,21 @@
                       @click.stop="toggleSubtasks(item.id)"
                     />
                     <VIcon
+                      v-if="item.is_bucks_allowed"
+                      color="primary"
+                      variant="text"
+                      class="tabler-coin-filled me-1 vertical-spin-pause"
+                      rounded
+                    >
+                      <VTooltip
+                        activator="parent"
+                        location="top"
+                      >
+                        <span class="text-xs">Bucks Task</span>
+                      </VTooltip>
+                    </VIcon>
+                    <VIcon
+                      v-else
                       class="tabler-playstation-circle"
                       color="primary me-1"
                     />
@@ -325,21 +340,6 @@
                         {{ item?.files_count }}
                       </span>
                     </span>
-                    <VIcon
-                      v-if="item.is_bucks_allowed"
-                      color="primary"
-                      variant="text"
-                      class="tabler-coin"
-                      rounded
-                      size="small"
-                    >
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span class="text-xs">Bucks Task</span>
-                      </VTooltip>
-                    </VIcon>
                   </td>
                   <td>
                     <VMenu
