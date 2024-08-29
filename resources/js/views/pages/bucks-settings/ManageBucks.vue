@@ -96,23 +96,6 @@
             </VTooltip>
           </span>
         </div>
-        <!-- <VBtn
-          color="success"
-          class="me-2"
-          size="small"
-          :disabled="approvalUpdating || item.approval_status == 'approved' || item.status.name !== 'completed'"
-          @click="approveTask(item)"
-        >
-          Approve
-        </VBtn>
-        <VBtn
-          color="error"
-          size="small"
-          :disabled="approvalUpdating || item.approval_status == 'rejected' || item.status.name !== 'completed'"
-          @click="rejectTask(item)"
-        >
-          Reject
-        </VBtn> -->
       </template>  
       <template #bottom>
         <VCardText class="pt-2">
