@@ -254,7 +254,7 @@
                       v-if="item.is_bucks_allowed"
                       color="primary"
                       variant="text"
-                      class="tabler-coin-filled me-1 vertical-spin-pause"
+                      class="tabler-coin-filled me-1"
                       rounded
                     >
                       <VTooltip
@@ -431,7 +431,9 @@
                             </VListItemAvatar>
                             <VListItemTitle class="ms-2">
                               {{ user.name_first + ' ' + user.name_last }}
-                              <p class="text-xs mb-0">{{ user.role }}</p>
+                              <p class="text-xs mb-0">
+                                {{ user.role }}
+                              </p>
                             </VListItemTitle>
                           </VListItem>
                         </template>
@@ -448,9 +450,9 @@
                                 v-for="user in item.assignees"
                                 :key="user.id"
                                 class="assignee-list-item"
+                                :disabled="isAssigneeRemoving"
                                 @mouseenter="showDeleteIcon = user.id"
                                 @mouseleave="showDeleteIcon = null"
-                                :disabled="isAssigneeRemoving"
                               >
                                 <VListItemAvatar>
                                   <VAvatar
@@ -463,7 +465,9 @@
                                 </VListItemAvatar>
                                 <VListItemTitle class="ms-2">
                                   {{ user.name_first + ' ' + user.name_last }}
-                                  <p class="text-xs mb-0">{{ user.role }}</p>
+                                  <p class="text-xs mb-0">
+                                    {{ user.role }}
+                                  </p>
                                 </VListItemTitle>
                                 <VIcon
                                   v-if="showDeleteIcon === user.id"
@@ -670,6 +674,22 @@
                       @click.stop="startEditing(subtask)"
                     >
                       <VIcon
+                        v-if="subtask.is_bucks_allowed"
+                        color="primary"
+                        variant="text"
+                        size="small"
+                        class="tabler-coin-filled ms-6 me-2"
+                        rounded
+                      >
+                        <VTooltip
+                          activator="parent"
+                          location="top"
+                        >
+                          <span class="text-xs">Bucks Task</span>
+                        </VTooltip>
+                      </VIcon>
+                      <VIcon
+                        v-else
                         class="tabler-playstation-circle"
                         size="x-small"
                         color="primary ms-6 me-2"
@@ -785,7 +805,9 @@
                               </VListItemAvatar>
                               <VListItemTitle class="ms-2">
                                 {{ user.name_first + ' ' + user.name_last }}
-                                <p class="text-xs mb-0">{{ user.role }}</p>
+                                <p class="text-xs mb-0">
+                                  {{ user.role }}
+                                </p>
                               </VListItemTitle>
                             </VListItem>
                           </template>
@@ -802,9 +824,9 @@
                                   v-for="user in subtask.assignees"
                                   :key="user.id"
                                   class="assignee-list-item"
+                                  :disabled="isAssigneeRemoving"
                                   @mouseenter="showDeleteIcon = user.id"
                                   @mouseleave="showDeleteIcon = null"
-                                  :disabled="isAssigneeRemoving"
                                 >
                                   <VListItemAvatar>
                                     <VAvatar
@@ -817,7 +839,9 @@
                                   </VListItemAvatar>
                                   <VListItemTitle class="ms-2">
                                     {{ user.name_first + ' ' + user.name_last }}
-                                    <p class="text-xs mb-0">{{ user.role }}</p>
+                                    <p class="text-xs mb-0">
+                                      {{ user.role }}
+                                    </p>
                                   </VListItemTitle>
                                   <VIcon
                                     v-if="showDeleteIcon === user.id"
