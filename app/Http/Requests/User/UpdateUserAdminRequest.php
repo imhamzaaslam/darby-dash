@@ -43,12 +43,10 @@ class UpdateUserAdminRequest extends FormRequest
             'phone' => 'required|string|max:255',
             'password' => 'sometimes|string|min:8',
             'confirmPassword' => 'sometimes|same:password',
-            'state' => 'required|string|in:active,inactive',
             'role' => 'required|string|exists:roles,name',
             'avatar' => 'sometimes|nullable|image|mimes:jpg,jpeg,gif,png|max:1024',
             'address' => 'sometimes|string|max:255',
             'city' => 'sometimes|string|max:255',
-            'state' => 'sometimes|string|max:255',
             'zip' => 'sometimes|string|max:255',
         ];
     }

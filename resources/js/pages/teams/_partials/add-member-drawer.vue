@@ -84,20 +84,6 @@
                 />
               </VCol>
 
-              <!-- State -->
-              <VCol cols="6">
-                <AppSelect
-                  v-model="newMemberDetails.state"
-                  label="Select Status *"
-                  placeholder="Select Status"
-                  :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
-                  item-title="title"
-                  item-value="value"
-                  :rules="[requiredValidator]"
-                  :error-messages="addingErrors.state"
-                />
-              </VCol>
-
               <!-- Password -->
               <VCol cols="6">
                 <AppTextField
@@ -201,7 +187,6 @@ const newMemberDetails = ref({
   phone: '',
   password: '',
   confirmPassword: '',
-  state: null,
 })
 
 const addingErrors = ref({
@@ -212,7 +197,6 @@ const addingErrors = ref({
   phone: '',
   password: '',
   confirmPassword: '',
-  state: '',
 })
 
 const handleDrawerModelValueUpdate = val => {
@@ -261,7 +245,6 @@ const assignEmptyValeus = () => {
     phone: '',
     password: '',
     confirmPassword: '',
-    state: null,
   })
 }
 

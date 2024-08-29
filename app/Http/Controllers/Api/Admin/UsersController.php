@@ -79,7 +79,6 @@ class UsersController extends Controller
             'name_last' => $validated['name_last'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
-            'state' => $validated['state'],
         ];
 
         $role = $validated['role'];
@@ -89,7 +88,6 @@ class UsersController extends Controller
             'avatar' => $validated['avatar'] ?? null,
             'address' => $validated['address'] ?? '',
             'city' => $validated['city'] ?? '',
-            'state' => $validated['state'] ?? '',
             'zip' => $validated['zip'] ?? '',
         ];
 
@@ -139,7 +137,6 @@ class UsersController extends Controller
             'name_last',
             'email',
             'password',
-            'state',
         ]);
 
         $validatedInfoInput = $request->safe()->only([

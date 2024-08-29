@@ -85,20 +85,6 @@
                 />
               </VCol>
 
-              <!-- State -->
-              <VCol cols="6">
-                <AppSelect
-                  v-model="props.editMemberDetails.state"
-                  label="Select Status *"
-                  placeholder="Select Status"
-                  :items="[ { title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' } ]"
-                  item-title="title"
-                  item-value="value"
-                  :rules="[requiredValidator]"
-                  :error-messages="editErrors.state"
-                />
-              </VCol>
-
               <VCol cols="12">
                 <div class="d-flex justify-start">
                   <VBtn
@@ -170,7 +156,6 @@ const editErrors = ref({
   email: '',
   role: '',
   phone: '',
-  state: '',
 })
 
 const handleDrawerModelValueUpdate = val => {
