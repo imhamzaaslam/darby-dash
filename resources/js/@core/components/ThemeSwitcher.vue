@@ -48,7 +48,10 @@ watch(() => configStore.theme, () => {
           :prepend-icon="icon"
           color="primary"
           class="text-capitalize"
-          @click="() => { configStore.theme = name }"
+          @click="() => { 
+            configStore.theme = name;
+            localStorage.setItem('selectedTheme', name);
+          }"
         >
           {{ name }}
         </VListItem>

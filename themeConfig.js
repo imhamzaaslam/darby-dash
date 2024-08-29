@@ -8,6 +8,8 @@ import logo from '@images/logo.png'
 import logoHalf from '@images/half-logo.png'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
+const selectedTheme = localStorage.getItem('selectedTheme') || 'system'
+
 export const { themeConfig, layoutConfig } = defineThemeConfig({
   app: {
     title: 'Darby Dash',
@@ -44,7 +46,7 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
         },
       ],
     },
-    theme: 'system',
+    theme: selectedTheme,
     skin: Skins.Default,
     iconRenderer: VIcon,
   },
