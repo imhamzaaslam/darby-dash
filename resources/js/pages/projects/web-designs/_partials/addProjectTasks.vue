@@ -503,7 +503,8 @@
                           :color="getStatusColor(item.status)"
                           size="small"
                           v-bind="props"
-                          class="cursor-pointer"
+                          class="cursor-pointer d-flex justify-center"
+                          style="width: 105px;"
                         >
                           {{ item.status.name }}
                         </VChip>
@@ -533,7 +534,7 @@
                       <template #activator="{ props }">
                         <VChip
                           class="cursor-pointer"
-                          style="background: #d7e3fb;"
+                          style="background: #d7e3fb; color: #3f51b5; width: 115px;"
                           size="small"
                           v-bind="props"
                         >
@@ -567,6 +568,7 @@
                           size="small"
                           v-bind="props"
                           class="cursor-pointer"
+                          style="width: 110px;"
                           @click="setInputTime(item)"
                         >
                           <VIcon
@@ -877,7 +879,8 @@
                             :color="getStatusColor(subtask.status)"
                             size="small"
                             v-bind="props"
-                            class="cursor-pointer"
+                            class="cursor-pointer d-flex justify-center"
+                            style="width: 105px;"
                           >
                             {{ subtask.status.name }}
                           </VChip>
@@ -907,7 +910,7 @@
                         <template #activator="{ props }">
                           <VChip
                             class="cursor-pointer"
-                            :color="subtask.due_date ? 'error' : 'primary'"
+                            style="background: #d7e3fb; color: #3f51b5; width: 115px;"
                             size="small"
                             v-bind="props"
                           >
@@ -941,6 +944,7 @@
                             size="small"
                             v-bind="props"
                             class="cursor-pointer"
+                            style="width: 110px;"
                             @click="setInputTime(subtask)"
                           >
                             <VIcon

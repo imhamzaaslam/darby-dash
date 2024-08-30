@@ -65,11 +65,11 @@
               >
                 <VSwitch
                   v-model="props.editingTask.is_bucks_allowed"
-                  :label="props.editingTask.assignees?.length == 0 ? 'Give Bucks (Assignee required)' : 'Give Bucks'"
+                  :label="props.editingTask.assignees?.length == 0 ? 'Assign Bucks (Assignee required)' : 'Assign Bucks'"
                   inset
                   class="me-4"
                   hide-details
-                  :disabled="props.editingTask.assignees?.length == 0"
+                  :disabled="(props.editingTask.assignees?.length == 0) || (!authStore.isAdmin && !authStore.isManager)"
                 />
               </VCol>
               
@@ -194,6 +194,7 @@ import { ref } from 'vue'
 import { useToast } from "vue-toastification"
 import Swal from 'sweetalert2'
 import { useProjectTaskStore } from "@/store/project_tasks"
+import { useAuthStore } from '@/store/auth'
 import { useFileStore } from '@/store/files'
 import FileViewer from '@/pages/projects/web-designs/_partials/file-viewer.vue'
 
@@ -217,6 +218,7 @@ onMounted(async () => {
 
 const toast = useToast()
 const projectTaskStore = useProjectTaskStore()
+const authStore = useAuthStore()
 const fileStore = useFileStore()
 
 const focusInput = ref(null)
