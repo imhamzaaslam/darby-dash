@@ -34,7 +34,9 @@ class Project extends Base
 
     public function members()
     {
-        return $this->belongsToMany(User::class, 'project_members')->with('roles');
+        return $this->belongsToMany(User::class, 'project_members')
+                ->with('roles')
+                ->wherePivot('deleted_at', null);
     }
 
     public function projectManager()

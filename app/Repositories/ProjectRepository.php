@@ -143,6 +143,6 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
 
     public function deleteProjectMember(Project $project, User $user): void
     {
-        $project->members()->detach($user->id);
+        ProjectMember::where(['project_id' => $project->id, 'user_id' => $user->id])->delete();
     }
 }
