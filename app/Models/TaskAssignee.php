@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Base;
+use App\Models\User;
 
 class TaskAssignee extends Base
 {
@@ -20,4 +21,9 @@ class TaskAssignee extends Base
         'bucks_amount',
         'approval_status',
     ];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

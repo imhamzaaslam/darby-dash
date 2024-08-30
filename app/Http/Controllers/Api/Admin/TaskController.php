@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\TaskRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
+use App\Contracts\ProjectBucksRepositoryInterface;
 use App\Contracts\ProjectListRepositoryInterface;
 use App\Contracts\FileRepositoryInterface;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ use App\Http\Requests\task\AssignTaskRequest;
 use App\Http\Requests\task\UpdateBucksTaskRequest;
 use App\Http\Requests\file\StoreFileRequest;
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\BucksTaskResource;
 use App\Http\Resources\FileResource;
 use App\Http\Resources\UserResource;
 use App\Services\FileResolverService;
@@ -29,6 +31,7 @@ class TaskController extends Controller
     public function __construct(
         protected TaskRepositoryInterface $taskRepository,
         protected ProjectRepositoryInterface $projectRepository,
+        protected ProjectBucksRepositoryInterface $projectBucksRepository,
         protected ProjectListRepositoryInterface $projectListRepository,
         protected FileRepositoryInterface $fileRepository,
         protected FileResolverService $fileResolverService,
@@ -370,7 +373,7 @@ class TaskController extends Controller
         $this->authorize('view', $project);
         $tasks = $this->taskRepository->fetchBucksTasks($project);
 
-        return TaskResource::collection($tasks);
+        return BucksTaskResource::collection($tasks);
     }
     
     /**
@@ -382,12 +385,12 @@ class TaskController extends Controller
      */
     public function updateBucksTask(UpdateBucksTaskRequest $request, string $projectUuid, string $taskId): Response|JsonResponse
     {
-        $task = $this->taskRepository->getFirstByOrFail('id', $taskId);
+        $task = $this->taskRepository->getFirstByOrFail('id', $taskId);        
         $project = $task->project;
         $this->authorize('view', $project);
+        
         $validated = $request->validated();
-
-        $this->taskRepository->update($task, $validated);
+        $this->projectBucksRepository->updateTaskApprovalStatus($task, $validated);
 
         return (new TaskResource($task))
             ->response()

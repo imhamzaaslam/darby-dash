@@ -27,30 +27,34 @@
       @update:options="updateOptions"
     >
       <template #item.name="{ item }">
-        <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0">{{ item.name }}</span>
-        </div>
+        <span class="text-sm text-truncate mb-0">{{ item.name }}</span>
       </template>
       <template #item.status="{ item }">
-        <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0">{{ item.status.name }}</span>
-        </div>
+        <span class="text-sm text-truncate mb-0">{{ item.status.name }}</span>
+      </template>
+      <template #item.amount="{ item }">
+        <span class="text-sm text-truncate mb-0">${{ item.bucks_amount }}</span>
       </template>
       <template #item.approval="{ item }">
-        <div class="d-flex gap-1">
-          <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
-        </div>
-      </template>
-      <template #item.assignee="{ item }">
         <VChip
-          v-for="assignee in item.assignees_bucks"
-          :key="assignee.id"
-          color="primary"
+          :color="getApprovalStatusColor(item.approval_status)"
           text-color="white"
           class="me-2"
           size="small"
         >
-          {{ assignee.user_name }} (${{ assignee.bucks_amount }})
+          <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
+        </VChip>
+      </template>
+      <template #item.assignee="{ item }">
+        <VChip>
+          <VAvatar
+            start
+            size="25"
+            class="text-white bg-primary"
+          >
+            <small>{{ avatarText(item.assignee?.name_first + ' ' + item.assignee?.name_last) }}</small>
+          </VAvatar>
+          <span>{{ item.assignee?.name_first }} {{ item.assignee?.name_last }}</span>
         </VChip>
       </template>
       <template #item.actions="{ item }">
@@ -61,7 +65,7 @@
               icon
               size="x-small"
               :disabled="approvalUpdating || item.approval_status == 'approved' || item.status.name !== 'COMPLETED'"
-              @click="approveTask(item)"
+              @click="approveTask(item, item.assignee?.id)"
             >
               <VIcon
                 size="large"
@@ -81,7 +85,7 @@
               icon
               size="x-small"
               :disabled="approvalUpdating || item.approval_status == 'rejected' || item.status.name !== 'COMPLETED'"
-              @click="rejectTask(item)"
+              @click="rejectTask(item, item.assignee?.id)"
             >
               <VIcon
                 size="large"
@@ -145,10 +149,11 @@ const search = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const headers = [
-  { title: 'Task', key: 'name', sortable: false, width: '15%' },
-  { title: 'Status', key: 'status', sortable: false, width: '15%' },
-  { title: 'Approval', key: 'approval', sortable: false, width: '15%' },
-  { title: 'Assignee', key: 'assignee', sortable: false, width: '45%' },
+  { title: 'Task', key: 'name', sortable: false, width: '20%' },
+  { title: 'Task Status', key: 'status', sortable: false, width: '20%' },
+  { title: 'Bucks Amount', key: 'amount', sortable: false, width: '20%' },
+  { title: 'Approval', key: 'approval', sortable: false, width: '20%' },
+  { title: 'Assignee', key: 'assignee', sortable: false, width: '20%' },
   { title: 'Actions', key: 'actions', sortable: false },
 ]
 
@@ -189,12 +194,13 @@ const updateOptions = async updateOptions => {
   await fetchBucksTasks()
 }
 
-const approveTask = async task => {
+const approveTask = async (task, userId) => {
   try {
     approvalUpdating.value = true
     
     const payload = {
       approval_status: 'approved',
+      user_id: userId,
     }
     
     await projectBucksStore.updateTaskApproval(projectUuid, task.id, payload)
@@ -211,12 +217,13 @@ const approveTask = async task => {
   }
 }
 
-const rejectTask = async task => {
+const rejectTask = async (task, userId) => {
   try {
     approvalUpdating.value = true
     
     const payload = {
       approval_status: 'rejected',
+      user_id: userId,
     }
     
     await projectBucksStore.updateTaskApproval(projectUuid, task.id, payload)
@@ -230,6 +237,16 @@ const rejectTask = async task => {
     }
   } catch (error) {
     toast.error('Error rejecting task:', error)
+  }
+}
+
+const getApprovalStatusColor = approvalStatus => {
+  if (approvalStatus === 'approved') {
+    return 'success'
+  } else if (approvalStatus === 'rejected') {
+    return 'error'
+  } else {
+    return 'secondary'
   }
 }
   

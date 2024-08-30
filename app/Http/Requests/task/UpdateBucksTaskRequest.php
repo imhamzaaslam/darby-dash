@@ -24,6 +24,7 @@ class UpdateBucksTaskRequest extends FormRequest
     {
         return [
             'approval_status' => 'required|in:approved,rejected',
+            'user_id' => 'required|exists:users,id',
         ];
     }
 }

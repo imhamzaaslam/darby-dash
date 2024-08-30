@@ -9,6 +9,8 @@ use App\Models\Base;
 use App\Models\Project;
 use App\Models\ProjectBucks;
 use App\Models\Role;
+use App\Models\Task;
+use App\Models\TaskAssignee;
 use Illuminate\Support\Collection;
 
 class ProjectBucksRepository extends AbstractEloquentRepository implements ProjectBucksRepositoryInterface
@@ -53,6 +55,12 @@ class ProjectBucksRepository extends AbstractEloquentRepository implements Proje
             'role_id' => $data['roleId'],
             'shares' => $data['shares'],
         ]);
+    }
+    
+    public function updateTaskApprovalStatus(Task $task, array $attributes): bool
+    {
+        $assignee = TaskAssignee::where(['task_id' => $task->id, 'user_id' => $attributes['user_id']])->first();
+        return $assignee->fill($attributes)->save();
     }
     
     public function getRoleShare(Project $project, int $roleId): string
