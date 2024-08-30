@@ -8,6 +8,10 @@ const themes = [
     name: 'dark',
     icon: 'tabler-moon-stars',
   },
+  {
+    name: 'system',
+    icon: 'tabler-device-desktop-analytics',
+  },
 ]
 </script>
 
