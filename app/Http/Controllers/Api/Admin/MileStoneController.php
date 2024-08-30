@@ -28,7 +28,7 @@ class MileStoneController extends Controller
     public function index(Request $request, string $projectUuid): AnonymousResourceCollection|JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($projectUuid);
-        $this->authorize('delete', $project);
+        $this->authorize('view', $project);
         $mileStones = $this->mileStoneRepository
             ->getByProjectQuery($project)
             ->paginate($request->per_page ?? config('pagination.per_page', 10));

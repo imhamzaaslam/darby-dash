@@ -1,6 +1,7 @@
 <template>
   <div>
     <VTabs
+      v-if="authStore.isAdmin || authStore.isManager"
       v-model="activeTab"
       class="v-tabs-pill"
     >
@@ -25,7 +26,10 @@
       :touch="false"
     >
       <!-- Account -->
-      <VWindowItem value="bucks-overview">
+      <VWindowItem
+        v-if="authStore.isAdmin || authStore.isManager"
+        value="bucks-overview"
+      >
         <BucksOverview />
       </VWindowItem>
 
@@ -42,21 +46,28 @@ import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import BucksOverview from '@/views/pages/bucks-settings/BucksOverview.vue'
 import MangageBucks from '@/views/pages/bucks-settings/ManageBucks.vue'
+import { useAuthStore } from "@/store/auth"
+import { useProjectStore } from "@/store/projects"
 import { watch, ref } from 'vue'
 
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 useHead({ title: `${layoutConfig.app.title} | Bucks` })
-onBeforeMount(() => {
+onBeforeMount(async () => {
   const searchParams = new URLSearchParams(window.location.search)
   const activeTab = searchParams.get('tab')
-  if (activeTab && ['bucks-overview', 'manage-bucks',].includes(activeTab)) {
+  if (activeTab && ['bucks-overview', 'manage-bucks'].includes(activeTab)) {
     setActiveTab(activeTab)
   }
+  await projectStore.show(projectUuid)
 })
 
+const authStore = useAuthStore()
+const projectStore = useProjectStore()
 const activeTab = ref('bucks-overview')
 const router = useRouter()
+const route = useRoute()
+const projectUuid = route.params.id
 
 // tabs
 const tabs = [

@@ -153,6 +153,11 @@ const project = computed(() =>{
               Darby Bucks <span class="text-primary">${{ project?.bucks_share_amount }}</span>
             </RouterLink>
           </span>
+          <span v-else>
+            <RouterLink :to="`/projects/${projectId}/bucks?tab=manage-bucks`">
+              Earned Bucks <span class="text-primary">${{ project?.bucks_earnings }}</span>
+            </RouterLink>
+          </span>
         </span>
         <NavBarNotifications class="me-2" />
         <UserProfile />

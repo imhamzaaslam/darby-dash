@@ -34,6 +34,7 @@ class ProjectResource extends JsonResource
             'bucks_share' => round($this->bucks_share, 2),
             'bucks_share_type' => $this->bucks_share_type,
             'bucks_share_amount' => $this->bucks_share_type === 'fixed' ? round($this->bucks_share, 2) : round($this->bucks_share * $this->budget_amount / 100, 2),
+            'bucks_earnings' => $this->bucksEarnings(),
             'status' => $this->status ?? 'N/A',
             'start_date' => $this->start_date ?? 'N/A',
             'end_date' => $this->end_date ?? 'N/A',

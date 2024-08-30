@@ -57,7 +57,10 @@
           <span>{{ item.assignee?.name_first }} {{ item.assignee?.name_last }}</span>
         </VChip>
       </template>
-      <template #item.actions="{ item }">
+      <template
+        v-if="authStore.isAdmin || authStore.isManager"
+        #item.actions="{ item }"
+      >
         <div class="d-flex gap-1">
           <span>
             <VBtn
@@ -130,6 +133,7 @@
 import { ref } from 'vue'
 import Loader from '@/components/Loader.vue'
 import { useProjectBucksStore } from "@/store/project_bucks"
+import { useAuthStore } from "@/store/auth"
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
 import { debounce } from 'lodash'
@@ -139,6 +143,7 @@ onBeforeMount(async () => {
 })
   
 const projectBucksStore = useProjectBucksStore()
+const authStore = useAuthStore()
 const route = useRoute()
 const toast = useToast()
 const projectUuid = route.params.id
@@ -154,7 +159,7 @@ const headers = [
   { title: 'Bucks Amount', key: 'amount', sortable: false, width: '20%' },
   { title: 'Approval', key: 'approval', sortable: false, width: '20%' },
   { title: 'Assignee', key: 'assignee', sortable: false, width: '20%' },
-  { title: 'Actions', key: 'actions', sortable: false },
+  ...(authStore.isAdmin || authStore.isManager ? [{ title: 'Actions', key: 'actions', sortable: false }] : []),
 ]
 
 const fetchBucksTasks = async () => {

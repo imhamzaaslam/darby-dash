@@ -11,6 +11,7 @@ let staffAuthorizedPages = [
   'add-project-tasks',
   'tasks',
   'account-setting',
+  'bucks-setting',
 ]
     
 export default staffAuthorizedPages

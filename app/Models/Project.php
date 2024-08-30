@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Base;
+use App\Models\Task;
+use App\Models\TaskAssignee;
 use App\Services\ProjectProgressService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -94,6 +96,14 @@ class Project extends Base
     public function projectBucks()
     {
         return $this->hasMany(ProjectBucks::class);
+    }
+    
+    public function bucksEarnings(): float
+    {
+        $taskIds = $this->tasks->pluck('id');
+        $authId = auth()->id();
+        $amount = TaskAssignee::whereIn('task_id', $taskIds)->where('user_id', $authId)->where('approval_status', 'approved')->sum('bucks_amount');
+        return $amount ? number_format($amount, 2) : '0.00';
     }
 
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder

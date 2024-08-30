@@ -88,7 +88,7 @@ class ProjectPolicy
      */
     public function viewbucks(User $user, Project $project): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
+        return $user->hasRole('Super Admin') || $project->members->contains($user);
     }
     
     /**
