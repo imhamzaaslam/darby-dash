@@ -61,7 +61,8 @@
               <!-- Bucks Section -->
               <VCol
                 cols="12"
-                class="d-flex align-center pb-0"
+                calss="pb-0"
+                :class="{'d-none': !authStore.isAdmin && !authStore.isManager, 'd-flex align-center': authStore.isAdmin || authStore.isManager}"
               >
                 <VSwitch
                   v-model="props.editingTask.is_bucks_allowed"
@@ -69,11 +70,20 @@
                   inset
                   class="me-4"
                   hide-details
-                  :disabled="(props.editingTask.assignees?.length == 0) || (!authStore.isAdmin && !authStore.isManager)"
+                  :disabled="props.editingTask.assignees?.length == 0"
                 />
               </VCol>
               
               <template v-if="props.editingTask.is_bucks_allowed">
+                <VCol 
+                  v-if="!authStore.isAdmin && !authStore.isManager"
+                  cols="12"
+                  class="pb-0"
+                >
+                  <h4>
+                    Bucks
+                  </h4>
+                </VCol>
                 <VCol
                   v-for="(assignee, index) in props.editingTask.assignees_bucks"
                   :key="index"
@@ -85,7 +95,8 @@
                     type="number"
                     :label="`${assignee.user_name} (${assignee.role_name})`"
                     prepend-inner-icon="tabler-currency-dollar"
-                    :suffix="`($${getRemainingBucks(assignee.role_id)} remaining)`"
+                    :suffix="authStore.isAdmin || authStore.isManager ? `($${getRemainingBucks(assignee.role_id)} remaining)` : ''"
+                    :disabled="!authStore.isAdmin && !authStore.isManager"
                     class="flex-grow-1 no-arrows"
                     outlined
                     dense
@@ -434,5 +445,8 @@ overflow-y: hidden !important;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   height: 30px !important;
   width: 30px !important;
+}
+.d-none {
+  display: none !important;
 }
 </style>

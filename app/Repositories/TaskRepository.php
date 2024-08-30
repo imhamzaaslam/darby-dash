@@ -51,11 +51,13 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         if(isset($attributes['start_date'])) {
             $attributes['start_date'] = Carbon::parse($attributes['start_date']);
         }
-        if (isset($attributes['is_bucks_allowed']) && isset($attributes['assignees_bucks'])) {
-            foreach ($attributes['assignees_bucks'] as $assignee) {
-                $taskAssignee = TaskAssignee::where(['task_id' => $task->id, 'user_id' => $assignee['id']])->first();
-                if ($taskAssignee) {
-                    $taskAssignee->update(['bucks_amount' => $assignee['bucks_amount']]);
+        if(isAdminOrManager()) {
+            if (isset($attributes['is_bucks_allowed']) && isset($attributes['assignees_bucks'])) {
+                foreach ($attributes['assignees_bucks'] as $assignee) {
+                    $taskAssignee = TaskAssignee::where(['task_id' => $task->id, 'user_id' => $assignee['id']])->first();
+                    if ($taskAssignee) {
+                        $taskAssignee->update(['bucks_amount' => $assignee['bucks_amount']]);
+                    }
                 }
             }
         }

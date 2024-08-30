@@ -26,7 +26,7 @@ class FileRepository extends AbstractEloquentRepository implements FileRepositor
     }
 
     public function store(string $fileableType, int $fileableId, FileData $fileData): ?File
-    {;
+    {
         return $this->model->create([
             'fileable_type' => $fileableType,
             'fileable_id' => $fileableId,
