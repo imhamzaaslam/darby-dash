@@ -18,5 +18,6 @@ class TaskAssignee extends Base
         'user_id',
         'display_order',
         'bucks_amount',
+        'approval_status',
     ];
 }

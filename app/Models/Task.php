@@ -27,7 +27,6 @@ class Task extends Base
         'due_date',
         'est_time',
         'is_bucks_allowed',
-        'approval_status',
     ];
 
     protected $casts = [
