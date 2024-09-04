@@ -117,9 +117,21 @@
     </VCol>
 
     <VCol cols="3">
-      <VCard class="logistics-card-statistics cursor-pointer p-1">
+      <VCard
+        style="height: 163px;"
+        class="logistics-card-statistics cursor-pointer p-1"
+      >
         <VCardText>
-          <div class="text-body-1 text-center d-flex align-center justify-center">
+          <div class="text-body-1 text-center d-flex align-center mb-3">
+            <span class="text-primary font-weight-bold me-1">Start Date:</span>{{ formatDate(project?.created_at) }}
+          </div>
+          <div class="text-body-1 text-center d-flex align-center mb-3">
+            <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
+          </div>
+          <div class="text-body-1 text-center d-flex align-center mb-3">
+            <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ formatDate(projectProgress.launchingDate) }}
+          </div>
+          <!-- <div class="text-body-1 text-center d-flex align-center justify-center">
             Project Launch Date
             <VIcon
               class="tabler-info-circle ms-1"
@@ -141,7 +153,7 @@
             <small>
               {{ projectProgress.launchingDate }}
             </small>
-          </div>
+          </div> -->
         </VCardText>
       </VCard>
     </VCol>

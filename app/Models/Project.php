@@ -110,6 +110,12 @@ class Project extends Base
     {
         return $this->calendarEvents()->whereDate('start_date', '>=', now())->orderBy('start_date', 'asc')->limit(2)->get();
     }
+    
+    public function totalEstimatedHoursAndMinutest()
+    {
+        $totalMinutes = $this->tasks->sum('est_time');
+        return floor($totalMinutes / 60) . 'h ' . ($totalMinutes % 60) . 'm';
+    }
 
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder
     {
