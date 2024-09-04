@@ -105,6 +105,11 @@ class Project extends Base
         $amount = TaskAssignee::whereIn('task_id', $taskIds)->where('user_id', $authId)->where('approval_status', 'approved')->sum('bucks_amount');
         return $amount ? number_format($amount, 2) : '0.00';
     }
+    
+    public function upcomingEvents()
+    {
+        return $this->calendarEvents()->whereDate('start_date', '>=', now())->orderBy('start_date', 'asc')->limit(2)->get();
+    }
 
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder
     {

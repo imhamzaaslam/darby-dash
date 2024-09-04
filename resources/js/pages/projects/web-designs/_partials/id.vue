@@ -294,7 +294,7 @@
   </VRow>
   <VRow>
     <VCol cols="6">
-      <VCard>
+      <VCard style="height: 320px;">
         <VCardItem title="Upcoming Event">
           <template #append>
             <MoreBtn />
@@ -302,37 +302,49 @@
         </VCardItem>
         <VCardText>
           <div>
-            <div class="d-flex justify-space-between mx-12 my-8 flex-wrap">
+            <div
+              v-if="project?.upcoming_events.length > 0"
+              class="d-flex mx-12 my-8 flex-wrap"
+              :class="project?.upcoming_events.length > 1 ? 'justify-space-between' : 'justify-center'"
+            >
               <div
-                v-for="{ icon, title, value, color } in [{ icon: 'tabler-clock', value: '32 Minutes', title: 'Status Call', color: 'primary' }, { icon: 'tabler-check', value: '17 Mar, 2024', title: 'Approve Design', color: 'success' }]"
-                :key="title"
+                v-for="(event, index) in project?.upcoming_events"
+                :key="index"
                 class="mx-7"
               >
                 <div class="text-center">
                   <VIcon
-                    :icon="icon"
-                    size="60"
-                    :color="color"
+                    icon="tabler-clock"
+                    size="55"
+                    color="primary"
                   />
                 </div>
                 <div>
                   <h6 class="text-h5 text-high-emphasis">
-                    {{ title }}
+                    {{ event.name }}
                   </h6>
                   <div class="text-sm text-center mt-1">
-                    {{ value }}
+                    {{ formatDate(event.start_date) }}
                   </div>
                 </div>
               </div>
             </div>
-            <div class="text-center mb-1">
-              <VBtn
-                size="small"
-                rounded="pill"
-                color="primary"
-              >
-                Join the Event
-              </VBtn>
+            <div
+              v-else
+              class="text-center py-10"
+            >
+              <p class="text-body-2 text-high-emphasis">
+                No upcoming events for this project.
+              </p>
+              <RouterLink :to="`/projects/${projectUuid}/calendar`">
+                <VBtn
+                  size="small"
+                  rounded="pill"
+                  color="primary"
+                >
+                  Add Event
+                </VBtn>
+              </RouterLink>
             </div>
           </div>
         </VCardText>
@@ -550,6 +562,7 @@
 <script setup lang="js">
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
+import moment from 'moment'
 import Loader from "@/components/Loader.vue"
 import avatar1 from '@images/avatars/avatar-1.png'
 import girlWithLaptop from '@images/illustrations/PM.png'
@@ -588,6 +601,8 @@ const getColor = progress => {
     return 'secondary'
   }
 }
+
+const formatDate = date => moment(date).format('MM/DD/YYYY')
 
 const projectProgress = computed(() => {
   return projectStore.getProjectProgress
