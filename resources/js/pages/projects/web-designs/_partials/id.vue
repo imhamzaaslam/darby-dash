@@ -442,7 +442,7 @@
   </VRow>
   <VRow>
     <VCol cols="6">
-      <VCard>
+      <VCard style="height: 295px;">
         <!-- // check if project_manager is not null/ -->
         <template v-if="project?.project_manager">
           <VCardItem title="Meet with PM">
@@ -453,17 +453,18 @@
           <VCardText>
             <VRow>
               <VCol cols="6">
-                <div class="d-flex justify-center  align-start pb-0 px-3 pt-3 mb-3 bg-light-primary rounded">
+                <div
+                  v-if="project?.project_manager?.info?.avatar"
+                  class="d-flex justify-center  align-start pb-0 px-3 pt-3 mb-3"
+                >
                   <VImg
-                    :src="girlWithLaptop"
+                    :src="getImageUrl(project?.project_manager?.info?.avatar.path)"
                     width="145"
                     height="140"
                   />
                 </div>
-              </VCol>
-
-              <!-- <VCol cols="6">
-                <div 
+                <div
+                  v-else
                   class="d-flex justify-center align-center pb-0 px-3 bg-light-primary rounded"
                   style="height: 140px;"
                 >
@@ -471,7 +472,7 @@
                     {{ avatarText(project?.project_manager?.name_first + ' . ' + project?.project_manager?.name_last) }}
                   </h6>
                 </div>
-              </VCol> -->
+              </VCol>
 
               <VCol cols="6">
                 <div>
@@ -482,19 +483,21 @@
                           {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }}
                         </h6>
                         <div class="text-sm text-high-emphasis">
-                          hamza@gmail.com
+                          {{ project?.project_manager?.email }}
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="my-5">
-                    <VBtn
-                      size="small"
-                      rounded="pill"
-                      color="primary"
-                    >
-                      Schedule Meeting
-                    </VBtn>
+                    <RouterLink :to="`/projects/${projectUuid}/calendar`">
+                      <VBtn
+                        size="small"
+                        rounded="pill"
+                        color="primary"
+                      >
+                        Schedule Meeting
+                      </VBtn>
+                    </RouterLink>
                   </div>
                 </div>
               </VCol>
@@ -603,6 +606,12 @@ const getColor = progress => {
 }
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 
 const projectProgress = computed(() => {
   return projectStore.getProjectProgress

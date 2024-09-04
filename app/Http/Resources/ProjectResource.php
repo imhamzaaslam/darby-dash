@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
 
 class ProjectResource extends JsonResource
 {
@@ -28,7 +29,7 @@ class ProjectResource extends JsonResource
                     'role' => $member->roles->first()->name ?? 'N/A',
                 ];
             }),
-            'project_manager' => $this->projectManager(),
+            'project_manager' => $this->projectManager() ? new UserResource($this->projectManager()) : null,
             'member_ids' => $this->members->pluck('id'),
             'budget_amount' => round($this->budget_amount, 2),
             'bucks_share' => round($this->bucks_share, 2),
