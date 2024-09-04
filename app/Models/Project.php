@@ -112,7 +112,6 @@ class Project extends Base
         // projects Members tabel
         $projectMembersTable = (new ProjectMember())->getTable();
 
-
         // check projectManager in projectMembers table
         return $query->when($keyword, function ($query, $keyword) use ($projectsTable) {
             return $query->where(function ($query) use ($projectsTable, $keyword) {
