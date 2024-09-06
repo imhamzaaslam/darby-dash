@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Admin\FileController;
 use App\Http\Controllers\Api\Admin\FolderController;
 use App\Http\Controllers\Api\Admin\PaymentController;
 use App\Http\Controllers\Api\Admin\ProjectBucksController;
+use App\Http\Controllers\Api\Admin\TemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +85,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [ProjectController::class, 'update']);
                 Route::delete('/', [ProjectController::class, 'delete']);
                 Route::delete('/user/{userUuid}', [ProjectController::class, 'deleteUser']);
-                
+
                 Route::prefix('bucks')->group(function () {
                     Route::get('/', [ProjectBucksController::class, 'index']);
                     Route::patch('/', [ProjectBucksController::class, 'update']);
@@ -136,6 +137,10 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::prefix('payments')->group(function () {
                     Route::get('/', [PaymentController::class, 'index']);
                     Route::post('/', [PaymentController::class, 'store']);
+                });
+
+                Route::prefix('templates')->group(function () {
+                    Route::post('/', [TemplateController::class, 'store']);
                 });
             });
         });

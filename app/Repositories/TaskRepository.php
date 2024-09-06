@@ -64,7 +64,7 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         if(isset($attributes['is_bucks_allowed']) && $attributes['is_bucks_allowed'] == 0) {
             TaskAssignee::where('task_id', $task->id)->update(['bucks_amount' => null]);
         }
-        
+
         return $task->fill($attributes)->save();
     }
 
@@ -121,12 +121,12 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         $task->assignees()->sync(array_merge($previousAssginees, [$attributes['assignee']]));
         return true;
     }
-    
+
     public function fetchBucksTasks(Project $project): Collection
     {
         $taskIds = $this->model->where(['project_id' => $project->id, 'is_bucks_allowed' => 1])->pluck('id');
         $taskAssigneeIds = TaskAssignee::whereIn('task_id', $taskIds)->pluck('task_id')->unique();
-        
+
         $taskAssignees = [];
         foreach ($taskAssigneeIds as $taskAssigneeId) {
             $taskAssignee = TaskAssignee::where('task_id', $taskAssigneeId)->get();
@@ -134,7 +134,7 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
                 $taskAssignees[] = $assignee;
             }
         }
-        
+
         $tasks = collect();
         foreach ($taskAssignees as $taskAssignee) {
             $task = $this->model->find($taskAssignee->task_id);
@@ -143,7 +143,7 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
             $task->bucks_amount = number_format($taskAssignee->bucks_amount, 2);
             $tasks->push($task);
         }
-        
+
         return $tasks;
     }
 }
