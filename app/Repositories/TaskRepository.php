@@ -124,12 +124,17 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
 
     public function fetchBucksTasks(Project $project): Collection
     {
+        $loggedInUser = auth()->user();
         $taskIds = $this->model->where(['project_id' => $project->id, 'is_bucks_allowed' => 1])->pluck('id');
         $taskAssigneeIds = TaskAssignee::whereIn('task_id', $taskIds)->pluck('task_id')->unique();
 
         $taskAssignees = [];
         foreach ($taskAssigneeIds as $taskAssigneeId) {
-            $taskAssignee = TaskAssignee::where('task_id', $taskAssigneeId)->get();
+            if (!$loggedInUser->hasRole('Super Admin') && !$loggedInUser->hasRole('Project Manager')) {
+                $taskAssignee = TaskAssignee::where(['task_id' => $taskAssigneeId, 'user_id' => $loggedInUser->id])->get();
+            } else {
+                $taskAssignee = TaskAssignee::where('task_id', $taskAssigneeId)->get();
+            }
             foreach ($taskAssignee as $assignee) {
                 $taskAssignees[] = $assignee;
             }
