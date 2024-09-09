@@ -122,14 +122,17 @@
         class="logistics-card-statistics cursor-pointer p-1"
       >
         <VCardText>
-          <div class="text-body-1 text-center d-flex align-center mb-3">
+          <div class="text-body-1 text-center d-flex align-center mb-2">
             <span class="text-primary font-weight-bold me-1">Start Date:</span>{{ formatDate(project?.created_at) }}
           </div>
-          <div class="text-body-1 text-center d-flex align-center mb-3">
+          <div class="text-body-1 text-center d-flex align-center mb-2">
             <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
           </div>
-          <div class="text-body-1 text-center d-flex align-center mb-3">
+          <div class="text-body-1 text-center d-flex align-center mb-2">
             <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ formatDate(projectProgress.launchingDate) }}
+          </div>
+          <div class="text-body-1 text-center d-flex align-center mb-2">
+            <span class="text-primary font-weight-bold me-1">Due Time:</span>{{ projectProgress.launchingTime }}
           </div>
           <!-- <div class="text-body-1 text-center d-flex align-center justify-center">
             Project Launch Date

@@ -1,4 +1,18 @@
 <template>
+  <VRow>
+    <VCol cols="12">
+      <div class="d-flex justify-start align-center">
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
   <div>
     <VTabs
       v-if="authStore.isAdmin || authStore.isManager"
@@ -49,6 +63,7 @@ import MangageBucks from '@/views/pages/bucks-settings/ManageBucks.vue'
 import { useAuthStore } from "@/store/auth"
 import { useProjectStore } from "@/store/projects"
 import { watch, ref } from 'vue'
+import sketch from '@images/icons/project-icons/sketch.png'
 
 import { useRouter, useRoute } from 'vue-router'
 
@@ -59,7 +74,7 @@ onBeforeMount(async () => {
   if (activeTab && ['bucks-overview', 'manage-bucks'].includes(activeTab)) {
     setActiveTab(activeTab)
   }
-  await projectStore.show(projectUuid)
+  await fetchProject()
 })
 
 const authStore = useAuthStore()
@@ -83,9 +98,21 @@ const tabs = [
   },
 ]
 
+const fetchProject = async () => {
+  try {
+    await projectStore.show(projectUuid)
+  } catch (error) {
+    toast.error('Error fetching project:', error)
+  }
+}
+
 function setActiveTab(tab) {
   activeTab.value = tab
 }
+
+const project = computed(() =>{
+  return projectStore.getProject
+})
 
 // use watch to change the active tab and then pass to the route as query param
 watch(activeTab, newActiveTab => {

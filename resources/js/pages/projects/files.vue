@@ -1,6 +1,20 @@
 <template>
   <Loader v-if="isLoading" />
   <VRow>
+    <VCol cols="12">
+      <div class="d-flex justify-start align-center">
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
+  <VRow>
     <VCol
       cols="12"
       class="d-flex justify-space-between align-center"
@@ -338,6 +352,7 @@ import { useFolderStore } from '@/store/folders'
 import { useFileStore } from '@/store/files'
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
+import sketch from '@images/icons/project-icons/sketch.png'
 
 onBeforeMount(async () => {
   await getFolders()
