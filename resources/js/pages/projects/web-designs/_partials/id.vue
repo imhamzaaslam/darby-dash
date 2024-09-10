@@ -129,7 +129,7 @@
             <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
           </div>
           <div class="text-body-1 text-center d-flex align-center mb-4">
-            <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ formatDate(projectProgress.launchingDate) }} <small>(10 days)</small>
+            <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
           </div>
           <!-- <div class="text-body-1 text-center d-flex align-center justify-center">
             Project Launch Date

@@ -84,6 +84,11 @@ if (!function_exists('convertMinutesToDays')) {
     {
         $minutesInADay = 8 * 60;
         $days = $totalMinutes / $minutesInADay;
+        $minutesLeft = $totalMinutes % $minutesInADay;
+        $hours = floor($minutesLeft / 60);
+        if($hours > 4) {
+            $days += 1;
+        }
 
         return $days;
     }

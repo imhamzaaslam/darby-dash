@@ -37,6 +37,7 @@ class ProjectProgressService
             'lists' => $sortedList,
             'launchingTime' => $this->getLaunchingTime($project),
             'launchingDate' => $this->getLaunchingDate($project),
+            'launchingDays' => $this->getLaunchingDays($project),
             'overallProgress' => $this->getOverallProgress($project),
             'totalTasks' => $project->tasks->whereNull('parent_id')->count(),
         ];
