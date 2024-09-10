@@ -12,9 +12,19 @@
           class="d-toggle align-center-important"
           rounded="0"
         >
+          <div class="d-flex justify-center align-center">
+            <VAvatar
+              :size="30"
+              class="me-1"
+              :image="sketch"
+            />
+            <h3 class="text-primary">
+              {{ project?.title }}
+            </h3>
+          </div>
           <VIcon
             icon="tabler-list"
-            class="me-1"
+            class="me-1 ms-2"
             :class="{ 'bg-primary': viewType === 'list' }"
             @click="viewType = 'list'"
           />
@@ -28,16 +38,6 @@
             class="bg-primary ms-1"
             @click="isFilterDrawerOpen = !isFilterDrawerOpen"
           />
-          <div class="ms-4 d-flex justify-center align-center">
-            <VAvatar
-              :size="30"
-              class="me-1"
-              :image="sketch"
-            />
-            <h3 class="text-primary">
-              {{ project?.title }}
-            </h3>
-          </div>
         </VBtnToggle>
       </VCol>
       <VCol
