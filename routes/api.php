@@ -188,6 +188,10 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             Route::delete('/', [PaymentController::class, 'delete']);
         });
 
+        Route::prefix('templates')->group(function () {
+            Route::get('/', [TemplateController::class, 'index']);
+        });
+
         // Route::prefix('project/{id}/tasks')->group(function () {
         //     Route::get('/', [TaskController::class, 'index']);
         //     Route::post('/', [TaskController::class, 'store']);

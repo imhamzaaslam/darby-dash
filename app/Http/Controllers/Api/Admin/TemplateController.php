@@ -19,6 +19,18 @@ class TemplateController extends Controller
     ) {}
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function index(): AnonymousResourceCollection|JsonResponse
+    {
+        dd('here');
+        $templates = $this->templateRepository->get();
+        return TemplateResource::collection($templates);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request

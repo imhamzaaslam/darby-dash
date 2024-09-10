@@ -20,6 +20,11 @@ class TemplateRepository  extends AbstractEloquentRepository implements Template
         parent::__construct($model);
     }
 
+    public function get(): Collection
+    {
+        return $this->model->get();
+    }
+
     public function create(array $attributes, Project $project): Template
     {
 

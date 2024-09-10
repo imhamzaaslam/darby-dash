@@ -25,8 +25,8 @@
             @submit.prevent="submitAddProjectForm"
           >
             <VRow>
-              <VCol 
-                md="6" 
+              <VCol
+                md="6"
                 cols="12"
               >
                 <AppAutocomplete
@@ -41,7 +41,7 @@
                 />
               </VCol>
               <VCol
-                md="6" 
+                md="6"
                 cols="12"
               >
                 <AppAutocomplete
@@ -50,6 +50,19 @@
                   placeholder="Select Project Type"
                   :rules="[requiredValidator]"
                   :items="props.getProjectTypes"
+                  item-title="name"
+                  item-value="id"
+                />
+              </VCol>
+              <VCol
+                v-if="showTemplateField"
+                cols="12"
+              >
+                <AppAutocomplete
+                  v-model="newProjectDetails.template_id"
+                  label="Template"
+                  placeholder="Select Template"
+                  :items="props.getTemplates"
                   item-title="name"
                   item-value="id"
                 />
@@ -92,7 +105,7 @@
                   style="color: #000 !important;"
                 />
               </VCol>
-              <VCol 
+              <VCol
                 md="6"
                 cols="12"
               >
@@ -131,7 +144,7 @@
                   :rules="[requiredValidator]"
                   dense
                   hide-details
-                  /> 
+                  />
                 -->
               </VCol>
 
@@ -190,6 +203,7 @@ const props = defineProps({
   getProjectTypes: Object,
   getStaffList: Object,
   getClients: Object,
+  getTemplates: Object,
   getProjectManagersList: Object,
   getLoadStatus: Number,
 })
@@ -202,12 +216,14 @@ const projectStore = useProjectStore()
 const focusField = ref(null)
 const addProjectForm = ref()
 const isLoading= ref(false)
+const showTemplateField = ref(false)
 
 const newProjectDetails = ref({
   client_id: null,
   project_manager_id: null,
   title: '',
   project_type_id: null,
+  template_id: null,
   staff_ids: [],
   budget_amount: '',
   bucks_share: '',
@@ -249,14 +265,14 @@ async function submitAddProjectForm() {
 
           return
         }
-        
+
         isLoading.value = true
         await projectStore.create(newProjectDetails.value)
-        
+
         if(projectStore.getErrors) {
           toast.error('Failed to add project')
           isLoading.value = false
-          
+
           return
         } else {
           emit('update:isDrawerOpen', false)
@@ -292,6 +308,10 @@ watch(() => props.isDrawerOpen, val => {
       }
     })
   }
+})
+
+watch(() => newProjectDetails.value.project_type_id, newTypeId => {
+  showTemplateField.value = !!newTypeId
 })
 </script>
 

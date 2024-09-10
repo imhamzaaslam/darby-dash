@@ -286,6 +286,7 @@
     :get-project-types="getProjectTypes"
     :get-staff-list="getStaffListsForDropDown"
     :get-clients="getClients"
+    :get-templates="getTemplates"
     :get-project-managers-list="getProjectManagers"
     :get-load-status="getLoadStatus"
   />
@@ -325,12 +326,14 @@ import { useProjectStore } from "../../../store/projects"
 import { useProjectTypeStore } from "../../../store/project_types"
 import { useUserStore } from "../../../store/users"
 import { useAuthStore } from '@/store/auth'
+import { useTemplateStore } from '@/store/templates'
 import { useRoute } from 'vue-router'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Projects` })
 onBeforeMount(async () => {
   await fetchProjects()
   await fetchProjectTypes()
+  await fetchTemplates()
   await fetchMembers()
   totalRecords.value = totalProjects.value
 })
@@ -340,6 +343,7 @@ const projectStore = useProjectStore()
 const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
 const authStore = useAuthStore()
+const templateStore = useTemplateStore()
 const route = useRoute()
 
 const totalRecords = ref(0)
@@ -360,6 +364,17 @@ const fetchProjects = async () => {
     await projectStore.getAll(options.value.page, options.value.itemsPerPage, search.value, selectedProjectType.value, selectedProjectManagerId.value)
   } catch (error) {
     toast.error('Error fetching projects:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const fetchTemplates = async () => {
+  try {
+    isLoading.value = true
+    await templateStore.getAll()
+  } catch (error) {
+    toast.error('Error fetching templates:', error)
   } finally {
     isLoading.value = false
   }
@@ -470,14 +485,14 @@ const getProjectTypes = computed(() => {
 const getClients = computed(() => {
   let members = userStore.getMembersList
   let clients = members.filter(member => member.role === USER_ROLES.CLIENT)
-  
+
   return clients.map(client => ({ id: client.id, name: client.name_first + " " + client.name_last }))
 })
 
 const getProjectManagers = computed(() => {
   let members = userStore.getMembersList
   let projectManagers = members.filter(member => member.role === USER_ROLES.PROJECT_MANAGER)
-  
+
   return projectManagers.map(manager => ({ id: manager.id, name: manager.name_first + " " + manager.name_last }))
 })
 
@@ -497,19 +512,23 @@ const projectTypesWithFirstOption = (firstOption = null) => {
 const projectManagersWithFirstOption = computed(() => {
   let members = userStore.getMembersList
   let projectManagers = members.filter(member => member.role === USER_ROLES.PROJECT_MANAGER)
-  
+
   let managers = projectManagers.map(manager => ({ id: manager.id, name: manager.name_first + " " + manager.name_last }))
-  
+
   managers.unshift({ id: null, name: '-- Select --' })
-  
+
   return managers
 })
 
 const getStaffListsForDropDown = computed(() => {
   let members = userStore.getMembersList
   let staff = members.filter(member => member.role === USER_ROLES.STAFF)
-  
+
   return staff.map(staff => ({ label: staff.name_first + " " + staff.name_last, value: staff.id }))
+})
+
+const getTemplates = computed(() => {
+  return templateStore.getTemplates
 })
 
 const getErrors = computed(() => {

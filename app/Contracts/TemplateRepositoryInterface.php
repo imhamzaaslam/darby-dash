@@ -7,5 +7,6 @@ use Illuminate\Support\Collection;
 
 interface TemplateRepositoryInterface
 {
+    public function get(): Collection;
     public function create(array $attributes, Project $project):Template;
 }
