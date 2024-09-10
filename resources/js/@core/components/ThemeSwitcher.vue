@@ -11,6 +11,20 @@ const props = defineProps({
 const configStore = useConfigStore()
 const selectedItem = ref([configStore.theme])
 
+onMounted(() => {
+  const savedTheme = localStorage.getItem('selectedTheme')
+  if (savedTheme) {
+    configStore.theme = savedTheme
+    selectedItem.value = [savedTheme]
+  }
+})
+
+const updateTheme = theme => {
+  configStore.theme = theme
+  selectedItem.value = [theme]
+  localStorage.setItem('selectedTheme', theme)
+}
+
 // Update icon if theme is changed from other sources
 watch(() => configStore.theme, () => {
   selectedItem.value = [configStore.theme]
@@ -48,10 +62,7 @@ watch(() => configStore.theme, () => {
           :prepend-icon="icon"
           color="primary"
           class="text-capitalize"
-          @click="() => { 
-            configStore.theme = name;
-            localStorage.setItem('selectedTheme', name);
-          }"
+          @click="() => updateTheme(name)"
         >
           {{ name }}
         </VListItem>
