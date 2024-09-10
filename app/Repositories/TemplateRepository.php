@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\AbstractEloquentRepository;
 use App\Contracts\TemplateRepositoryInterface;
+use Illuminate\Support\Collection;
 use App\Models\Base;
 use App\Models\Project;
 use App\Models\Template;
@@ -25,6 +26,11 @@ class TemplateRepository  extends AbstractEloquentRepository implements Template
         return $this->model->get();
     }
 
+    public function getTemplate($id): Template
+    {
+        return $this->model->findOrFail($id);
+    }
+
     public function create(array $attributes, Project $project): Template
     {
 
@@ -41,14 +47,42 @@ class TemplateRepository  extends AbstractEloquentRepository implements Template
                 'name' => $list->name,
             ]);
 
-            foreach ($list->tasks as $task) {
+            foreach ($list->allTasks as $task) {
                 $templateList->templateListTasks()->create([
                     'template_list_id' => $templateList->id,
                     'name' => $task->name,
+                    'parent_id' => $task->parent_id,
                 ]);
             }
         }
 
         return $template;
+    }
+
+    public function createProjectListAndTask(Template $template, Project $project)
+    {
+        if ($template->templateLists->isNotEmpty()) {
+            foreach ($template->templateLists as $templateList) {
+                $projectList = $project->lists()->create([
+                    'name' => $templateList->name,
+                ]);
+
+                if ($templateList->templateListTasks->isNotEmpty()) {
+                    foreach ($templateList->templateListTasks as $templateListTask) {
+                        $projectList->allTasks()->create([
+                            'name' => $templateListTask->name,
+                            'project_id' => $project->id,
+                            'list_id' => $projectList->id,
+                            'parent_id' => $templateListTask->parent_id,
+                        ]);
+                    }
+                }
+            }
+        }
+    }
+
+    public function hasTemplateLists(Template $template): bool
+    {
+        return $template->templateLists()->count() > 0;
     }
 }

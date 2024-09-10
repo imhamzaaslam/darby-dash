@@ -28,6 +28,7 @@ class StoreProjectRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'sometimes|string',
             'project_manager_id' => 'required|exists:users,id',
+            'template_id' => 'sometimes|nullable',
             'staff_ids' => [
                 'sometimes',
                 'nullable',

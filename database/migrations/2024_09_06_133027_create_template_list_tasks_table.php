@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->unsignedBigInteger('template_list_id');
+            $table->foreignId('parent_id')->nullable()->constrained('template_list_tasks')->onDelete('cascade');
             $table->longText('name');
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');

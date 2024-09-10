@@ -12,7 +12,7 @@ class TemplateListTask extends Base
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['uuid', 'template_list_id', 'name'];
+    protected $fillable = ['uuid', 'template_list_id', 'parent_id' ,'name'];
 
     public function templateList()
     {

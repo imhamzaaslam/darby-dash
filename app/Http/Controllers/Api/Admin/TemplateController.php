@@ -25,7 +25,6 @@ class TemplateController extends Controller
      */
     public function index(): AnonymousResourceCollection|JsonResponse
     {
-        dd('here');
         $templates = $this->templateRepository->get();
         return TemplateResource::collection($templates);
     }

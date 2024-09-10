@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
+use App\Contracts\TemplateRepositoryInterface;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\project\StoreProjectRequest;
@@ -19,7 +20,8 @@ class ProjectController extends Controller
 {
     public function __construct(
         protected ProjectRepositoryInterface $projectRepository,
-        protected UserRepositoryInterface $userRepository
+        protected UserRepositoryInterface $userRepository,
+        protected TemplateRepositoryInterface $templateRepository
     ) {}
 
     /**
@@ -72,7 +74,7 @@ class ProjectController extends Controller
     {
         $this->authorize('create', Project::class);
         $validated = $request->validated();
-    
+
         $member_ids = [];
         if(isset($validated['client_id'])) {
             $member_ids[] = $validated['client_id'];
@@ -92,7 +94,18 @@ class ProjectController extends Controller
             $this->projectRepository->storeProjectMembers($project, $member_ids);
         }
 
-        $this->projectRepository->createBacklogList($project);
+        //save project lists and tasks from template
+        $templateId = $validated['template_id'] ?? null;
+
+        if ($templateId) {
+            $template = $this->templateRepository->getTemplate($templateId);
+            if ($this->templateRepository->hasTemplateLists($template) === 0) {
+                $this->projectRepository->createBacklogList($project);
+            }
+            $this->templateRepository->createProjectListAndTask($template, $project);
+        } else {
+            $this->projectRepository->createBacklogList($project);
+        }
 
         return (new ProjectResource($project))
             ->response()
@@ -127,7 +140,7 @@ class ProjectController extends Controller
         $project = $this->projectRepository->getByUuid($uuid);
         $this->authorize('update', $project);
         $validated = $request->validated();
-        
+
         $member_ids = [];
         if(isset($validated['client_id'])) {
             $member_ids[] = $validated['client_id'];
@@ -141,7 +154,7 @@ class ProjectController extends Controller
             $member_ids = array_merge($member_ids, $validated['staff_ids']);
             unset($validated['staff_ids']);
         }
-        
+
 
         $this->projectRepository->update($project, $validated);
         $this->projectRepository->updateProjectMembers($project, $member_ids);
@@ -198,7 +211,7 @@ class ProjectController extends Controller
     {
         $project = $this->projectRepository->getByUuid($uuid);
         $this->authorize('view', $project);
- 
+
         return UserResource::collection($project->users);
     }
 
