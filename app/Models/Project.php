@@ -108,7 +108,7 @@ class Project extends Base
     
     public function upcomingEvents()
     {
-        return $this->calendarEvents()->whereDate('start_date', '>=', now())->orderBy('start_date', 'asc')->limit(2)->get();
+        return $this->calendarEvents()->whereDate('start_date', '>=', now())->orderBy('start_date', 'asc')->limit(3)->get();
     }
     
     public function totalEstimatedHoursAndMinutest()

@@ -307,6 +307,77 @@
   <VRow>
     <VCol cols="6">
       <VCard style="height: 320px;">
+        <VCardItem>
+          <VCardTitle>Upcoming Event</VCardTitle>
+
+          <template #append>
+            <div>
+              <MoreBtn />
+            </div>
+          </template>
+        </VCardItem>
+
+        <VCardText class="activity-card">
+          <VTimeline
+            v-if="project?.upcoming_events.length > 0"
+            density="compact"
+            align="start"
+            truncate-line="both"
+            class="v-timeline-density-compact"
+          >
+            <VTimelineItem
+              v-for="(event, index) in project?.upcoming_events"
+              :key="index"
+              dot-color="primary"
+              size="x-small"
+            >
+              <div class="d-flex justify-space-between align-center flex-wrap">
+                <span class="app-timeline-title">
+                  {{ event.name }}
+                </span>
+                <span class="app-timeline-meta">{{ getDaysLeft(event.start_date) }} Days Left</span>
+              </div>
+              <p class="app-timeline-text mb-2">
+                {{ formatDate(event.start_date) }}
+              </p>
+            </VTimelineItem>
+          </VTimeline>
+          <div
+            v-else
+            class="text-center py-10"
+          >
+            <p class="text-body-2 text-high-emphasis">
+              No upcoming events for this project.
+            </p>
+            <RouterLink :to="`/projects/${projectUuid}/calendar`">
+              <VBtn
+                size="small"
+                rounded="pill"
+                color="primary"
+              >
+                Add Event
+              </VBtn>
+            </RouterLink>
+          </div>
+          <div
+            v-if="project?.upcoming_events.length < 2"
+            class="text-center py-10"
+          >
+            <RouterLink :to="`/projects/${projectUuid}/calendar`">
+              <VBtn
+                size="small"
+                rounded="pill"
+                color="primary"
+              >
+                Add More Event
+              </VBtn>
+            </RouterLink>
+          </div>
+        </VCardText>
+      </VCard>
+    </VCol>
+    <!-- <VCol cols="6">
+      <VCard style="height: 320px;">
         <VCardItem title="Upcoming Event">
           <template #append>
             <MoreBtn />
@@ -361,7 +432,7 @@
           </div>
         </VCardText>
       </VCard>
-    </VCol>
+    </VCol> -->
     <VCol cols="6">
       <VCard>
         <VCardItem>
@@ -618,6 +689,13 @@ const getColor = progress => {
 }
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
+
+const getDaysLeft = date => {
+  const today = moment()
+  const eventDate = moment(date)
+  
+  return eventDate.diff(today, 'days')
+}
 
 const getImageUrl = path => {
   const baseUrl = import.meta.env.VITE_APP_URL
