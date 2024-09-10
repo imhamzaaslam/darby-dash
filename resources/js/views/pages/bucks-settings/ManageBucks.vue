@@ -14,9 +14,9 @@
         </div> 
       -->
       <VTabs v-model="currentTab">
-        <VTab>COMPLETED</VTab>
-        <VTab>In Progress</VTab>
-        <VTab>Pending</VTab>
+        <VTab>Pending Approval</VTab>
+        <VTab>Earned</VTab>
+        <VTab>Rejected</VTab>
       </VTabs>
     </VCardText>
   
@@ -29,7 +29,7 @@
         <VDataTable
           :headers="headers"
           :items-per-page="options.itemsPerPage"
-          :items="completedTasks"
+          :items="pendingApprovalTasks"
           item-value="name"
           hide-default-footer
           class="text-no-wrap"
@@ -64,7 +64,10 @@
               <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
             </VChip>
           </template>
-          <template #item.assignee="{ item }">
+          <template 
+            v-if="authStore.isAdmin || authStore.isManager"
+            #item.assignee="{ item }"
+          >
             <VChip>
               <VAvatar
                 start
@@ -140,7 +143,7 @@
             <TablePagination
               v-model:page="options.page"
               :items-per-page="options.itemsPerPage"
-              :total-items="completedTasks.length"
+              :total-items="pendingApprovalTasks.length"
               @update:page="handlePageChange"
             />
           </template>
@@ -150,7 +153,7 @@
         <VDataTable
           :headers="headers"
           :items-per-page="options.itemsPerPage"
-          :items="inProgressTasks"
+          :items="earnedTasks"
           item-value="name"
           hide-default-footer
           class="text-no-wrap"
@@ -185,7 +188,10 @@
               <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
             </VChip>
           </template>
-          <template #item.assignee="{ item }">
+          <template 
+            v-if="authStore.isAdmin || authStore.isManager"
+            #item.assignee="{ item }"
+          >
             <VChip>
               <VAvatar
                 start
@@ -261,7 +267,7 @@
             <TablePagination
               v-model:page="options.page"
               :items-per-page="options.itemsPerPage"
-              :total-items="inProgressTasks.length"
+              :total-items="earnedTasks.length"
               @update:page="handlePageChange"
             />
           </template>
@@ -271,7 +277,7 @@
         <VDataTable
           :headers="headers"
           :items-per-page="options.itemsPerPage"
-          :items="pendingTasks"
+          :items="rejectedTasks"
           item-value="name"
           hide-default-footer
           class="text-no-wrap"
@@ -306,7 +312,10 @@
               <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
             </VChip>
           </template>
-          <template #item.assignee="{ item }">
+          <template
+            v-if="authStore.isAdmin || authStore.isManager"
+            #item.assignee="{ item }"
+          >
             <VChip>
               <VAvatar
                 start
@@ -382,7 +391,7 @@
             <TablePagination
               v-model:page="options.page"
               :items-per-page="options.itemsPerPage"
-              :total-items="pendingTasks.length"
+              :total-items="rejectedTasks.length"
               @update:page="handlePageChange"
             />
           </template>
@@ -533,7 +542,7 @@ const headers = [
   { title: 'Task Status', key: 'status', sortable: false, width: '20%' },
   { title: 'Bucks Amount', key: 'amount', sortable: false, width: '20%' },
   { title: 'Approval', key: 'approval', sortable: false, width: '20%' },
-  { title: 'Assignee', key: 'assignee', sortable: false, width: '20%' },
+  ...(authStore.isAdmin || authStore.isManager ? [{ title: 'Assignee', key: 'assignee', sortable: false, width: '20%' }] : []),
   ...(authStore.isAdmin || authStore.isManager ? [{ title: 'Actions', key: 'actions', sortable: false }] : []),
 ]
 
@@ -633,7 +642,11 @@ const getApprovalStatusColor = approvalStatus => {
   }
 }
 
-const completedTasks = computed(() => getBucksTasks.value.filter(task => task.status.name === 'COMPLETED'))
+const pendingApprovalTasks = computed(() => getBucksTasks.value.filter(task => task.status.name === 'COMPLETED' && task.approval_status === 'pending'))
+const earnedTasks = computed(() => getBucksTasks.value.filter(task => task.status.name === 'COMPLETED' && task.approval_status === 'approved'))
+const rejectedTasks = computed(() => getBucksTasks.value.filter(task => task.status.name === 'COMPLETED' && task.approval_status === 'rejected'))
+
+// const completedTasks = computed(() => getBucksTasks.value.filter(task => task.status.name === 'COMPLETED'))
 const inProgressTasks = computed(() => getBucksTasks.value.filter(task => task.status.name === 'IN PROGRESS'))
 const pendingTasks = computed(() => getBucksTasks.value.filter(task => task.status.name === 'PENDING'))
 

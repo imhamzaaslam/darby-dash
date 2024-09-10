@@ -55,19 +55,6 @@
                 />
               </VCol>
               <VCol
-                v-if="showTemplateField"
-                cols="12"
-              >
-                <AppAutocomplete
-                  v-model="newProjectDetails.template_id"
-                  label="Template"
-                  placeholder="Select Template"
-                  :items="props.getTemplates"
-                  item-title="name"
-                  item-value="id"
-                />
-              </VCol>
-              <VCol
                 md="6"
                 cols="12"
               >
@@ -103,6 +90,19 @@
                   :options="props.getStaffList"
                   class="bg-background multiselect-purple"
                   style="color: #000 !important;"
+                />
+              </VCol>
+              <VCol
+                v-if="showTemplateField"
+                cols="12"
+              >
+                <AppAutocomplete
+                  v-model="newProjectDetails.template_id"
+                  label="Choose From Templates"
+                  placeholder="Select Template"
+                  :items="props.getTemplates"
+                  item-title="name"
+                  item-value="id"
                 />
               </VCol>
               <VCol
