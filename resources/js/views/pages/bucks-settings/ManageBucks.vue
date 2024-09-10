@@ -39,12 +39,13 @@
           <template #item.name="{ item }">
             <span class="text-sm text-truncate mb-0">
               {{ item.name }}
-              <VBtn
+              <VChip
+                :label="false"
+                color="primary"
                 size="x-small"
-                color="error"
               >
                 #{{ item.id }}
-              </VBtn>
+              </VChip>
             </span>
           </template>
           <template #item.status="{ item }">
@@ -159,12 +160,13 @@
           <template #item.name="{ item }">
             <span class="text-sm text-truncate mb-0">
               {{ item.name }}
-              <VBtn
+              <VChip
+                :label="false"
+                color="primary"
                 size="x-small"
-                color="error"
               >
                 #{{ item.id }}
-              </VBtn>
+              </VChip>
             </span>
           </template>
           <template #item.status="{ item }">
@@ -279,12 +281,13 @@
           <template #item.name="{ item }">
             <span class="text-sm text-truncate mb-0">
               {{ item.name }}
-              <VBtn
+              <VChip
+                :label="false"
+                color="primary"
                 size="x-small"
-                color="error"
               >
                 #{{ item.id }}
-              </VBtn>
+              </VChip>
             </span>
           </template>
           <template #item.status="{ item }">

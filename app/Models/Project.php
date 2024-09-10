@@ -114,7 +114,9 @@ class Project extends Base
     public function totalEstimatedHoursAndMinutest()
     {
         $totalMinutes = $this->tasks->sum('est_time');
-        return floor($totalMinutes / 60) . 'h ' . ($totalMinutes % 60) . 'm';
+        $hours = floor($totalMinutes / 60);
+        $minutes = $totalMinutes % 60;
+        return $minutes > 0 ? "{$hours}h {$minutes}m" : "{$hours}h";
     }
 
     function scopeFiltered(Builder $query, ?string $keyword, ?string $projectTypeId, ?string $projectManagerId): Builder
