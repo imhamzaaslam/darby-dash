@@ -47,12 +47,21 @@ class TemplateRepository  extends AbstractEloquentRepository implements Template
                 'name' => $list->name,
             ]);
 
-            foreach ($list->allTasks as $task) {
-                $templateList->templateListTasks()->create([
+            foreach ($list->tasks as $task) {
+                $templateTask = $templateList->templateListTasks()->create([
                     'template_list_id' => $templateList->id,
                     'name' => $task->name,
-                    'parent_id' => $task->parent_id,
                 ]);
+
+                if ($task->subtasks) {
+                    foreach ($task->subtasks as $subtask) {
+                        $templateList->templateListTasks()->create([
+                            'template_list_id' => $templateList->id,
+                            'name' => $subtask->name,
+                            'parent_id' => $templateTask->id,
+                        ]);
+                    }
+                }
             }
         }
 
@@ -68,13 +77,23 @@ class TemplateRepository  extends AbstractEloquentRepository implements Template
                 ]);
 
                 if ($templateList->templateListTasks->isNotEmpty()) {
-                    foreach ($templateList->templateListTasks as $templateListTask) {
-                        $projectList->allTasks()->create([
+                    foreach ($templateList->templateListParentTasks as $templateListTask) {
+                        $projectTask = $projectList->tasks()->create([
                             'name' => $templateListTask->name,
                             'project_id' => $project->id,
                             'list_id' => $projectList->id,
-                            'parent_id' => $templateListTask->parent_id,
                         ]);
+
+                        if ($templateListTask->subtasks) {
+                            foreach ($templateListTask->subtasks as $subtask) {
+                                $projectList->allTasks()->create([
+                                    'name' => $subtask->name,
+                                    'list_id' => $projectList->id,
+                                    'project_id' => $project->id,
+                                    'parent_id' => $projectTask->id,
+                                ]);
+                            }
+                        }
                     }
                 }
             }

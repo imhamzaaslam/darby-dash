@@ -18,4 +18,9 @@ class TemplateListTask extends Base
     {
         return $this->belongsTo(TemplateList::class);
     }
+
+    public function subtasks()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
 }
