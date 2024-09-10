@@ -7,8 +7,6 @@ use App\Contracts\TemplateRepositoryInterface;
 use App\Models\Base;
 use App\Models\Project;
 use App\Models\Template;
-use App\Models\TemplateList;
-use App\Models\TemplateListTask;
 
 class TemplateRepository  extends AbstractEloquentRepository implements TemplateRepositoryInterface
 {

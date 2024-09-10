@@ -27,7 +27,7 @@
           <VIcon
           icon="tabler-filter"
           class="bg-primary ms-1 me-2"
-          /> 
+          />
         -->
         <div class="ms-2 d-flex justify-center align-center">
           <VAvatar
@@ -60,6 +60,13 @@
         />
 
         <!-- Button and Dialog -->
+        <VBtn
+          class="me-3"
+          @click="isSaveTemplateModalOpen = true"
+        >
+          <VIcon icon="tabler-device-floppy" />
+          Save as Template
+        </VBtn>
         <VDialog
           v-model="isAddListDialogVisible"
           persistent
@@ -135,7 +142,7 @@
           :key="index"
           :class="`px-4 py-4 mt-2 ${expandedRows[index] ? '' : 'list-side-border'}`"
         >
-          <VRow 
+          <VRow
             class="cursor-pointer"
             @click="toggleRow(index)"
           >
@@ -438,7 +445,7 @@
                           </VListItem>
                         </template>
                         <template v-else>
-                          <div 
+                          <div
                             v-if="usersLoading"
                             class="members-loading"
                           >
@@ -814,7 +821,7 @@
                             </VListItem>
                           </template>
                           <template v-else>
-                            <div 
+                            <div
                               v-if="usersLoading"
                               class="members-loading"
                             >
@@ -1554,6 +1561,10 @@
     :users-assigned-bucks="usersAssignedBucks"
     :get-load-status="getLoadStatus"
   />
+  <SaveTemplateModal
+    v-model:is-save-template-modal-open="isSaveTemplateModalOpen"
+    :selected-project="projectId"
+  />
 </template>
 
 <script setup="js">
@@ -1563,6 +1574,7 @@ import moment from 'moment'
 import Swal from 'sweetalert2'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-project-task-drawer.vue'
+import SaveTemplateModal from '@/pages/projects/web-designs/_partials/save-template-modal.vue'
 import { computed, onBeforeMount, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../../store/projects"
@@ -1594,6 +1606,8 @@ const viewType = ref('list')
 
 const editingTask = ref({})
 const isEditTaskDrawerOpen = ref(false)
+
+const isSaveTemplateModalOpen = ref(false)
 
 const isAddListDialogVisible = ref(false)
 const addListForm = ref()
@@ -2258,7 +2272,7 @@ const fetchMembers = async task => {
     }
 
     usersLoading.value = true
-    
+
     await userStore.fetchMembersForTask(projectId.value, task.uuid, searchUser.value)
     filteredUsers.value = userStore.getMembersForTask
   } catch (error) {
@@ -2270,7 +2284,7 @@ const fetchMembers = async task => {
 }
 
 const debouncedFilter = debounce(fetchMembers, 300)
-  
+
 const onMemberSearchInpt = task => {
   debouncedFilter(task)
 }
