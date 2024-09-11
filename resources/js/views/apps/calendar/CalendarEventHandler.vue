@@ -158,7 +158,10 @@ const dialogModelValueUpdate = val => {
       :title="event.id ? event.extendedProps.isTask ? 'Task Details' : 'Update Event' : 'Add Event'"
       @cancel="$emit('update:isDrawerOpen', false)"
     >
-      <template #beforeClose>
+      <template
+        v-if="event.id && !event.extendedProps.isTask"
+        #beforeClose
+      >
         <IconBtn
           v-show="event.id"
           color="error"
