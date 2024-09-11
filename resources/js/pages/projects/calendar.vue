@@ -158,6 +158,7 @@ const setCalendarEvents = async () => {
       extendedProps: {
         description: task.description,
         guests: task.guests || [],
+        isTask: true,
       },
     })),
     ...calendarEvents.map(event => ({
@@ -170,6 +171,7 @@ const setCalendarEvents = async () => {
       extendedProps: {
         description: event.description,
         guests: event.guests || [],
+        isTask: false,
       },
     })),
   ]

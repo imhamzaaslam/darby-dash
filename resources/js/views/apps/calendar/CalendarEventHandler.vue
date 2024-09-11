@@ -44,6 +44,8 @@ const refForm = ref()
 // 👉 Event
 const event = ref(JSON.parse(JSON.stringify(props.event)))
 
+console.log('This is event', event)
+
 const resetEvent = () => {
   event.value = JSON.parse(JSON.stringify(props.event))
   nextTick(() => {
@@ -153,7 +155,7 @@ const dialogModelValueUpdate = val => {
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      :title="event.id ? 'Update Event' : 'Add Event'"
+      :title="event.id ? event.extendedProps.isTask ? 'Task Details' : 'Update Event' : 'Add Event'"
       @cancel="$emit('update:isDrawerOpen', false)"
     >
       <template #beforeClose>
@@ -185,7 +187,9 @@ const dialogModelValueUpdate = val => {
                   v-model="event.title"
                   autofocus
                   label="Title"
+                  :disabled="event.id && event.extendedProps.isTask"
                   placeholder="Meeting with Jane"
+                  :class="{ 'cursor-not-allowed': event.id && event.extendedProps.isTask }"
                   :rules="[requiredValidator]"
                 />
               </VCol>
@@ -196,6 +200,7 @@ const dialogModelValueUpdate = val => {
                   :key="JSON.stringify(startDateTimePickerConfig)"
                   v-model="event.start"
                   :rules="[requiredValidator]"
+                  :disabled="event.id && event.extendedProps.isTask"
                   label="Start date"
                   placeholder="Select Date"
                   :config="startDateTimePickerConfig"
@@ -209,12 +214,16 @@ const dialogModelValueUpdate = val => {
                   v-model="event.end"
                   label="Due date"
                   placeholder="Select Date"
+                  :disabled="event.id && event.extendedProps.isTask"
                   :config="endDateTimePickerConfig"
                 />
               </VCol>
 
               <!-- 👉 Event URL -->
-              <VCol cols="12">
+              <VCol
+                v-if="event.id && !event.extendedProps.isTask"
+                cols="12"
+              >
                 <AppTextField
                   v-model="event.url"
                   label="Event URL"
@@ -225,7 +234,10 @@ const dialogModelValueUpdate = val => {
               </VCol>
 
               <!-- 👉 Guests -->
-              <VCol cols="12">
+              <VCol
+                v-if="event.id && !event.extendedProps.isTask"
+                cols="12"
+              >
                 <AppSelect
                   v-model="event.extendedProps.guests"
                   label="Members"
@@ -240,7 +252,10 @@ const dialogModelValueUpdate = val => {
               </VCol>
 
               <!-- 👉 Description -->
-              <VCol cols="12">
+              <VCol
+                v-if="event.id && !event.extendedProps.isTask"
+                cols="12"
+              >
                 <AppTextarea
                   v-model="event.extendedProps.description"
                   label="Description"
@@ -249,7 +264,10 @@ const dialogModelValueUpdate = val => {
               </VCol>
 
               <!-- 👉 Form buttons -->
-              <VCol cols="12">
+              <VCol
+                v-if="event.id && !event.extendedProps.isTask"
+                cols="12"
+              >
                 <VBtn
                   type="submit"
                   class="me-3"
@@ -283,3 +301,4 @@ const dialogModelValueUpdate = val => {
     </PerfectScrollbar>
   </VNavigationDrawer>
 </template>
+

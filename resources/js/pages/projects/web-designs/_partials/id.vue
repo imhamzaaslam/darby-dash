@@ -360,7 +360,7 @@
             </RouterLink>
           </div>
           <div
-            v-if="project?.upcoming_events.length < 2"
+            v-if="project?.upcoming_events.length < 2 && project?.upcoming_events.length > 0"
             class="text-center py-10"
           >
             <RouterLink :to="`/projects/${projectUuid}/calendar`">
@@ -693,7 +693,7 @@ const formatDate = date => moment(date).format('MM/DD/YYYY')
 const getDaysLeft = date => {
   const today = moment()
   const eventDate = moment(date)
-  
+
   return eventDate.diff(today, 'days')
 }
 

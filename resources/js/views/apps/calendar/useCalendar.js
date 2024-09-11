@@ -14,6 +14,7 @@ export const blankEvent = {
     guests: [],
     description: null,
     uuid: '',
+    isTask: false,
   },
 }
 export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpen, projectUuid) => {
@@ -28,7 +29,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
 
   // ℹ️ Extract event data from event API
   const extractEventDataFromEventApi = eventApi => {
-    const { id, title, start, end, url, extendedProps: { guests, description, uuid } } = eventApi
+    const { id, title, start, end, url, extendedProps: { guests, description, uuid, isTask } } = eventApi
 
     return {
       id,
@@ -41,6 +42,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
         guests,
         description,
         uuid,
+        isTask,
       },
     }
   }
@@ -64,6 +66,7 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
           end: e.end_date ? new Date(e.end_date) : null,
           uuid: e.uuid,
           url: e.url,
+          isTask: e.isTask,
         })))
       })
       .catch(e => {
@@ -165,9 +168,10 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
         `bg-light-primary text-primary`,
       ]
     },
-    eventClick({ event: clickedEvent }) {
+    eventClick({ event: clickedEvent, jsEvent }) {
       // * Only grab required field otherwise it goes in infinity loop
       // ! Always grab all fields rendered by form (even if it get `undefined`) otherwise due to Vue3/Composition API you might get: "object is not extensible"
+      jsEvent.preventDefault()
       event.value = extractEventDataFromEventApi(clickedEvent)
       isEventHandlerSidebarActive.value = true
     },
