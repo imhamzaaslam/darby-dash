@@ -131,29 +131,31 @@
           <div class="text-body-1 text-center d-flex align-center mb-4">
             <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
           </div>
-          <!-- <div class="text-body-1 text-center d-flex align-center justify-center">
+          <!--
+            <div class="text-body-1 text-center d-flex align-center justify-center">
             Project Launch Date
             <VIcon
-              class="tabler-info-circle ms-1"
-              color="primary"
+            class="tabler-info-circle ms-1"
+            color="primary"
             />
             <VTooltip
-              activator="parent"
-              location="top"
+            activator="parent"
+            location="top"
             >
-              <span class="text-xs">Based on pending & inprogress tasks</span>
+            <span class="text-xs">Based on pending & inprogress tasks</span>
             </VTooltip>
-          </div>
-          <div class="mb-2 mt-2 text-center">
+            </div>
+            <div class="mb-2 mt-2 text-center">
             <h5 class="text-h3 mb-3 font-weight-medium">
-              {{ projectProgress.launchingTime }}
+            {{ projectProgress.launchingTime }}
             </h5>
-          </div>
-          <div class="text-center text-h6 mb-2 font-weight-medium">
+            </div>
+            <div class="text-center text-h6 mb-2 font-weight-medium">
             <small>
-              {{ projectProgress.launchingDate }}
+            {{ projectProgress.launchingDate }}
             </small>
-          </div> -->
+            </div>
+          -->
         </VCardText>
       </VCard>
     </VCol>
@@ -376,63 +378,65 @@
         </VCardText>
       </VCard>
     </VCol>
-    <!-- <VCol cols="6">
+    <!--
+      <VCol cols="6">
       <VCard style="height: 320px;">
-        <VCardItem title="Upcoming Event">
-          <template #append>
-            <MoreBtn />
-          </template>
-        </VCardItem>
-        <VCardText>
-          <div>
-            <div
-              v-if="project?.upcoming_events.length > 0"
-              class="d-flex mx-12 my-8 flex-wrap"
-              :class="project?.upcoming_events.length > 1 ? 'justify-space-between' : 'justify-center'"
-            >
-              <div
-                v-for="(event, index) in project?.upcoming_events"
-                :key="index"
-                class="mx-7"
-              >
-                <div class="text-center">
-                  <VIcon
-                    icon="tabler-clock"
-                    size="55"
-                    color="primary"
-                  />
-                </div>
-                <div>
-                  <h6 class="text-h5 text-high-emphasis">
-                    {{ event.name }}
-                  </h6>
-                  <div class="text-sm text-center mt-1">
-                    {{ formatDate(event.start_date) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              v-else
-              class="text-center py-10"
-            >
-              <p class="text-body-2 text-high-emphasis">
-                No upcoming events for this project.
-              </p>
-              <RouterLink :to="`/projects/${projectUuid}/calendar`">
-                <VBtn
-                  size="small"
-                  rounded="pill"
-                  color="primary"
-                >
-                  Add Event
-                </VBtn>
-              </RouterLink>
-            </div>
-          </div>
-        </VCardText>
+      <VCardItem title="Upcoming Event">
+      <template #append>
+      <MoreBtn />
+      </template>
+      </VCardItem>
+      <VCardText>
+      <div>
+      <div
+      v-if="project?.upcoming_events.length > 0"
+      class="d-flex mx-12 my-8 flex-wrap"
+      :class="project?.upcoming_events.length > 1 ? 'justify-space-between' : 'justify-center'"
+      >
+      <div
+      v-for="(event, index) in project?.upcoming_events"
+      :key="index"
+      class="mx-7"
+      >
+      <div class="text-center">
+      <VIcon
+      icon="tabler-clock"
+      size="55"
+      color="primary"
+      />
+      </div>
+      <div>
+      <h6 class="text-h5 text-high-emphasis">
+      {{ event.name }}
+      </h6>
+      <div class="text-sm text-center mt-1">
+      {{ formatDate(event.start_date) }}
+      </div>
+      </div>
+      </div>
+      </div>
+      <div
+      v-else
+      class="text-center py-10"
+      >
+      <p class="text-body-2 text-high-emphasis">
+      No upcoming events for this project.
+      </p>
+      <RouterLink :to="`/projects/${projectUuid}/calendar`">
+      <VBtn
+      size="small"
+      rounded="pill"
+      color="primary"
+      >
+      Add Event
+      </VBtn>
+      </RouterLink>
+      </div>
+      </div>
+      </VCardText>
       </VCard>
-    </VCol> -->
+      </VCol>
+    -->
     <VCol cols="6">
       <VCard>
         <VCardItem>
@@ -528,57 +532,96 @@
       <VCard style="height: 295px;">
         <!-- // check if project_manager is not null/ -->
         <template v-if="project?.project_manager">
-          <VCardItem title="Meet with PM">
+          <VCardItem title="Your Project Manager">
             <template #append>
               <MoreBtn />
             </template>
           </VCardItem>
           <VCardText>
             <VRow>
-              <VCol cols="6">
+              <VCol cols="4">
                 <div
                   v-if="project?.project_manager?.info?.avatar"
-                  class="d-flex justify-center  align-start pb-0 px-3 pt-3 mb-3"
+                  class="d-flex justify-center align-start pb-0 pt-2 mb-3"
                 >
-                  <VImg
-                    :src="getImageUrl(project?.project_manager?.info?.avatar.path)"
-                    width="145"
-                    height="140"
-                  />
+                  <VAvatar
+                    :size="140"
+                    class="elevation-1"
+                  >
+                    <VImg
+                      :src="getImageUrl(project?.project_manager?.info?.avatar.path)"
+                      alt="Project Manager Avatar"
+                    />
+                  </VAvatar>
                 </div>
                 <div
                   v-else
-                  class="d-flex justify-center align-center pb-0 px-3 bg-light-primary rounded"
-                  style="height: 140px;"
+                  class="d-flex justify-start align-center pb-0"
                 >
-                  <h6 class="text-h1 text-primary">
-                    {{ avatarText(project?.project_manager?.name_first + ' . ' + project?.project_manager?.name_last) }}
-                  </h6>
+                  <VAvatar
+                    :size="140"
+                    color="light-primary"
+                    class="elevation-1"
+                  >
+                    <span class="text-h1 text-primary">
+                      {{ avatarText(project?.project_manager?.name_first + ' . ' + project?.project_manager?.name_last) }}
+                    </span>
+                  </VAvatar>
                 </div>
               </VCol>
-
-              <VCol cols="6">
+              <VCol cols="8">
                 <div>
                   <div class="d-flex justify-space-between my-2 flex-wrap">
-                    <div class="d-flex gap-x-3 align-center">
+                    <div class="d-flex align-center">
                       <div>
-                        <h6 class="text-h5 text-high-emphasis">
+                        <h6 class="text-h5 text-high-emphasis d-inline-flex align-items-center">
                           {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }}
+                          <VBadge
+                            dot
+                            color="success"
+                            class="ms-3 mt-2"
+                          />
                         </h6>
                         <div class="text-sm text-high-emphasis">
-                          {{ project?.project_manager?.email }}
+                          <VIcon
+                            class="me-1 text-primary"
+                            icon="tabler-phone"
+                          />
+                          {{ project?.project_manager?.info?.phone }}
+                        </div>
+                        <div class="text-sm text-high-emphasis mt-1">
+                          <VIcon
+                            class="me-1 text-primary"
+                            icon="tabler-calendar"
+                          />
+                          <RouterLink
+                            class="text-high-emphasis"
+                            :to="`/projects/${projectUuid}/calendar`"
+                          >
+                            <span class="text-decoration-underline ">Schedule A Meeting</span>
+                          </RouterLink>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="my-5">
-                    <RouterLink :to="`/projects/${projectUuid}/calendar`">
+                  <div class="my-5 d-flex gap-3">
+                    <RouterLink :to="`/projects/${projectUuid}/chat`">
                       <VBtn
                         size="small"
                         rounded="pill"
                         color="primary"
                       >
-                        Schedule Meeting
+                        Start A Chat
+                      </VBtn>
+                    </RouterLink>
+
+                    <RouterLink :to="`/projects/${projectUuid}/chat`">
+                      <VBtn
+                        size="small"
+                        rounded="pill"
+                        color="primary"
+                      >
+                        Send A Message
                       </VBtn>
                     </RouterLink>
                   </div>
