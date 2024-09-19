@@ -34,10 +34,12 @@ class ProjectBucksController extends Controller
         $bucks = $this->projectBucksRepository->index($project);
         
         if($project->bucks_share_type === 'fixed') {
-            $remainingBucks = number_format($project->bucks_share - $bucks->sum('bucks_share'), 2);
+            $remainingBucks = formatToTwoDecimalPlaces($project->bucks_share - $bucks->sum('bucks_share'));
+            // $remainingBucks = number_format($project->bucks_share - $bucks->sum('bucks_share'), 2);
         } else {
             $bucks_share = $project->bucks_share * $project->budget_amount / 100;
-            $remainingBucks = number_format($bucks_share - $bucks->sum('bucks_share'), 2);
+            $remainingBucks = formatToTwoDecimalPlaces($bucks_share - $bucks->sum('bucks_share'));
+            // $remainingBucks = number_format($bucks_share - $bucks->sum('bucks_share'), 2);
         }
 
         $project = new ProjectResource($project);

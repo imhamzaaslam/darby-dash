@@ -159,3 +159,11 @@ if (!function_exists('isAdminOrManager')) {
         return auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Project Manager');
     }
 }
+
+if (!function_exists('formatToTwoDecimalPlaces')) {
+    function formatToTwoDecimalPlaces($value)
+    {
+        $floatValue = floatval($value);
+        return number_format($floatValue, 2, '.', '');
+    }
+}
