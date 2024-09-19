@@ -145,6 +145,7 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
             $task = $this->model->find($taskAssignee->task_id);
             $task->assignee = $taskAssignee->user;
             $task->approval_status = $taskAssignee->approval_status;
+            $task->comments = $taskAssignee->comments;
             $task->bucks_amount = number_format($taskAssignee->bucks_amount, 2);
             $tasks->push($task);
         }

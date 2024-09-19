@@ -539,7 +539,28 @@
                       offset-y
                     >
                       <template #activator="{ props }">
+                        <VBadge
+                          v-if="item.is_bucks_allowed && (!item.due_date || item.due_date == '')"
+                          dot
+                          color="primary"
+                        >
+                          <VChip
+                            class="cursor-pointer"
+                            style="background: #d7e3fb; color: #3f51b5; width: 115px;"
+                            size="small"
+                            v-bind="props"
+                          >
+                            <VIcon
+                              icon="tabler-calendar"
+                              class="me-1"
+                              left
+                            />
+                            <span v-if="item.due_date">{{ formatDate(item.due_date) }}</span>
+                            <span v-else><small>Set Due Date</small></span>
+                          </VChip>
+                        </VBadge>
                         <VChip
+                          v-else
                           class="cursor-pointer"
                           style="background: #d7e3fb; color: #3f51b5; width: 115px;"
                           size="small"
@@ -915,7 +936,28 @@
                         offset-y
                       >
                         <template #activator="{ props }">
+                          <VBadge
+                            v-if="subtask.is_bucks_allowed && (!subtask.due_date || subtask.due_date == '')"
+                            dot
+                            color="primary"
+                          >
+                            <VChip
+                              class="cursor-pointer"
+                              style="background: #d7e3fb; color: #3f51b5; width: 115px;"
+                              size="small"
+                              v-bind="props"
+                            >
+                              <VIcon
+                                icon="tabler-calendar"
+                                class="me-1"
+                                left
+                              />
+                              <span v-if="subtask.due_date">{{ formatDate(subtask.due_date) }}</span>
+                              <span v-else><small>Set Due Date</small></span>
+                            </VChip>
+                          </VBadge>
                           <VChip
+                            v-else
                             class="cursor-pointer"
                             style="background: #d7e3fb; color: #3f51b5; width: 115px;"
                             size="small"
