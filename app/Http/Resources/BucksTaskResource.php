@@ -41,6 +41,7 @@ class BucksTaskResource extends JsonResource
             'assignees_bucks' => $this->getAssigneesBucks(),
             'approval_status' => $this->approval_status,
             'bucks_amount' => $this->bucks_amount,
+            'comments' => $this->comments,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

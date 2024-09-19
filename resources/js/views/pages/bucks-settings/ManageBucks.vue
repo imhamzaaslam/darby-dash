@@ -10,8 +10,8 @@
         v-model="search"
         placeholder="Search Tasks"
         @input="onInput($event.target.value)"
-        /> 
-        </div> 
+        />
+        </div>
       -->
       <VTabs v-model="currentTab">
         <VTab>Pending Approval</VTab>
@@ -19,9 +19,9 @@
         <VTab>Rejected</VTab>
       </VTabs>
     </VCardText>
-  
+
     <VDivider />
-    <VWindow 
+    <VWindow
       v-model="currentTab"
       class="p-4"
     >
@@ -64,7 +64,7 @@
               <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
             </VChip>
           </template>
-          <template 
+          <template
             v-if="authStore.isAdmin || authStore.isManager"
             #item.assignee="{ item }"
           >
@@ -110,7 +110,7 @@
                   icon
                   size="x-small"
                   :disabled="approvalUpdating || item.approval_status == 'rejected' || item.status.name !== 'COMPLETED'"
-                  @click="rejectTask(item, item.assignee?.id)"
+                  @click="openLeaveCommentDialogue(item, item.assignee?.id)"
                 >
                   <VIcon
                     size="large"
@@ -125,7 +125,7 @@
                 </VTooltip>
               </span>
             </div>
-          </template>  
+          </template>
           <template #bottom>
             <VCardText class="pt-2">
               <div
@@ -188,7 +188,7 @@
               <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
             </VChip>
           </template>
-          <template 
+          <template
             v-if="authStore.isAdmin || authStore.isManager"
             #item.assignee="{ item }"
           >
@@ -234,7 +234,7 @@
                   icon
                   size="x-small"
                   :disabled="approvalUpdating || item.approval_status == 'rejected' || item.status.name !== 'COMPLETED'"
-                  @click="rejectTask(item, item.assignee?.id)"
+                  @click="openLeaveCommentDialogue(item, item.assignee?.id)"
                 >
                   <VIcon
                     size="large"
@@ -249,7 +249,7 @@
                 </VTooltip>
               </span>
             </div>
-          </template>  
+          </template>
           <template #bottom>
             <VCardText class="pt-2">
               <div
@@ -303,15 +303,40 @@
             <span class="text-sm text-truncate mb-0">${{ item.bucks_amount }}</span>
           </template>
           <template #item.approval="{ item }">
-            <VChip
-              :color="getApprovalStatusColor(item.approval_status)"
-              text-color="white"
-              class="me-2"
-              size="small"
-            >
-              <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
-            </VChip>
+            <div class="d-flex align-items-center">
+              <VChip
+                :color="getApprovalStatusColor(item.approval_status)"
+                text-color="white"
+                class="me-2"
+                size="small"
+              >
+                <span class="text-sm text-truncate mb-0 text-uppercase">{{ item.approval_status }}</span>
+              </VChip>
+              <div
+                v-if="item.comments && item.approval_status === 'rejected'"
+                class="d-flex align-items-center"
+              >
+                <VBadge color="error">
+                  <template #badge>
+                    <VTooltip
+                      :model-value="isTooltipVisible"
+                      location="top"
+                      style="width: auto; max-width: 80%;"
+                    >
+                      <template #activator="{ props }">
+                        <VIcon
+                          v-bind="props"
+                          icon="tabler-alert-circle-filled"
+                        />
+                      </template>
+                      <span>{{ item.comments }}</span>
+                    </VTooltip>
+                  </template>
+                </VBadge>
+              </div>
+            </div>
           </template>
+
           <template
             v-if="authStore.isAdmin || authStore.isManager"
             #item.assignee="{ item }"
@@ -358,7 +383,7 @@
                   icon
                   size="x-small"
                   :disabled="approvalUpdating || item.approval_status == 'rejected' || item.status.name !== 'COMPLETED'"
-                  @click="rejectTask(item, item.assignee?.id)"
+                  @click="openLeaveCommentDialogue(item, item.assignee?.id)"
                 >
                   <VIcon
                     size="large"
@@ -373,7 +398,7 @@
                 </VTooltip>
               </span>
             </div>
-          </template>  
+          </template>
           <template #bottom>
             <VCardText class="pt-2">
               <div
@@ -486,7 +511,7 @@
       </VTooltip>
       </span>
       </div>
-      </template>  
+      </template>
       <template #bottom>
       <VCardText class="pt-2">
       <div
@@ -508,11 +533,63 @@
       @update:page="handlePageChange"
       />
       </template>
-      </VDataTable> 
+      </VDataTable>
     -->
   </VCard>
+
+  <!-- Reason for Rejection of Task Approval Dialogue -->
+  <VDialog
+    v-model="isLeaveCommentDialogue"
+    :width="$vuetify.display.smAndDown ? 'auto' : 600"
+  >
+    <!-- Dialog close btn -->
+    <DialogCloseBtn @click="closeLeaveCommentDialogue" />
+
+    <VCard
+      title="Reason for Rejection"
+      class="pricing-dialog"
+    >
+      <VForm
+        ref="saveCommentForm"
+        @submit.prevent="rejectTask"
+      >
+        <VCardText>
+          <AppTextarea
+            v-model="comment"
+            label="Reason *"
+            rows="3"
+            autofocus
+            multiline
+            :rules="[requiredValidator]"
+          />
+        </VCardText>
+        <VCardText class="d-flex justify-end gap-3 flex-wrap">
+          <VBtn
+            color="secondary"
+            @click="closeLeaveCommentDialogue"
+          >
+            Cancel
+          </VBtn>
+          <VBtn
+            :disabled="loadStatus === 1"
+            type="submit"
+            @click="saveCommentForm?.validate()"
+          >
+            <VProgressCircular
+              v-if="loadStatus === 1"
+              indeterminate
+              size="16"
+              color="white"
+            />
+            <span v-if="loadStatus === 1">Processing...</span>
+            <span v-else>Reject</span>
+          </VBtn>
+        </VCardText>
+      </vform>
+    </VCard>
+  </VDialog>
 </template>
-  
+
 <script setup>
 import { ref } from 'vue'
 import Loader from '@/components/Loader.vue'
@@ -520,19 +597,25 @@ import { useProjectBucksStore } from "@/store/project_bucks"
 import { useAuthStore } from "@/store/auth"
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
-import { debounce } from 'lodash'
-  
+import { debounce, reject } from 'lodash'
+
 onBeforeMount(async () => {
   await fetchBucksTasks()
 })
-  
+
 const projectBucksStore = useProjectBucksStore()
 const authStore = useAuthStore()
 const route = useRoute()
 const toast = useToast()
 const projectUuid = route.params.id
 const approvalUpdating = ref(false)
-  
+const saveCommentForm = ref()
+const isLeaveCommentDialogue = ref(false)
+const comment = ref(null)
+const selectedUserId = ref(null)
+const selectedTask = ref(null)
+const isTooltipVisible = ref(false)
+
 const isLoading = ref(false)
 const search = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
@@ -552,36 +635,38 @@ const tabItemContent = 'Candy canes donut chupa chups candy canes lemon drops oa
 const fetchBucksTasks = async () => {
   await projectBucksStore.fetchBucksTasks(projectUuid)
 }
-  
+
+const loadStatus = computed(() => projectBucksStore.getLoadStatus)
+
 const handlePageChange = async page => {
   options.value.page = page
   await fetchBucksTasks()
 }
-  
+
 const onFilter = async value => {
   options.value.page = 1
   search.value = value
   await fetchBucksTasks()
 }
-  
+
 const debouncedFilter = debounce(onFilter, 300)
-  
+
 const onInput = value => {
   debouncedFilter(value)
 }
-  
+
 const updateOptions = async updateOptions => {
   const sortKeyMap = {
     name: 'name',
     amount: 'amount',
     status: 'status',
   }
-  
+
   const sortByKey = updateOptions.sortBy[0]?.key
   if (sortByKey && sortKeyMap[sortByKey]) {
     options.value.orderBy = sortKeyMap[sortByKey]
   }
-    
+
   options.value.order = updateOptions.sortBy[0]?.order
   await fetchBucksTasks()
 }
@@ -589,12 +674,12 @@ const updateOptions = async updateOptions => {
 const approveTask = async (task, userId) => {
   try {
     approvalUpdating.value = true
-    
+
     const payload = {
       approval_status: 'approved',
       user_id: userId,
     }
-    
+
     await projectBucksStore.updateTaskApproval(projectUuid, task.id, payload)
     if(getErrors.value) {
       toast.error('Something went wrong. Please try again later')
@@ -609,28 +694,48 @@ const approveTask = async (task, userId) => {
   }
 }
 
-const rejectTask = async (task, userId) => {
-  try {
-    approvalUpdating.value = true
-    
-    const payload = {
-      approval_status: 'rejected',
-      user_id: userId,
-    }
-    
-    await projectBucksStore.updateTaskApproval(projectUuid, task.id, payload)
-    if(getErrors.value) {
-      toast.error('Something went wrong. Please try again later')
-      approvalUpdating.value = false
-    } else {
-      toast.success('Task rejected successfully')
-      await fetchBucksTasks()
-      approvalUpdating.value = false
-    }
-  } catch (error) {
-    toast.error('Error rejecting task:', error)
-  }
+const openLeaveCommentDialogue = (task, userId) => {
+  isLeaveCommentDialogue.value = true
+  selectedTask.value = task
+  selectedUserId.value = userId
 }
+
+const closeLeaveCommentDialogue = () => {
+  isLeaveCommentDialogue.value = false
+  selectedTask.value = null
+  selectedUserId.value = null
+  comment.value = null
+}
+
+const rejectTask = async () => {
+  saveCommentForm.value?.validate().then(async ({ valid: isValid }) => {
+    if (isValid) {
+      approvalUpdating.value = true
+      try {
+        const payload = {
+          approval_status: 'rejected',
+          user_id: selectedUserId.value,
+          comments: comment.value || null,
+        }
+
+        await projectBucksStore.updateTaskApproval(projectUuid, selectedTask.value.id, payload)
+
+        if (getErrors.value) {
+          toast.error('Something went wrong. Please try again later')
+        } else {
+          toast.success('Task rejected successfully')
+          closeLeaveCommentDialogue()
+          await fetchBucksTasks()
+        }
+      } catch (error) {
+        toast.error(`Error rejecting task: ${error.message || error}`)
+      } finally {
+        approvalUpdating.value = false
+      }
+    }
+  })
+}
+
 
 const getApprovalStatusColor = approvalStatus => {
   if (approvalStatus === 'approved') {
@@ -653,24 +758,23 @@ const pendingTasks = computed(() => getBucksTasks.value.filter(task => task.stat
 const getBucksTasks = computed(() => {
   return projectBucksStore.getBucksTasks
 })
-  
+
 const getErrors = computed(() => {
   return projectBucksStore.getErrors
 })
-  
+
 // const getStatusCode = computed(() => {
 //   return projectBucksStore.getStatusCode
 // })
-  
+
 // const getLoadStatus = computed(() => {
 //   return projectBucksStore.getLoadStatus
 // })
 </script>
-  
+
   <style scoped>
-  .table-wrapper {
-      inline-size: auto;
-      overflow-x: auto;
-  }
+    .table-wrapper {
+    inline-size: auto;
+    overflow-x: auto;
+    }
   </style>
-  

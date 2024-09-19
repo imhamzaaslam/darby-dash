@@ -20,8 +20,9 @@ class TaskAssignee extends Base
         'display_order',
         'bucks_amount',
         'approval_status',
+        'comments',
     ];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
