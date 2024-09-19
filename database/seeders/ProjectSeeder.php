@@ -74,7 +74,7 @@ class ProjectSeeder extends Seeder
         ];
 
         $lists = [
-            ['name' => 'Backlog', 'display_order' => 1],
+            ['name' => 'Project Kickoff', 'display_order' => 1],
         ];
 
         foreach ($projects as $projectData) {

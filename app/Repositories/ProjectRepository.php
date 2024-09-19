@@ -57,7 +57,7 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
     public function createBacklogList(Project $project): void
     {
         $lists = [
-            ['name' => 'Backlog', 'display_order' => 1],
+            ['name' => 'Project Kickoff', 'display_order' => 1],
         ];
 
         foreach ($lists as $list) {

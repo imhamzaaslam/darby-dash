@@ -159,7 +159,7 @@ const dialogModelValueUpdate = val => {
       @cancel="$emit('update:isDrawerOpen', false)"
     >
       <template
-        v-if="event.id && !event.extendedProps.isTask"
+        v-if="!event.extendedProps.isTask"
         #beforeClose
       >
         <IconBtn
@@ -190,9 +190,9 @@ const dialogModelValueUpdate = val => {
                   v-model="event.title"
                   autofocus
                   label="Title"
-                  :disabled="event.id && event.extendedProps.isTask"
+                  :disabled="event.extendedProps.isTask"
                   placeholder="Meeting with Jane"
-                  :class="{ 'cursor-not-allowed': event.id && event.extendedProps.isTask }"
+                  :class="{ 'cursor-not-allowed': event.extendedProps.isTask }"
                   :rules="[requiredValidator]"
                 />
               </VCol>
@@ -203,7 +203,7 @@ const dialogModelValueUpdate = val => {
                   :key="JSON.stringify(startDateTimePickerConfig)"
                   v-model="event.start"
                   :rules="[requiredValidator]"
-                  :disabled="event.id && event.extendedProps.isTask"
+                  :disabled="event.extendedProps.isTask"
                   label="Start date"
                   placeholder="Select Date"
                   :config="startDateTimePickerConfig"
@@ -224,7 +224,7 @@ const dialogModelValueUpdate = val => {
 
               <!-- 👉 Event URL -->
               <VCol
-                v-if="event.id && !event.extendedProps.isTask"
+                v-if="!event.extendedProps.isTask"
                 cols="12"
               >
                 <AppTextField
@@ -238,7 +238,7 @@ const dialogModelValueUpdate = val => {
 
               <!-- 👉 Guests -->
               <VCol
-                v-if="event.id && !event.extendedProps.isTask"
+                v-if="!event.extendedProps.isTask"
                 cols="12"
               >
                 <AppSelect
@@ -256,7 +256,7 @@ const dialogModelValueUpdate = val => {
 
               <!-- 👉 Description -->
               <VCol
-                v-if="event.id && !event.extendedProps.isTask"
+                v-if="!event.extendedProps.isTask"
                 cols="12"
               >
                 <AppTextarea
@@ -268,7 +268,7 @@ const dialogModelValueUpdate = val => {
 
               <!-- 👉 Form buttons -->
               <VCol
-                v-if="event.id && !event.extendedProps.isTask"
+                v-if="!event.extendedProps.isTask"
                 cols="12"
               >
                 <VBtn

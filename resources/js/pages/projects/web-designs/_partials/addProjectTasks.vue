@@ -539,28 +539,7 @@
                       offset-y
                     >
                       <template #activator="{ props }">
-                        <VBadge
-                          v-if="item.is_bucks_allowed && (!item.due_date || item.due_date == '')"
-                          dot
-                          color="primary"
-                        >
-                          <VChip
-                            class="cursor-pointer"
-                            style="background: #d7e3fb; color: #3f51b5; width: 115px;"
-                            size="small"
-                            v-bind="props"
-                          >
-                            <VIcon
-                              icon="tabler-calendar"
-                              class="me-1"
-                              left
-                            />
-                            <span v-if="item.due_date">{{ formatDate(item.due_date) }}</span>
-                            <span v-else><small>Set Due Date</small></span>
-                          </VChip>
-                        </VBadge>
                         <VChip
-                          v-else
                           class="cursor-pointer"
                           style="background: #d7e3fb; color: #3f51b5; width: 115px;"
                           size="small"
@@ -591,7 +570,28 @@
                       class="p-0"
                     >
                       <template #activator="{ props }">
+                        <VBadge
+                          v-if="item.is_bucks_allowed && (!item.est_time || item.est_time == '')"
+                          dot
+                          color="primary"
+                        >
+                          <VChip
+                            color="primary"
+                            size="small"
+                            v-bind="props"
+                            class="cursor-pointer"
+                            style="width: 110px;"
+                            @click="setInputTime(item)"
+                          >
+                            <VIcon
+                              size="x-small"
+                              class="tabler-clock me-1"
+                            />
+                            <small>{{ item.est_time || 'Set EST Time' }}</small>
+                          </VChip>
+                        </VBadge>
                         <VChip
+                          v-else
                           color="primary"
                           size="small"
                           v-bind="props"
@@ -936,28 +936,7 @@
                         offset-y
                       >
                         <template #activator="{ props }">
-                          <VBadge
-                            v-if="subtask.is_bucks_allowed && (!subtask.due_date || subtask.due_date == '')"
-                            dot
-                            color="primary"
-                          >
-                            <VChip
-                              class="cursor-pointer"
-                              style="background: #d7e3fb; color: #3f51b5; width: 115px;"
-                              size="small"
-                              v-bind="props"
-                            >
-                              <VIcon
-                                icon="tabler-calendar"
-                                class="me-1"
-                                left
-                              />
-                              <span v-if="subtask.due_date">{{ formatDate(subtask.due_date) }}</span>
-                              <span v-else><small>Set Due Date</small></span>
-                            </VChip>
-                          </VBadge>
                           <VChip
-                            v-else
                             class="cursor-pointer"
                             style="background: #d7e3fb; color: #3f51b5; width: 115px;"
                             size="small"
@@ -988,7 +967,28 @@
                         class="p-0"
                       >
                         <template #activator="{ props }">
+                          <VBadge
+                            v-if="subtask.is_bucks_allowed && (!subtask.est_time || subtask.est_time == '')"
+                            dot
+                            color="primary"
+                          >
+                            <VChip
+                              color="primary"
+                              size="small"
+                              v-bind="props"
+                              class="cursor-pointer"
+                              style="width: 110px;"
+                              @click="setInputTime(subtask)"
+                            >
+                              <VIcon
+                                size="x-small"
+                                class="tabler-clock me-1"
+                              />
+                              <small>{{ subtask.est_time || 'Set EST Time' }}</small>
+                            </VChip>
+                          </VBadge>
                           <VChip
+                            v-else
                             color="primary"
                             size="small"
                             v-bind="props"
