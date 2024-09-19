@@ -72,11 +72,13 @@ class ProjectBucksController extends Controller
         $bucks = $this->projectBucksRepository->index($project);        
         if($project->bucks_share_type === 'fixed') {
             $remainingBucks = $project->bucks_share - $bucks->sum('bucks_share') + $roleShare;
-            $remainingBucks = number_format($remainingBucks, 2);
+            $remainingBucks = formatToTwoDecimalPlaces($remainingBucks);
+            // $remainingBucks = number_format($remainingBucks, 2);
         } else {
             $bucks_share = $project->bucks_share * $project->budget_amount / 100;
             $remainingBucks = $bucks_share - $bucks->sum('bucks_share') + $roleShare;
-            $remainingBucks = number_format($remainingBucks, 2);
+            $remainingBucks = formatToTwoDecimalPlaces($remainingBucks);
+            // $remainingBucks = number_format($remainingBucks, 2);
         }
         
         // Step 3: Validate the shares field
