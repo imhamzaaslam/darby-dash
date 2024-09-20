@@ -128,16 +128,51 @@
       </div>
     </VCol>
   </VRow>
-  <VRow class="mt-5 pt-0 pb-0">
+  <VRow class="mt-5 pt-0 pb-0 align-center">
     <VCol
-      cols="12"
+      cols="6"
       class="pt-0 ps-4 pb-0"
     >
       <h3>
         Manage Tasks
       </h3>
     </VCol>
+
+    <VCol
+      cols="6"
+      class="d-flex justify-end align-center"
+    >
+      <VCol
+        cols="6"
+        class="d-flex justify-center align-items-center"
+      >
+        <div
+          class="text-center text-h6 mb-2"
+          style="position: absolute; top: 175px; right: 135px;"
+        >
+          <small>{{ project.total_tasks }}</small>
+        </div>
+
+        <div class="d-flex justify-between align-center w-100">
+          <div class="text-body-1 text-high-emphasis">
+            <small>{{ project.progress }}%</small>
+          </div>
+          <div class="flex-grow-1 mx-2">
+            <VProgressLinear
+              :height="6"
+              :model-value="project.progress"
+              color="primary"
+              rounded
+            />
+          </div>
+          <div class="text-body-1 text-high-emphasis">
+            <small>{{ project.completed_tasks }}</small>
+          </div>
+        </div>
+      </VCol>
+    </VCol>
   </VRow>
+
 
   <!-- List View -->
   <VRow
