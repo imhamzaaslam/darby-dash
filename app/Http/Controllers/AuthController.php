@@ -83,30 +83,38 @@ class AuthController extends Controller
 
     public function verify2FA(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'code' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'code' => 'required|string',
+            ]);
 
-        $user = User::where('email', $request->email)->firstOrFail();
-        $verificationExpiresAt = Carbon::parse($user->verification_expires_at);
-        if ($user->verification_code == $request->code && $verificationExpiresAt->gt(now())) {
-            $user->reset2FACode();
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->plainTextToken;
+            $user = User::where('email', $request->email)->firstOrFail();
+            $verificationExpiresAt = Carbon::parse($user->verification_expires_at);
+
+            if ($user->verification_code == $request->code && $verificationExpiresAt->gt(now())) {
+                $user->reset2FACode();
+                $tokenResult = $user->createToken('Personal Access Token');
+                $token = $tokenResult->plainTextToken;
+
+                return response()->json([
+                    'success' => true,
+                    'accessToken' => $token,
+                    'token_type' => 'Bearer',
+                    'user' => $user,
+                    'permissions' => $user->getAllPermissions()->pluck('name'),
+                ]);
+            }
 
             return response()->json([
-                'success' => true,
-                'accessToken' => $token,
-                'token_type' => 'Bearer',
-                'user' => $user,
-                'permissions' => $user->getAllPermissions()->pluck('name'),
+                'message' => 'Invalid or expired 2FA code',
+                'success' => false,
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred: ' . $e->getMessage(),
+                'success' => false,
+            ], 500);
         }
-
-        return response()->json([
-            'message' => 'Invalid or expired 2FA code',
-            'success' => false,
-        ]);
     }
 }
