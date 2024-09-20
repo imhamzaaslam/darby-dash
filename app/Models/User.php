@@ -134,6 +134,9 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         'email_verified_at',
         'password',
         'state',
+        'is_2fa',
+        'verification_code',
+        'verification_expires_at',
     ];
 
     /**
@@ -252,5 +255,19 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
             $orderBy = 'name_first';
         }
         return $query->orderBy($orderBy, $order);
+    }
+
+    public function generate2FACode()
+    {
+        $this->verification_code = rand(100000, 999999);
+        $this->verification_expires_at = Carbon::now()->addMinutes(15);
+        $this->save();
+    }
+
+    public function reset2FACode()
+    {
+        $this->verification_code = null;
+        $this->verification_expires_at = null;
+        $this->save();
     }
 }

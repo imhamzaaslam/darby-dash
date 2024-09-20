@@ -116,4 +116,9 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
     {
         return $user->fill(['password' => bcrypt($password)])->save();
     }
+
+    public function update2FA(User $user, bool $isEnable): bool
+    {
+        return $user->fill([ 'is_2fa' => $isEnable ])->save();
+    }
 }

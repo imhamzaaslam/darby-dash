@@ -36,9 +36,11 @@ Route::get('test', function () {
     return response()->json(['message' => 'Hello World!']);
 });
 
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
+    Route::post('verify-2fa-code', [AuthController::class, 'verify2FA']);
 
     Route::group(['middleware' => 'auth:sanctum'], function() {
       Route::post('logout', [AuthController::class, 'logout']);
@@ -68,6 +70,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::post('/avatar', [UsersController::class, 'updateImage']);
                 Route::delete('/', [UsersController::class, 'delete']);
                 Route::patch('/update-password', [UsersController::class, 'updatePassword']);
+                Route::patch('/update-2fa', [UsersController::class, 'update2FA']);
             });
             Route::get('/role/{role}', [UsersController::class, 'getByRole']);
         });

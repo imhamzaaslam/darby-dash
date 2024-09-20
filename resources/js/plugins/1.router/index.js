@@ -19,6 +19,8 @@ import AuthorizationError from '@/pages/errors/authorization-error.vue'
 import Roles from '@/pages/roles/index.vue'
 import BucksSetting from '@/pages/projects/bucks.vue'
 
+import TwoFactorAuth from '@/pages/TwoFactorAuth.vue'
+
 const requireAuth = () => {
   const authStore = useAuthStore()
 
@@ -167,6 +169,14 @@ const router = createRouter({
       },
     ),
     ...pages.map(route => recursiveLayouts(route)),
+    recursiveLayouts(
+      {
+        path: '/two-factor-auth/:email',
+        name: 'two-factor-auth',
+        component: TwoFactorAuth,
+        meta: { layout: 'blank' },
+      },
+    ),
   ],
 })
 

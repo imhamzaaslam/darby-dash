@@ -18,10 +18,13 @@ const routes = [
     icon: { icon: 'tabler-users' },
     to: { name: 'members-list' },
   },
-  isAdmin && {
-    title: 'Roles',
-    icon: { icon: 'tabler-shield-check' },
-    to: { name: 'roles-setting' },
+  isAdmin &&
+  {
+    title: 'Settings',
+    icon: { icon: 'tabler-settings' },
+    children: [
+      { title: 'Roles', to: 'roles-setting' },
+    ],
   },
 
   // {

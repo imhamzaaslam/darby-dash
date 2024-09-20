@@ -134,6 +134,12 @@ async function submit() {
         return
       }
 
+      if (res.data.requires_2fa) {
+        $router.push({ name: 'two-factor-auth', params: { email } })
+
+        return
+      }
+
       localStorage.setItem('user', JSON.stringify(res.data))
 
       $router.push('/')

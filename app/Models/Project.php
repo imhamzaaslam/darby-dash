@@ -97,7 +97,7 @@ class Project extends Base
     {
         return $this->hasMany(ProjectBucks::class);
     }
-    
+
     public function bucksEarnings(): float
     {
         $taskIds = $this->tasks->pluck('id');
@@ -105,12 +105,12 @@ class Project extends Base
         $amount = TaskAssignee::whereIn('task_id', $taskIds)->where('user_id', $authId)->where('approval_status', 'approved')->sum('bucks_amount');
         return $amount ? number_format($amount, 2) : '0.00';
     }
-    
+
     public function upcomingEvents()
     {
         return $this->calendarEvents()->whereDate('start_date', '>=', now())->orderBy('start_date', 'asc')->limit(3)->get();
     }
-    
+
     public function totalEstimatedHoursAndMinutest()
     {
         $totalMinutes = $this->tasks->sum('est_time');
@@ -142,5 +142,15 @@ class Project extends Base
     function scopeOrdered(Builder $query, string $orderBy = 'id', string $order = 'asc'): Builder
     {
         return $query->orderBy($orderBy, $order);
+    }
+
+    public function getTotalTasksAttribute()
+    {
+        return $this->tasks()->whereNull('parent_id')->count();
+    }
+
+    public function getCompletedTasksAttribute()
+    {
+        return $this->tasks()->where('status', 3)->whereNull('parent_id')->count();
     }
 }

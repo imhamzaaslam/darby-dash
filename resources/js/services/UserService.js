@@ -53,7 +53,7 @@ export default {
   getAllByProject(projectUuid) {
     return apiClient.get(`admin/projects/${projectUuid}/users/all`)
   },
-  
+
   getByProjects: async (
     page = 1,
     perPage = 10,
@@ -74,7 +74,7 @@ export default {
 
     return await apiClient.get(baseUrl + queryString)
   },
-  
+
   getUser(uuid) {
     return apiClient.get(`admin/users/${uuid}`)
   },
@@ -89,7 +89,7 @@ export default {
     if (user.avatar) {
       delete newUser.avatar
     }
-    
+
     return apiClient.patch(`admin/users/${user.uuid}`, newUser)
   },
 
@@ -119,5 +119,9 @@ export default {
 
   updatePassword: async (uuid, payload) => {
     return await apiClient.patch(`admin/users/${uuid}/update-password`, payload)
+  },
+
+  updateTwoFactor: async (uuid, payload) => {
+    return await apiClient.patch(`admin/users/${uuid}/update-2fa`, payload)
   },
 }

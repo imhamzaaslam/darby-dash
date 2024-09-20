@@ -91,6 +91,10 @@ export default {
     return authClient.post('/email/verification-notification', payload)
   },
 
+  verify2FACode: (email, code) => {
+    return authClient.post('/api/auth/verify-2fa-code', { email, code })
+  },
+
   updateUser: (uuid, payload) => {
     return authClient.patch(`/api/v1/users/${uuid}`, payload)
   },

@@ -122,9 +122,22 @@
                   <small>{{ project.project_type }}</small>
                 </div>
               </VCol>
-              <VCol cols="2">
-                <div class="d-flex align-center gap-3">
-                  <div class="flex-grow-1 mt-2">
+              <VCol
+                cols="2"
+                class="d-flex justify-center align-items-center"
+              >
+                <div
+                  class="text-center text-h6 mb-2"
+                  style="position: absolute; bottom: 30px; right: 245px;"
+                >
+                  <small>{{ project.total_tasks }}</small>
+                </div>
+
+                <div class="d-flex justify-between align-center w-100">
+                  <div class="text-body-1 text-high-emphasis">
+                    <small>{{ project.progress }}%</small>
+                  </div>
+                  <div class="flex-grow-1 mx-2">
                     <VProgressLinear
                       :height="6"
                       :model-value="project.progress"
@@ -132,11 +145,12 @@
                       rounded
                     />
                   </div>
-                  <div class="text-body-1 text-high-emphasis mt-2">
-                    {{ project.progress }}%
+                  <div class="text-body-1 text-high-emphasis">
+                    <small>{{ project.completed_tasks }}</small>
                   </div>
                 </div>
               </VCol>
+
               <VCol
                 cols="2"
                 class="d-flex justify-end"

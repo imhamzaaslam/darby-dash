@@ -28,4 +28,6 @@ interface UserRepositoryInterface
     public function getByRole(string $role): Collection;
 
     public function updatePassword(User $user, string $password): bool;
+
+    public function update2FA(User $user, bool $isEnable): bool;
 }

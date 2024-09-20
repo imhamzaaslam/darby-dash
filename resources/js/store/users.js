@@ -33,6 +33,7 @@ export const useUserStore = defineStore('users', {
         console.error('getUsers error ', error)
       }
     },
+
     // async getAll(page = 1, perPage = 10, search = null, orderBy = null, orderDirection = null) {
     //   this.error = null
     //   this.loadStatus = 1
@@ -55,6 +56,7 @@ export const useUserStore = defineStore('users', {
         const response = await UserService.getAllByProject(projectUuid)
 
         this.allUsersByProject = response.data.data
+
         // this.usersCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
@@ -141,7 +143,7 @@ export const useUserStore = defineStore('users', {
         this.projectManagers = response.data.data
 
         this.projectManagers = response.data.data.map(manager => ({ id: manager.id, name: manager.name_first+ " " + manager.name_last }))
-        
+
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -190,7 +192,7 @@ export const useUserStore = defineStore('users', {
         this.loadStatus = 3
         console.error('fetchMembersForTask error ', error)
       }
-    },  
+    },
     async updateUserImage(avatar, uuid) {
       this.error = null
       this.loadStatus = 1
@@ -215,6 +217,19 @@ export const useUserStore = defineStore('users', {
         this.error = error
         this.loadStatus = 3
         console.error('updatePassword error ', error)
+      }
+    },
+    async updateTwoFactor(uuid, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await UserService.updateTwoFactor(uuid, payload)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updateTwoFactor error ', error)
       }
     },
   },

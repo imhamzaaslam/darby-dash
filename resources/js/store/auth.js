@@ -72,6 +72,21 @@ export const useAuthStore = defineStore('auth', {
         console.error('getUser error ', error)
       }
     },
+    async verifyTwoFactorCode(email, code) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const res = await AuthService.verify2FACode(email, code)
+
+        this.loadStatus = 2
+
+        return res
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('verify 2fa code error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

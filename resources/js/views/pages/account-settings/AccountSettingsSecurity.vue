@@ -98,7 +98,7 @@
 
           <!-- 👉 Action Buttons -->
           <VCardText class="d-flex flex-wrap gap-4">
-            <VBtn 
+            <VBtn
               type="submit"
               :disabled="getLoadStatus === 1"
             >
@@ -121,8 +121,8 @@
     <!-- !SECTION -->
 
     <!-- SECTION Two-steps verification -->
-    <!-- <VCol cols="5">
-      <VCard title="Two-steps verification">
+    <VCol cols="5">
+      <VCard title="Two-Factor Authentication">
         <VCardText>
           <p>
             Two-factor authentication adds an additional layer of security to your account by
@@ -132,18 +132,17 @@
               class="text-decoration-none"
             >Learn more.</a>
           </p>
-
-          <VBtn @click="isOneTimePasswordDialogVisible = true">
-            Enable 2FA
-          </VBtn>
+          <VSwitch
+            v-model="enable2fa"
+            color="primary"
+            :true-value="1"
+            :false-value="0"
+            @change="handle2FaChange"
+          />
         </VCardText>
       </VCard>
-    </VCol> -->
+    </VCol>
   </VRow>
-
-  <!-- SECTION Enable One time password -->
-  <TwoFactorAuthDialog v-model:isDialogVisible="isOneTimePasswordDialogVisible" />
-  <!-- !SECTION -->
 </template>
 
 <script setup>
@@ -159,7 +158,7 @@ const currentPassword = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
 const passRefForm = ref(null)
-const isOneTimePasswordDialogVisible = ref(false)
+const enable2fa = ref(userStore.getUser?.is_2fa || false)
 
 const resetPassErrors = ref({
   current_password: null,
@@ -194,6 +193,19 @@ async function submit() {
       }
     }
   })
+}
+
+const handle2FaChange = async value => {
+  const uuid = userStore.getUser?.uuid
+
+  console.log('User details', userStore.getUser)
+
+  const payload = {
+    isEnable: value ? 1 : 0,
+  }
+
+  await userStore.updateTwoFactor(uuid, payload)
+  toast.success(value ? 'Two-Factor authentication enabled' : 'Two-Factor authentication disabled')
 }
 
 const showError = () => {

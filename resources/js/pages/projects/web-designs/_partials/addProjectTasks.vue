@@ -61,27 +61,36 @@
 
         <!-- Button and Dialog -->
         <VBtn
-          class="me-3"
-          @click="isSaveTemplateModalOpen = true"
+          icon
+          color="primary"
+          class="ma-2"
+          size="small"
+          rounded
+          @click.prevent
         >
-          <VIcon icon="tabler-device-floppy" />
-          Save as Template
+          <VIcon icon="tabler-dots" />
+          <VMenu activator="parent">
+            <VList>
+              <VListItem
+                value="add-list"
+                @click="isAddListDialogVisible = true"
+              >
+                Add List
+              </VListItem>
+              <VListItem
+                value="save-template"
+                @click="isSaveTemplateModalOpen = true"
+              >
+                Save as Template
+              </VListItem>
+            </VList>
+          </VMenu>
         </VBtn>
         <VDialog
           v-model="isAddListDialogVisible"
           persistent
           class="v-dialog-sm"
         >
-          <template #activator="{ props }">
-            <VBtn
-              class="me-3"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-plus" />
-              Add List
-            </VBtn>
-          </template>
-
           <!-- Dialog close btn -->
           <DialogCloseBtn @click="isAddListDialogVisible = !isAddListDialogVisible" />
 

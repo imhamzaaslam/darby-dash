@@ -248,4 +248,14 @@ class UsersController extends Controller
             'message' => 'Password updated successfully',
         ]);
     }
+
+    public function update2FA(Request $request, string $uuid): JsonResponse
+    {
+        $user = $this->userRepository->getByUuidOrFail($uuid);
+
+        $this->userRepository->update2FA($user, $request->isEnable);
+        return response()->json([
+            'message' => '2FA updated successfully',
+        ]);
+    }
 }
