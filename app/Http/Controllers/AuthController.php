@@ -88,10 +88,8 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'code' => 'required|string',
             ]);
-
             $user = User::where('email', $request->email)->firstOrFail();
             $verificationExpiresAt = Carbon::parse($user->verification_expires_at);
-
             if ($user->verification_code == $request->code && $verificationExpiresAt->gt(now())) {
                 $user->reset2FACode();
                 $tokenResult = $user->createToken('Personal Access Token');

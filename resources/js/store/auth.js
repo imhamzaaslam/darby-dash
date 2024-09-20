@@ -77,6 +77,15 @@ export const useAuthStore = defineStore('auth', {
       this.loadStatus = 1
       try {
         const res = await AuthService.verify2FACode(email, code)
+        if(res.data.success)
+        {
+          this.authenticated = true
+          this.token = res.data.accessToken
+
+          this.authUser = res.data
+
+          this.loginUserPermissions = res.data.permissions
+        }
 
         this.loadStatus = 2
 
