@@ -104,6 +104,8 @@ async function submit() {
   errorMessage.value = ''
   localStorage.setItem('user', JSON.stringify(res.data))
   $router.push('/')
+
+  /* console.log */
 }
 </script>
 
