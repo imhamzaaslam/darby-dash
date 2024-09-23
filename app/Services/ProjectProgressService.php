@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Project;
 use App\Models\MileStone;
+use App\Models\ProjectList;
 use Carbon\Carbon;
 
 class ProjectProgressService
@@ -41,6 +42,15 @@ class ProjectProgressService
             'overallProgress' => $this->getOverallProgress($project),
             'totalTasks' => $project->tasks->whereNull('parent_id')->count(),
         ];
+    }
+
+    public function getProjectListProgress(ProjectList $list): int
+    {
+        $totalTasks = $list->tasks->count();
+        $completedTasks = $list->tasks->where('status', 3)->count();
+        $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
+
+        return $progress;
     }
 
     public function getMileStoneProgress($uuid): array

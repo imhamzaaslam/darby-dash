@@ -19,6 +19,9 @@ class ProjectListResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'is_deletable' => $this->is_deletable,
+            'progress' => $this->progress(),
+            'total_tasks' => $this->total_tasks,
+            'completed_tasks' => $this->completed_tasks,
             'tasks' => TaskResource::collection($this->tasks),
         ];
     }

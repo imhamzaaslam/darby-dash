@@ -137,40 +137,6 @@
         Manage Tasks
       </h3>
     </VCol>
-
-    <VCol
-      cols="6"
-      class="d-flex justify-end align-center"
-    >
-      <VCol
-        cols="6"
-        class="d-flex justify-center align-items-center"
-      >
-        <div
-          class="text-center text-h6 mb-2"
-          style="position: absolute; top: 175px; right: 135px;"
-        >
-          <small>{{ project.total_tasks }}</small>
-        </div>
-
-        <div class="d-flex justify-between align-center w-100">
-          <div class="text-body-1 text-high-emphasis">
-            <small>{{ project.progress }}%</small>
-          </div>
-          <div class="flex-grow-1 mx-2">
-            <VProgressLinear
-              :height="6"
-              :model-value="project.progress"
-              color="primary"
-              rounded
-            />
-          </div>
-          <div class="text-body-1 text-high-emphasis">
-            <small>{{ project.completed_tasks }}</small>
-          </div>
-        </div>
-      </VCol>
-    </VCol>
   </VRow>
 
 
@@ -190,7 +156,7 @@
             class="cursor-pointer"
             @click="toggleRow(index)"
           >
-            <VCol cols="8">
+            <VCol cols="4">
               <h6 class="text-h6 text-high-emphasis d-flex align-center">
                 <VIcon
                   color="primary"
@@ -250,11 +216,44 @@
               cols="4"
               class="d-flex justify-end align-center"
             >
+              <VCol
+                cols="8"
+                class="d-flex justify-center align-items-center"
+              >
+                <div
+                  class="text-center text-h6 mb-2"
+                  style="position: absolute;top:15px;margin-left:20px;"
+                >
+                  <small>{{ list.total_tasks }}</small>
+                </div>
+
+                <div class="d-flex justify-between align-center w-100">
+                  <div class="text-body-1 text-high-emphasis">
+                    <small>{{ list.progress }}%</small>
+                  </div>
+                  <div class="flex-grow-1 mx-2">
+                    <VProgressLinear
+                      :height="6"
+                      :model-value="list.progress"
+                      color="primary"
+                      rounded
+                    />
+                  </div>
+                  <div class="text-body-1 text-high-emphasis">
+                    <small>{{ list.completed_tasks }}</small>
+                  </div>
+                </div>
+              </VCol>
+            </VCol>
+            <VCol
+              cols="4"
+              class="d-flex justify-end align-center"
+            >
               <AppTextField
                 v-model="searchQuery[index]"
                 placeholder="Search tasks"
                 clearable
-                style="width:85%"
+                style="width:100%"
                 class="me-2"
                 @click.stop
               />
@@ -2277,6 +2276,7 @@ const updateStatus = async (item, status) => {
     }
 
     await projectTaskStore.updateAttributes(item.uuid, payload)
+    await fetchProjectLists()
     toast.success('Task status updated successfully', { timeout: 1000 })
   } catch (error) {
     toast.error('Failed to update task status:', error)
