@@ -103,7 +103,7 @@
         >
           <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
             <VCard class="d-flex ps-4 py-1 list-side-border">
-              <VCol cols="4">
+              <VCol cols="3">
                 <div class="d-flex align-center gap-x-3">
                   <VAvatar
                     :size="34"
@@ -113,22 +113,30 @@
                     <h6 class="text-h6 text-no-wrap">
                       <span class="d-block">{{ project.title }}</span>
                     </h6>
+                    <VChip
+                      color="primary"
+                      size="x-small"
+                    >
+                      <span class="text-high-emphasis text-xs">
+                        {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
+                      </span>
+                    </VChip>
                   </div>
                 </div>
               </VCol>
-              <VCol cols="4">
+              <VCol cols="3">
                 <div class="d-flex flex-column ms-3">
                   <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
                   <small>{{ project.project_type }}</small>
                 </div>
               </VCol>
               <VCol
-                cols="2"
+                cols="3"
                 class="d-flex justify-center align-items-center"
               >
                 <div
                   class="text-center text-h6 mb-2"
-                  style="position: absolute; bottom: 30px; right: 245px;"
+                  style="position: absolute; bottom: 32px;"
                 >
                   <small>{{ project.total_tasks }}</small>
                 </div>
@@ -151,8 +159,15 @@
                 </div>
               </VCol>
 
+              <VCol cols="2">
+                <div class="d-flex flex-column ms-3">
+                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Created At</span>
+                  <small>{{ formatDate(project.created_at) }}</small>
+                </div>
+              </VCol>
+
               <VCol
-                cols="2"
+                cols="1"
                 class="d-flex justify-end"
               >
                 <IconBtn @click.prevent>
@@ -216,6 +231,14 @@
                         <h6 class="text-h6 text-no-wrap">
                           {{ project.title }}
                         </h6>
+                        <VChip
+                          color="primary"
+                          size="x-small"
+                        >
+                          <span class="text-high-emphasis text-xs">
+                            {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
+                          </span>
+                        </VChip>
                       </div>
                     </div>
                   </VCol>
@@ -262,6 +285,9 @@
                     <div class="d-flex flex-column ms-3">
                       <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
                       <small>{{ project.project_type }}</small>
+                    </div>
+                    <div class="d-flex flex-column ms-3">
+                      <small><span class="font-weight-bold text-high-emphasis text-xs text-truncate">Created At: {{ formatDate(project.created_at) }}</span></small>
                     </div>
                   </VCol>
                   <VCol cols="4">
@@ -342,6 +368,7 @@ import { useUserStore } from "../../../store/users"
 import { useAuthStore } from '@/store/auth'
 import { useTemplateStore } from '@/store/templates'
 import { useRoute } from 'vue-router'
+import moment from 'moment'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Projects` })
 onBeforeMount(async () => {
@@ -371,6 +398,8 @@ const editProjectDetails = ref({})
 const search = ref('')
 const selectedProjectManagerId = ref(null)
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
+
+const formatDate = date => moment(date).format('MM/DD/YYYY')
 
 const fetchProjects = async () => {
   try {
@@ -556,6 +585,12 @@ const getLoadStatus = computed(() => {
 const totalProjects = computed(() => {
   return projectStore.projectsCount
 })
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 
 watch(
   () => route.query.type,

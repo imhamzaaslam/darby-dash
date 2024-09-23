@@ -21,9 +21,13 @@ class ProjectListRepository extends AbstractEloquentRepository implements Projec
         parent::__construct($model);
     }
 
-    public function getProjectLists(Project $project): Collection
+    public function getProjectLists(Project $project, array $filters): Collection
     {
-        return $project->lists;
+        return $project->lists()->with(['tasks' => function ($query) use ($filters) {
+            if (!empty($filters)) {
+                $query->filter($filters);
+            }
+        }])->get();
     }
 
     public function create(array $attributes): ProjectList

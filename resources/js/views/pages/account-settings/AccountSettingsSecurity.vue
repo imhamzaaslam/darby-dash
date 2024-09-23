@@ -148,6 +148,7 @@
 <script setup>
 import { useUserStore } from "@/store/users"
 import { useToast } from "vue-toastification"
+import { onMounted } from 'vue'
 
 const userStore = useUserStore()
 const toast = useToast()
@@ -158,7 +159,7 @@ const currentPassword = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
 const passRefForm = ref(null)
-const enable2fa = ref(userStore.getUser?.is_2fa || false)
+const enable2fa = ref(0)
 
 const resetPassErrors = ref({
   current_password: null,
@@ -171,6 +172,11 @@ const passwordRequirements = [
   'At least one lowercase character',
   'Password and confirm password should match',
 ]
+
+onMounted(async () => {
+  await userStore.show(userStore.getUser?.uuid)
+  enable2fa.value = userStore.getUser?.is_2fa
+})
 
 async function submit() {
   passRefForm.value?.validate().then(async ({ valid: isValid }) => {
@@ -195,17 +201,15 @@ async function submit() {
   })
 }
 
-const handle2FaChange = async value => {
+const handle2FaChange = async () => {
   const uuid = userStore.getUser?.uuid
 
-  console.log('User details', userStore.getUser)
-
   const payload = {
-    isEnable: value ? 1 : 0,
+    isEnable: enable2fa.value,
   }
 
   await userStore.updateTwoFactor(uuid, payload)
-  toast.success(value ? 'Two-Factor authentication enabled' : 'Two-Factor authentication disabled')
+  toast.success(enable2fa.value ? 'Two-Factor authentication enabled' : 'Two-Factor authentication disabled')
 }
 
 const showError = () => {

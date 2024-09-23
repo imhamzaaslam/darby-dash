@@ -27,6 +27,7 @@ class UserResource extends JsonResource
             'role' => ucwords($this->getRoleNames()->first() ?? ''),
             'state' => $this->state,
             'phone' => $this->info->phone,
+            'is_2fa' => $this->is_2fa,
             'info' => [
                 'phone' => $this->info->phone,
                 'address' => $this->info->address,

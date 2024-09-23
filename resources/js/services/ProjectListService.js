@@ -1,8 +1,8 @@
 import { apiClient, generateQueryString } from './api'
 
 export default {
-  getProjectLists(projectId) {
-    return apiClient.get(`admin/projects/${projectId}/lists`)
+  getProjectLists(projectId, filters) {
+    return apiClient.post(`admin/projects/${projectId}/lists`, filters)
   },
   getWithoutMileStone(projectId) {
     return apiClient.get(`admin/projects/${projectId}/lists-without-milestone`)

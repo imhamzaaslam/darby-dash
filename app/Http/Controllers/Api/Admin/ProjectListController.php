@@ -24,12 +24,15 @@ class ProjectListController extends Controller
      * @param string $uuid
      * @return AnonymousResourceCollection
      */
-    public function index(string $uuid): AnonymousResourceCollection
+    public function index(string $uuid, Request $request):AnonymousResourceCollection
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
         $this->authorize('view', $project);
-        $projectLists  = $this->projectListRepository->getProjectLists($project);
-        
+        $filters = $request->only([
+            'searchQuery', 'assignees', 'statuses', 'createdAt', 'dueDate', 'sortBy', 'sortDirection'
+        ]);
+        $projectLists  = $this->projectListRepository->getProjectLists($project, $filters);
+
         return ProjectListResource::collection($projectLists);
     }
 

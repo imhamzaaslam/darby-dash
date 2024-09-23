@@ -33,12 +33,16 @@
           :class="{ 'bg-primary': viewType === 'grid' }"
           @click="viewType = 'grid'"
         />
-        <!--
-          <VIcon
+        <VIcon
           icon="tabler-filter"
-          class="bg-primary ms-1 me-2"
-          />
-        -->
+          class="bg-primary ms-2"
+          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+        />
+        <span
+          v-if="filtersApplied"
+          class="filter-indicator"
+          @click.stop="resetFilter"
+        >❌</span>
       </VBtnToggle>
     </VCol>
     <VCol
@@ -1646,6 +1650,13 @@
     :users-assigned-bucks="usersAssignedBucks"
     :get-load-status="getLoadStatus"
   />
+  <FilterTaskDrawer
+    v-model:is-filter-drawer-open="isFilterDrawerOpen"
+    :selected-project="projectId"
+    :assignees-list="assigneesList"
+    :get-load-status="getLoadStatus"
+    @apply-filters="fetchProjectLists"
+  />
   <SaveTemplateModal
     v-model:is-save-template-modal-open="isSaveTemplateModalOpen"
     :selected-project="projectId"
@@ -1659,6 +1670,7 @@ import moment from 'moment'
 import Swal from 'sweetalert2'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-project-task-drawer.vue'
+import FilterTaskDrawer from '@/pages/projects/web-designs/_partials/filter-task-drawer.vue'
 import SaveTemplateModal from '@/pages/projects/web-designs/_partials/save-template-modal.vue'
 import { computed, onBeforeMount, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
@@ -1691,6 +1703,8 @@ const viewType = ref('list')
 
 const editingTask = ref({})
 const isEditTaskDrawerOpen = ref(false)
+const isFilterDrawerOpen = ref(false)
+const filtersApplied = ref(false)
 
 const isSaveTemplateModalOpen = ref(false)
 
@@ -1762,6 +1776,7 @@ onBeforeMount(async () => {
   await fetchProjectLists()
   await fetchStatus()
   await fetchProjectDetails()
+  await fetchAsigneesUsers()
   isLoading.value = false
 
   const searchParams = new URLSearchParams(window.location.search)
@@ -1816,11 +1831,28 @@ const fetchProjectTasks = async () => {
   }
 }
 
-const fetchProjectLists = async () => {
+const fetchProjectLists = async (filters = {}) => {
   try {
-    await projectListStore.getAll(projectId.value)
+    await projectListStore.getAll(projectId.value, filters)
+    if(!Object.keys(filters).length === 0)
+    {
+      filtersApplied.value = true
+    }
   } catch (error) {
     toast.error('Error fetching project lists:', error)
+  }
+}
+
+const resetFilter = async () => {
+  filtersApplied.value = false
+  await fetchProjectLists()
+}
+
+const fetchAsigneesUsers = async () => {
+  try {
+    await userStore.getAllByProject(projectId.value)
+  } catch (error) {
+    toast.error('Error fetching assigneesList:', error)
   }
 }
 
@@ -2418,6 +2450,16 @@ const filteredProjectLists = computed(() => {
   })
 })
 
+const assigneesList = computed(() =>
+  userStore.getAllUsersByProjects.map(user => ({
+    id: user.id,
+    name: `${user.name_first} ${user.name_last}`,
+    avatar: user.avatar,
+    name_first: user.name_first,
+    name_last: user.name_last,
+  })),
+)
+
 watch(project, () => {
   useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title} - Tasks` })
 })
@@ -2537,5 +2579,8 @@ watch(project, () => {
 
 .time-field-list :deep(.v-text-field__suffix) {
   color: lightgray;
+}
+.filter-indicator{
+
 }
 </style>

@@ -12,11 +12,11 @@ export const useProjectListStore = defineStore('project_lists', {
   }),
   persist: true,
   actions: {
-    async getAll(projectId) {
+    async getAll(projectId, filters) {
       this.error = null
       this.loadStatus = 1
       try {
-        const response = await ProjectListService.getProjectLists(projectId)
+        const response = await ProjectListService.getProjectLists(projectId, filters)
 
         this.projectLists = response.data.data
         this.loadStatus = 2

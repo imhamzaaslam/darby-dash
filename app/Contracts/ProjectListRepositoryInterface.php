@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 interface ProjectListRepositoryInterface
 {
-    public function getProjectLists(Project $project): Collection;
+    public function getProjectLists(Project $project, array $filters): Collection;
 
     public function create(array $attributes): ProjectList;
 

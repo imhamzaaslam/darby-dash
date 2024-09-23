@@ -110,8 +110,8 @@ definePage({ meta: { layout: 'blank' } })
 useHead({ title: `${layoutConfig.app.title} | Login` })
 
 const form = ref({
-  email: 'eric@darby.com',
-  password: 'password',
+  email: '',
+  password: '',
   remember: false,
 })
 
