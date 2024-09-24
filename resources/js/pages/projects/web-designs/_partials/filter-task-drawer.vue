@@ -182,8 +182,8 @@ const filterDetails = ref({
   searchQuery: '',
   assignees: [],
   statuses: ['1'],
-  createdAt: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
-  dueDate: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
+  createdAt: null,
+  dueDate: null,
   estTimeFrom: null,
   estTimeTo: null,
   sortBy: 'created_at',
@@ -212,7 +212,6 @@ const sortDirections = ref([
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isFilterDrawerOpen', val)
-  resetFilters()
 }
 
 const filter = () => {
@@ -224,13 +223,13 @@ const resetFilters = () => {
   filterDetails.value = {
     searchQuery: '',
     assignees: [],
-    statuses: ['1'],
-    createdAt: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
-    dueDate: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
+    statuses: [],
+    createdAt: null,
+    dueDate: null,
     estTimeFrom: null,
     estTimeTo: null,
-    sortBy: 'created_at',
-    sortDirection: 'asc',
+    sortBy: null,
+    sortDirection: null,
   }
 }
 
