@@ -1700,6 +1700,7 @@ import { VIcon } from 'vuetify/lib/components/index.mjs'
 import { debounce } from 'lodash'
 import sketch from '@images/icons/project-icons/sketch.png'
 import Loader from "@/components/Loader.vue"
+import { truncate } from 'lodash'
 
 const toast = useToast()
 const vuetifyTheme = useTheme()
@@ -2465,15 +2466,25 @@ const filteredProjectLists = computed(() => {
   })
 })
 
-const assigneesList = computed(() =>
-  userStore.getAllUsersByProjects.map(user => ({
-    id: user.id,
-    name: `${user.name_first} ${user.name_last}`,
-    avatar: user.avatar,
-    name_first: user.name_first,
-    name_last: user.name_last,
-  })),
-)
+const assigneesList = computed(() => {
+  const uniqueUsers = {}
+
+  return userStore.getAllUsersByProjects.reduce((acc, user) => {
+    if (!uniqueUsers[user.id]) {
+      uniqueUsers[user.id] = truncate
+      acc.push({
+        id: user.id,
+        name: `${user.name_first} ${user.name_last}`,
+        avatar: user.avatar,
+        name_first: user.name_first,
+        name_last: user.name_last,
+      })
+    }
+
+    return acc
+  }, [])
+})
+
 
 watch(project, () => {
   useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title} - Tasks` })
