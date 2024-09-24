@@ -155,12 +155,18 @@ class Task extends Base
             $query->whereIn('status', $filters['statuses']);
         }
 
-        if (!empty($filters['createdAt']['from']) && !empty($filters['createdAt']['to'])) {
-            $query->whereBetween('created_at', [$filters['createdAt']['from'], $filters['createdAt']['to']]);
+        if (!empty($filters['createdAt'])) {
+            $createdAtDates = parseDateRange($filters['createdAt']);
+            if ($createdAtDates['from'] && $createdAtDates['to']) {
+                $query->whereBetween('created_at', [$createdAtDates['from'], $createdAtDates['to']]);
+            }
         }
 
-        if (!empty($filters['dueDate']['from']) && !empty($filters['dueDate']['to'])) {
-            $query->whereBetween('due_date', [$filters['dueDate']['from'], $filters['dueDate']['to']]);
+        if (!empty($filters['dueDate'])) {
+            $dueDateDates = parseDateRange($filters['dueDate']);
+            if ($dueDateDates['from'] && $dueDateDates['to']) {
+                $query->whereBetween('due_date', [$dueDateDates['from'], $dueDateDates['to']]);
+            }
         }
 
         if (!empty($filters['sortBy'])) {

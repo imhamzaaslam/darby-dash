@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 if (!function_exists('make_integer')) {
     /**
      * Transforms a float value into an integer.
@@ -165,5 +167,29 @@ if (!function_exists('formatToTwoDecimalPlaces')) {
     {
         $floatValue = floatval($value);
         return number_format($floatValue, 2, '.', '');
+    }
+}
+
+if (!function_exists('parseDateRange')) {
+    function parseDateRange($dateRange)
+    {
+        $dates = [
+            'from' => null,
+            'to' => null,
+        ];
+
+        if (!empty($dateRange)) {
+            $splitDates = explode(' to ', $dateRange);
+
+            if (count($splitDates) == 2) {
+                $dates['from'] = Carbon::parse(trim($splitDates[0]));
+                $dates['to'] = Carbon::parse(trim($splitDates[1]));
+            } else {
+                $dates['from'] = Carbon::parse(trim($splitDates[0]));
+                $dates['to'] = Carbon::parse(trim($splitDates[0]));
+            }
+        }
+
+        return $dates;
     }
 }

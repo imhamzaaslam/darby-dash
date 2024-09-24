@@ -42,7 +42,20 @@
           v-if="filtersApplied"
           class="filter-indicator"
           @click.stop="resetFilter"
-        >❌</span>
+        >
+          <VTooltip bottom>
+            <template #activator="{ props }">
+              <VIcon
+                color="error"
+                icon="tabler-circle-x-filled"
+                size="20"
+                class="cursor-pointer"
+                v-bind="props"
+              />
+            </template>
+            <span>Reset Filter</span>
+          </VTooltip>
+        </span>
       </VBtnToggle>
     </VCol>
     <VCol
@@ -1834,9 +1847,10 @@ const fetchProjectTasks = async () => {
 const fetchProjectLists = async (filters = {}) => {
   try {
     await projectListStore.getAll(projectId.value, filters)
-    if(!Object.keys(filters).length === 0)
-    {
+    if (Object.keys(filters).length > 0) {
       filtersApplied.value = true
+    } else {
+      filtersApplied.value = false
     }
   } catch (error) {
     toast.error('Error fetching project lists:', error)
@@ -1846,6 +1860,7 @@ const fetchProjectLists = async (filters = {}) => {
 const resetFilter = async () => {
   filtersApplied.value = false
   await fetchProjectLists()
+  toast.success('Filter reset successfully.')
 }
 
 const fetchAsigneesUsers = async () => {
@@ -2581,6 +2596,8 @@ watch(project, () => {
   color: lightgray;
 }
 .filter-indicator{
-
+  position: relative;
+  right: 10px;
+  bottom: 8px;
 }
 </style>

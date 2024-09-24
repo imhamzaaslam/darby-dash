@@ -98,7 +98,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     });
                 });
 
-                Route::post('/lists', [ProjectListController::class, 'index']);
+                Route::get('/lists', [ProjectListController::class, 'index']);
                 Route::post('/list', [ProjectListController::class, 'store']);
                 Route::prefix('list/{listUuid}')->group(function () {
                     Route::patch('/', [ProjectListController::class, 'update']);

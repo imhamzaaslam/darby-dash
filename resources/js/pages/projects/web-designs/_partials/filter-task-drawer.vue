@@ -182,8 +182,8 @@ const filterDetails = ref({
   searchQuery: '',
   assignees: [],
   statuses: ['1'],
-  createdAt: { from: '', to: '' },
-  dueDate: { from: '', to: '' },
+  createdAt: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
+  dueDate: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
   estTimeFrom: null,
   estTimeTo: null,
   sortBy: 'created_at',
@@ -220,53 +220,13 @@ const filter = () => {
   handleDrawerModelValueUpdate(false)
 }
 
-/* watch(() => filterDetails.value.dueDate, newDate => {
-  updateDueDateRange(newDate)
-})
-
-watch(() => filterDetails.value.createdAt, newDate => {
-  updateCreatedDateRange(newDate)
-})
-
-const updateDueDateRange = newDate => {
-  if (newDate) {
-    const dateParts = newDate.split(' to ')
-    if (dateParts.length == 2) {
-      filterDetails.value.dueDate.from = dateParts[0].trim()
-      filterDetails.value.dueDate.to = dateParts[1].trim()
-    } else if (dateParts.length == 1 && dateParts[0].trim()) {
-      filterDetails.value.dueDate.from = dateParts[0].trim()
-      filterDetails.value.dueDate.to = dateParts[0].trim()
-    } else {
-      filterDetails.value.dueDate.from = ''
-      filterDetails.value.dueDate.to = ''
-    }
-  }
-}
-
-const updateCreatedDateRange = newDate => {
-  if (newDate) {
-    const dateParts = newDate.split(' to ')
-    if (dateParts.length == 2) {
-      filterDetails.value.createdAt.from = ''
-      filterDetails.value.createdAt.to = dateParts[1].trim()
-    } else if (dateParts.length == 1 && dateParts[0].trim()) {
-      filterDetails.value.createdAt.from = dateParts[0].trim()
-      filterDetails.value.createdAt.to = dateParts[0].trim()
-    } else {
-      filterDetails.value.createdAt.from = ''
-      filterDetails.value.createdAt.to = ''
-    }
-  }
-} */
-
 const resetFilters = () => {
   filterDetails.value = {
     searchQuery: '',
     assignees: [],
-    statuses: [],
-    createdAt: { from: '', to: '' },
-    dueDate: { from: '', to: '' },
+    statuses: ['1'],
+    createdAt: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
+    dueDate: [new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]],
     estTimeFrom: null,
     estTimeTo: null,
     sortBy: 'created_at',
