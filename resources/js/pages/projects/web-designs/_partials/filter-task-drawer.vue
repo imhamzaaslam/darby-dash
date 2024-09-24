@@ -52,7 +52,7 @@
               </VCol>
 
               <!-- Assignee list (multi-select) -->
-              <VCol cols="7">
+              <VCol cols="6">
                 <AppSelect
                   v-model="filterDetails.assignees"
                   :items="props.assigneesList"
@@ -88,7 +88,7 @@
               </VCol>
 
               <!-- Status list (multi-select) -->
-              <VCol cols="5">
+              <VCol cols="6">
                 <AppSelect
                   v-model="filterDetails.statuses"
                   :items="statusList"
