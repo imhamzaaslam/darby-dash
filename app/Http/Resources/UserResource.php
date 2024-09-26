@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'state' => $this->state,
             'phone' => $this->info->phone,
             'is_2fa' => $this->is_2fa,
+            'is_online' => $this->isOnline(),
             'info' => [
                 'phone' => $this->info->phone,
                 'address' => $this->info->address,

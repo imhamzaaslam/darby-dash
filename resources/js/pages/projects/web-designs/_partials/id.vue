@@ -606,7 +606,7 @@
                           {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }}
                           <VBadge
                             dot
-                            color="success"
+                            :color="project?.project_manager?.is_online ? 'success' : 'warning'"
                             class="ms-3 mt-2"
                           />
                         </h6>

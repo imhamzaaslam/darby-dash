@@ -137,6 +137,7 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         'is_2fa',
         'verification_code',
         'verification_expires_at',
+        'last_active_at',
     ];
 
     /**
@@ -157,11 +158,17 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_active_at' => 'datetime',
     ];
 
     public function info(): HasOne
     {
         return $this->hasOne(UserInfo::class);
+    }
+
+    public function isOnline()
+    {
+        return $this->last_active_at && $this->last_active_at->diffInMinutes(now()) < 5;
     }
 
     public function files(): MorphMany
