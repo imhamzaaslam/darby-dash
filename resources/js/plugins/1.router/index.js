@@ -5,6 +5,7 @@ import authenticatedPages from './authenticatedPages'
 import adminAuthorizedPages from './adminAuthorizedPages'
 import projectManagerAuthorizedPages from './projectManagerAuthorizedPages'
 import staffAuthorizedPages from './staffAuthorizedPages'
+import clientAuthorizedPages from './clientAuthorizedPages'
 import WebDesignsList from '@/pages/projects/web-designs/index.vue'
 import WebDesign from '@/pages/projects/web-designs/_partials/id.vue'
 import Team from '@/pages/projects/team.vue'
@@ -32,7 +33,8 @@ const isAuthorized = to => {
 
   return (authStore.isAdmin && adminAuthorizedPages.includes(to.name)) ||
          (authStore.isManager && projectManagerAuthorizedPages.includes(to.name)) ||
-          (authStore.isStaff && staffAuthorizedPages.includes(to.name))
+         (authStore.isStaff && staffAuthorizedPages.includes(to.name)) ||
+         (authStore.isClient && clientAuthorizedPages.includes(to.name))
 }
 
 function recursiveLayouts(route) {
