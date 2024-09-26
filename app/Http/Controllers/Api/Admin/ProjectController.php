@@ -164,6 +164,19 @@ class ProjectController extends Controller
             ->setStatusCode(200);
     }
 
+    public function projectCompleted(Request $request, string $uuid): JsonResponse
+    {
+        $project = $this->projectRepository->getByUuid($uuid);
+        $this->authorize('update', $project);
+        $data = $request->all();
+        $data['completed_at'] = $request->has('is_completed') && $request->is_completed == 1 ? now() : null;
+        $this->projectRepository->update($project, $data);
+
+        return (new ProjectResource($project))
+        ->response()
+        ->setStatusCode(200);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

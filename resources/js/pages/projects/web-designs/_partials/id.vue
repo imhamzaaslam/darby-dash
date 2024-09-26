@@ -1,16 +1,44 @@
 <template>
   <Loader v-if="loadStatus === 1" />
   <VRow>
-    <VCol cols="12">
-      <div class="d-flex justify-start align-center">
-        <VAvatar
-          :size="30"
-          class="me-1"
-          :image="sketch"
+    <VCol cols="6">
+      <div class="d-flex justify-between align-center">
+        <div class="d-flex align-center">
+          <VAvatar
+            :size="30"
+            class="me-1"
+            :image="sketch"
+          />
+          <h3 class="text-primary">
+            {{ project?.title }}
+          </h3>
+        </div>
+      </div>
+    </VCol>
+    <VCol cols="6">
+      <div class="d-flex justify-end align-center">
+        <VCheckbox
+          v-if="projectProgress.overallProgress === 100 && authStore.isAdmin"
+          v-model="isCompleted"
+          label="Mark as Completed"
+          class="ms-2 me-2"
+          :true-value="1"
+          :false-value="0"
+          @change="handleProjectCompleteSwitchChange(project?.title)"
         />
-        <h3 class="text-primary">
-          {{ project?.title }}
-        </h3>
+        <VBtn
+          v-if="projectProgress.overallProgress === 100 && showAwardBucksBtn && authStore.isAdmin"
+          size="x-small"
+          color="primary"
+          rounded="pill"
+          @click="openAwardBucksDialogue"
+        >
+          <VIcon
+            start
+            icon="tabler-award-filled"
+          />
+          Award Bucks to PM
+        </VBtn>
       </div>
     </VCol>
   </VRow>
@@ -129,7 +157,7 @@
             <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
           </div>
           <div class="text-body-1 text-center d-flex align-center mb-4">
-            <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
+            <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
           </div>
           <!--
             <div class="text-body-1 text-center d-flex align-center justify-center">
@@ -686,10 +714,90 @@
       </VCard>
     </VCol>
   </VRow>
+  <!-- Award Bucks to PM Dialogue -->
+  <VDialog
+    v-model="isAwardBucksDialogue"
+    :width="$vuetify.display.smAndDown ? 'auto' : 600"
+  >
+    <!-- Dialog close btn -->
+    <DialogCloseBtn @click="closeAwardBucksDialogue" />
+
+    <VCard
+      title="Award Bucks to PM"
+      class="pricing-dialog"
+    >
+      <VForm
+        ref="saveAwardedBucksForm"
+        @submit.prevent="submitAwardedBucks"
+      >
+        <VCardText>
+          <VAlert
+            v-if="!project.is_bucks_share_assigned_to_pm"
+            type="error"
+            class="text-sm mb-5"
+            dismissible
+          >
+            Please assign bucks share to the Project Manager.
+            <RouterLink
+              class="text-decoration-underline ms-1 me-1 text-white"
+              :to="`/projects/${projectUuid}/bucks`"
+            >
+              Go to Bucks Management
+            </RouterLink>
+          </VAlert>
+          <div class="d-flex align-items-center">
+            <VCheckbox
+              v-model="awardedBucks"
+              :disabled="!project.is_bucks_share_assigned_to_pm"
+              label="Award to PM"
+              class="ps-0 me-1"
+              :true-value="1"
+              :false-value="0"
+            />
+            <small
+              v-if="project?.pm_bucks"
+              class="mt-2 text-primary font-weight-bold"
+            >(${{ project?.pm_bucks }})</small>
+          </div>
+          <AppTextarea
+            v-model="comment"
+            label="Comment"
+            rows="3"
+            autofocus
+            multiline
+          />
+        </VCardText>
+        <VCardText class="d-flex justify-end gap-3 flex-wrap">
+          <VBtn
+            color="secondary"
+            @click="closeAwardBucksDialogue"
+          >
+            Cancel
+          </VBtn>
+          <VBtn
+            :disabled="loadStatus === 1 || !project.is_bucks_share_assigned_to_pm"
+            type="submit"
+            @click="saveAwardedBucksForm?.validate()"
+          >
+            <VProgressCircular
+              v-if="loadStatus === 1"
+              indeterminate
+              size="16"
+              color="white"
+            />
+            <span v-if="loadStatus === 1">Processing...</span>
+            <span v-else>Award</span>
+          </VBtn>
+        </VCardText>
+      </vform>
+    </VCard>
+  </VDialog>
 </template>
 
 <script setup lang="js">
 import { layoutConfig } from '@layouts'
+import Swal from 'sweetalert2'
+import confetti from 'canvas-confetti'
 import { useHead } from '@unhead/vue'
 import moment from 'moment'
 import Loader from "@/components/Loader.vue"
@@ -699,17 +807,37 @@ import otherListImg from '@images/darby/other_list.svg?raw'
 import { useProjectStore } from "@/store/projects"
 import { useRoute } from 'vue-router'
 import sketch from '@images/icons/project-icons/sketch.png'
+import { useProjectBucksStore } from "@/store/project_bucks"
+import { useAuthStore } from "@/store/auth"
+import { useToast } from "vue-toastification"
 
 onBeforeMount(async () => {
   await getProjectProgress()
 })
 
 const projectStore = useProjectStore()
+const projectBucksStore = useProjectBucksStore()
+const authStore = useAuthStore()
 const $route = useRoute()
+const toast = useToast()
+
 const projectUuid = $route.params.id
+const isCompleted = ref(0)
+const showAwardBucksBtn = ref(0)
+const saveAwardedBucksForm = ref()
+const isAwardBucksDialogue = ref(false)
+const awardedBucks = ref(0)
+const comment = ref(null)
 
 const getProjectProgress = async () => {
   await fetchProject()
+  isCompleted.value = project.value.is_completed
+  awardedBucks.value = project.value.is_pm_bucks_awarded
+  comment.value = project.value.comments
+  if(isCompleted.value)
+  {
+    showAwardBucksBtn.value = true
+  }
   await projectStore.getProgress(projectUuid)
 }
 
@@ -719,6 +847,96 @@ const fetchProject = async () => {
   } catch (error) {
     toast.error('Error fetching project:', error)
   }
+}
+
+const showConfetti = () => {
+  confetti({
+    particleCount: 1000,
+    spread: 360,
+  })
+}
+
+const handleProjectCompleteSwitchChange = async projectName => {
+  const originalState = isCompleted.value
+  const isComplete = originalState === 1
+
+  const title = isComplete
+    ? `Confirm Completion of the ${projectName} Project`
+    : `Confirm Incompletion of the ${projectName} Project`
+
+  const actionText = `<small>You are about to mark the project as ${isComplete ? 'completed' : 'incomplete'}. This action cannot be undone. Do you wish to continue?</small>`
+
+  try {
+    const { isConfirmed } = await Swal.fire({
+      title,
+      html: actionText,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#a12592",
+      cancelButtonColor: "#808390",
+      confirmButtonText: isComplete ? "Yes, mark as completed" : "Yes, mark as incomplete",
+      cancelButtonText: "Cancel",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+
+        const titleElem = document.querySelector('.swal2-title')
+        if (titleElem) titleElem.style.fontSize = '18px'
+        const textElem = document.querySelector('.swal2-html-container')
+        if (textElem) textElem.style.marginTop = '8px'
+      },
+    })
+
+    if (isConfirmed) {
+      await projectStore.complete({ uuid: projectUuid, is_completed: isCompleted.value })
+      showAwardBucksBtn.value = isComplete
+      if(isComplete)
+      {
+        showConfetti()
+      }
+    } else {
+      isCompleted.value = originalState ? 0 : 1
+    }
+  } catch (error) {
+    isCompleted.value = originalState ? 0 : 1
+    toast.error('Error updating project:', error)
+  }
+}
+
+const closeAwardBucksDialogue = () => {
+  isAwardBucksDialogue.value = false
+  comment.value = null
+}
+
+const openAwardBucksDialogue =() => {
+  isAwardBucksDialogue.value = true
+}
+
+const submitAwardedBucks = async () => {
+  saveAwardedBucksForm.value?.validate().then(async ({ valid: isValid }) => {
+    if (isValid) {
+      try {
+        const payload = {
+          uuid: projectUuid,
+          is_pm_bucks_awarded: awardedBucks.value,
+          comments: comment.value || null,
+        }
+
+        await projectStore.complete(payload)
+
+        if (getErrors.value) {
+          toast.error('Something went wrong. Please try again later')
+        } else {
+          toast.success('Bucks awarded successfully')
+          closeAwardBucksDialogue()
+          isCompleted.value = project.value.is_completed
+          awardedBucks.value = project.value.is_pm_bucks_awarded
+          comment.value = project.value.comments
+        }
+      } catch (error) {
+        toast.error(`Error awarding bucks to pm: ${error.message || error}`)
+      }
+    }
+  })
 }
 
 const getColor = progress => {
@@ -754,8 +972,16 @@ const project = computed(() =>{
   return projectStore.getProject
 })
 
+const projectBucks = computed(() =>{
+  return projectBucksStore.getBucksDetails
+})
+
 const loadStatus = computed(() => {
   return projectStore.getLoadStatus
+})
+
+const getErrors = computed(() => {
+  return projectStore.getErrors
 })
 
 watch(project, () => {

@@ -104,6 +104,10 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
     {
         $projectMembers = $project->members;
 
+        $projectMembers = $projectMembers->filter(function ($member) {
+            return !$member->roles->contains('id', 2);
+        });
+
         $taskAssignees = $task->assignees;
 
         if ($keyword) {

@@ -59,6 +59,7 @@
                   item-title="name"
                   item-value="id"
                   label="Assignees"
+                  placeholder="Select Assignees"
                   multiple
                   clearable
                   clear-icon="tabler-x"
@@ -93,6 +94,7 @@
                   v-model="filterDetails.statuses"
                   :items="statusList"
                   label="Statuses"
+                  placeholder="Select Status"
                   item-title="name"
                   item-value="value"
                   multiple
@@ -181,7 +183,7 @@ const emit = defineEmits(['update:isFilterDrawerOpen', 'applyFilters'])
 const filterDetails = ref({
   searchQuery: '',
   assignees: [],
-  statuses: ['1'],
+  statuses: [],
   createdAt: null,
   dueDate: null,
   estTimeFrom: null,

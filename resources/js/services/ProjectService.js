@@ -15,7 +15,7 @@ export default {
       projectTypeId && `projectTypeId=${projectTypeId}`,
       projectManagerId && `projectManagerId=${projectManagerId}`,
     ].filter(Boolean)
-  
+
     const queryString = queryParams.length ? `&${queryParams.join('&')}` : ''
 
     return apiClient.get(baseUrl + queryString)
@@ -31,6 +31,9 @@ export default {
   },
   updateProject(project) {
     return apiClient.patch(`admin/projects/${project.uuid}`, project)
+  },
+  projectComplete(project){
+    return apiClient.patch(`admin/projects/${project.uuid}/complete`, project)
   },
   deleteProject(id) {
     return apiClient.delete(`admin/projects/${id}`)

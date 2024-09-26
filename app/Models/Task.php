@@ -182,4 +182,9 @@ class Task extends Base
 
         return $query;
     }
+
+    public function getHasBucksShareAttribute()
+    {
+        return $this->project && $this->project->bucks_share > 0;
+    }
 }

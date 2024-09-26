@@ -23,7 +23,15 @@ class AssignTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'assignee' => 'required|exists:project_members,user_id',
+            'assignee' => [
+                'required',
+                'exists:project_members,user_id',
+                function ($attribute, $value, $fail) {
+                    if (User::find($value)?->roles->contains('id', 2)) {
+                        $fail('Cannot assign a user with this role.');
+                    }
+                },
+            ],
         ];
     }
 }

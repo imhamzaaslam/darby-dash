@@ -37,6 +37,7 @@ class TaskResource extends JsonResource
             'display_order' => $this->display_order,
             'files_count' => $this->files->count(),
             'assignees' => UserResource::collection($this->assignees),
+            'has_bucks_share' => $this->has_bucks_share,
             'is_bucks_allowed' => $this->is_bucks_allowed ? true : false,
             'remaining_bucks' => $this->getRoleWiseRemainingBucks(),
             'assignees_bucks' => $this->getAssigneesBucks(),

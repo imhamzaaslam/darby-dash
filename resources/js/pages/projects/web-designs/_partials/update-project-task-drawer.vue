@@ -29,9 +29,9 @@
                 <AppTextField
                   ref="focusInput"
                   v-model="props.editingTask.name"
-                  label="Title*"
+                  label="Task Name*"
                   :rules="[requiredValidator]"
-                  placeholder="Title"
+                  placeholder="Task Name"
                 />
               </VCol>
               <VCol cols="12">
@@ -60,6 +60,7 @@
               </VCol>
               <!-- Bucks Section -->
               <VCol
+                v-if="props.editingTask.has_bucks_share"
                 cols="12"
                 calss="pb-0"
                 :class="{'d-none': !authStore.isAdmin && !authStore.isManager, 'd-flex align-center': authStore.isAdmin || authStore.isManager}"
@@ -73,9 +74,9 @@
                   :disabled="props.editingTask.assignees?.length == 0"
                 />
               </VCol>
-              
+
               <template v-if="props.editingTask.is_bucks_allowed">
-                <VCol 
+                <VCol
                   v-if="!authStore.isAdmin && !authStore.isManager"
                   cols="12"
                   class="pb-0"
@@ -105,7 +106,7 @@
                   />
                 </VCol>
               </template>
-                            
+
               <VCol cols="12 pb-0">
                 <input
                   ref="fileInputRef"
@@ -118,7 +119,7 @@
                 <h4 class="mb-1">
                   Attachments
                 </h4>
-                <div 
+                <div
                   class="upload-files-sec"
                   @click="$refs.fileInputRef.click()"
                 >
@@ -138,14 +139,14 @@
                     height="100"
                     class="mb-2"
                   />
-                  <IconBtn 
+                  <IconBtn
                     class="delete-media-menu"
                     @click.prevent
                   >
                     <VIcon icon="tabler-dots" />
                     <VMenu activator="parent">
                       <VList>
-                        <VListItem 
+                        <VListItem
                           value="delete"
                           @click="deleteFile(file)"
                         >
@@ -303,7 +304,7 @@ async function submitEditTaskForm() {
     if(isValid){
       try {
         isLoading.value = true
-        
+
         const payload = {
           uuid: props.editingTask.uuid,
           name: props.editingTask.name,
@@ -313,7 +314,7 @@ async function submitEditTaskForm() {
           due_date: props.editingTask.due_date,
           is_bucks_allowed: props.editingTask.is_bucks_allowed,
         }
-      
+
         if(payload.is_bucks_allowed) {
           const roleIds = [...new Set(props.editingTask.assignees_bucks.map(assignee => assignee.role_id))]
           for (const roleId of roleIds) {
@@ -321,11 +322,12 @@ async function submitEditTaskForm() {
             const bucksAmount = assigneeBucks.reduce((acc, assignee) => acc + parseFloat(assignee.bucks_amount), 0)
             const remainingBucks = getRemainingBucks(roleId)
             if (bucksAmount > remainingBucks) {
-              toast.error('Bucks amount should not be greater than remaining bucks amount.') 
+              toast.error('Bucks amount should not be greater than remaining bucks amount.')
+
               return
             }
           }
-          
+
           payload.assignees_bucks = props.editingTask.assignees_bucks
         }
         const roleIds = [...new Set(props.editingTask.assignees_bucks.map(assignee => assignee.role_id))]
@@ -334,15 +336,15 @@ async function submitEditTaskForm() {
           const bucksAmount = assigneeBucks.reduce((acc, assignee) => acc + parseFloat(assignee.bucks_amount), 0)
           const remainingBucks = getRemainingBucks(roleId)
           if (bucksAmount > remainingBucks) {
-            toast.error('Bucks amount should not be greater than remaining bucks amount.') 
+            toast.error('Bucks amount should not be greater than remaining bucks amount.')
             this.isLoading = false
-            
+
             return
           }
         }
-        
+
         const res = await projectTaskStore.update(payload)
-        
+
         if(projectTaskStore.getErrors){
           toast.error('Failed to update task')
           isLoading.value = false

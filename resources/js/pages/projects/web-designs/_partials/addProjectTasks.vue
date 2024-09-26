@@ -79,10 +79,10 @@
         <!-- Button and Dialog -->
         <VBtn
           icon
-          color="primary"
+          color="td-hover"
           class="ma-2"
           size="small"
-          rounded
+          rounded="pills"
           @click.prevent
         >
           <VIcon icon="tabler-dots" />
@@ -1697,10 +1697,9 @@ import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useTheme } from 'vuetify'
 import { VIcon } from 'vuetify/lib/components/index.mjs'
-import { debounce } from 'lodash'
+import { debounce, truncate } from 'lodash'
 import sketch from '@images/icons/project-icons/sketch.png'
 import Loader from "@/components/Loader.vue"
-import { truncate } from 'lodash'
 
 const toast = useToast()
 const vuetifyTheme = useTheme()

@@ -35,7 +35,7 @@ export const useProjectStore = defineStore('projects', {
         const response = await ProjectService.getProjectsByType(id)
 
         this.projectsByType = response.data.data
-        
+
         // this.usersCount = response.data.meta.total
         this.loadStatus = 2
       } catch (error) {
@@ -86,6 +86,22 @@ export const useProjectStore = defineStore('projects', {
         console.error('updateProject error ', error)
       }
     },
+
+    async complete(project) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectService.projectComplete(project)
+
+        this.project = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('complete project error ', error)
+      }
+    },
+
     async delete(id) {
       this.error = null
       this.loadStatus = 1
@@ -119,7 +135,7 @@ export const useProjectStore = defineStore('projects', {
       this.loadStatus = 1
       try {
         const response = await ProjectService.updateMember(project)
-        
+
         this.project = response.data.data
         this.loadStatus = 2
       } catch (error) {
@@ -133,7 +149,7 @@ export const useProjectStore = defineStore('projects', {
       this.loadStatus = 1
       try {
         await ProjectService.deleteMember(uuid, userUuid)
-        
+
         this.loadStatus = 2
       } catch (error) {
         this.error = error

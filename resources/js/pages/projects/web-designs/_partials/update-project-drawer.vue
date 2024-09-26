@@ -25,8 +25,8 @@
             @submit.prevent="submitEditProjectForm"
           >
             <VRow>
-              <VCol 
-                md="6" 
+              <VCol
+                md="6"
                 cols="12"
               >
                 <AppAutocomplete
@@ -107,6 +107,7 @@
                 />
               </VCol>
               <VCol
+                v-if="showBucksShare"
                 md="6"
                 cols="12"
               >
@@ -120,19 +121,13 @@
                   class="no-arrows me-1"
                   prepend-inner-icon="tabler-percentage"
                 />
-
-                <!-- Dropdown to Select Type -->
-                <!--
-                  <AppSelect
-                  v-model="props.editProjectDetails.bucks_share_type"
-                  :items="budgetTypes"
-                  class="budget-type-select"
-                  label="Share Type"
-                  :rules="[requiredValidator]"
-                  dense
-                  hide-details
-                  /> 
-                -->
+              </VCol>
+              <VCol cols="12">
+                <VSwitch
+                  v-model="showBucksShare"
+                  label="Enable Darby Bucks Share"
+                  class="mb-3"
+                />
               </VCol>
               <VCol cols="12">
                 <div class="d-flex justify-start">
@@ -201,6 +196,7 @@ const projectStore = useProjectStore()
 const focusField = ref(null)
 const editProjectForm = ref()
 const isLoading= ref(false)
+const showBucksShare = ref(false)
 
 const projectDetails = ref({
   client_id: null,
@@ -209,7 +205,7 @@ const projectDetails = ref({
   project_type_id: null,
   staff_ids: [],
   budget_amount: '',
-  bucks_share: '',
+  bucks_share: null,
 })
 
 const handleDrawerModelValueUpdate = val => {
@@ -242,7 +238,7 @@ async function submitEditProjectForm() {
         }
         payload.id = props.editProjectDetails.id
         payload.uuid = props.editProjectDetails.uuid
-        
+
         if (parseFloat(payload.bucks_share) > 100) {
           toast.error('Darby Bucks Share cannot be greater than 100%')
 
@@ -251,17 +247,17 @@ async function submitEditProjectForm() {
 
         isLoading.value = true
         await projectStore.update(payload)
-        
+
         if(projectStore.getErrors) {
           toast.error('Failed to add project')
           isLoading.value = false
-          
+
           return
         } else {
           emit('update:isEditDrawerOpen', false)
           toast.success('Project updated successfully', { timeout: 1000 })
           await props.fetchProjects()
-          isLoading.value = false 
+          isLoading.value = false
         }
       } catch (error) {
         toast.error('Failed to update project:', error.message || error)
@@ -278,24 +274,24 @@ watch(
       let client = members.find(member => member.role == USER_ROLES.CLIENT)
       let clientId = client?.id
       projectDetails.value.client_id = props.getClients.find(client => client.id == clientId)
-      
+
       let projectManager = members.find(member => member.role == USER_ROLES.PROJECT_MANAGER)
       let projectManagerId = projectManager?.id
       projectDetails.value.project_manager_id = props.getProjectManagersList.find(manager => manager.id == projectManagerId)
-      
+
       let staffs = members.filter(member => member.role == USER_ROLES.STAFF)
       projectDetails.value.staff_ids = staffs
         .map(staff => props.getStaffList.find(staffMember => staffMember.value === staff.id)?.value)
         .filter(id => id !== undefined)
-      
+
       let projectTypeId = editProjectDetails?.project_type_id
       projectDetails.value.project_type_id = props.getProjectTypes.find(type => type.id == projectTypeId)
-      
+
       projectDetails.value.title = editProjectDetails?.title
       projectDetails.value.budget_amount = editProjectDetails?.budget_amount
       projectDetails.value.bucks_share = editProjectDetails?.bucks_share
     }
-    
+
     if (isEditDrawerOpen) {
       nextTick(() => {
         const inputEl = focusField.value.$el.querySelector('input')
@@ -304,6 +300,13 @@ watch(
         }
       })
     }
+  },
+)
+
+watch(
+  () => projectDetails.value.bucks_share,
+  newValue => {
+    showBucksShare.value = newValue && newValue > 0
   },
 )
 </script>

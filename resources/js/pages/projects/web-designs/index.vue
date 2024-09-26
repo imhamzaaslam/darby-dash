@@ -161,8 +161,8 @@
 
               <VCol cols="2">
                 <div class="d-flex flex-column ms-3">
-                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Created At</span>
-                  <small>{{ formatDate(project.created_at) }}</small>
+                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Due Date</span>
+                  <small class="text-center">{{ project.launching_date == 'Today' ? '---' : formatDate(project.launching_date) }}</small>
                 </div>
               </VCol>
 
@@ -287,7 +287,7 @@
                       <small>{{ project.project_type }}</small>
                     </div>
                     <div class="d-flex flex-column ms-3">
-                      <small><span class="font-weight-bold text-high-emphasis text-xs text-truncate">Created At: {{ formatDate(project.created_at) }}</span></small>
+                      <small><span class="font-weight-bold text-high-emphasis text-xs text-center text-truncate">Due Date: {{ project.launching_date == 'Today' ? '' : formatDate(project.launching_date) }}</span></small>
                     </div>
                   </VCol>
                   <VCol cols="4">

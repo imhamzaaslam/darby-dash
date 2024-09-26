@@ -145,7 +145,7 @@ const project = computed(() =>{
         <VSpacer />
 
         <span
-          v-if="showNavigation"
+          v-if="showNavigation && project?.bucks_share"
           class="text-h6 font-weight-bold me-4"
         >
           <span v-if="authStore.isAdmin || authStore.isManager">

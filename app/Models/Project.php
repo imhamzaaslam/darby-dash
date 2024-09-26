@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Base;
 use App\Models\Task;
 use App\Models\TaskAssignee;
+use App\Models\ProjectBucks;
 use App\Services\ProjectProgressService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,6 +28,10 @@ class Project extends Base
         'budget_amount',
         'bucks_share',
         'bucks_share_type',
+        'is_completed',
+        'is_pm_bucks_awarded',
+        'comments',
+        'completed_at',
     ];
 
     public function projectType()
@@ -152,5 +157,19 @@ class Project extends Base
     public function getCompletedTasksAttribute()
     {
         return $this->tasks()->where('status', 3)->whereNull('parent_id')->count();
+    }
+
+    public function getIsBucksShareAssignedToPmAttribute()
+    {
+        return $this->projectBucks()->where('role_id', 2)->where('shares', '>', 0)->exists();
+    }
+
+    public function getPmBucksAttribute()
+    {
+        $projectBucks = $this->projectBucks()
+        ->where('role_id', 2)
+        ->first();
+
+        return $projectBucks ? $projectBucks->shares : null;
     }
 }

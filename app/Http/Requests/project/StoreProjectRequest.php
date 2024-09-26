@@ -44,7 +44,7 @@ class StoreProjectRequest extends FormRequest
             'end_date' => 'sometimes|date',
             'status' => 'sometimes|in:active,inactive',
             'budget_amount' => 'required',
-            'bucks_share' => 'required',
+            'bucks_share' => 'sometimes|nullable',
             'bucks_share_type' => 'sometimes|nullable|in:fixed,percentage',
         ];
     }

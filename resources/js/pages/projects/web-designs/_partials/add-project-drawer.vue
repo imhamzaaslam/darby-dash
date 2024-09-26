@@ -119,11 +119,12 @@
                   prepend-inner-icon="tabler-currency-dollar"
                 />
               </VCol>
+
               <VCol
+                v-if="showBucksShare"
                 md="6"
                 cols="12"
               >
-                <!-- Input Field -->
                 <AppTextField
                   v-model="newProjectDetails.bucks_share"
                   label="Darby Bucks Share*"
@@ -133,19 +134,14 @@
                   class="no-arrows me-1"
                   prepend-inner-icon="tabler-percentage"
                 />
+              </VCol>
 
-                <!-- Dropdown to Select Type -->
-                <!--
-                  <AppSelect
-                  v-model="newProjectDetails.bucks_share_type"
-                  :items="budgetTypes"
-                  class="budget-type-select"
-                  label="Share Type"
-                  :rules="[requiredValidator]"
-                  dense
-                  hide-details
-                  />
-                -->
+              <VCol cols="12">
+                <VSwitch
+                  v-model="showBucksShare"
+                  label="Enable Darby Bucks Share"
+                  class="mb-3"
+                />
               </VCol>
 
               <VCol cols="12">
@@ -217,6 +213,7 @@ const focusField = ref(null)
 const addProjectForm = ref()
 const isLoading= ref(false)
 const showTemplateField = ref(false)
+const showBucksShare = ref(false)
 
 const newProjectDetails = ref({
   client_id: null,
@@ -226,7 +223,7 @@ const newProjectDetails = ref({
   template_id: null,
   staff_ids: [],
   budget_amount: '',
-  bucks_share: '',
+  bucks_share: null,
 })
 
 // const budgetTypes = [
