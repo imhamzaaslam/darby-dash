@@ -129,7 +129,7 @@
                     <VTooltip>
                       <template #activator="{ props }">
                         <VIcon
-                          v-if="project.is_pm_bucks_awarded"
+                          v-if="project.is_pm_bucks_awarded && (authStore.isAdmin || authStore.isManager)"
                           color="primary"
                           variant="text"
                           class="tabler-coin-filled ms-1"
@@ -281,7 +281,7 @@
                         <VTooltip>
                           <template #activator="{ props }">
                             <VIcon
-                              v-if="project.is_pm_bucks_awarded"
+                              v-if="project.is_pm_bucks_awarded && (authStore.isAdmin || authStore.isManager)"
                               color="primary"
                               variant="text"
                               class="tabler-coin-filled ms-1"
