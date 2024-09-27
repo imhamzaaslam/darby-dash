@@ -61,7 +61,7 @@
     </VCol>
   </VRow>
   <VRow class="mt-0 pt-0">
-    <VCol 
+    <VCol
       cols="12"
       class="pt-0 ps-4"
     >
@@ -81,7 +81,7 @@
       v-else
       class="mb-4"
     >
-      <GridViewSkeleton /> 
+      <GridViewSkeleton />
     </VRow>
   </div>
 
@@ -105,13 +105,21 @@
         <VCard class="d-flex align-center ps-4 py-1 list-side-border">
           <VCol cols="4">
             <div class="d-flex align-center gap-x-3">
-              <VAvatar
-                size="34"
-                :class="user.avatar ? '' : 'text-white bg-primary'"
-                :variant="!user.avatar ? 'tonal' : ''"
+              <VBadge
+                dot
+                location="top end"
+                offset-x="1"
+                offset-y="1"
+                :color="user.is_online ? 'success' : 'warning'"
               >
-                <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
-              </VAvatar>
+                <VAvatar
+                  size="34"
+                  :class="user.avatar ? '' : 'text-white bg-primary'"
+                  :variant="!user.avatar ? 'tonal' : ''"
+                >
+                  <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                </VAvatar>
+              </VBadge>
               <div>
                 <h6 class="text-h6 text-no-wrap">
                   <span class="d-block">{{ user.name_first }} {{ user.name_last }}</span>
@@ -186,13 +194,21 @@
             <VRow>
               <VCol cols="10">
                 <div class="d-flex align-center gap-x-3">
-                  <VAvatar
-                    size="36"
-                    :class="user.avatar ? '' : 'text-white bg-primary'"
-                    :variant="!user.avatar ? 'tonal' : ''"
+                  <VBadge
+                    dot
+                    location="top end"
+                    offset-x="1"
+                    offset-y="1"
+                    :color="user.is_online ? 'success' : 'warning'"
                   >
-                    <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
-                  </VAvatar>
+                    <VAvatar
+                      size="34"
+                      :class="user.avatar ? '' : 'text-white bg-primary'"
+                      :variant="!user.avatar ? 'tonal' : ''"
+                    >
+                      <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                    </VAvatar>
+                  </VBadge>
                   <div>
                     <h6 class="text-h6 text-no-wrap">
                       {{ user.name_first }} {{ user.name_last }}
@@ -201,7 +217,7 @@
                 </div>
               </VCol>
               <VCol cols="2">
-                <IconBtn 
+                <IconBtn
                   v-if="user.role !== 'Admin'"
                   @click.prevent
                 >

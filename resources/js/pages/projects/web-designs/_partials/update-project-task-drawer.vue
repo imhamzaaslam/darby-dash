@@ -374,10 +374,6 @@ const getImageUrl = path => {
   return `${baseUrl}storage/${path}`
 }
 
-const fetchFiles = async () => {
-  await projectTaskStore.fetchFiles(props.editingTask.uuid)
-}
-
 const getRemainingBucks = roleId => {
   const assignee = props.editingTask.remaining_bucks?.find(assignee => assignee.role_id === roleId)
 

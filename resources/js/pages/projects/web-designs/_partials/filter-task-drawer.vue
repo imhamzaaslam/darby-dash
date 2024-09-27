@@ -214,6 +214,7 @@ const sortDirections = ref([
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isFilterDrawerOpen', val)
+  resetFilters()
 }
 
 const filter = () => {
@@ -230,8 +231,8 @@ const resetFilters = () => {
     dueDate: null,
     estTimeFrom: null,
     estTimeTo: null,
-    sortBy: null,
-    sortDirection: null,
+    sortBy: 'created_at',
+    sortDirection: 'asc',
   }
 }
 

@@ -120,13 +120,21 @@
             <VCard class="d-flex align-center ps-4 py-1 list-side-border">
               <VCol cols="4">
                 <div class="d-flex align-center">
-                  <VAvatar
-                    size="36"
-                    :class="member.avatar ? '' : 'text-white bg-primary'"
-                    :variant="!member.avatar ? 'tonal' : ''"
+                  <VBadge
+                    dot
+                    location="top end"
+                    offset-x="1"
+                    offset-y="1"
+                    :color="member.is_online ? 'success' : 'warning'"
                   >
-                    <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
-                  </VAvatar>
+                    <VAvatar
+                      size="36"
+                      :class="member.avatar ? '' : 'text-white bg-primary'"
+                      :variant="!member.avatar ? 'tonal' : ''"
+                    >
+                      <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
+                    </VAvatar>
+                  </VBadge>
                   <div class="d-flex flex-column ms-3">
                     <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ member.name_first }} {{ member.name_last }}</span>
                     <small class="mt-0 text-xs">
@@ -199,7 +207,11 @@
                   <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
                 </VAvatar>
                 <div class="d-flex flex-column ms-3">
-                  <span class="font-weight-medium text-high-emphasis text-sm text-truncate side-flick-name ms-4">{{ member.name_first }} {{ member.name_last }}</span>
+                  <span class="font-weight-medium text-high-emphasis text-sm text-truncate side-flick-name ms-4">{{ member.name_first }} {{ member.name_last }} <VBadge
+                    dot
+                    :color="member.is_online ? 'success' : 'warning'"
+                    class="ms-2 mb-2"
+                  /></span>
                   <small class="mt-0 text-xs side-flick-role ms-4">
                     {{ roleStore.capitalizeFirstLetter(member.role) }}
                   </small>

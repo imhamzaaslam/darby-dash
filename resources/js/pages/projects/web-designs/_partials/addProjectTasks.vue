@@ -1828,6 +1828,10 @@ const fetchProjectDetails = async () => {
   }
 }
 
+const fetchFiles = async taskUuid => {
+  await projectTaskStore.fetchFiles(taskUuid)
+}
+
 const fetchStatus = async () => {
   try {
     await statusStore.getAll()
@@ -1860,7 +1864,6 @@ const fetchProjectLists = async (filters = {}) => {
 const resetFilter = async () => {
   filtersApplied.value = false
   await fetchProjectLists()
-  toast.success('Filter reset successfully.')
 }
 
 const fetchAsigneesUsers = async () => {
@@ -2101,6 +2104,7 @@ function cancelQuickKanbanSubTask(index) {
 }
 
 function startEditing(task) {
+  fetchFiles(task.uuid)
   editingTask.value = { ...task, project_uuid: projectId.value }
   usersAssignedBucks.value = task.assignees_bucks
   isEditTaskDrawerOpen.value = true

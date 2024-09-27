@@ -102,6 +102,11 @@
           cols="12"
         >
           <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
+            <VIcon
+              v-if="project.is_completed"
+              icon="tabler-circle-check-filled"
+              class="project_completed_active"
+            />
             <VCard class="d-flex ps-4 py-1 list-side-border">
               <VCol cols="3">
                 <div class="d-flex align-center gap-x-3">
@@ -121,6 +126,19 @@
                         {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
                       </span>
                     </VChip>
+                    <VTooltip>
+                      <template #activator="{ props }">
+                        <VIcon
+                          v-if="project.is_pm_bucks_awarded"
+                          color="primary"
+                          variant="text"
+                          class="tabler-coin-filled ms-1"
+                          rounded
+                          v-bind="props"
+                        />
+                      </template>
+                      <small>${{ project.pm_bucks }} awarded to PM</small>
+                    </VTooltip>
                   </div>
                 </div>
               </VCol>
@@ -159,7 +177,20 @@
                 </div>
               </VCol>
 
-              <VCol cols="2">
+              <VCol
+                v-if="project.is_completed"
+                cols="2"
+              >
+                <div class="d-flex flex-column ms-3">
+                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Completed At</span>
+                  <small class="text-center">{{ formatDate(project.completed_at) }}</small>
+                </div>
+              </VCol>
+
+              <VCol
+                v-else
+                cols="2"
+              >
                 <div class="d-flex flex-column ms-3">
                   <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Due Date</span>
                   <small class="text-center">{{ project.launching_date == 'Today' ? '---' : formatDate(project.launching_date) }}</small>
@@ -218,7 +249,15 @@
           md="4"
         >
           <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
-            <VCard class="pt-2">
+            <VCard
+              class="pt-2"
+              style="position: relative; overflow: visible;"
+            >
+              <VIcon
+                v-if="project.is_completed"
+                icon="tabler-circle-check-filled"
+                class="project_completed_active_grid"
+              />
               <VCardTitle>
                 <VRow>
                   <VCol cols="10">
@@ -239,6 +278,19 @@
                             {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
                           </span>
                         </VChip>
+                        <VTooltip>
+                          <template #activator="{ props }">
+                            <VIcon
+                              v-if="project.is_pm_bucks_awarded"
+                              color="primary"
+                              variant="text"
+                              class="tabler-coin-filled ms-1"
+                              rounded
+                              v-bind="props"
+                            />
+                          </template>
+                          <small>${{ project.pm_bucks }} awarded to PM</small>
+                        </VTooltip>
                       </div>
                     </div>
                   </VCol>
@@ -286,7 +338,16 @@
                       <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
                       <small>{{ project.project_type }}</small>
                     </div>
-                    <div class="d-flex flex-column ms-3">
+                    <div
+                      v-if="project.is_completed"
+                      class="d-flex flex-column ms-3"
+                    >
+                      <small><span class="font-weight-bold text-high-emphasis text-xs text-center text-truncate">Completed At: {{ formatDate(project.completed_at) }}</span></small>
+                    </div>
+                    <div
+                      v-else
+                      class="d-flex flex-column ms-3"
+                    >
                       <small><span class="font-weight-bold text-high-emphasis text-xs text-center text-truncate">Due Date: {{ project.launching_date == 'Today' ? '' : formatDate(project.launching_date) }}</span></small>
                     </div>
                   </VCol>
