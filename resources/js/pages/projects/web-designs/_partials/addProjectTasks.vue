@@ -95,6 +95,7 @@
                 Add List
               </VListItem>
               <VListItem
+                v-if="authStore.isAdmin"
                 value="save-template"
                 @click="isSaveTemplateModalOpen = true"
               >
@@ -1687,12 +1688,13 @@ import FilterTaskDrawer from '@/pages/projects/web-designs/_partials/filter-task
 import SaveTemplateModal from '@/pages/projects/web-designs/_partials/save-template-modal.vue'
 import { computed, onBeforeMount, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
-import { useProjectStore } from "../../../../store/projects"
-import { useProjectTaskStore } from "../../../../store/project_tasks"
+import { useAuthStore } from "@/store/auth"
+import { useProjectStore } from "@/store/projects"
+import { useProjectTaskStore } from "@/store/project_tasks"
 import { useListTaskStore } from "@/store/list_tasks"
 import { useStatusStore } from "@/store/status"
 import { useUserStore } from "@/store/users"
-import { useProjectListStore } from "../../../../store/project_lists"
+import { useProjectListStore } from "@/store/project_lists"
 import { useRouter } from 'vue-router'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useTheme } from 'vuetify'
@@ -1703,6 +1705,7 @@ import Loader from "@/components/Loader.vue"
 
 const toast = useToast()
 const vuetifyTheme = useTheme()
+const authStore = useAuthStore()
 const projectStore = useProjectStore()
 const projectTaskStore = useProjectTaskStore()
 const listTaskStore = useListTaskStore()
