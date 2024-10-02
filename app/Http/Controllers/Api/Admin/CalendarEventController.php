@@ -10,12 +10,15 @@ use App\Http\Requests\project\StoreCalendarEventRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Services\NotificationService;
+use App\Enums\Management;
 
 class CalendarEventController extends Controller
 {
     public function __construct(
         protected CalendarEventRepositoryInterface $calendarEventRepository,
-        protected ProjectRepositoryInterface $projectRepository
+        protected ProjectRepositoryInterface $projectRepository,
+        protected NotificationService $notificationService,
     ) {}
 
     /**
