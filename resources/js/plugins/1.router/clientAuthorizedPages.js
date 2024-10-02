@@ -12,6 +12,7 @@ let clientAuthorizedPages = [
   'tasks',
   'account-setting',
   'bucks-setting',
+  'view-received-notifications',
 ]
 
 export default clientAuthorizedPages

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             CalendarFilterSeeder::class,
             StatusSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

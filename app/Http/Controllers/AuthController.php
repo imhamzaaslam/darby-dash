@@ -7,6 +7,7 @@ use App\Models\User;
 use Validator;
 use Carbon\Carbon;
 use App\Services\EmailService;
+use App\Events\UserCreated;
 
 class AuthController extends Controller
 {
@@ -55,6 +56,9 @@ class AuthController extends Controller
         $user->role = $user->getRoleNames()->first();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->plainTextToken;
+
+        // call for existing user to add settings meta
+        event(new UserCreated($user));
 
         return response()->json([
             'success' => true,

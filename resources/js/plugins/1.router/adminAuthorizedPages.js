@@ -18,6 +18,7 @@ let adminAuthorizedPages = [
   'payment-setting',
   'roles-setting',
   'bucks-setting',
+  'view-received-notifications',
 ]
 
 export default adminAuthorizedPages

@@ -1,6 +1,20 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\User;
+
+if (!function_exists('getUser')) {
+    /**
+     * Transforms a int value into an User.
+     *
+     * @param int $id
+     * @return User
+     */
+    function getUser(int $id): User
+    {
+        return User::findOrFail($id);
+    }
+}
 
 if (!function_exists('make_integer')) {
     /**

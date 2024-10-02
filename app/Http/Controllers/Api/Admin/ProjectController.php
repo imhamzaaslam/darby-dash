@@ -15,13 +15,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use App\Services\NotificationService;
+use App\Enums\Management;
 
 class ProjectController extends Controller
 {
     public function __construct(
         protected ProjectRepositoryInterface $projectRepository,
         protected UserRepositoryInterface $userRepository,
-        protected TemplateRepositoryInterface $templateRepository
+        protected TemplateRepositoryInterface $templateRepository,
+        protected NotificationService $notificationService,
     ) {}
 
     /**
@@ -107,6 +110,9 @@ class ProjectController extends Controller
             $this->projectRepository->createBacklogList($project);
         }
 
+        //Send Notification
+        $this->notificationService->sendNotification(Management::PROJECT->value, 'project-created', $member_ids, $project->toArray());
+
         return (new ProjectResource($project))
             ->response()
             ->setStatusCode(201);
@@ -172,6 +178,27 @@ class ProjectController extends Controller
         $data['completed_at'] = $request->has('is_completed') && $request->is_completed == 1 ? now() : null;
         $this->projectRepository->update($project, $data);
 
+        //Send Notification
+        if($request->has('is_completed') && $request->is_completed == 1)
+        {
+            $member_ids = $project->members->pluck('id');
+            $this->notificationService->sendNotification(Management::PROJECT->value, 'project-completed', $member_ids, $project->toArray());
+        }
+
+        //Send Notification
+        if($request->has('is_pm_bucks_awarded'))
+        {
+            $projectManager = $project->projectManager();
+            if($projectManager)
+            {
+                $projectData = [
+                    'amount' => $project->pm_bucks,
+                    'title' => $project->title,
+                ];
+                $this->notificationService->sendNotification(Management::BUCKS->value, 'bucks-award', $projectManager->id, $projectData);
+            }
+        }
+
         return (new ProjectResource($project))
         ->response()
         ->setStatusCode(200);
@@ -187,6 +214,10 @@ class ProjectController extends Controller
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
         $this->authorize('delete', $project);
+
+        //Send Notification
+        $member_ids = $project->members->pluck('id');
+        $this->notificationService->sendNotification(Management::PROJECT->value, 'project-deleted', $member_ids, $project->toArray());
 
         $this->projectRepository->delete($project);
 
@@ -244,6 +275,9 @@ class ProjectController extends Controller
 
         $this->projectRepository->updateProjectMembers($project, $member_ids);
 
+        //Send Notification
+        $this->notificationService->sendNotification(Management::MEMBER->value, 'memeber-created', $member_ids, $project->toArray());
+
         return response()->json(['message' => 'Members updated successfully']);
     }
 
@@ -261,6 +295,9 @@ class ProjectController extends Controller
         $user = $this->userRepository->getByUuidOrFail($userUuid);
 
         $this->projectRepository->deleteProjectMember($project, $user);
+
+        //Send Notification
+        $this->notificationService->sendNotification(Management::MEMBER->value, 'memeber-deleted', $user->id, $project->toArray());
 
         return response()->json(['message' => 'Member removed successfully']);
     }

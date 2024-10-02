@@ -9,6 +9,7 @@ use App\Contracts\ProjectBucksRepositoryInterface;
 use App\Contracts\ProjectListRepositoryInterface;
 use App\Contracts\FileRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\task\StoreTaskRequest;
 use App\Http\Requests\task\UpdateTaskRequest;
 use App\Http\Requests\task\StoreTaskByProjectRequest;
@@ -22,7 +23,10 @@ use App\Http\Resources\FileResource;
 use App\Http\Resources\UserResource;
 use App\Services\FileResolverService;
 use App\Services\FileUploadService;
+use App\Services\NotificationService;
 use App\Models\Task;
+use App\Models\TaskAssignee;
+use App\Enums\Management;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -36,6 +40,7 @@ class TaskController extends Controller
         protected FileRepositoryInterface $fileRepository,
         protected FileResolverService $fileResolverService,
         protected FileUploadService $fileUploadService,
+        protected NotificationService $notificationService,
     ) {}
 
     /**
@@ -300,6 +305,13 @@ class TaskController extends Controller
 
         $this->taskRepository->update($task, $validated);
 
+        //Send Notification
+        if($request->has('status') && $request->status == 3)
+        {
+            $projectManager = $project->projectManager();
+            $this->notificationService->sendNotification(Management::TASK->value, 'task-completed', $projectManager->id, $task->toArray());
+        }
+
         return (new TaskResource($task))
             ->response()
             ->setStatusCode(200);
@@ -338,7 +350,13 @@ class TaskController extends Controller
         $this->authorize('view', $project);
         $validated = $request->validated();
 
-        $this->taskRepository->assginMember($task, $validated);
+        $result = $this->taskRepository->assginMember($task, $validated);
+
+        if($result)
+        {
+            //Send Notification
+            $this->notificationService->sendNotification(Management::TASK->value, 'task-assigned', $validated['assignee'], $task->toArray());
+        }
 
         return response()->json(['message' => 'Task assigned successfully']);
     }
@@ -358,12 +376,15 @@ class TaskController extends Controller
 
         $task->assignees()->detach($validated['assignee']);
 
+        //Send Notification
+        $this->notificationService->sendNotification(Management::TASK->value, 'task-unassigned', $validated['assignee'], $task->toArray());
+
         return response()->json(['message' => 'Task unassigned successfully']);
     }
-    
+
     /**
      * Get tasks by project.
-     * 
+     *
      * @param string $projectUuid
      * @return AnonymousResourceCollection|JsonResponse
      */
@@ -375,7 +396,7 @@ class TaskController extends Controller
 
         return BucksTaskResource::collection($tasks);
     }
-    
+
     /**
      * Update bucks task.
      *
@@ -385,12 +406,30 @@ class TaskController extends Controller
      */
     public function updateBucksTask(UpdateBucksTaskRequest $request, string $projectUuid, string $taskId): Response|JsonResponse
     {
-        $task = $this->taskRepository->getFirstByOrFail('id', $taskId);        
+        $task = $this->taskRepository->getFirstByOrFail('id', $taskId);
         $project = $task->project;
         $this->authorize('view', $project);
-        
+
         $validated = $request->validated();
         $this->projectBucksRepository->updateTaskApprovalStatus($task, $validated);
+
+        //Send Notification
+        $bucks = TaskAssignee::where('user_id', $validated['user_id'])->where('task_id', $task->id)->first();
+        $taskData = [
+            'amount' => $bucks ? $bucks->bucks_amount : '0.00',
+            'title' => $project->title,
+            'task_title' => $task->name,
+        ];
+
+        if($request->has('approval_status') && $request->approval_status == 'approved')
+        {
+            $this->notificationService->sendNotification(Management::BUCKS->value, 'bucks-approved', $validated['user_id'], $taskData);
+        }
+
+        if($request->has('approval_status') && $request->approval_status == 'rejected')
+        {
+            $this->notificationService->sendNotification(Management::BUCKS->value, 'bucks-rejected', $validated['user_id'], $taskData);
+        }
 
         return (new TaskResource($task))
             ->response()

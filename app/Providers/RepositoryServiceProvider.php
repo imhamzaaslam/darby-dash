@@ -18,6 +18,8 @@ use App\Contracts\FolderRepositoryInterface;
 use App\Contracts\PaymentRepositoryInterface;
 use App\Contracts\ProjectBucksRepositoryInterface;
 use App\Contracts\TemplateRepositoryInterface;
+use App\Contracts\NotificationRepositoryInterface;
+use App\Contracts\SettingRepositoryInterface;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -34,6 +36,8 @@ use App\Models\Folder;
 use App\Models\Payment;
 use App\Models\ProjectBucks;
 use App\Models\Template;
+use App\Models\Notification;
+use App\Models\Settings_meta;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
@@ -50,6 +54,8 @@ use App\Repositories\FolderRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ProjectBucksRepository;
 use App\Repositories\TemplateRepository;
+use App\Repositories\NotificationRepository;
+use App\Repositories\SettingRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -134,6 +140,14 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             TemplateRepositoryInterface::class,
             fn() => new TemplateRepository(new Template)
+        );
+        $this->app->bind(
+            NotificationRepositoryInterface::class,
+            fn() => new NotificationRepository(new Notification)
+        );
+        $this->app->bind(
+            SettingRepositoryInterface::class,
+            fn() => new SettingRepository(new Settings_meta)
         );
     }
 

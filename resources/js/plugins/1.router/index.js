@@ -19,6 +19,7 @@ import AddProjectTasks from '@/pages/projects/web-designs/_partials/addProjectTa
 import AuthorizationError from '@/pages/errors/authorization-error.vue'
 import Roles from '@/pages/roles/index.vue'
 import BucksSetting from '@/pages/projects/bucks.vue'
+import NotificationList from '@/views/pages/received-notifications-list.vue'
 
 import TwoFactorAuth from '@/pages/TwoFactorAuth.vue'
 
@@ -158,6 +159,15 @@ const router = createRouter({
         path: '/projects/:id/bucks',
         name: 'bucks-setting',
         component: BucksSetting,
+        meta: { layout: 'default' },
+        props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/view/received/notifications',
+        name: 'view-received-notifications',
+        component: NotificationList,
         meta: { layout: 'default' },
         props: true,
       },

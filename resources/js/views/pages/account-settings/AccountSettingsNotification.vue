@@ -1,116 +1,174 @@
+<!-- eslint-disable camelcase -->
 <script setup>
-const recentDevices = ref([
-  {
-    type: 'New for you',
-    email: true,
-    browser: true,
-    app: true,
-  },
-  {
-    type: 'Account activity',
-    email: true,
-    browser: true,
-    app: true,
-  },
-  {
-    type: 'A new browser used to sign in',
-    email: true,
-    browser: true,
-    app: false,
-  },
-  {
-    type: 'A new device is linked',
-    email: true,
-    browser: false,
-    app: false,
-  },
-])
+import { computed, onBeforeMount, ref } from 'vue'
+import { useToast } from "vue-toastification"
+import { useUserSettingStore } from "@/store/user_settings"
 
-const selectedNotification = ref('Only when I\'m online')
+const toast = useToast()
+const userSettingStore = useUserSettingStore()
+
+const managementTypes = ref([])
+const selectedManagementType = ref(null)
+
+const getNotificationSettings = computed(() => userSettingStore.getNotificationSettings)
+
+const fetchNotificationSettings = async () => {
+  try {
+    await userSettingStore.getAllNotifications()
+
+    const apiResponse = getNotificationSettings.value
+
+    if (apiResponse && Object.keys(apiResponse).length > 0) {
+      managementTypes.value = Object.keys(apiResponse).map(managementType => ({
+        title: capitalizeFirstLetter(managementType),
+        notifications: apiResponse[managementType].map(notification => ({
+          id: notification.id,
+          type: notification.type,
+          deliverableChannel: notification.deliverableChannel,
+        })),
+      }))
+
+      selectedManagementType.value = managementTypes.value[0]
+    } else {
+      toast.error('No settings available.')
+    }
+  } catch (error) {
+    toast.error(`Error fetching settings: ${error.message}`)
+  }
+}
+
+const capitalizeFirstLetter = string => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+const updateNotificationChannel = notification => {
+  const { id, deliverableChannel } = notification
+
+  if (id && deliverableChannel !== undefined) {
+    userSettingStore.updateNotificationSetting(id, { deliverable_channel: deliverableChannel })
+      .then(() => {
+        toast.success('Notification channel updated successfully.')
+      })
+      .catch(error => {
+        toast.error(`Error updating notification channel: ${error.message}`)
+      })
+  } else {
+    toast.error('Invalid notification data.')
+  }
+}
+
+const selectManagement = managementTitle => {
+  selectedManagementType.value = managementTypes.value.find(type => type.title === managementTitle) || managementTypes.value[0]
+}
+
+onBeforeMount(fetchNotificationSettings)
 </script>
 
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Recent Devices</VCardTitle>
+      <VCardTitle>Notification Settings</VCardTitle>
       <p class="text-sm mt-2 mb-0">
-        We need permission from your browser to show notifications. <span class="font-weight-bold">Request Permission</span>
+        Manage your preferences for receiving notifications and alerts.
       </p>
     </VCardItem>
 
     <VCardText>
-      <VTable class="text-no-wrap rounded border">
+      <div class="d-flex flex-wrap gap-1 mb-4">
+        <VChip
+          v-for="management in managementTypes"
+          :key="management.title"
+          :class="{ 'v-chip--active': selectedManagementType?.title === management.title }"
+          class="cursor-pointer"
+          color="primary"
+          @click="selectManagement(management.title)"
+        >
+          {{ management.title }} Alerts
+        </VChip>
+      </div>
+
+      <VTable
+        class="text-no-wrap mt-4"
+        density="compact"
+        :style="{ border: '1px solid #e0e0e0' }"
+      >
         <thead>
           <tr>
-            <th scope="col">
-              Type
+            <th style="width: 65%;">
+              Notification Type
             </th>
-            <th scope="col">
-              EMAIL
-            </th>
-            <th scope="col">
-              BROWSER
-            </th>
-            <th scope="col">
-              App
+            <th style="width: 35%;">
+              Deliverable Channel
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="device in recentDevices"
-            :key="device.type"
+            v-for="notification in selectedManagementType?.notifications"
+            :key="notification.type"
           >
+            <td>{{ notification.type }}</td>
             <td>
-              {{ device.type }}
-            </td>
-            <td>
-              <VCheckbox v-model="device.email" />
-            </td>
-            <td>
-              <VCheckbox v-model="device.browser" />
-            </td>
-            <td>
-              <VCheckbox v-model="device.app" />
+              <div class="d-flex align-items-center">
+                <VRadioGroup
+                  v-model="notification.deliverableChannel"
+                  inline
+                  @change="updateNotificationChannel(notification)"
+                >
+                  <VRadio
+                    label="Email"
+                    value="mail"
+                    class="me-2"
+                    density="compact"
+                  />
+                  <VRadio
+                    label="Push"
+                    value="database"
+                    class="me-2"
+                    density="compact"
+                  />
+                  <VRadio
+                    label="Both"
+                    value="both"
+                    class="me-2"
+                    density="compact"
+                  />
+                  <VRadio
+                    label="None"
+                    value="null"
+                    density="compact"
+                  />
+                </VRadioGroup>
+              </div>
             </td>
           </tr>
         </tbody>
       </VTable>
     </VCardText>
     <VDivider />
-
-    <VCardText>
-      <VForm @submit.prevent="() => {}">
-        <h6 class="text-base font-weight-medium mb-3">
-          When should we send you notifications?
-        </h6>
-
-        <VRow>
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <AppSelect
-              v-model="selectedNotification"
-              mandatory
-              :items="['Only when I\'m online', 'Anytime']"
-            />
-          </VCol>
-        </VRow>
-
-        <div class="d-flex flex-wrap gap-4 mt-4">
-          <VBtn type="submit">
-            Save Changes
-          </VBtn>
-          <VBtn
-            color="secondary"
-            variant="tonal"
-            type="reset"
-          >
-            Reset
-          </VBtn>
-        </div>
-      </VForm>
-    </VCardText>
   </VCard>
 </template>
+
+<style scoped>
+.cursor-pointer {
+  transition: background-color 0.3s;
+}
+
+.v-chip--active {
+  background-color: #a12592;
+  color: white !important;
+}
+
+.v-chip {
+  transition: transform 0.2s;
+}
+
+.v-chip:hover {
+  transform: scale(1.03);
+}
+
+.v-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+</style>

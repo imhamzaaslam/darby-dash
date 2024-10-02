@@ -6,6 +6,7 @@ use App\Contracts\AbstractUserRepository;
 use App\Contracts\UserInfoRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
 use App\Events\OssRegistrationDateChanged;
+use App\Events\UserCreated;
 // use App\Notifications\SendSetPasswordNotification;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -39,6 +40,7 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
         $this->userInfoRepository->create($user, $infoAttributes);
 
+        event(new UserCreated($user));
 
         return $user;
     }

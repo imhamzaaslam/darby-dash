@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\Admin\FolderController;
 use App\Http\Controllers\Api\Admin\PaymentController;
 use App\Http\Controllers\Api\Admin\ProjectBucksController;
 use App\Http\Controllers\Api\Admin\TemplateController;
+use App\Http\Controllers\Api\Admin\NotificationController;
+use App\Http\Controllers\Api\Admin\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -194,6 +196,18 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
         Route::prefix('templates')->group(function () {
             Route::get('/', [TemplateController::class, 'index']);
+        });
+
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [NotificationController::class, 'index']);
+            Route::post('/mark-as-read', [NotificationController::class, 'markAsRead']);
+            Route::post('/mark-as-unread', [NotificationController::class, 'markAsUnRead']);
+            Route::delete('/{uuid}', [NotificationController::class, 'delete']);
+        });
+
+        Route::prefix('settings')->group(function () {
+            Route::get('/notifications', [SettingController::class, 'getNotificationSettings']);
+            Route::patch('/notifications/{id}/update', [SettingController::class, 'updateNotificationSetting']);
         });
 
         // Route::prefix('project/{id}/tasks')->group(function () {

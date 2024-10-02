@@ -39,11 +39,16 @@
         <AccountSettingsBillingAndPlans />
       </VWindowItem>
 
+      <!-- Notification -->
+      <VWindowItem value="notifications">
+        <AccountSettingsNotification />
+      </VWindowItem>
+
       <!-- Danger Zone -->
       <!--
         <VWindowItem value="danger-zone">
         <AccountSettingsDangerZone />
-        </VWindowItem> 
+        </VWindowItem>
       -->
     </VWindow>
   </div>
@@ -55,6 +60,7 @@ import { useHead } from '@unhead/vue'
 import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
 import AccountSettingsBillingAndPlans from '@/views/pages/account-settings/AccountSettingsBillingAndPlans.vue'
 import AccountSettingsDangerZone from '@/views/pages/account-settings/AccountSettingsDangerZone.vue'
+import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue'
 import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
 import { watch, ref } from 'vue'
 
@@ -64,7 +70,7 @@ useHead({ title: `${layoutConfig.app.title} | Account` })
 onBeforeMount(() => {
   const searchParams = new URLSearchParams(window.location.search)
   const activeTab = searchParams.get('tab')
-  if (activeTab && ['account', 'security', 'billing-plans'].includes(activeTab)) {
+  if (activeTab && ['account', 'security', 'billing-plans', 'notifications'].includes(activeTab)) {
     setActiveTab(activeTab)
   }
 })
@@ -88,6 +94,11 @@ const tabs = [
     title: 'Billing & Plans',
     icon: 'tabler-file-text',
     tab: 'billing-plans',
+  },
+  {
+    title: 'Notifications',
+    icon: 'tabler-bell',
+    tab: 'notifications',
   },
 
   // {

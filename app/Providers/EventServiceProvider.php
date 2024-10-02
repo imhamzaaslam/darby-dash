@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Events\OssRegistrationDateChanged;
+use App\Events\UserCreated;
 use App\Events\CredentialCreated;
 use App\Events\InvoiceFetched;
 use App\Events\ProductCategoryChanged;
+use App\Listeners\AddNotificationSettingsMeta;
 use App\Listeners\ActivateUser;
 use App\Listeners\BroadcastNotification;
 use App\Listeners\CreateJournal;
@@ -48,8 +50,8 @@ class EventServiceProvider extends ServiceProvider
         ProductCategoryChanged::class => [
             UpdateJournal::class,
         ],
-        NotificationSent::class => [
-            BroadcastNotification::class,
+        UserCreated::class => [
+            AddNotificationSettingsMeta::class,
         ],
     ];
 

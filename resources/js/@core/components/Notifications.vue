@@ -1,57 +1,8 @@
-<script setup>
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-
-const props = defineProps({
-  notifications: {
-    type: Array,
-    required: true,
-  },
-  badgeProps: {
-    type: Object,
-    required: false,
-    default: undefined,
-  },
-  location: {
-    type: null,
-    required: false,
-    default: 'bottom end',
-  },
-})
-
-const emit = defineEmits([
-  'read',
-  'unread',
-  'remove',
-  'click:notification',
-])
-
-const isAllMarkRead = computed(() => props.notifications.some(item => item.isSeen === false))
-
-const markAllReadOrUnread = () => {
-  const allNotificationsIds = props.notifications.map(item => item.id)
-  if (!isAllMarkRead.value)
-    emit('unread', allNotificationsIds)
-  else
-    emit('read', allNotificationsIds)
-}
-
-const totalUnseenNotifications = computed(() => {
-  return props.notifications.filter(item => item.isSeen === false).length
-})
-
-const toggleReadUnread = (isSeen, Id) => {
-  if (isSeen)
-    emit('unread', [Id])
-  else
-    emit('read', [Id])
-}
-</script>
-
 <template>
   <IconBtn id="notification-btn">
     <VBadge
       v-bind="props.badgeProps"
-      :model-value="props.notifications.some(n => !n.isSeen)"
+      :model-value="props.notifications.some(n => !n.read_at)"
       color="primary"
       dot
       offset-x="2"
@@ -79,7 +30,7 @@ const toggleReadUnread = (isSeen, Id) => {
 
           <template #append>
             <VChip
-              v-show="props.notifications.some(n => !n.isSeen)"
+              v-show="props.notifications.some(n => !n.read_at)"
               size="small"
               color="primary"
               class="me-2"
@@ -130,15 +81,22 @@ const toggleReadUnread = (isSeen, Id) => {
                 <!-- Slot: Prepend -->
                 <!-- Handles Avatar: Image, Icon, Text -->
                 <div class="d-flex align-start gap-3">
-                  <VAvatar
-                    size="40"
-                    :color="notification.color && notification.icon ? notification.color : undefined"
-                    :image="notification.img || undefined"
-                    :icon="notification.icon || undefined"
-                    :variant="notification.img ? undefined : 'tonal' "
+                  <VBadge
+                    dot
+                    location="top end"
+                    offset-x="0"
+                    offset-y="1"
+                    :color="notification.is_online ? 'success' : 'warning'"
                   >
-                    <span v-if="notification.text">{{ avatarText(notification.text) }}</span>
-                  </VAvatar>
+                    <VAvatar
+                      size="34"
+                      color="primary"
+                      :image="getImageUrl(notification.img.path) || undefined"
+                      :variant="notification.img ? undefined : 'tonal' "
+                    >
+                      <span v-if="!notification.img">{{ avatarText(notification.name) }}</span>
+                    </VAvatar>
+                  </VBadge>
 
                   <div>
                     <p class="text-sm font-weight-medium mb-1">
@@ -163,10 +121,10 @@ const toggleReadUnread = (isSeen, Id) => {
                     <VIcon
                       size="10"
                       icon="tabler-circle-filled"
-                      :color="!notification.isSeen ? 'primary' : '#a8aaae'"
-                      :class="`${notification.isSeen ? 'visible-in-hover' : ''}`"
+                      :color="!notification.read_at ? 'primary' : '#a8aaae'"
+                      :class="`${notification.read_at ? 'visible-in-hover' : ''}`"
                       class="mb-2"
-                      @click.stop="toggleReadUnread(notification.isSeen, notification.id)"
+                      @click.stop="toggleReadUnread(notification.read_at, notification.id)"
                     />
 
                     <VIcon
@@ -200,6 +158,7 @@ const toggleReadUnread = (isSeen, Id) => {
           <VBtn
             block
             size="small"
+            :to="{ path: '/view/received/notifications' }"
           >
             View All Notifications
           </VBtn>
@@ -208,6 +167,61 @@ const toggleReadUnread = (isSeen, Id) => {
     </VMenu>
   </IconBtn>
 </template>
+
+<script setup>
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+
+const props = defineProps({
+  notifications: {
+    type: Array,
+    required: true,
+  },
+  badgeProps: {
+    type: Object,
+    required: false,
+    default: undefined,
+  },
+  location: {
+    type: null,
+    required: false,
+    default: 'bottom end',
+  },
+})
+
+const emit = defineEmits([
+  'read',
+  'unread',
+  'remove',
+  'click:notification',
+])
+
+const isAllMarkRead = computed(() => props.notifications.some(item => item.read_at === null))
+
+const markAllReadOrUnread = () => {
+  const allNotificationsIds = props.notifications.map(item => item.id)
+  if (!isAllMarkRead.value)
+    emit('unread', allNotificationsIds)
+  else
+    emit('read', allNotificationsIds)
+}
+
+const totalUnseenNotifications = computed(() => {
+  return props.notifications.filter(item => item.read_at === null).length
+})
+
+const toggleReadUnread = (isSeen, Id) => {
+  if (isSeen)
+    emit('unread', [Id])
+  else
+    emit('read', [Id])
+}
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+</script>
 
 <style lang="scss">
 .notification-section {

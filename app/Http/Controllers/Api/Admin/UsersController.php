@@ -24,6 +24,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use App\Services\NotificationService;
+use App\Enums\Management;
 
 class UsersController extends Controller
 {
@@ -33,6 +35,7 @@ class UsersController extends Controller
         protected FileRepositoryInterface $fileRepository,
         protected FileResolverService $fileResolverService,
         protected FileUploadService $fileUploadService,
+        protected NotificationService $notificationService,
     ) {}
 
     /**
@@ -92,6 +95,9 @@ class UsersController extends Controller
         ];
 
         $user = $this->userRepository->create($role, $attributes, $infoAttributes ?? []);
+
+        //Send Notification
+        $this->notificationService->sendNotification(Management::USER->value, 'user-created', $user->id, $user->toArray());
 
         return (new UserResource($user))
             ->response()

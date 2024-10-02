@@ -11,7 +11,7 @@ class EmailService
     public function send2FACode($user)
     {
         try {
-            Mail::send('emails.two_factor_authentication', ['user' => $user], function ($message) use ($user) {
+            Mail::send('emails.two_factor_authentication', compact('user'), function ($message) use ($user) {
                 $message->subject('Your 2FA code')->to($user->email);
             });
             return true;
@@ -21,3 +21,4 @@ class EmailService
         }
     }
 }
+
