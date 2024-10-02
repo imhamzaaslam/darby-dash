@@ -23,7 +23,7 @@ class NotificationRepository extends AbstractEloquentRepository implements Notif
 
     public function get(): Collection
     {
-        return $this->model->where('notifiable_id', Auth::id())->get();
+        return $this->model->where('notifiable_id', Auth::id())->orderBy('created_at', 'desc')->get();
     }
 
     public function getNotification($uuid): Notification

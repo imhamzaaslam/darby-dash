@@ -67,7 +67,7 @@
                         <VAvatar
                           size="34"
                           color="primary"
-                          :image="getImageUrl(notification.img.path) || undefined"
+                          :image="notification.img ? getImageUrl(notification.img.path) : undefined"
                           :variant="notification.img ? undefined : 'tonal' "
                         >
                           <span v-if="!notification.img">{{ avatarText(notification.name) }}</span>
