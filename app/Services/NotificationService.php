@@ -24,7 +24,7 @@ class NotificationService
     {
         $sender = Auth::user();
         $settings = Settings_meta::where('key', $messageType)->where('user_id', $sender->id)->first() ?? null;
-        if($settings)
+        if($settings && !empty($settings->deliverable_channel) && $settings->deliverable_channel !== 'null' && $settings->deliverable_channel !== null)
         {
             $receivers = $this->getReceivers($receivers);
             $receivers = $receivers instanceof User ? [$receivers] : $receivers;
