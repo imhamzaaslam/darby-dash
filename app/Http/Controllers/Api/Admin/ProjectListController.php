@@ -121,4 +121,19 @@ class ProjectListController extends Controller
         return ProjectListResource::collection($projectLists);
     }
 
+    /**
+     * Sort lists.
+     *  @param Request $request
+     * @param string $uuid
+     * @return JsonResponse
+     */
+    public function sortLists(Request $request, string $uuid): JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($uuid);
+        $this->authorize('update', $project);
+        $this->projectListRepository->sortLists($request->input('lists'));
+
+        return response()->json(['message' => 'Project List sorted successfully']);
+    }
+
 }

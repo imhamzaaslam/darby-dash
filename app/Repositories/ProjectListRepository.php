@@ -66,4 +66,14 @@ class ProjectListRepository extends AbstractEloquentRepository implements Projec
     {
         return $project->lists->where('milestone_id', null);
     }
+
+    public function sortLists(array $lists): void
+    {
+        foreach ($lists as $list) {
+            $projectList = $this->model->findOrFail($list['id']);
+            if($projectList){
+                $projectList->update(['display_order' => $list['order']]);
+            }
+        }
+    }
 }

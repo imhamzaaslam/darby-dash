@@ -101,6 +101,12 @@
               >
                 Save as Template
               </VListItem>
+              <VListItem
+                value="sort-list"
+                @click="isSortListModalOpen = true"
+              >
+                Sort Lists
+              </VListItem>
             </VList>
           </VMenu>
         </VBtn>
@@ -1675,6 +1681,11 @@
     v-model:is-save-template-modal-open="isSaveTemplateModalOpen"
     :selected-project="projectId"
   />
+  <SortListModal
+    v-model:is-sort-list-modal-open="isSortListModalOpen"
+    :selected-project="projectId"
+    :get-project-lists="getProjectLists"
+  />
 </template>
 
 <script setup="js">
@@ -1686,6 +1697,7 @@ import NoTaskInList from '@images/darby/tasks_list.svg?raw'
 import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-project-task-drawer.vue'
 import FilterTaskDrawer from '@/pages/projects/web-designs/_partials/filter-task-drawer.vue'
 import SaveTemplateModal from '@/pages/projects/web-designs/_partials/save-template-modal.vue'
+import SortListModal from '@/pages/projects/web-designs/_partials/sort-lists-modal.vue'
 import { computed, onBeforeMount, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useAuthStore } from "@/store/auth"
@@ -1723,6 +1735,7 @@ const isFilterDrawerOpen = ref(false)
 const filtersApplied = ref(false)
 
 const isSaveTemplateModalOpen = ref(false)
+const isSortListModalOpen = ref(false)
 
 const isAddListDialogVisible = ref(false)
 const addListForm = ref()

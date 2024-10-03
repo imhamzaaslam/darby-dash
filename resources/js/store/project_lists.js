@@ -82,6 +82,19 @@ export const useProjectListStore = defineStore('project_lists', {
         console.error('deleteList error ', error)
       }
     },
+    async saveSortedOrder(projectId, lists) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectListService.saveSortedOrder(projectId, lists)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('saveSortedOrder error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,

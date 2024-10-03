@@ -103,6 +103,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
                 Route::get('/lists', [ProjectListController::class, 'index']);
                 Route::post('/list', [ProjectListController::class, 'store']);
+                Route::patch('lists/sort', [ProjectListController::class, 'sortLists']);
                 Route::prefix('list/{listUuid}')->group(function () {
                     Route::patch('/', [ProjectListController::class, 'update']);
                     Route::delete('/', [ProjectListController::class, 'delete']);

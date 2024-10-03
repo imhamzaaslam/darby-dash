@@ -16,4 +16,7 @@ export default {
   deleteProjectList(list) {
     return apiClient.delete(`admin/projects/${list.project_uuid}/list/${list.uuid}`)
   },
+  saveSortedOrder(projectId, lists) {
+    return apiClient.patch(`admin/projects/${projectId}/lists/sort`, { lists: lists })
+  },
 }

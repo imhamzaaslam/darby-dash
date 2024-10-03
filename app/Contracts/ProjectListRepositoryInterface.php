@@ -19,4 +19,6 @@ interface ProjectListRepositoryInterface
     public function getListTasks(ProjectList $projectList): Collection;
 
     public function getListWithoutMilestone(Project $project): Collection;
+
+    public function sortLists(array $lists): void;
 }
