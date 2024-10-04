@@ -110,7 +110,6 @@
         >
           <VBtn
             color="primary"
-            variant="plain"
             class="mt-2 float-right"
             size="small"
             @click.stop="toggleAddList"
