@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-template-shadow -->
 <template>
   <VDialog
     :model-value="props.isSortListModalOpen"
@@ -9,39 +10,209 @@
     <DialogCloseBtn @click="$emit('update:isSortListModalOpen', false)" />
 
     <VCard class="sort-dialog-card">
-      <VCardTitle class="text-h5">
+      <VCardTitle class="d-flex justify-between align-center mb-0 text-h5">
         <span>
           <VIcon
             icon="tabler-align-box-left-top"
-            class="me-2"
+            class="me-1"
             color="primary"
           />
-          Sort Lists ({{ props.getProjectLists ? props.getProjectLists.length : 0 }})
+          Manage Lists ({{ props.getProjectAllLists ? props.getProjectAllLists.length : 0 }})
         </span>
+        <VTooltip location="top">
+          <template #activator="{ props }">
+            <VIcon
+              v-bind="props"
+              icon="tabler-circle-plus"
+              class="cursor-pointer ms-2"
+              color="primary"
+              size="small"
+              @click="toggleAddList"
+            />
+          </template>
+          <span>Add List</span>
+        </VTooltip>
       </VCardTitle>
+
+      <!-- Add new list section -->
+      <VRow
+        v-if="isAddingList"
+        class="px-5 mt-4"
+      >
+        <VCol
+          cols="12"
+          class="d-flex align-center justify-between"
+        >
+          <!-- Text Field -->
+          <AppTextField
+            v-model="newListName"
+            placeholder="List Name"
+            density="compact"
+            autofocus
+            hide-details
+            dense
+            class="flex-grow-1"
+          />
+
+          <!-- Action Buttons (Icons) -->
+          <div class="d-flex align-center ms-2">
+            <div>
+              <VBtn
+                color="success"
+                class="me-1"
+                icon
+                size="x-small"
+                @click.stop="saveNewList"
+              >
+                <VIcon
+                  size="small"
+                  icon="tabler-check"
+                />
+              </VBtn>
+              <VTooltip
+                activator="parent"
+                location="top"
+              >
+                <span class="text-xs">Save</span>
+              </VTooltip>
+            </div>
+            <div>
+              <VBtn
+                color="error"
+                class="ms-1"
+                icon
+                size="x-small"
+                @click.stop="cancelAddList"
+              >
+                <VIcon
+                  size="small"
+                  icon="tabler-x"
+                />
+              </VBtn>
+              <VTooltip
+                activator="parent"
+                location="top"
+              >
+                <span class="text-xs">Cancel</span>
+              </VTooltip>
+            </div>
+          </div>
+        </VCol>
+      </VRow>
+      <VRow
+        v-else
+        class="px-1"
+      >
+        <VCol
+          cols="12"
+          class="py-0"
+        >
+          <VBtn
+            color="primary"
+            variant="plain"
+            class="mt-2 float-right"
+            size="small"
+            @click.stop="toggleAddList"
+          >
+            <VIcon icon="tabler-plus" />
+            <small>Add List</small>
+          </VBtn>
+        </VCol>
+      </VRow>
 
       <VCardText class="px-4">
         <VueDraggableNext
-          :list="props.getProjectLists"
+          :list="props.getProjectAllLists"
           item-key="id"
           class="drag-container"
         >
           <VRow
-            v-for="list in props.getProjectLists"
+            v-for="(list, index) in props.getProjectAllLists"
             :key="list.id"
             class="sort-item"
+            :class="[{ 'no-hover': editingListId === list.id }]"
           >
             <!-- Left side: drag icon and list name -->
             <VCol
               cols="8"
               class="d-flex align-items-center py-0"
+              @mouseenter="hoveredListId = list.id"
+              @mouseleave="hoveredListId = null"
             >
               <VIcon
                 icon="tabler-grip-vertical"
                 class="drag-handle"
                 color="grey darken-1"
               />
-              <small class="list-text text-sm ms-2">{{ list.name }} ({{ list.total_tasks }})</small>
+              <template v-if="editingListId === list.id">
+                <VTextField
+                  v-model="list.editingName"
+                  hide-details
+                  autofocus
+                  density="compact"
+                  class="ms-2"
+                  dense
+                />
+                <div>
+                  <VBtn
+                    color="success"
+                    class="ms-2"
+                    icon
+                    size="x-small"
+                    @click.stop="saveListName(list, index)"
+                  >
+                    <VIcon
+                      size="small"
+                      icon="tabler-check"
+                    />
+                  </VBtn>
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span class="text-xs">Save</span>
+                  </VTooltip>
+                </div>
+                <div>
+                  <VBtn
+                    color="error"
+                    class="ms-1"
+                    icon
+                    size="x-small"
+                    @click.stop="cancelEdit(list)"
+                  >
+                    <VIcon
+                      size="small"
+                      icon="tabler-x"
+                    />
+                  </VBtn>
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span class="text-xs">Cancel</span>
+                  </VTooltip>
+                </div>
+              </template>
+              <template v-else>
+                <small class="list-text text-sm ms-2">{{ list.name }} ({{ list.total_tasks }})</small>
+                <VIcon
+                  v-if="hoveredListId === list.id"
+                  icon="tabler-edit"
+                  class="ms-2 edit-icon"
+                  size="small"
+                  color="primary"
+                  @click.stop="editList(list)"
+                />
+                <VIcon
+                  v-if="hoveredListId === list.id && (getProjectAllLists? getProjectAllLists.length > 1 : 0)"
+                  icon="tabler-trash"
+                  class="ms-1 edit-icon"
+                  size="small"
+                  color="primary"
+                  @click.stop="deleteProjectList(list)"
+                />
+              </template>
             </VCol>
 
             <!-- Right side: progress and tasks -->
@@ -51,7 +222,7 @@
             >
               <div class="d-flex justify-between align-center w-100">
                 <div class="text-body-1 text-high-emphasis">
-                  <small>{{ list.progress }}%</small>
+                  <small class="progress-text">{{ list.progress }}%</small>
                 </div>
                 <div class="flex-grow-1 mx-2">
                   <VProgressLinear
@@ -62,15 +233,14 @@
                   />
                 </div>
                 <div class="text-body-1 text-high-emphasis">
-                  <small>{{ list.completed_tasks }}</small>
+                  <small class="progress-complete-task-text">{{ list.completed_tasks }}</small>
                 </div>
               </div>
             </VCol>
           </VRow>
         </VueDraggableNext>
       </VCardText>
-
-      <VCardText class="d-flex justify-end gap-3 flex-wrap">
+      <VCardText class="d-flex justify-end gap-3 flex-wrap px-3 mb-0">
         <VBtn
           color="secondary"
           @click="$emit('update:isSortListModalOpen', false)"
@@ -96,18 +266,24 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useProjectListStore } from '@/store/project_lists'
 import { useToast } from 'vue-toastification'
+import Swal from 'sweetalert2'
 
 const props = defineProps({
   isSortListModalOpen: { type: Boolean, required: true },
   selectedProject: { type: String, required: true },
-  getProjectLists: { type: Array, required: true },
+  getProjectAllLists: { type: Array, required: true },
 })
 
 const emit = defineEmits(['update:isSortListModalOpen'])
+
+const hoveredListId = ref(null)
+const editingListId = ref(null)
+const isAddingList = ref(false)
+const newListName = ref('')
 
 const dialogVisibleUpdate = val => {
   emit('update:isSortListModalOpen', val)
@@ -116,11 +292,76 @@ const dialogVisibleUpdate = val => {
 const projectListStore = useProjectListStore()
 const toast = useToast()
 
+const fetchProjectLists = async () => {
+  try {
+    await projectListStore.getAll(props.selectedProject, {})
+  } catch (error) {
+    toast.error('Error fetching project lists:', error)
+  }
+}
+
+const editList = list => {
+  editingListId.value = list.id
+  list.editingName = list.name
+}
+
+const saveListName = async(list, index) => {
+  if (!list.editingName.trim()) {
+    toast.error('List name cannot be empty.')
+
+    return
+  }
+
+  list.name = list.editingName
+
+  const editListDetails = {
+    name: list.name,
+    uuid: list.uuid,
+    project_uuid: props.selectedProject,
+  }
+
+  await projectListStore.update(editListDetails)
+  editingListId.value = null
+  toast.success('List name updated!')
+}
+
+const cancelEdit = list => {
+  editingListId.value = null
+  list.editingName = list.name
+}
+
+const toggleAddList = () => {
+  isAddingList.value = true
+  newListName.value = ''
+}
+
+const saveNewList = async() => {
+  if (!newListName.value.trim()) {
+    toast.error('List name cannot be empty.')
+
+    return
+  }
+
+  const newListDetails = {
+    name: newListName.value.trim(),
+    project_uuid: props.selectedProject,
+  }
+
+  await projectListStore.create(newListDetails)
+  await fetchProjectLists()
+  isAddingList.value = false
+  toast.success('New list added!')
+}
+
+const cancelAddList = () => {
+  isAddingList.value = false
+}
+
 const saveSortedOrder = async () => {
   try {
     const projectId = props.selectedProject
 
-    const sortedLists = props.getProjectLists.map((list, index) => ({
+    const sortedLists = props.getProjectAllLists.map((list, index) => ({
       id: list.id,
       order: index + 1,
     }))
@@ -130,6 +371,43 @@ const saveSortedOrder = async () => {
     emit('update:isSortListModalOpen', false)
   } catch (error) {
     toast.error('Failed to save sorted order.')
+  }
+}
+
+const deleteProjectList = async list => {
+  try {
+    const listWithProjectId = { ...list, project_uuid: props.selectedProject }
+
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      html: `
+        <div>
+        <p>
+            Do you want to delete <strong>${list.name}</strong>?
+            <br>
+            <small>This action will also delete all associated tasks.</small>
+        </p>
+        </div>
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#a12592",
+      cancelButtonColor: "#808390",
+      confirmButtonText: "Yes, delete it!",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+      },
+    })
+
+    if (confirmDelete.isConfirmed) {
+
+      const res = await projectListStore.delete(listWithProjectId)
+
+      toast.success('List deleted successfully', { timeout: 1000 })
+      await fetchProjectLists()
+    }
+  } catch (error) {
+    toast.error('Failed to delete project list:', error)
   }
 }
 
@@ -153,25 +431,39 @@ const loadStatus = computed(() => projectListStore.getLoadStatus)
 
   .sort-item:hover {
     background-color: #F0D9EB;
-    border-radius: 4px;
   }
 
   .drag-handle {
     margin-right: 12px;
   }
-  .sort-item:hover .drag-handle {
-    color: #a12592 !important;
-    font-weight: bold;
-  }
 
-  .sort-item:hover .list-text {
+  .sort-item:hover .drag-handle,
+  .sort-item:hover .list-text,
+  .sort-item:hover .progress-text,
+  .sort-item:hover .progress-complete-task-text {
     color: #a12592 !important;
-    font-weight: bold;
+    font-weight: normal;
+   }
+
+   .no-hover:hover {
+    background-color: transparent !important;
+   }
+
+   .no-hover:hover .drag-handle,
+   .no-hover:hover .list-text,
+   .no-hover:hover .progress-text,
+   .no-hover:hover .progress-complete-task-text {
+    color: inherit !important;
+    font-weight: normal;
+   }
+
+  .edit-icon {
+    cursor: pointer;
+    transition: color 0.3s;
   }
 
   .list-text {
     font-weight: 500;
-    color: #333;
   }
 
   .v-btn {

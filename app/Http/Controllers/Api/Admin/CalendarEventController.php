@@ -54,8 +54,10 @@ class CalendarEventController extends Controller
 
         $calendarEvent = $this->calendarEventRepository->getByUuidOrFail($res->uuid);
 
-        $calendarEventData = array_merge($calendarEvent->toArray(), ['project_title' => $project->title]);
+        $calendarEventData = array_merge($calendarEvent->toArray(), ['project_title' => $project->title, 'project_uuid' => $project->uuid]);
 
+
+        //Send Notification
         $this->notificationService->sendNotification(Management::CALENDAR->value, 'new-event', $validated['guests_ids'], $calendarEventData);
 
         return (new CalendarEventResource($calendarEvent))

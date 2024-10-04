@@ -309,7 +309,8 @@ class TaskController extends Controller
         if($request->has('status') && $request->status == 3)
         {
             $projectManager = $project->projectManager();
-            $this->notificationService->sendNotification(Management::TASK->value, 'task-completed', $projectManager->id, $task->toArray());
+            $taskArray = array_merge($task->toArray(), ['project_uuid' => $project->uuid]);
+            $this->notificationService->sendNotification(Management::TASK->value, 'task-completed', $projectManager->id, $taskArray);
         }
 
         return (new TaskResource($task))
@@ -355,7 +356,8 @@ class TaskController extends Controller
         if($result)
         {
             //Send Notification
-            $this->notificationService->sendNotification(Management::TASK->value, 'task-assigned', $validated['assignee'], $task->toArray());
+            $taskArray = array_merge($task->toArray(), ['project_uuid' => $project->uuid]);
+            $this->notificationService->sendNotification(Management::TASK->value, 'task-assigned', $validated['assignee'], $taskArray);
         }
 
         return response()->json(['message' => 'Task assigned successfully']);
@@ -377,7 +379,8 @@ class TaskController extends Controller
         $task->assignees()->detach($validated['assignee']);
 
         //Send Notification
-        $this->notificationService->sendNotification(Management::TASK->value, 'task-unassigned', $validated['assignee'], $task->toArray());
+        $taskArray = array_merge($task->toArray(), ['project_uuid' => $project->uuid]);
+        $this->notificationService->sendNotification(Management::TASK->value, 'task-unassigned', $validated['assignee'], $taskArray);
 
         return response()->json(['message' => 'Task unassigned successfully']);
     }
@@ -418,6 +421,7 @@ class TaskController extends Controller
         $taskData = [
             'amount' => $bucks ? $bucks->bucks_amount : '0.00',
             'title' => $project->title,
+            'project_uuid' => $project->uuid,
             'task_title' => $task->name,
         ];
 

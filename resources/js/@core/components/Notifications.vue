@@ -7,6 +7,7 @@
       dot
       offset-x="2"
       offset-y="3"
+      class="animated-badge"
     >
       <VIcon
         size="24"
@@ -76,7 +77,7 @@
                 lines="one"
                 min-height="66px"
                 class="list-item-hover-class"
-                @click="$emit('click:notification', notification)"
+                @click="notifyClick(notification)"
               >
                 <!-- Slot: Prepend -->
                 <!-- Handles Avatar: Image, Icon, Text -->
@@ -170,6 +171,7 @@
 
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   notifications: {
@@ -195,7 +197,16 @@ const emit = defineEmits([
   'click:notification',
 ])
 
+const router = useRouter()
+
 const isAllMarkRead = computed(() => props.notifications.some(item => item.read_at === null))
+
+const notifyClick = async notification => {
+  emit('click:notification', notification)
+  if (notification.url) {
+    router.push(notification.url)
+  }
+}
 
 const markAllReadOrUnread = () => {
   const allNotificationsIds = props.notifications.map(item => item.id)
@@ -221,6 +232,12 @@ const getImageUrl = path => {
 
   return `${baseUrl}storage/${path}`
 }
+
+/* const getUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}${path}`
+} */
 </script>
 
 <style lang="scss">

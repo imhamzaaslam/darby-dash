@@ -97,22 +97,22 @@ class NotificationService
                 return [
                     'title' => 'New Project Created',
                     'message' => $sender->name_first . ' added you as a team member of project: ' . $project['title'],
-                    'url' => '',
                     'type' => 'project-created',
+                    'url' => "projects/web-designs/{$project['uuid']}",
                 ];
             case 'project-completed':
                 return [
                     'title' => 'Project Completed',
                     'message' => $sender->name_first . ' has marked the '. $project['title'] .' project as completed.',
-                    'url' => '',
                     'type' => 'project-completed',
+                    'url' => "projects/web-designs/{$project['uuid']}",
                 ];
             case 'project-deleted':
                 return [
                     'title' => 'Project Deleted',
                     'message' => $sender->name_first . ' has deleted the '. $project['title'] .' project.',
-                    'url' => '',
-                    'type' => 'task-reminder',
+                    'type' => 'project-deleted',
+                    'url' => "projects/web-designs",
                 ];
             default:
                 return $this->getDefaultNotificationTemplate();
@@ -127,8 +127,8 @@ class NotificationService
                 return [
                     'title' => 'Welcome to DarbyDash! Your New Account Awaits',
                     'message' => $sender->name_first . ' added you as a '. ucwords($user->getRoleNames()->first() ?? ''),
-                    'url' => '',
                     'type' => 'user-created',
+                    'url' => "account-setting",
                 ];
             default:
                 return $this->getDefaultNotificationTemplate();
@@ -142,15 +142,15 @@ class NotificationService
                 return [
                     'title' => 'New Team Member',
                     'message' => $sender->name_first . ' has added you as a new team member to the project ' . $project['title'].".",
-                    'url' => '',
                     'type' => 'member-created',
+                    'url' => "projects/{$project['uuid']}/team",
                 ];
             case 'member-deleted':
                 return [
                     'title' => 'You Were Removed as a Team Member',
                     'message' => $sender->name . ' has removed you from the project ' . $project['title'] . '.',
-                    'url' => '',
                     'type' => 'member-deleted',
+                    'url' => "projects/web-designs",
                 ];
             default:
                 return $this->getDefaultNotificationTemplate();
@@ -164,22 +164,22 @@ class NotificationService
                 return [
                     'title' => 'Bucks Awarded - ' . $data['amount'],
                     'message' => $sender->name_first . ' has awarded you ' . $data['amount'] . ' bucks for completing the '. $data['title'] .' project.',
-                    'url' => '',
                     'type' => 'bucks-award',
+                    'url' => "projects/web-designs",
                 ];
             case 'bucks-approved':
                 return [
                     'title' => $data['title'] . 'Bucks Approved - ' . $data['amount'],
                     'message' => $sender->name_first . ' has been awarded ' . $data['amount'] . ' bucks for the task: ' . $data['task_title'],
-                    'url' => '',
                     'type' => 'bucks-approved',
+                    'url' => "projects/{$data['project_uuid']}/bucks?tab=manage-bucks",
                 ];
             case 'bucks-rejected':
                 return [
                     'title' => $data['title'] . ': Bucks Rejected - ' . $data['amount'],
                     'message' => $sender->name_first . ' has rejected to award bucks for the task: ' . $data['task_title'],
-                    'url' => '',
                     'type' => 'bucks-rejected',
+                    'url' => "projects/{$data['project_uuid']}/bucks?tab=manage-bucks",
                 ];
             default:
                 return $this->getDefaultNotificationTemplate();
@@ -193,22 +193,22 @@ class NotificationService
                 return [
                     'title' => 'New Task Assigned',
                     'message' => $sender->name_first . ' assigned you a new task: ' . $data['name'],
-                    'url' => '',
                     'type' => 'task-assigned',
+                    'url' => "projects/{$data['project_uuid']}/tasks/add",
                 ];
             case 'task-completed':
                 return [
                     'title' => 'Task Completed',
                     'message' => $sender->name_first . ' has completed the task: ' . $data['name'],
-                    'url' => '',
                     'type' => 'task-completed',
+                    'url' => "projects/{$data['project_uuid']}/tasks/add",
                 ];
             case 'task-unassigned':
                 return [
                     'title' => 'Task Unassigned',
                     'message' => $sender->name_first . ' unassigned you from task: ' . $data['name'],
-                    'url' => '',
                     'type' => 'task-unassigned',
+                    'url' => "projects/{$data['project_uuid']}/tasks/add",
                 ];
             default:
                 return $this->getDefaultNotificationTemplate();
@@ -222,8 +222,8 @@ class NotificationService
                 return [
                     'title' => $data['title'].': Milestone Completed',
                     'message' => 'We have completed the milestone "' . $data['milestone_title'] . '" for the project "' . $data['title'] . '".',
-                    'url' => '',
                     'type' => 'milestone-completed',
+                    'url' => null,
                 ];
         }
     }
@@ -235,15 +235,15 @@ class NotificationService
                 return [
                     'title' => 'New Message from ' . $sender->name_first,
                     'message' => 'You have received a new message: ' . $data['message'],
-                    'url' => '',
                     'type' => 'new-message',
+                    'url' => null,
                 ];
             case 'message-replied':
                 return [
                     'title' => 'Message Replied from ' . $sender->name_first,
                     'message' => 'You have a reply: ' . $data['message'],
-                    'url' => '',
                     'type' => 'message-replied',
+                    'url' => null,
                 ];
         }
     }
@@ -255,15 +255,15 @@ class NotificationService
                 return [
                     'title' => 'File Uploaded: ' . $data['file_name'],
                     'message' => $sender->name_first . ' uploaded a file: ' . $data['file_name'],
-                    'url' => '',
                     'type' => 'file-uploaded',
+                    'url' => null,
                 ];
             case 'file-shared':
                 return [
                     'title' => 'File Shared: ' . $data['file_name'],
                     'message' => $sender->name_first . ' shared a file with you: ' . $data['file_name'],
-                    'url' => '',
                     'type' => 'file-shared',
+                    'url' => null,
                 ];
         }
     }
@@ -275,15 +275,15 @@ class NotificationService
                 return [
                     'title' => 'Event Reminder: ' . $data['event_title'],
                     'message' => 'The event "' . $data['event_title'] . '" is happening today.',
-                    'url' => '',
+                    'url' => null,
                     'type' => 'event-reminder',
                 ];
             case 'new-event':
                 return [
-                    'title' => 'New Event Created in Project: ' . $data['title'],
+                    'title' => 'New Event Created in Project: ' . $data['project_title'],
                     'message' => $sender->name_first . ' created a new event: ' . $data['name'],
-                    'url' => '',
                     'type' => 'new-event',
+                    'url' => "projects/{$data['project_uuid']}/calendar",
                 ];
         }
     }

@@ -88,11 +88,19 @@
           <VIcon icon="tabler-dots" />
           <VMenu activator="parent">
             <VList>
-              <VListItem
+              <!--
+                <VListItem
                 value="add-list"
                 @click="isAddListDialogVisible = true"
-              >
+                >
                 Add List
+                </VListItem>
+              -->
+              <VListItem
+                value="sort-list"
+                @click="isSortListModalOpen = true"
+              >
+                Manage Lists
               </VListItem>
               <VListItem
                 v-if="authStore.isAdmin"
@@ -100,12 +108,6 @@
                 @click="isSaveTemplateModalOpen = true"
               >
                 Save as Template
-              </VListItem>
-              <VListItem
-                value="sort-list"
-                @click="isSortListModalOpen = true"
-              >
-                Sort Lists
               </VListItem>
             </VList>
           </VMenu>
@@ -1684,7 +1686,7 @@
   <SortListModal
     v-model:is-sort-list-modal-open="isSortListModalOpen"
     :selected-project="projectId"
-    :get-project-lists="getProjectLists"
+    :get-project-all-lists="getProjectAllLists"
   />
 </template>
 
@@ -2202,6 +2204,7 @@ function filteredTasks(index, tasks) {
 
 const getProjectTasks = computed(() => projectTaskStore.getProjectTasks)
 const getProjectLists = computed(() => projectListStore.getProjectLists)
+const getProjectAllLists = computed(() => projectListStore.getProjectLists)
 const project = computed(() => projectStore.getProject)
 
 getProjectLists.value.forEach(() => {

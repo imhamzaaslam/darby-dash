@@ -42,6 +42,7 @@ class NotificationResource extends JsonResource
             'name' => $name,
             'is_online' => $isOnline,
             'role' => $role,
+            'url' => $data['url'] ?? null,
         ];
     }
 }
