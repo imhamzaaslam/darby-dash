@@ -28,10 +28,10 @@ class NotificationService
         {
             $receivers = $this->getReceivers($receivers);
             $receivers = $receivers instanceof User ? [$receivers] : $receivers;
-            $admins = $this->getSuperAdmins();
+            /* $admins = $this->getSuperAdmins();
             if ($admins && $admins->isNotEmpty()) {
                 $receivers = array_merge($receivers, $admins->all());
-            }
+            } */
             if ($receivers) {
                 $template = $this->getTemplateForManagement($managementType, $messageType, $sender, $data);
                 foreach ($receivers as $receiver) {
