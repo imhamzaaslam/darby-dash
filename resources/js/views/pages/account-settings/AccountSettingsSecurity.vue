@@ -1,7 +1,11 @@
 <template>
   <VRow>
     <!-- SECTION: Change Password -->
-    <VCol cols="7">
+    <VCol
+      cols="12"
+      md="7"
+      sm="12"
+    >
       <VCard title="Change Password">
         <VForm
           ref="passRefForm"
@@ -121,7 +125,11 @@
     <!-- !SECTION -->
 
     <!-- SECTION Two-steps verification -->
-    <VCol cols="5">
+    <VCol
+      cols="12"
+      md="5"
+      sm="12"
+    >
       <VCard title="Two-Factor Authentication">
         <VCardText>
           <p>

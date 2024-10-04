@@ -100,9 +100,26 @@
                   </VBadge>
 
                   <div>
-                    <p class="text-sm font-weight-medium mb-1">
-                      {{ notification.title }}
-                    </p>
+                    <div class="d-flex align-items-center mb-1">
+                      <p class="text-sm font-weight-medium d-flex align-items-center mb-0">
+                        {{ notification.title }}
+                        <VIcon
+                          size="10"
+                          icon="tabler-circle-filled"
+                          :color="!notification.read_at ? 'primary' : '#a8aaae'"
+                          :class="`${notification.read_at ? 'visible-in-hover' : ''}`"
+                          class="ms-1 mt-1"
+                          @click.stop="toggleReadUnread(notification.read_at, notification.id)"
+                        />
+                      </p>
+                      <VIcon
+                        size="20"
+                        icon="tabler-x"
+                        class="ms-auto visible-in-hover"
+                        style="position:relative;left:35px;bottom:3px;"
+                        @click="$emit('remove', notification.id)"
+                      />
+                    </div>
                     <p
                       class="text-body-2 mb-2"
                       style=" letter-spacing: 0.4px !important; line-height: 18px;"
@@ -117,24 +134,6 @@
                     </p>
                   </div>
                   <VSpacer />
-
-                  <div class="d-flex flex-column align-end">
-                    <VIcon
-                      size="10"
-                      icon="tabler-circle-filled"
-                      :color="!notification.read_at ? 'primary' : '#a8aaae'"
-                      :class="`${notification.read_at ? 'visible-in-hover' : ''}`"
-                      class="mb-2"
-                      @click.stop="toggleReadUnread(notification.read_at, notification.id)"
-                    />
-
-                    <VIcon
-                      size="20"
-                      icon="tabler-x"
-                      class="visible-in-hover"
-                      @click="$emit('remove', notification.id)"
-                    />
-                  </div>
                 </div>
               </VListItem>
             </template>

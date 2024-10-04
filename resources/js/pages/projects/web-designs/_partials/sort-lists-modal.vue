@@ -426,7 +426,7 @@ const loadStatus = computed(() => projectListStore.getLoadStatus)
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 2px;
+    padding: 12px 2px;
     border-bottom: 1px solid #f0f0f0;
     cursor: grab;
   }

@@ -50,10 +50,13 @@
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody
+                v-for="notification in notifications"
+                :key="notification.id"
+              >
                 <tr
-                  v-for="notification in notifications"
-                  :key="notification.id"
+                  class="cursor-pointer"
+                  @click="notifyClick(notification)"
                 >
                   <td>
                     <div class="d-flex align-center gap-x-2">
@@ -111,10 +114,20 @@
 import { computed } from 'vue'
 import { useNotificationStore } from "@/store/notifications"
 import moment from 'moment'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const notificationStore = useNotificationStore()
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
+
+const notifyClick = async notification => {
+  if (notification.url) {
+    const url = notification.url.startsWith('/') ? notification.url : `/${notification.url}`
+
+    router.push(url)
+  }
+}
 
 const notifications = computed(() => {
   return notificationStore.getNotifications
