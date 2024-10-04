@@ -102,7 +102,7 @@
                   <div>
                     <div class="d-flex align-items-center mb-1">
                       <p class="text-sm font-weight-medium d-flex align-items-center mb-0">
-                        {{ notification.title }}
+                        <span class="text-primary">{{ notification.title }}</span>
                         <VIcon
                           size="10"
                           icon="tabler-circle-filled"

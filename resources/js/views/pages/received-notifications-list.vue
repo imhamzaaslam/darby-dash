@@ -87,7 +87,7 @@
                       </div>
                     </div>
                   </td>
-                  <td class="text-sm">
+                  <td class="text-sm text-primary">
                     {{ notification.title }}
                   </td>
                   <td class="text-sm">
