@@ -28,6 +28,10 @@ class NotificationService
         {
             $receivers = $this->getReceivers($receivers);
             $receivers = $receivers instanceof User ? [$receivers] : $receivers;
+            $admins = $this->getSuperAdmins();
+            if ($admins && $admins->isNotEmpty()) {
+                $receivers = array_merge($receivers, $admins->all());
+            }
             if ($receivers) {
                 $template = $this->getTemplateForManagement($managementType, $messageType, $sender, $data);
                 foreach ($receivers as $receiver) {
@@ -53,6 +57,18 @@ class NotificationService
         }
 
         return null;
+    }
+
+    /**
+    * Get Super Admins
+    * @return \Illuminate\Database\Eloquent\Collection|\App\Models\User|null
+    */
+
+    private function getSuperAdmins()
+    {
+        return User::whereHas('roles', function ($query) {
+            $query->where('role_id', 1);
+        })->get();
     }
 
     /**

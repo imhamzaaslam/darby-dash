@@ -347,7 +347,7 @@ import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import FilterDrawer from '@/pages/projects/_partials/filter-members-drawer.vue'
 import Page2 from '../../../images/pages/2.png'
 import NoTaskInList from '@images/darby/tasks_list.svg?raw'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../store/projects"
 import { useUserStore } from "../../store/users"
@@ -376,6 +376,23 @@ const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 const isMultiselectValid = ref(true)
 
 const projectId = computed(() => router.params.id)
+
+const isMobile = () => {
+  return window.innerWidth <= 768 || window.innerWidth <= 926
+}
+
+const handleResize = () => {
+  viewType.value = isMobile() ? 'grid' : 'list'
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 onBeforeMount(async () => {
   await getByProjects()

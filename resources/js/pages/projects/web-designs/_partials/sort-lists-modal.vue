@@ -63,6 +63,7 @@
                 icon
                 size="x-small"
                 @click.stop="saveNewList"
+                @keydown.enter="saveNewList"
               >
                 <VIcon
                   size="small"
@@ -203,6 +204,7 @@
                   size="small"
                   color="primary"
                   @click.stop="editList(list)"
+                  @keydown.enter="editList(list)"
                 />
                 <VIcon
                   v-if="hoveredListId === list.id && (getProjectAllLists? getProjectAllLists.length > 1 : 0)"

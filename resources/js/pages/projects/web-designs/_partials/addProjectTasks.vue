@@ -1700,7 +1700,7 @@ import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-projec
 import FilterTaskDrawer from '@/pages/projects/web-designs/_partials/filter-task-drawer.vue'
 import SaveTemplateModal from '@/pages/projects/web-designs/_partials/save-template-modal.vue'
 import SortListModal from '@/pages/projects/web-designs/_partials/sort-lists-modal.vue'
-import { computed, onBeforeMount, nextTick, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useAuthStore } from "@/store/auth"
 import { useProjectStore } from "@/store/projects"
@@ -1789,6 +1789,23 @@ const isLoading = ref(false)
 const projectId = computed(() => router.currentRoute.value.params.id)
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
+
+const isMobile = () => {
+  return window.innerWidth <= 768 || window.innerWidth <= 926
+}
+
+const handleResize = () => {
+  viewType.value = isMobile() ? 'grid' : 'list'
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 const validateMinutes = (event, item) => {
   const inputValue = event.target.value

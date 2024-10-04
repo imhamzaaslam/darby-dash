@@ -317,7 +317,7 @@ import EditMemberDrawer from '@/pages/teams/_partials/update-member-drawer.vue'
 import ListViewSkeleton from '@/pages/teams/_partials/list-view-skeleton.vue'
 import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
 import FilterDrawer from '@/pages/teams/_partials/filter-members-drawer.vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRoleStore } from "../../store/roles"
 import { useUserStore } from "../../store/users"
@@ -339,6 +339,23 @@ const isLoading = ref(false)
 const searchName = ref('')
 const searchEmail = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
+
+const isMobile = () => {
+  return window.innerWidth <= 768 || window.innerWidth <= 926
+}
+
+const handleResize = () => {
+  viewType.value = isMobile() ? 'grid' : 'list'
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 onBeforeMount(async () => {
   const searchParams = new URLSearchParams(window.location.search)

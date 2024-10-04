@@ -421,7 +421,7 @@ import EditProjectDrawer from '@/pages/projects/web-designs/_partials/update-pro
 import FilterDrawer from '@/pages/projects/web-designs/_partials/filter-projects-drawer.vue'
 import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-skeleton.vue'
 import GridViewSkeleton from '@/pages/projects/web-designs/_partials/grid-view-skeleton.vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../../store/projects"
 import { useProjectTypeStore } from "../../../store/project_types"
@@ -461,6 +461,23 @@ const selectedProjectManagerId = ref(null)
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
+
+const isMobile = () => {
+  return window.innerWidth <= 768 || window.innerWidth <= 926
+}
+
+const handleResize = () => {
+  viewType.value = isMobile() ? 'grid' : 'list'
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 const fetchProjects = async () => {
   try {

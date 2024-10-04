@@ -204,7 +204,9 @@ const isAllMarkRead = computed(() => props.notifications.some(item => item.read_
 const notifyClick = async notification => {
   emit('click:notification', notification)
   if (notification.url) {
-    router.push(notification.url)
+    const url = notification.url.startsWith('/') ? notification.url : `/${notification.url}`
+
+    router.push(url)
   }
 }
 
