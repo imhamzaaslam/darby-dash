@@ -18,6 +18,13 @@ class TemplateResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'template_name' => $this->template_name,
+            'lists' => $this->templateLists->map(function ($list) {
+                return [
+                    'list_name' => $list->name,
+                    'tasks_count' => $list->templateListParentTasks->count()
+                ];
+            }),
+            'created_at' => $this->created_at,
         ];
     }
 }

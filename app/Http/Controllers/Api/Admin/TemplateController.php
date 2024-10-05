@@ -7,6 +7,7 @@ use App\Contracts\TemplateRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Requests\Template\StoreTemplateRequest;
 use App\Http\Resources\TemplateResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -26,6 +27,25 @@ class TemplateController extends Controller
     public function index(): AnonymousResourceCollection|JsonResponse
     {
         $templates = $this->templateRepository->get();
+        return TemplateResource::collection($templates);
+    }
+
+    /**
+     * Display a listing of the resource with pagination.
+     *
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function templatesWithPagination(Request $request): AnonymousResourceCollection|JsonResponse
+    {
+        $user = Auth::user();
+
+        if ($user->hasRole('Super Admin')) {
+            $templates = $this->templateRepository
+                ->getTemplatesQuery()
+                ->filtered($request->keyword ?? '')
+                ->paginate($request->per_page ?? config('pagination.per_page', 10));
+        }
+
         return TemplateResource::collection($templates);
     }
 
@@ -50,5 +70,26 @@ class TemplateController extends Controller
         return (new TemplateResource($template))
             ->response()
             ->setStatusCode(200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param string $uuid
+     * @return JsonResponse
+     */
+    public function delete(string $templateUuid): JsonResponse
+    {
+        $user = Auth::user();
+
+        if ($user->hasRole('Super Admin')) {
+
+            $template = $this->templateRepository->getByUuidOrFail($templateUuid);
+
+            $this->templateRepository->delete($template);
+
+            return response()->json(['message' => 'Template deleted successfully']);
+
+        }
     }
 }

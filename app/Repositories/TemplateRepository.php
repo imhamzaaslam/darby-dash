@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\AbstractEloquentRepository;
 use App\Contracts\TemplateRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Base;
 use App\Models\Project;
 use App\Models\Template;
@@ -24,6 +25,11 @@ class TemplateRepository  extends AbstractEloquentRepository implements Template
     public function get(): Collection
     {
         return $this->model->get();
+    }
+
+    public function getTemplatesQuery(): Builder
+    {
+        return $this->model->whereNotNull('project_id');
     }
 
     public function getTemplate($id): Template
@@ -103,5 +109,25 @@ class TemplateRepository  extends AbstractEloquentRepository implements Template
     public function hasTemplateLists(Template $template): bool
     {
         return $template->templateLists()->count() > 0;
+    }
+
+    public function delete(Template $template): bool
+    {
+        $this->deleteTemplateLists($template);
+
+        // Delete the template itself
+        return $template->delete();
+    }
+
+    private function deleteTemplateLists(Template $template)
+    {
+        $lists = $template->templateLists;
+        foreach ($lists as $list) {
+            $tasks = $list->templateListTasks;
+            foreach ($tasks as $task) {
+                $task->delete();
+            }
+            $list->delete();
+        }
     }
 }

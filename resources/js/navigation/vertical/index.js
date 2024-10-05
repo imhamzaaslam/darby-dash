@@ -23,7 +23,8 @@ const routes = [
     title: 'Settings',
     icon: { icon: 'tabler-settings' },
     children: [
-      { title: 'Roles', to: 'roles-setting' },
+      { title: 'Manage Roles', to: 'roles-setting' },
+      { title: 'Manage Templates', to: 'templates-setting' },
     ],
   },
 

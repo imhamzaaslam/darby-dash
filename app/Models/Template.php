@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Base;
 
 class Template extends Base
@@ -17,5 +18,16 @@ class Template extends Base
     public function templateLists()
     {
         return $this->hasMany(TemplateList::class);
+    }
+
+    function scopeFiltered(Builder $query, ?string $keyword): Builder
+    {
+        if ($keyword) {
+            return $query->where(function ($query) use ($keyword) {
+                $query->where('template_name', 'LIKE', "%{$keyword}%");
+            });
+        }
+
+        return $query;
     }
 }

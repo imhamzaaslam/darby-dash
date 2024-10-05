@@ -20,6 +20,7 @@ import AuthorizationError from '@/pages/errors/authorization-error.vue'
 import Roles from '@/pages/roles/index.vue'
 import BucksSetting from '@/pages/projects/bucks.vue'
 import NotificationList from '@/views/pages/received-notifications-list.vue'
+import Templates from '@/pages/settings/templates/index.vue'
 
 import TwoFactorAuth from '@/pages/TwoFactorAuth.vue'
 
@@ -168,6 +169,15 @@ const router = createRouter({
         path: '/view/received/notifications',
         name: 'view-received-notifications',
         component: NotificationList,
+        meta: { layout: 'default' },
+        props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/settings/manage-templates',
+        name: 'templates-setting',
+        component: Templates,
         meta: { layout: 'default' },
         props: true,
       },

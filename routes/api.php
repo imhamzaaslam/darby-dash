@@ -197,6 +197,10 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
         Route::prefix('templates')->group(function () {
             Route::get('/', [TemplateController::class, 'index']);
+            Route::get('/pagination', [TemplateController::class, 'templatesWithPagination']);
+            Route::prefix('{templateUuid}')->group(function () {
+                Route::delete('/', [TemplateController::class, 'delete']);
+            });
         });
 
         Route::prefix('notifications')->group(function () {
