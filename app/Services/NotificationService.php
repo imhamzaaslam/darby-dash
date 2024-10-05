@@ -178,21 +178,21 @@ class NotificationService
         switch ($messageType) {
             case 'bucks-award':
                 return [
-                    'title' => 'Bucks Awarded - ' . $data['amount'],
-                    'message' => $sender->name_first . ' has awarded you ' . $data['amount'] . ' bucks for completing the '. $data['title'] .' project.',
+                    'title' => 'Bucks Awarded - $' . $data['amount'],
+                    'message' => $sender->name_first . ' has awarded you $' . $data['amount'] . ' bucks for completing the '. $data['title'] .' project.',
                     'type' => 'bucks-award',
                     'url' => "projects/web-designs",
                 ];
             case 'bucks-approved':
                 return [
-                    'title' => $data['title'] . 'Bucks Approved - ' . $data['amount'],
-                    'message' => $sender->name_first . ' has been awarded ' . $data['amount'] . ' bucks for the task: ' . $data['task_title'],
+                    'title' => $data['title'] . 'Bucks Approved - $' . $data['amount'],
+                    'message' => $sender->name_first . ' has been awarded $' . $data['amount'] . ' bucks for the task: ' . $data['task_title'],
                     'type' => 'bucks-approved',
                     'url' => "projects/{$data['project_uuid']}/bucks?tab=manage-bucks",
                 ];
             case 'bucks-rejected':
                 return [
-                    'title' => $data['title'] . ': Bucks Rejected - ' . $data['amount'],
+                    'title' => $data['title'] . ': Bucks Rejected - $' . $data['amount'],
                     'message' => $sender->name_first . ' has rejected to award bucks for the task: ' . $data['task_title'],
                     'type' => 'bucks-rejected',
                     'url' => "projects/{$data['project_uuid']}/bucks?tab=manage-bucks",

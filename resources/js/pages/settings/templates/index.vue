@@ -31,7 +31,7 @@
           cols="12"
         >
           <VCard class="d-flex ps-4 py-1 list-side-border">
-            <VCol cols="2">
+            <VCol cols="3">
               <div class="d-flex align-center gap-x-3">
                 <VIcon
                   color="primary"
@@ -51,7 +51,7 @@
                 <small>Web Designs</small>
               </div>
             </VCol>
-            <VCol cols="5">
+            <VCol cols="4">
               <div class="d-flex flex-column ms-3">
                 <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Lists</span>
                 <div class="d-flex flex-row flex-wrap">
