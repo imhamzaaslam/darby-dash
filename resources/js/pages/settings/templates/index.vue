@@ -92,12 +92,14 @@
                 <VIcon icon="tabler-dots" />
                 <VMenu activator="parent">
                   <VList>
-                    <VListItem
+                    <!--
+                      <VListItem
                       value="edit"
                       @click="editTemplate(template)"
-                    >
+                      >
                       Edit
-                    </VListItem>
+                      </VListItem>
+                    -->
                     <VListItem
                       value="delete"
                       @click="deleteTemplate(template)"
@@ -128,7 +130,6 @@
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import Swal from 'sweetalert2'
-import sketch from '@images/icons/project-icons/sketch.png'
 import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-skeleton.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useToast } from "vue-toastification"
