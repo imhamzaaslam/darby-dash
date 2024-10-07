@@ -30,87 +30,87 @@
           :key="template.id"
           cols="12"
         >
-          <VCard class="d-flex ps-4 py-1 list-side-border">
-            <VCol cols="3">
-              <div class="d-flex align-center gap-x-3">
-                <VIcon
-                  color="primary"
-                  :size="28"
-                  icon="tabler-template"
-                />
-                <div>
-                  <h6 class="text-h6 text-no-wrap">
-                    <span class="d-block">{{ template.template_name }}</span>
-                  </h6>
+          <RouterLink :to="{ name: 'manage-templates', params: { id: template.uuid } }">
+            <VCard class="d-flex ps-4 py-1 list-side-border">
+              <VCol cols="3">
+                <div class="d-flex align-center gap-x-3">
+                  <VIcon
+                    color="primary"
+                    :size="28"
+                    icon="tabler-template"
+                  />
+                  <div>
+                    <h6 class="text-h6 text-no-wrap">
+                      <span class="d-block">{{ template.template_name }}</span>
+                    </h6>
+                  </div>
                 </div>
-              </div>
-            </VCol>
-            <VCol cols="2">
-              <div class="d-flex flex-column ms-3">
-                <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Template Type</span>
-                <small>Web Designs</small>
-              </div>
-            </VCol>
-            <VCol cols="4">
-              <div class="d-flex flex-column ms-3">
-                <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Lists</span>
-                <div class="d-flex flex-row flex-wrap">
-                  <span
-                    v-for="(list, index) in template.lists"
-                    :key="index"
-                    class="me-1 mb-1"
-                  >
-                    <VTooltip location="top">
-                      <template #activator="{ props }">
-                        <VChip
-                          v-bind="props"
-                          size="small"
-                          color="primary"
-                        >
-                          {{ list.list_name }} ({{ list.tasks_count }})
-                        </VChip>
-                      </template>
-                      <span>{{ list.tasks_count }} tasks</span>
-                    </VTooltip>
-                  </span>
+              </VCol>
+              <VCol cols="2">
+                <div class="d-flex flex-column ms-3">
+                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Template Type</span>
+                  <small>Web Designs</small>
                 </div>
-              </div>
-            </VCol>
-
-            <VCol cols="2">
-              <div class="d-flex flex-column ms-3">
-                <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Created At</span>
-                <small class="text-center">{{ formatDate(template.created_at) }}</small>
-              </div>
-            </VCol>
-
-            <VCol
-              cols="1"
-              class="d-flex justify-end"
-            >
-              <IconBtn @click.prevent>
-                <VIcon icon="tabler-dots" />
-                <VMenu activator="parent">
-                  <VList>
-                    <!--
-                      <VListItem
-                      value="edit"
-                      @click="editTemplate(template)"
-                      >
-                      Edit
-                      </VListItem>
-                    -->
-                    <VListItem
-                      value="delete"
-                      @click="deleteTemplate(template)"
+              </VCol>
+              <VCol cols="4">
+                <div class="d-flex flex-column ms-3">
+                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Lists</span>
+                  <div class="d-flex flex-row flex-wrap">
+                    <span
+                      v-for="(list, index) in template.lists"
+                      :key="index"
+                      class="me-1 mb-1"
                     >
-                      Delete
-                    </VListItem>
-                  </VList>
-                </VMenu>
-              </IconBtn>
-            </VCol>
-          </VCard>
+                      <VTooltip location="top">
+                        <template #activator="{ props }">
+                          <VChip
+                            v-bind="props"
+                            size="small"
+                            color="primary"
+                          >
+                            {{ list.name }} ({{ list.tasks_count }})
+                          </VChip>
+                        </template>
+                        <span>{{ list.tasks_count }} tasks</span>
+                      </VTooltip>
+                    </span>
+                  </div>
+                </div>
+              </VCol>
+
+              <VCol cols="2">
+                <div class="d-flex flex-column ms-3">
+                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Created At</span>
+                  <small class="text-center">{{ formatDate(template.created_at) }}</small>
+                </div>
+              </VCol>
+
+              <VCol
+                cols="1"
+                class="d-flex justify-end"
+              >
+                <IconBtn @click.prevent>
+                  <VIcon icon="tabler-dots" />
+                  <VMenu activator="parent">
+                    <VList>
+                      <VListItem
+                        value="edit"
+                        :to="{ name: 'manage-templates', params: { id: template.uuid } }"
+                      >
+                        Edit
+                      </VListItem>
+                      <VListItem
+                        value="delete"
+                        @click="deleteTemplate(template)"
+                      >
+                        Delete
+                      </VListItem>
+                    </VList>
+                  </VMenu>
+                </IconBtn>
+              </VCol>
+            </VCard>
+          </RouterLink>
         </VCol>
       </VRow>
     </div>

@@ -649,7 +649,7 @@ const getStaffListsForDropDown = computed(() => {
 })
 
 const getTemplates = computed(() => {
-  return templateStore.getTemplates
+  return templateStore.getTemplatesDropdown
 })
 
 const getErrors = computed(() => {

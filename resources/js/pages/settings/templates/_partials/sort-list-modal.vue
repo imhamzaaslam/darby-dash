@@ -17,7 +17,7 @@
             class="me-1"
             color="primary"
           />
-          Manage Lists ({{ props.getProjectAllLists ? props.getProjectAllLists.length : 0 }})
+          Manage Lists ({{ props.getTemplateLists ? props.getTemplateLists.length : 0 }})
         </span>
         <VTooltip location="top">
           <template #activator="{ props }">
@@ -122,12 +122,12 @@
 
       <VCardText class="px-4">
         <VueDraggableNext
-          :list="props.getProjectAllLists"
+          :list="props.getTemplateLists"
           item-key="id"
           class="drag-container"
         >
           <VRow
-            v-for="(list, index) in props.getProjectAllLists"
+            v-for="(list, index) in props.getTemplateLists"
             :key="list.id"
             class="sort-item"
             :class="[{ 'no-hover': editingListId === list.id }]"
@@ -196,7 +196,7 @@
                 </div>
               </template>
               <template v-else>
-                <small class="list-text text-sm ms-2">{{ list.name }} ({{ list.total_tasks }})</small>
+                <small class="list-text text-sm ms-2">{{ list.name }} ({{ list.tasks_count }})</small>
                 <VIcon
                   v-if="hoveredListId === list.id"
                   icon="tabler-edit"
@@ -206,37 +206,14 @@
                   @click.stop="editList(list)"
                 />
                 <VIcon
-                  v-if="hoveredListId === list.id && (getProjectAllLists? getProjectAllLists.length > 1 : 0)"
+                  v-if="hoveredListId === list.id && (getTemplateLists? getTemplateLists.length > 1 : 0)"
                   icon="tabler-trash"
                   class="ms-1 edit-icon"
                   size="small"
                   color="primary"
-                  @click.stop="deleteProjectList(list)"
+                  @click.stop="deleteTemplateList(list)"
                 />
               </template>
-            </VCol>
-
-            <!-- Right side: progress and tasks -->
-            <VCol
-              cols="4"
-              class="d-flex justify-center align-items-center py-0"
-            >
-              <div class="d-flex justify-between align-center w-100">
-                <div class="text-body-1 text-high-emphasis">
-                  <small class="progress-text">{{ list.progress }}%</small>
-                </div>
-                <div class="flex-grow-1 mx-2">
-                  <VProgressLinear
-                    :height="6"
-                    :model-value="list.progress"
-                    color="primary"
-                    rounded
-                  />
-                </div>
-                <div class="text-body-1 text-high-emphasis">
-                  <small class="progress-complete-task-text">{{ list.completed_tasks }}</small>
-                </div>
-              </div>
             </VCol>
           </VRow>
         </VueDraggableNext>
@@ -269,14 +246,15 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useProjectListStore } from '@/store/project_lists'
+import { useTemplateStore } from '@/store/templates'
 import { useToast } from 'vue-toastification'
 import Swal from 'sweetalert2'
 
 const props = defineProps({
   isSortListModalOpen: { type: Boolean, required: true },
-  selectedProject: { type: String, required: true },
-  getProjectAllLists: { type: Array, required: true },
+  selectedTemplate: { type: String, required: true },
+  fetchTemplate: { type: Function },
+  getTemplateLists: { type: Array, required: true },
 })
 
 const emit = defineEmits(['update:isSortListModalOpen'])
@@ -290,16 +268,8 @@ const dialogVisibleUpdate = val => {
   emit('update:isSortListModalOpen', val)
 }
 
-const projectListStore = useProjectListStore()
+const templateStore = useTemplateStore()
 const toast = useToast()
-
-const fetchProjectLists = async () => {
-  try {
-    await projectListStore.getAll(props.selectedProject, {})
-  } catch (error) {
-    toast.error('Error fetching project lists:', error)
-  }
-}
 
 const editList = list => {
   editingListId.value = list.id
@@ -317,11 +287,10 @@ const saveListName = async(list, index) => {
 
   const editListDetails = {
     name: list.name,
-    uuid: list.uuid,
-    project_uuid: props.selectedProject,
   }
 
-  await projectListStore.update(editListDetails)
+  await templateStore.updateList(list.uuid, editListDetails)
+  await props.fetchTemplate()
   editingListId.value = null
   toast.success('List name updated!')
 }
@@ -345,11 +314,10 @@ const saveNewList = async() => {
 
   const newListDetails = {
     name: newListName.value.trim(),
-    project_uuid: props.selectedProject,
   }
 
-  await projectListStore.create(newListDetails)
-  await fetchProjectLists()
+  await templateStore.createList(props.selectedTemplate, newListDetails)
+  await props.fetchTemplate()
   isAddingList.value = false
   toast.success('New list added!')
 }
@@ -360,14 +328,14 @@ const cancelAddList = () => {
 
 const saveSortedOrder = async () => {
   try {
-    const projectId = props.selectedProject
+    const templateId = props.selectedTemplate
 
-    const sortedLists = props.getProjectAllLists.map((list, index) => ({
+    const sortedLists = props.getTemplateLists.map((list, index) => ({
       id: list.id,
       order: index + 1,
     }))
 
-    await projectListStore.saveSortedOrder(projectId, sortedLists)
+    await templateStore.saveSortedOrder(templateId, { lists: sortedLists })
     toast.success('Lists sorted successfully!')
     emit('update:isSortListModalOpen', false)
   } catch (error) {
@@ -375,21 +343,20 @@ const saveSortedOrder = async () => {
   }
 }
 
-const deleteProjectList = async list => {
+const deleteTemplateList = async list => {
   try {
-    const listWithProjectId = { ...list, project_uuid: props.selectedProject }
 
     const confirmDelete = await Swal.fire({
       title: "Are you sure?",
       html: `
-        <div>
-        <p>
-            Do you want to delete <strong>${list.name}</strong>?
-            <br>
-            <small>This action will also delete all associated tasks.</small>
-        </p>
-        </div>
-      `,
+          <div>
+          <p>
+              Do you want to delete <strong>${list.name}</strong>?
+              <br>
+              <small>This action will also delete all associated tasks.</small>
+          </p>
+          </div>
+        `,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#a12592",
@@ -402,78 +369,78 @@ const deleteProjectList = async list => {
 
     if (confirmDelete.isConfirmed) {
 
-      const res = await projectListStore.delete(listWithProjectId)
+      const res = await templateStore.deleteList(list.uuid)
 
       toast.success('List deleted successfully', { timeout: 1000 })
-      await fetchProjectLists()
+      await props.fetchTemplate()
     }
   } catch (error) {
     toast.error('Failed to delete project list:', error)
   }
 }
 
-const loadStatus = computed(() => projectListStore.getLoadStatus)
+const loadStatus = computed(() => templateStore.getLoadStatus)
 </script>
 
-  <style scoped>
-  .sort-dialog-card {
-    border-radius: 12px;
-    padding: 6px;
-  }
+    <style scoped>
+    .sort-dialog-card {
+      border-radius: 12px;
+      padding: 6px;
+    }
 
-  .sort-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 2px;
-    border-bottom: 1px solid #f0f0f0;
-    cursor: grab;
-  }
+    .sort-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 2px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: grab;
+    }
 
-  .sort-item:hover {
-    background-color: #F0D9EB;
-  }
+    .sort-item:hover {
+      background-color: #F0D9EB;
+    }
 
-  .drag-handle {
-    margin-right: 12px;
-  }
+    .drag-handle {
+      margin-right: 12px;
+    }
 
-  .sort-item:hover .drag-handle,
-  .sort-item:hover .list-text,
-  .sort-item:hover .progress-text,
-  .sort-item:hover .progress-complete-task-text {
-    color: #a12592 !important;
-    font-weight: normal;
-   }
+    .sort-item:hover .drag-handle,
+    .sort-item:hover .list-text,
+    .sort-item:hover .progress-text,
+    .sort-item:hover .progress-complete-task-text {
+      color: #a12592 !important;
+      font-weight: normal;
+     }
 
-   .no-hover:hover {
-    background-color: transparent !important;
-   }
+     .no-hover:hover {
+      background-color: transparent !important;
+     }
 
-   .no-hover:hover .drag-handle,
-   .no-hover:hover .list-text,
-   .no-hover:hover .progress-text,
-   .no-hover:hover .progress-complete-task-text {
-    color: inherit !important;
-    font-weight: normal;
-   }
+     .no-hover:hover .drag-handle,
+     .no-hover:hover .list-text,
+     .no-hover:hover .progress-text,
+     .no-hover:hover .progress-complete-task-text {
+      color: inherit !important;
+      font-weight: normal;
+     }
 
-  .edit-icon {
-    cursor: pointer;
-    transition: color 0.3s;
-  }
+    .edit-icon {
+      cursor: pointer;
+      transition: color 0.3s;
+    }
 
-  .list-text {
-    font-weight: 500;
-  }
+    .list-text {
+      font-weight: 500;
+    }
 
-  .v-btn {
-    text-transform: none;
-    font-size: 16px;
-  }
+    .v-btn {
+      text-transform: none;
+      font-size: 16px;
+    }
 
-  .v-card-title {
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
-  </style>
+    .v-card-title {
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    </style>

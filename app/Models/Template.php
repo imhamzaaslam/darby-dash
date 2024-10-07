@@ -17,7 +17,7 @@ class Template extends Base
 
     public function templateLists()
     {
-        return $this->hasMany(TemplateList::class);
+        return $this->hasMany(TemplateList::class)->orderBy('display_order');
     }
 
     function scopeFiltered(Builder $query, ?string $keyword): Builder

@@ -58,18 +58,41 @@ class TemplateController extends Controller
      */
     public function store(StoreTemplateRequest $request, string $uuid): JsonResponse
     {
-        $project = $this->projectRepository->getByUuidOrFail($uuid);
-        $validated = $request->validated();
+        $user = Auth::user();
 
-        $attributes = [
-            'template_name' => $validated['template_name'],
-        ];
+        if ($user->hasRole('Super Admin')) {
+            $project = $this->projectRepository->getByUuidOrFail($uuid);
+            $validated = $request->validated();
 
-        $template = $this->templateRepository->create($attributes, $project);
+            $attributes = [
+                'template_name' => $validated['template_name'],
+            ];
 
-        return (new TemplateResource($template))
-            ->response()
-            ->setStatusCode(200);
+            $template = $this->templateRepository->create($attributes, $project);
+
+            return (new TemplateResource($template))
+                ->response()
+                ->setStatusCode(200);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param string $uuid
+     * @return TemplateResource|JsonResponse
+     */
+    public function show(string $uuid): TemplateResource|JsonResponse
+    {
+        $user = Auth::user();
+
+        if ($user->hasRole('Super Admin')) {
+            $template = $this->templateRepository->getByUuid($uuid);
+
+            return (new TemplateResource($template))
+                ->response()
+                ->setStatusCode(200);
+        }
     }
 
     /**

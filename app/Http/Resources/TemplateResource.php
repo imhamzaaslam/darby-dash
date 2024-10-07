@@ -20,7 +20,17 @@ class TemplateResource extends JsonResource
             'template_name' => $this->template_name,
             'lists' => $this->templateLists->map(function ($list) {
                 return [
-                    'list_name' => $list->name,
+                    'id' => $list->id,
+                    'uuid' => $list->uuid,
+                    'name' => $list->name,
+                    'tasks' => $list->templateListParentTasks->map(function ($task) {
+                        return [
+                            'id' => $task->id,
+                            'uuid' => $task->uuid,
+                            'name' => $task->name,
+                            'subtasks' => $task->subtasks,
+                        ];
+                    }),
                     'tasks_count' => $list->templateListParentTasks->count()
                 ];
             }),

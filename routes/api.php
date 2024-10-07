@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\Admin\FolderController;
 use App\Http\Controllers\Api\Admin\PaymentController;
 use App\Http\Controllers\Api\Admin\ProjectBucksController;
 use App\Http\Controllers\Api\Admin\TemplateController;
+use App\Http\Controllers\Api\Admin\TemplateListController;
+use App\Http\Controllers\Api\Admin\TemplateTaskController;
 use App\Http\Controllers\Api\Admin\NotificationController;
 use App\Http\Controllers\Api\Admin\SettingController;
 
@@ -198,8 +200,27 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::prefix('templates')->group(function () {
             Route::get('/', [TemplateController::class, 'index']);
             Route::get('/pagination', [TemplateController::class, 'templatesWithPagination']);
+
             Route::prefix('{templateUuid}')->group(function () {
+                Route::post('/list', [TemplateListController::class, 'store']);
+                Route::patch('/lists/sort', [TemplateListController::class, 'sortLists']);
+                Route::get('/', [TemplateController::class, 'show']);
                 Route::delete('/', [TemplateController::class, 'delete']);
+            });
+
+            Route::prefix('list')->group(function () {
+                Route::prefix('{listUuid}')->group(function () {
+                    Route::post('/task', [TemplateTaskController::class, 'store']);
+                    Route::patch('/', [TemplateListController::class, 'update']);
+                    Route::delete('/', [TemplateListController::class, 'delete']);
+                });
+            });
+
+            Route::prefix('task')->group(function () {
+                Route::prefix('{taskUuid}')->group(function () {
+                    Route::patch('/', [TemplateTaskController::class, 'update']);
+                    Route::delete('/', [TemplateTaskController::class, 'delete']);
+                });
             });
         });
 

@@ -40,7 +40,9 @@ watch([
 }, { immediate: true })
 
 const showNavigation = computed(() => {
-  return $route.params.id !== undefined
+  const isManageTemplatesRoute = $route.name === 'manage-templates'
+
+  return !isManageTemplatesRoute && $route.params.id !== undefined
 })
 // !SECTION
 

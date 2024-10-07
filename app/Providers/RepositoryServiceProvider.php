@@ -18,6 +18,8 @@ use App\Contracts\FolderRepositoryInterface;
 use App\Contracts\PaymentRepositoryInterface;
 use App\Contracts\ProjectBucksRepositoryInterface;
 use App\Contracts\TemplateRepositoryInterface;
+use App\Contracts\TemplateListRepositoryInterface;
+use App\Contracts\TemplateTaskRepositoryInterface;
 use App\Contracts\NotificationRepositoryInterface;
 use App\Contracts\SettingRepositoryInterface;
 use App\Models\Role;
@@ -36,6 +38,8 @@ use App\Models\Folder;
 use App\Models\Payment;
 use App\Models\ProjectBucks;
 use App\Models\Template;
+use App\Models\TemplateList;
+use App\Models\TemplateListTask;
 use App\Models\Notification;
 use App\Models\Settings_meta;
 use App\Repositories\RoleRepository;
@@ -54,6 +58,8 @@ use App\Repositories\FolderRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ProjectBucksRepository;
 use App\Repositories\TemplateRepository;
+use App\Repositories\TemplateListRepository;
+use App\Repositories\TemplateTaskRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\SettingRepository;
 use Illuminate\Support\ServiceProvider;
@@ -140,6 +146,14 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             TemplateRepositoryInterface::class,
             fn() => new TemplateRepository(new Template)
+        );
+        $this->app->bind(
+            TemplateListRepositoryInterface::class,
+            fn() => new TemplateListRepository(new TemplateList)
+        );
+        $this->app->bind(
+            TemplateTaskRepositoryInterface::class,
+            fn() => new TemplateTaskRepository(new TemplateListTask)
         );
         $this->app->bind(
             NotificationRepositoryInterface::class,
