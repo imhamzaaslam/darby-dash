@@ -29,6 +29,11 @@ class ProjectType extends Base
         }
     }
 
+    public function projectServices()
+    {
+        return $this->hasMany(ProjectService::class);
+    }
+
     public function tasks()
     {
         if(auth()->user()->hasRole('Super Admin')){

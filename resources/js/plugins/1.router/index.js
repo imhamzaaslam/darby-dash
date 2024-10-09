@@ -22,6 +22,7 @@ import BucksSetting from '@/pages/projects/bucks.vue'
 import NotificationList from '@/views/pages/received-notifications-list.vue'
 import Templates from '@/pages/settings/templates/index.vue'
 import ManageTemplates from '@/pages/settings/templates/_partials/manage-templates.vue'
+import Services from '@/pages/settings/services/index.vue'
 
 import TwoFactorAuth from '@/pages/TwoFactorAuth.vue'
 
@@ -179,6 +180,15 @@ const router = createRouter({
         path: '/settings/manage-templates',
         name: 'templates-setting',
         component: Templates,
+        meta: { layout: 'default' },
+        props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/settings/manage-services',
+        name: 'services-setting',
+        component: Services,
         meta: { layout: 'default' },
         props: true,
       },

@@ -20,6 +20,7 @@ use App\Contracts\ProjectBucksRepositoryInterface;
 use App\Contracts\TemplateRepositoryInterface;
 use App\Contracts\TemplateListRepositoryInterface;
 use App\Contracts\TemplateTaskRepositoryInterface;
+use App\Contracts\ProjectServiceRepositoryInterface;
 use App\Contracts\NotificationRepositoryInterface;
 use App\Contracts\SettingRepositoryInterface;
 use App\Models\Role;
@@ -40,6 +41,7 @@ use App\Models\ProjectBucks;
 use App\Models\Template;
 use App\Models\TemplateList;
 use App\Models\TemplateListTask;
+use App\Models\ProjectService;
 use App\Models\Notification;
 use App\Models\Settings_meta;
 use App\Repositories\RoleRepository;
@@ -60,6 +62,7 @@ use App\Repositories\ProjectBucksRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\TemplateListRepository;
 use App\Repositories\TemplateTaskRepository;
+use App\Repositories\ProjectServiceRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\SettingRepository;
 use Illuminate\Support\ServiceProvider;
@@ -154,6 +157,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             TemplateTaskRepositoryInterface::class,
             fn() => new TemplateTaskRepository(new TemplateListTask)
+        );
+        $this->app->bind(
+            ProjectServiceRepositoryInterface::class,
+            fn() => new ProjectServiceRepository(new ProjectService)
         );
         $this->app->bind(
             NotificationRepositoryInterface::class,

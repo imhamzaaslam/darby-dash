@@ -685,31 +685,70 @@
       </VCard>
     </VCol>
     <VCol cols="6">
-      <VCard>
+      <VCard style="height:294px!important">
         <VCardItem title="Maching Services For Your Project">
           <template #append>
             <MoreBtn />
           </template>
         </VCardItem>
-        <VCardText class="my-8 mx-12">
-          <VRow>
-            <VCol col="12">
-              <div class="d-flex">
-                <VBtn block>
-                  SEO
-                </VBtn>
-              </div>
-            </VCol>
-          </VRow>
-          <VRow>
-            <VCol col="12">
-              <div class="d-flex">
-                <VBtn block>
-                  Web Hosting
-                </VBtn>
-              </div>
-            </VCol>
-          </VRow>
+        <VCardText>
+          <VCarousel
+            progress="primary"
+            show-arrows="hover"
+            hide-delimiter
+            cycle
+            :interval="3000"
+            height="294px"
+          >
+            <VCarouselItem
+              v-for="(service, index) in getServices"
+              :key="index"
+            >
+              <VRow class="mt-2">
+                <VCol
+                  v-if="service.image"
+                  cols="4"
+                >
+                  <VImg
+                    :src="getImageUrl(service.image.path)"
+                    :alt="service.title"
+                    height="100"
+                    rounded="md"
+                  />
+                </VCol>
+                <VCol
+                  v-else
+                  cols="4"
+                >
+                  <VImg
+                    :src="placeholderImg"
+                    :alt="service.title"
+                    height="100"
+                    rounded="md"
+                  />
+                </VCol>
+                <VCol
+                  cols="8"
+                  class="d-flex flex-column justify-center"
+                >
+                  <span class="font-weight-bold text-sm text-primary mt-1 mb-2">{{ service.title }}</span>
+                  <p
+                    class="mb-0 text-body-2"
+                    v-html="truncateDescription(service.description, 140)"
+                  />
+                  <div>
+                    <VBtn
+                      size="small"
+                      rounded="pill"
+                      color="primary"
+                    >
+                      Learn More
+                    </VBtn>
+                  </div>
+                </VCol>
+              </VRow>
+            </VCarouselItem>
+          </VCarousel>
         </VCardText>
       </VCard>
     </VCol>
@@ -804,11 +843,13 @@ import Loader from "@/components/Loader.vue"
 import avatar1 from '@images/avatars/avatar-1.png'
 import girlWithLaptop from '@images/illustrations/PM.png'
 import otherListImg from '@images/darby/other_list.svg?raw'
+import placeholderImg from '@images/pages/servicePlaceholder.png'
 import { useProjectStore } from "@/store/projects"
 import { useRoute } from 'vue-router'
 import sketch from '@images/icons/project-icons/sketch.png'
 import { useProjectBucksStore } from "@/store/project_bucks"
 import { useAuthStore } from "@/store/auth"
+import { useUserSettingStore } from "@/store/user_settings"
 import { useToast } from "vue-toastification"
 
 onBeforeMount(async () => {
@@ -818,6 +859,7 @@ onBeforeMount(async () => {
 const projectStore = useProjectStore()
 const projectBucksStore = useProjectBucksStore()
 const authStore = useAuthStore()
+const userSettingStore = useUserSettingStore()
 const $route = useRoute()
 const toast = useToast()
 
@@ -839,6 +881,7 @@ const getProjectProgress = async () => {
     showAwardBucksBtn.value = true
   }
   await projectStore.getProgress(projectUuid)
+  await fetchServices()
 }
 
 const fetchProject = async () => {
@@ -846,6 +889,14 @@ const fetchProject = async () => {
     await projectStore.show(projectUuid)
   } catch (error) {
     toast.error('Error fetching project:', error)
+  }
+}
+
+const fetchServices = async () => {
+  try {
+    await userSettingStore.getServicesByType(project?.value?.project_type_uuid)
+  } catch (error) {
+    toast.error('Error fetching services:', error)
   }
 }
 
@@ -958,6 +1009,12 @@ const getDaysLeft = date => {
   return eventDate.diff(today, 'days')
 }
 
+const truncateDescription = (description, length) => {
+  return description.length > length
+    ? description.slice(0, length) + '...'
+    : description
+}
+
 const getImageUrl = path => {
   const baseUrl = import.meta.env.VITE_APP_URL
 
@@ -982,6 +1039,10 @@ const loadStatus = computed(() => {
 
 const getErrors = computed(() => {
   return projectStore.getErrors
+})
+
+const getServices = computed(() => {
+  return userSettingStore.getProjectServicesByType
 })
 
 watch(project, () => {

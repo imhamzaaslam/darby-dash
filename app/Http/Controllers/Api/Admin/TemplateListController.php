@@ -60,7 +60,7 @@ class TemplateListController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $uuid
+     * @param string $listUuid
      * @return JsonResponse
      */
     public function delete(string $listUuid): JsonResponse

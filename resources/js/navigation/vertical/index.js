@@ -25,6 +25,7 @@ const routes = [
     children: [
       { title: 'Manage Roles', to: 'roles-setting' },
       { title: 'Manage Templates', to: 'templates-setting' },
+      { title: 'Manage Services', to: 'services-setting' },
     ],
   },
 

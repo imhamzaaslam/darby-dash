@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Admin\ProjectBucksController;
 use App\Http\Controllers\Api\Admin\TemplateController;
 use App\Http\Controllers\Api\Admin\TemplateListController;
 use App\Http\Controllers\Api\Admin\TemplateTaskController;
+use App\Http\Controllers\Api\Admin\ProjectServiceController;
 use App\Http\Controllers\Api\Admin\NotificationController;
 use App\Http\Controllers\Api\Admin\SettingController;
 
@@ -221,6 +222,22 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::patch('/', [TemplateTaskController::class, 'update']);
                     Route::delete('/', [TemplateTaskController::class, 'delete']);
                 });
+            });
+        });
+
+        Route::prefix('services')->group(function () {
+            Route::get('/', [ProjectServiceController::class, 'index']);
+            Route::get('/without-pagination', [ProjectServiceController::class, 'servicesWithoutPaginaton']);
+            Route::patch('/sort', [ProjectServiceController::class, 'sortServices']);
+            Route::post('/', [ProjectServiceController::class, 'store']);
+
+            Route::prefix('type/{projectTypeUuid}')->group(function () {
+                Route::get('/', [ProjectServiceController::class, 'getByType']);
+            });
+            Route::prefix('{serviceUuid}')->group(function () {
+                Route::get('/', [ProjectServiceController::class, 'show']);
+                Route::post('/', [ProjectServiceController::class, 'update']);
+                Route::delete('/', [ProjectServiceController::class, 'delete']);
             });
         });
 
