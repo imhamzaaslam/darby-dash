@@ -12,6 +12,7 @@
     "InjectionKey": true,
     "PropType": true,
     "Ref": true,
+    "USER_ROLES": true,
     "VNode": true,
     "WritableComputedRef": true,
     "acceptHMRUpdate": true,
@@ -351,8 +352,6 @@
     "watchThrottled": true,
     "watchTriggerable": true,
     "watchWithFilter": true,
-    "whenever": true,
-    "USER_ROLES": true,
-    "userRoles": true
+    "whenever": true
   }
 }
