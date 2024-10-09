@@ -10,12 +10,6 @@
       <VCol cols="6">
         <div class="d-flex justify-end mb-3">
           <VBtn
-            prepend-icon="tabler-plus"
-            @click="isAddServiceDrawerOpen = !isAddServiceDrawerOpen"
-          >
-            New Service
-          </VBtn>
-          <VBtn
             icon
             color="td-hover"
             class="ms-3"
@@ -26,6 +20,12 @@
             <VIcon icon="tabler-dots" />
             <VMenu activator="parent">
               <VList>
+                <VListItem
+                  value="add-service"
+                  @click="isAddServiceDrawerOpen = !isAddServiceDrawerOpen"
+                >
+                  Add Service
+                </VListItem>
                 <VListItem
                   value="sort-service"
                   @click="isSortServiceModalOpen = true"
