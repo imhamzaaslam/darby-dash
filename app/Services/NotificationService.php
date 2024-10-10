@@ -137,7 +137,7 @@ class NotificationService
 
     protected function getUserNotificationTemplate($messageType, $sender, array $user)
     {
-        $user = getUser($user->id);
+        $user = getUser($user['id']);
         switch ($messageType) {
             case 'user-created':
                 return [
