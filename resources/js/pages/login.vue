@@ -35,8 +35,17 @@
               <!-- email -->
               <VCol cols="12">
                 <VTextField
-                  v-model="form.email"
+                  v-model="form.company"
                   autofocus
+                  label="Company"
+                  placeholder="Company Name"
+                  :rules="[requiredValidator]"
+                />
+              </VCol>
+              <!-- email -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.email"
                   label="Email"
                   type="email"
                   placeholder="johndoe@email.com"
@@ -112,6 +121,7 @@ useHead({ title: `${layoutConfig.app.title} | Login` })
 const form = ref({
   email: '',
   password: '',
+  company: '',
   remember: false,
 })
 
@@ -125,8 +135,8 @@ const loadStatus = computed(() => authStore.getLoadStatus)
 async function submit() {
   refForm.value?.validate().then(async ({ valid: isValid }) => {
     if (isValid) {
-      let { email, password } = form.value
-      let res = await authStore.login(email, password)
+      let { email, password, company } = form.value
+      let res = await authStore.login(email, password, company)
 
       if (!res.data.success) {
         toast.error(res.data.message)

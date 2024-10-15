@@ -224,6 +224,11 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         return $this->email_verified_at;
     }
 
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'company_user')->withTimestamps();
+    }
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id');

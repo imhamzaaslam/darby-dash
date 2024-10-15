@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Company;
 use Validator;
 use Carbon\Carbon;
 use App\Services\EmailService;
@@ -23,12 +24,22 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
+            'company' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
             ], 400);
+        }
+
+        $company = Company::where('name', $request->company)->first();
+
+        if (!$company) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Company not found.',
+            ], 401);
         }
 
         $credentials = request(['email', 'password']);
@@ -40,6 +51,13 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
+        /* if (!$user->companies->contains($company->id)) {
+            Auth::logout();
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not belong to this company.',
+            ], 401);
+        } */
 
         if ($user->is_2fa) {
 
@@ -117,6 +135,19 @@ class AuthController extends Controller
                 'message' => 'An error occurred: ' . $e->getMessage(),
                 'success' => false,
             ], 500);
+        }
+    }
+
+    public function tempQuery()
+    {
+        $company = Company::firstOrCreate([
+            'name' => 'Darby Digital',
+        ]);
+        $users = User::all();
+        foreach ($users as $user) {
+            if (!$user->companies->contains($company->id)) {
+                $user->companies()->attach($company->id);
+            }
         }
     }
 }

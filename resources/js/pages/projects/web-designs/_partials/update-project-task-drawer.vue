@@ -249,6 +249,10 @@ const resetForm = () => {
   emit('update:isEditTaskDrawerOpen', false)
 }
 
+const fetchFiles = async () => {
+  await projectTaskStore.fetchFiles(props.editingTask.uuid)
+}
+
 const uploadFiles = async e => {
   isLoading.value = true
 

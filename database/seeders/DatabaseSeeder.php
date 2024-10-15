@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             SettingSeeder::class,
             ProjectServiceSeeder::class,
+            CompanySeeder::class,
         ]);
     }
 }
