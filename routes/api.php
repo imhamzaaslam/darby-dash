@@ -44,7 +44,6 @@ Route::get('test', function () {
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
-    Route::get('temp-query', [AuthController::class, 'tempQuery']);
     Route::post('register', [AuthController::class, 'register']);
     Route::post('verify-2fa-code', [AuthController::class, 'verify2FA']);
 

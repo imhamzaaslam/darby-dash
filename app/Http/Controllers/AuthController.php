@@ -137,17 +137,4 @@ class AuthController extends Controller
             ], 500);
         }
     }
-
-    public function tempQuery()
-    {
-        $company = Company::firstOrCreate([
-            'name' => 'Darby',
-        ]);
-        $users = User::all();
-        foreach ($users as $user) {
-            if (!$user->companies->contains($company->id)) {
-                $user->companies()->attach($company->id);
-            }
-        }
-    }
 }
