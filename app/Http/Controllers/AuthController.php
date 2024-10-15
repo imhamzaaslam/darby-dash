@@ -141,7 +141,7 @@ class AuthController extends Controller
     public function tempQuery()
     {
         $company = Company::firstOrCreate([
-            'name' => 'Darby Digital',
+            'name' => 'Darby',
         ]);
         $users = User::all();
         foreach ($users as $user) {
