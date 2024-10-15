@@ -17,12 +17,12 @@ export const useAuthStore = defineStore('auth', {
   }),
   persist: true,
   actions: {
-    async login(email, password, company) {
+    async login(email, password) {
       this.authenticated = false
       this.error = null
       this.loadStatus = 1
       try {
-        let res = await AuthService.login({ email, password, company })
+        let res = await AuthService.login({ email, password })
         this.loadStatus = 2
         this.authenticated = true
         this.token = res.data.accessToken

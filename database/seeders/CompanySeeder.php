@@ -31,9 +31,8 @@ class CompanySeeder extends Seeder
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'state' => 'active',
+            'company_id' => $company->id,
         ]);
-
-        $superadmin->companies()->attach($company->id);
 
         $this->addDummyInfo($faker, $superadmin);
 
