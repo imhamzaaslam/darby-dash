@@ -27,7 +27,7 @@ class CompanySeeder extends Seeder
         $superadmin = User::firstOrCreate([
             'name_first' => 'Hamza',
             'name_last' => 'Aslam',
-            'email' => 'imhamzaaslam@gmail.com',
+            'email' => 'hamza@sublimelogics.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'state' => 'active',

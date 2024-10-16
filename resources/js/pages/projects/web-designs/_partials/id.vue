@@ -686,69 +686,92 @@
     </VCol>
     <VCol cols="6">
       <VCard style="height:294px!important">
-        <VCardItem title="Maching Services For Your Project">
+        <VCardItem title="Matching Services For Your Project">
           <template #append>
             <MoreBtn />
           </template>
         </VCardItem>
         <VCardText>
-          <VCarousel
-            progress="primary"
-            show-arrows="hover"
-            hide-delimiter
-            cycle
-            :interval="3000"
-            height="294px"
-          >
-            <VCarouselItem
-              v-for="(service, index) in getServices"
-              :key="index"
+          <template v-if="getServices.length">
+            <!-- Carousel of services if services exist -->
+            <VCarousel
+              progress="primary"
+              show-arrows="hover"
+              hide-delimiter
+              cycle
+              :interval="3000"
+              height="294px"
             >
-              <VRow class="mt-2">
-                <VCol
-                  v-if="service.image"
-                  cols="4"
-                >
-                  <VImg
-                    :src="getImageUrl(service.image.path)"
-                    :alt="service.title"
-                    height="100"
-                    rounded="md"
-                  />
-                </VCol>
-                <VCol
-                  v-else
-                  cols="4"
-                >
-                  <VImg
-                    :src="placeholderImg"
-                    :alt="service.title"
-                    height="100"
-                    rounded="md"
-                  />
-                </VCol>
-                <VCol
-                  cols="8"
-                  class="d-flex flex-column justify-center"
-                >
-                  <span class="font-weight-bold text-sm text-primary mt-1 mb-2">{{ service.title }}</span>
-                  <p
-                    class="mb-0 text-body-2"
-                    v-html="truncateDescription(service.description, 140)"
-                  />
-                  <div>
-                    <VBtn
-                      size="small"
-                      rounded="pill"
-                      color="primary"
-                    >
-                      Learn More
-                    </VBtn>
-                  </div>
-                </VCol>
-              </VRow>
-            </VCarouselItem>
-          </VCarousel>
+              <VCarouselItem
+                v-for="(service, index) in getServices"
+                :key="index"
+              >
+                <VRow class="mt-2">
+                  <VCol
+                    v-if="service.image"
+                    cols="4"
+                  >
+                    <VImg
+                      :src="getImageUrl(service.image.path)"
+                      :alt="service.title"
+                      height="100"
+                      rounded="md"
+                    />
+                  </VCol>
+                  <VCol
+                    v-else
+                    cols="4"
+                  >
+                    <VImg
+                      :src="placeholderImg"
+                      :alt="service.title"
+                      height="100"
+                      rounded="md"
+                    />
+                  </VCol>
+                  <VCol
+                    cols="8"
+                    class="d-flex flex-column justify-center"
+                  >
+                    <span class="font-weight-bold text-sm text-primary mt-1 mb-2">{{ service.title }}</span>
+                    <p
+                      class="mb-0 text-body-2"
+                      v-html="truncateDescription(service.description, 140)"
+                    />
+                    <div>
+                      <VBtn
+                        size="small"
+                        rounded="pill"
+                        color="primary"
+                      >
+                        Learn More
+                      </VBtn>
+                    </div>
+                  </VCol>
+                </VRow>
+              </VCarouselItem>
+            </VCarousel>
+          </template>
+          <template v-else>
+            <!-- Fallback UI when no services are found -->
+            <div
+              class="d-flex flex-column align-center justify-center"
+              style="height: 180px; text-align: center;"
+            >
+              <p class="font-weight-bold text-body-1 mb-2">
+                No services available
+              </p>
+              <VBtn
+                v-if="authStore.isAdmin"
+                size="small"
+                rounded="pill"
+                color="primary"
+                :to="{ name: 'services-setting' }"
+              >
+                Add Services
+              </VBtn>
+            </div>
+          </template>
         </VCardText>
       </VCard>
     </VCol>

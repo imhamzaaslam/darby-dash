@@ -132,6 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         'name_first',
         'name_last',
         'email',
+        'company_id',
         'email_verified_at',
         'password',
         'state',

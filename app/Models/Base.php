@@ -20,9 +20,31 @@ use Illuminate\Support\Facades\Schema;
 class Base extends Model implements BaseInterface
 {
     use HasFactory;
+    protected static $excludedFilters = [
+        'project_types',
+        'project_lists',
+        'statuses',
+        'template_lists',
+    ];
+
     public static function boot(): void
     {
         parent::boot();
+
+        static::addGlobalScope('company', function (Builder $builder) {
+            if (auth()->check()) {
+                $companyId = auth()->user()->company_id;
+                if (in_array((new static())->getTable(), self::$excludedFilters)) {
+                    return;
+                }
+                $modelInstance = new static();
+                if (Schema::hasColumn($modelInstance->getTable(), 'created_by')) {
+                    $builder->whereHas('creator', function ($query) use ($companyId) {
+                        $query->where('company_id', $companyId);
+                    });
+                }
+            }
+        });
 
         static::creating(function (self $model) {
             if (Schema::hasColumn($model->getTable(), 'uuid')) {
@@ -67,6 +89,11 @@ class Base extends Model implements BaseInterface
     public function isActive(): bool
     {
         return $this->state === 'active';
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     function scopeOrdered(Builder $query, string $orderBy = 'id', string $order = 'asc'): Builder

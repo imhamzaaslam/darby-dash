@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -62,7 +63,7 @@ class UsersController extends Controller
      */
     public function getAllUsers(): AnonymousResourceCollection|JsonResponse
     {
-        $users = $this->userRepository->all();
+        $users = $this->userRepository->getAllRecordsQuery()->get();
 
         return UserResource::collection($users);
     }
@@ -82,6 +83,7 @@ class UsersController extends Controller
             'name_last' => $validated['name_last'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
+            'company_id' => Auth::user()->company_id,
         ];
 
         $role = $validated['role'];

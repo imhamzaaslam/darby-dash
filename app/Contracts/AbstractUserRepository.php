@@ -25,7 +25,7 @@ abstract class AbstractUserRepository implements AbstractUserRepositoryInterface
 
     public function getAllRecordsQuery(): Builder
     {
-        return $this->model->query();
+        return $this->model->query()->where('company_id', auth()->user()->company_id);
     }
 
     public function getFirstByOrFail(string $key, $value): ?User
