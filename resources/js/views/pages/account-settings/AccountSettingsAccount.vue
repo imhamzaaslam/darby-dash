@@ -55,7 +55,7 @@
 
         <VCardText class="pt-2">
           <!-- 👉 Form -->
-          <VForm 
+          <VForm
             ref="updateMemberForm"
             class="mt-6"
             @submit.prevent="submitUpdateMemberForm"
@@ -120,6 +120,22 @@
                   variant="outlined"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.phone"
+                />
+              </VCol>
+
+              <!-- 👉 Company -->
+              <VCol
+                v-if="authStore.isAdmin"
+                cols="12"
+                md="6"
+              >
+                <AppTextField
+                  v-model="accountData.company"
+                  label="Company *"
+                  placeholder="Company Name"
+                  variant="outlined"
+                  :rules="[requiredValidator]"
+                  :error-messages="editErrors.company"
                 />
               </VCol>
 
@@ -202,6 +218,7 @@
 import defaultAvatar from '@images/avatars/default-avatar.png'
 import Loader from '@/components/Loader.vue'
 import { useUserStore } from "@/store/users"
+import { useAuthStore } from "@/store/auth"
 import { useToast } from "vue-toastification"
 import { computed, onMounted, ref } from 'vue'
 
@@ -211,6 +228,7 @@ onMounted(() => {
 })
 
 const userStore = useUserStore()
+const authStore = useAuthStore()
 const toast = useToast()
 const isLoading = ref(false)
 
@@ -222,6 +240,7 @@ const accountData = ref({
   phone: '',
   city: '',
   address: '',
+  company: '',
   zip: '',
 })
 
@@ -232,6 +251,7 @@ const editErrors = ref({
   phone: '',
   city: '',
   address: '',
+  company: '',
   zip: '',
 })
 
@@ -303,6 +323,7 @@ const setUserDetails = async () => {
   // accountData.value.avatar = userDetails?.info?.avatar
   accountData.value.name_first = userDetails?.name_first
   accountData.value.name_last = userDetails?.name_last
+  accountData.value.company = userDetails?.company
   accountData.value.email = userDetails?.email
   accountData.value.phone = userDetails?.info?.phone
   accountData.value.city = userDetails?.info?.city

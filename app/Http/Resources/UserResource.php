@@ -29,6 +29,7 @@ class UserResource extends JsonResource
             'phone' => $this->info->phone,
             'is_2fa' => $this->is_2fa,
             'is_online' => $this->isOnline(),
+            'company' => $this->company->name ?? 'N/A',
             'info' => [
                 'phone' => $this->info->phone,
                 'address' => $this->info->address,

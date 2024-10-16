@@ -48,6 +48,7 @@ class UpdateUserAdminRequest extends FormRequest
             'address' => 'sometimes|string|max:255',
             'city' => 'sometimes|string|max:255',
             'zip' => 'sometimes|string|max:255',
+            'company' => ['sometimes', 'string', 'max:255', Rule::unique('companies', 'name')->ignore($user->company->id ?? null, 'id')],
         ];
     }
 }

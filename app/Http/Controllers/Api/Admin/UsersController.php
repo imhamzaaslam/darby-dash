@@ -160,6 +160,13 @@ class UsersController extends Controller
         $this->userRepository->update($role, $user, $validatedUserInput);
         $this->userInfoRepository->update($user->info, $validatedInfoInput);
 
+        if ($user->hasRole('Super Admin') && $request->has('company') && !empty($validated['company'])) {
+            $companyName = $validated['company'];
+            $user->company()->update([
+                'name' => $companyName,
+            ]);
+        }
+
         return (new UserResource($user))
             ->response()
             ->setStatusCode(200);

@@ -3,16 +3,45 @@
     <VRow class="mt-0 pt-0">
       <VCol
         cols="12"
-        class="pt-0 ps-4"
+        class="pt-0 ps-4 d-flex align-items-center"
       >
-        <h3>Manage Templates</h3>
+        <h3 class="mb-0">
+          Manage Templates
+        </h3>
+
+        <VBtnToggle
+          v-model="viewType"
+          class="d-toggle"
+          rounded="0"
+        >
+          <VIcon
+            icon="tabler-list"
+            class="me-1 ms-2"
+            :class="{ 'bg-primary': viewType === 'list' }"
+            @click="viewType = 'list'"
+          />
+          <VIcon
+            icon="tabler-layout-grid"
+            :class="{ 'bg-primary': viewType === 'grid' }"
+            @click="viewType = 'grid'"
+          />
+        </VBtnToggle>
       </VCol>
     </VRow>
 
     <!-- Skeleton Loader -->
     <div v-if="getLoadStatus == 1">
-      <VRow class="mb-4">
+      <VRow
+        v-if="viewType === 'list'"
+        class="mb-4"
+      >
         <ListViewSkeleton />
+      </VRow>
+      <VRow
+        v-else
+        class="mb-4"
+      >
+        <GridViewSkeleton />
       </VRow>
     </div>
 
@@ -24,7 +53,7 @@
           </VCard>
         </VCol>
       </VRow>
-      <VRow>
+      <VRow v-else-if="viewType === 'list'">
         <VCol
           v-for="template in getTemplates"
           :key="template.id"
@@ -113,6 +142,89 @@
           </RouterLink>
         </VCol>
       </VRow>
+      <VRow v-else>
+        <VCol
+          v-for="template in getTemplates"
+          :key="template.id"
+          cols="12"
+          md="4"
+        >
+          <VCard class="mb-4 elevation-3">
+            <VCardTitle class="pb-0">
+              <div class="d-flex justify-space-between align-center">
+                <!-- Template Name with Icon -->
+                <div class="d-flex align-center">
+                  <VIcon
+                    color="primary"
+                    :size="28"
+                    icon="tabler-template"
+                    class="me-3"
+                  />
+                  <h6 class="mb-0 text-h6">
+                    {{ template.template_name }}
+                  </h6>
+                </div>
+
+                <!-- Options Menu -->
+                <IconBtn @click.prevent>
+                  <VIcon icon="tabler-dots-vertical" />
+                  <VMenu activator="parent">
+                    <VList>
+                      <VListItem
+                        value="edit"
+                        :to="{ name: 'manage-templates', params: { id: template.uuid } }"
+                      >
+                        Edit
+                      </VListItem>
+                      <VListItem
+                        value="delete"
+                        @click="deleteTemplate(template)"
+                      >
+                        Delete
+                      </VListItem>
+                    </VList>
+                  </VMenu>
+                </IconBtn>
+              </div>
+            </VCardTitle>
+
+            <VCardText class="px-4 pt-2 pb-4">
+              <!-- Template Info -->
+              <div class="d-flex justify-space-between mb-3">
+                <div class="d-flex flex-column">
+                  <small class="text-high-emphasis">
+                    <span class="font-weight-bold">Type:</span> Web Designs
+                  </small>
+                  <small class="text-high-emphasis">
+                    <span class="font-weight-bold">Created At:</span> {{ formatDate(template.created_at) }}
+                  </small>
+                </div>
+              </div>
+
+              <!-- Lists and Chips -->
+              <div class="d-flex flex-wrap gap-1">
+                <span
+                  v-for="(list, index) in template.lists"
+                  :key="index"
+                >
+                  <VTooltip location="top">
+                    <template #activator="{ props }">
+                      <VChip
+                        v-bind="props"
+                        size="small"
+                        color="primary"
+                      >
+                        {{ list.name }} ({{ list.tasks_count }})
+                      </VChip>
+                    </template>
+                    <span>{{ list.tasks_count }} tasks</span>
+                  </VTooltip>
+                </span>
+              </div>
+            </VCardText>
+          </VCard>
+        </VCol>
+      </VRow>
     </div>
 
     <TablePagination
@@ -129,26 +241,53 @@
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
+import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-skeleton.vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useToast } from "vue-toastification"
 import { useTemplateStore } from '@/store/templates'
 import moment from 'moment'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Templates` })
-onBeforeMount(async () => {
-  await fetchTemplates()
-  totalRecords.value = totalTemplates.value
-})
 
 const toast = useToast()
 const templateStore = useTemplateStore()
+const router = useRouter()
 
 const totalRecords = ref(0)
 const isLoading = ref(false)
 const search = ref('')
+const viewType = ref('list')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
+
+const isMobile = () => {
+  return window.innerWidth <= 768 || window.innerWidth <= 926
+}
+
+const handleResize = () => {
+  viewType.value = isMobile() ? 'grid' : 'list'
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
+onBeforeMount(async () => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const savedViewType = searchParams.get('view')
+  if (savedViewType && ['list', 'grid'].includes(savedViewType)) {
+    viewType.value = savedViewType
+  }
+  await fetchTemplates()
+  totalRecords.value = totalTemplates.value
+})
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
 
@@ -233,6 +372,14 @@ const getLoadStatus = computed(() => {
 
 const totalTemplates = computed(() => {
   return templateStore.templatesCount
+})
+
+watch([viewType], ([newViewType]) => {
+  router.push({
+    query: {
+      view: newViewType,
+    },
+  })
 })
 </script>
 

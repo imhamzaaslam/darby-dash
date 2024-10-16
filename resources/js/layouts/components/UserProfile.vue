@@ -60,7 +60,8 @@
             <VListItemTitle class="font-weight-semibold">
               {{ userDetails?.name_first + ' ' + userDetails?.name_last }}
             </VListItemTitle>
-            <VListItemSubtitle>{{ userDetails?.role }}</VListItemSubtitle>
+            <VListItemSubtitle><small style="position: relative;top:-6px;">{{ userDetails?.role }}</small></VListItemSubtitle>
+            <VListItemSubtitle>{{ userDetails?.company }}</VListItemSubtitle>
           </VListItem>
 
           <VDivider class="my-2" />
@@ -135,7 +136,7 @@ const getImageUrl = path => {
 }
 
 
-const userDetails = computed(() => {  
+const userDetails = computed(() => {
   return userStore.getUser
 })
 </script>

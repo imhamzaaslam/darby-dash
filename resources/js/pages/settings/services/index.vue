@@ -1,48 +1,84 @@
 <template>
   <div>
-    <VRow class="mt-0">
+    <VRow class="d-flex align-items-center">
       <VCol
         cols="6"
-        class="ps-4"
+        class="d-flex justify-start justify-md-start"
       >
-        <h3>Manage Services</h3>
+        <VBtnToggle
+          v-model="viewType"
+          class="d-toggle align-center-important"
+          rounded="0"
+        >
+          <VIcon
+            icon="tabler-list"
+            class="me-1"
+            :class="{ 'bg-primary': viewType === 'list' }"
+            @click="viewType = 'list'"
+          />
+          <VIcon
+            icon="tabler-layout-grid"
+            class="ms-1"
+            :class="{ 'bg-primary': viewType === 'grid' }"
+            @click="viewType = 'grid'"
+          />
+        </VBtnToggle>
       </VCol>
-      <VCol cols="6">
-        <div class="d-flex justify-end mb-3">
-          <VBtn
-            icon
-            color="td-hover"
-            class="ms-3"
-            size="small"
-            rounded="pills"
-            @click.prevent
-          >
-            <VIcon icon="tabler-dots" />
-            <VMenu activator="parent">
-              <VList>
-                <VListItem
-                  value="add-service"
-                  @click="isAddServiceDrawerOpen = !isAddServiceDrawerOpen"
-                >
-                  Add Service
-                </VListItem>
-                <VListItem
-                  value="sort-service"
-                  @click="isSortServiceModalOpen = true"
-                >
-                  Manage Services
-                </VListItem>
-              </VList>
-            </VMenu>
-          </VBtn>
-        </div>
+      <VCol
+        cols="6"
+        class="d-flex justify-end justify-md-end mb-3"
+      >
+        <VBtn
+          icon
+          color="td-hover"
+          class="ms-3"
+          size="small"
+          rounded="pills"
+          @click.prevent
+        >
+          <VIcon icon="tabler-dots" />
+          <VMenu activator="parent">
+            <VList>
+              <VListItem
+                value="add-service"
+                @click="isAddServiceDrawerOpen = !isAddServiceDrawerOpen"
+              >
+                Add Service
+              </VListItem>
+              <VListItem
+                value="sort-service"
+                @click="isSortServiceModalOpen = true"
+              >
+                Manage Services
+              </VListItem>
+            </VList>
+          </VMenu>
+        </VBtn>
       </VCol>
     </VRow>
-
+    <VRow class="mb-3 pt-0 pb-0">
+      <VCol
+        cols="12"
+        class="pt-0 ps-4 pb-0"
+      >
+        <h3>
+          Manage Services
+        </h3>
+      </VCol>
+    </VRow>
     <!-- Skeleton Loader -->
     <div v-if="getLoadStatus == 1">
-      <VRow class="mb-4">
+      <VRow
+        v-if="viewType === 'list'"
+        class="mb-4"
+      >
         <ListViewSkeleton />
+      </VRow>
+      <VRow
+        v-else
+        class="mb-4"
+      >
+        <GridViewSkeleton />
       </VRow>
     </div>
 
@@ -54,7 +90,7 @@
           </VCard>
         </VCol>
       </VRow>
-      <VRow>
+      <VRow v-else-if="viewType === 'list'">
         <VCol
           v-for="service in getServices"
           :key="service.id"
@@ -147,6 +183,86 @@
           </VCard>
         </VCol>
       </VRow>
+      <VRow v-else>
+        <VCol
+          v-for="service in getServices"
+          :key="service.id"
+          cols="12"
+          md="4"
+        >
+          <VCard>
+            <VCardTitle>
+              <!-- Action Icon for Edit/Delete -->
+              <div class="d-flex justify-space-between align-center">
+                <!-- Status Chip with Tooltip -->
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VChip
+                      v-bind="props"
+                      size="small"
+                      :color="service.status ? 'primary' : 'error'"
+                      class="me-3"
+                    >
+                      {{ service.status ? 'Active' : 'Inactive' }}
+                    </VChip>
+                  </template>
+                  <span>{{ service.status ? 'Service is active' : 'Service is inactive' }}</span>
+                </VTooltip>
+
+                <IconBtn @click.prevent>
+                  <VIcon icon="tabler-dots-vertical" />
+                  <VMenu activator="parent">
+                    <VList>
+                      <VListItem
+                        value="edit"
+                        @click="editService(service)"
+                      >
+                        Edit
+                      </VListItem>
+                      <VListItem
+                        value="delete"
+                        @click="deleteService(service)"
+                      >
+                        Delete
+                      </VListItem>
+                    </VList>
+                  </VMenu>
+                </IconBtn>
+              </div>
+            </VCardTitle>
+            <VCardText class="ps-4">
+              <!-- Avatar and Service Info -->
+              <div class="d-flex align-center">
+                <VAvatar
+                  v-if="service.image"
+                  rounded
+                  size="80"
+                  class="me-5"
+                  :image="getImageUrl(service.image.path)"
+                />
+                <VAvatar
+                  v-else
+                  rounded
+                  size="80"
+                  class="me-5"
+                  :image="placeholderImg"
+                />
+                <div class="d-flex flex-column">
+                  <h6 class="text-h6 text-no-wrap">
+                    {{ service.title }}
+                  </h6>
+                  <small class="text-muted">
+                    <span class="font-weight-bold text-black">Type:</span> {{ service.service_type }}
+                  </small>
+                  <small class="text-muted">
+                    <span class="font-weight-bold text-black">Created At:</span> {{ formatDate(service.created_at) }}
+                  </small>
+                </div>
+              </div>
+            </VCardText>
+          </VCard>
+        </VCol>
+      </VRow>
     </div>
 
     <TablePagination
@@ -185,20 +301,44 @@
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
+import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import placeholderImg from '@images/pages/servicePlaceholder.png'
 import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-skeleton.vue'
+import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
 import AddServiceDrawer from '@/pages/settings/services/_partials/add-service-drawer.vue'
 import EditServiceDrawer from '@/pages/settings/services/_partials/update-service-drawer.vue'
 import SortServiceModal from '@/pages/settings/services/_partials/sort-service-modal.vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, watch, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useUserSettingStore } from '@/store/user_settings'
 import { useProjectTypeStore } from "@/store/project_types"
 import moment from 'moment'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Services` })
+
+const isMobile = () => {
+  return window.innerWidth <= 768 || window.innerWidth <= 926
+}
+
+const handleResize = () => {
+  viewType.value = isMobile() ? 'grid' : 'list'
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 onBeforeMount(async () => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const savedViewType = searchParams.get('view')
+  if (savedViewType && ['list', 'grid'].includes(savedViewType)) {
+    viewType.value = savedViewType
+  }
   await fetchServices()
   await fetchServicesWithoutPagination()
   totalRecords.value = totalServices.value
@@ -207,6 +347,7 @@ onBeforeMount(async () => {
 const toast = useToast()
 const userSettingStore = useUserSettingStore()
 const projectTypeStore = useProjectTypeStore()
+const router = useRouter()
 
 const totalRecords = ref(0)
 const isLoading = ref(false)
@@ -215,6 +356,7 @@ const isAddServiceDrawerOpen = ref(false)
 const isSortServiceModalOpen = ref(false)
 const editServiceDetails = ref({})
 const search = ref('')
+const viewType = ref('list')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
@@ -322,6 +464,14 @@ const getImageUrl = path => {
 
 const getProjectTypes = computed(() => {
   return projectTypeStore.getProjectTypes
+})
+
+watch([viewType], ([newViewType]) => {
+  router.push({
+    query: {
+      view: newViewType,
+    },
+  })
 })
 </script>
 
