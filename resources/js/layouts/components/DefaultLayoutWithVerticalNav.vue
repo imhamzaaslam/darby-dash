@@ -68,9 +68,62 @@ const project = computed(() =>{
         </IconBtn>
 
         <NavbarThemeSwitcher />
+
+        <!-- Dropdown for router links on mobile view -->
+
+        <IconBtn
+          v-if="showNavigation"
+          class="ms-n1 d-lg-none"
+          @click.prevent
+        >
+          <VIcon
+            size="26"
+            icon="tabler-dots-vertical"
+          />
+          <VMenu
+            activator="parent"
+            class="d-lg-none"
+            offset-y
+          >
+            <VList>
+              <VListItem
+                v-for="link in [
+                  { text: 'Overview', route: `/projects/web-designs/${projectId}` },
+                  { text: 'Tasks', route: `/projects/${projectId}/tasks/add` },
+                  { text: 'Milestones', route: `/projects/${projectId}/milestones` },
+                  { text: 'Calendar', route: `/projects/${projectId}/calendar` },
+                  { text: 'Files', route: `/projects/${projectId}/files` },
+                  { text: 'Inbox', route: `/projects/${projectId}/chat` },
+                  { text: 'Your Team', route: `/projects/${projectId}/team` },
+                  { text: 'Payments', route: `/projects/${projectId}/payments` }
+                ]"
+                :key="link.text"
+              >
+                <RouterLink :to="link.route">
+                  <VListItemTitle>{{ link.text }}</VListItemTitle>
+                </RouterLink>
+              </VListItem>
+              <!-- Darby Bucks/Earned Bucks for mobile view -->
+              <VListItem v-if="project?.bucks_share">
+                <RouterLink :to="authStore.isAdmin || authStore.isManager ? `/projects/${projectId}/bucks` : `/projects/${projectId}/bucks?tab=manage-bucks`">
+                  <VListItemTitle>
+                    <span v-if="authStore.isAdmin || authStore.isManager">
+                      Darby Bucks
+                      <span class="text-primary">${{ project?.bucks_share_amount }}</span>
+                    </span>
+                    <span v-else>
+                      Earned Bucks
+                      <span class="text-primary">${{ project?.bucks_earnings }}</span>
+                    </span>
+                  </VListItemTitle>
+                </RouterLink>
+              </VListItem>
+            </VList>
+          </VMenu>
+        </IconBtn>
         <div
           v-if="showNavigation"
-          class="d-flex align-center"
+          class="d-none d-lg-flex align-center"
         >
           <RouterLink :to="`/projects/web-designs/${projectId}`">
             <span
@@ -148,7 +201,7 @@ const project = computed(() =>{
 
         <span
           v-if="showNavigation && project?.bucks_share"
-          class="text-h6 font-weight-bold me-4"
+          class="text-h6 font-weight-bold me-4 d-none d-lg-flex"
         >
           <span v-if="authStore.isAdmin || authStore.isManager">
             <RouterLink :to="`/projects/${projectId}/bucks`">

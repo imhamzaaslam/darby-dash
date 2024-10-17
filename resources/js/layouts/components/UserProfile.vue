@@ -39,6 +39,7 @@
                   offset-x="3"
                   offset-y="3"
                   color="success"
+                  style="position: relative;top:-10px;"
                 >
                   <VAvatar
                     color="primary"
@@ -60,12 +61,20 @@
             <VListItemTitle class="font-weight-semibold">
               {{ userDetails?.name_first + ' ' + userDetails?.name_last }}
             </VListItemTitle>
-            <VListItemSubtitle><small style="position: relative;top:-6px;">{{ userDetails?.role }}</small></VListItemSubtitle>
-            <VListItemSubtitle>{{ userDetails?.company }}</VListItemSubtitle>
+            <VListItemSubtitle
+              class="role-company-container"
+              style="position: relative;top:-5px;"
+            >
+              <small>{{ userDetails?.role }}</small>
+              <div
+                class="company-name text-primary"
+                style="position: relative;top:-5px;"
+              >
+                {{ userDetails?.company }}
+              </div>
+            </VListItemSubtitle>
           </VListItem>
-
           <VDivider class="my-2" />
-
           <!-- 👉 Profile -->
           <VListItem to="/account-setting">
             <template #prepend>
@@ -140,3 +149,15 @@ const userDetails = computed(() => {
   return userStore.getUser
 })
 </script>
+
+<style lang="scss" scoped>
+.role-company-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.company-name {
+  font-size: 1em;
+}
+</style>

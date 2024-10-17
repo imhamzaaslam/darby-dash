@@ -1,7 +1,10 @@
 <template>
   <Loader v-if="loadStatus === 1" />
   <VRow>
-    <VCol cols="6">
+    <VCol
+      cols="12"
+      md="6"
+    >
       <div class="d-flex justify-between align-center">
         <div class="d-flex align-center">
           <VAvatar
@@ -15,7 +18,10 @@
         </div>
       </div>
     </VCol>
-    <VCol cols="6">
+    <VCol
+      cols="12"
+      md="6"
+    >
       <div class="d-flex justify-end align-center">
         <VCheckbox
           v-if="projectProgress.overallProgress === 100 && authStore.isAdmin"
@@ -189,65 +195,77 @@
     </VCol>
   </VRow>
   <VRow>
-    <VCol cols="6">
-      <VCard>
-        <VCardItem title="Inbox (14)">
+    <VCol
+      cols="12"
+      md="6"
+    >
+      <VCard style="height: 388px; position: relative;">
+        <VCardItem title="Inbox (0)">
           <template #append>
             <MoreBtn />
           </template>
         </VCardItem>
-        <VCardText>
+        <VCardText
+          class="inbox-card"
+          style="max-height: 250px!important;"
+        >
           <VList class="card-list">
             <VListItem
-              v-for="instructor in [
-                { active: 'success', name: 'Jordan Stevenson', profession: 'Business Intelligence', totalCourses: 3, avatar: avatar1 },
-                { active: 'primary', name: 'Bentlee Emblin', profession: 'Digital Marketing', totalCourses: 2, avatar: avatar1 },
-                { active: 'primary', name: 'Benedetto Rossiter', profession: 'UI/UX Design', totalCourses: 1, avatar: avatar1 },
-                { active: 'secondary', name: 'Beverlie Krabbe', profession: 'Vue', totalCourses: 8, avatar: avatar1 },
-              ]"
-              :key="instructor.name"
+              v-for="inbox in getUsersByProjects"
+              :key="inbox.id"
             >
               <template #prepend>
                 <VBadge
                   dot
                   bordered
-                  :color="instructor.active"
+                  :color="inbox.is_online ? 'success' : 'warning'"
                   location="bottom end"
                 >
                   <VAvatar
-                    size="34"
-                    :image="instructor.avatar"
-                  />
+                    v-if="inbox?.info"
+                    color="primary"
+                    :image="inbox?.info?.avatar ? getImageUrl(inbox?.info?.avatar.path) : undefined"
+                    :variant="inbox?.info?.avatar ? undefined : 'tonal'"
+                    size="38"
+                  >
+                    <span v-if="!inbox?.info?.avatar">{{ avatarText(inbox.name_first + ' ' + inbox.name_last) }}</span>
+                  </VAvatar>
                 </VBadge>
               </template>
               <VListItemTitle class="font-weight-medium">
-                {{ instructor.name }}
+                {{ inbox.name_first + ' ' + inbox.name_last }}
               </VListItemTitle>
               <VListItemSubtitle class="text-disabled">
-                {{ instructor.profession }}
+                {{ inbox.role }}
               </VListItemSubtitle>
 
               <template #append>
                 <span class="p-0">
                   <VBadge
                     color="primary"
-                    :content="instructor.totalCourses"
+                    :content="0"
                   />
                 </span>
               </template>
             </VListItem>
-            <VBtn
-              size="small"
-              rounded="pill"
-              color="primary"
-            >
-              Write Message
-            </VBtn>
           </VList>
         </VCardText>
+        <div style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center;">
+          <VBtn
+            size="small"
+            rounded="pill"
+            color="primary"
+          >
+            Write Message
+          </VBtn>
+        </div>
       </VCard>
     </VCol>
-    <VCol cols="6">
+
+    <VCol
+      cols="12"
+      md="6"
+    >
       <VCard
         class="pb-5"
         style="height: 388px;"
@@ -335,7 +353,10 @@
     </VCol>
   </VRow>
   <VRow>
-    <VCol cols="6">
+    <VCol
+      cols="12"
+      md="6"
+    >
       <VCard style="height: 320px;">
         <VCardItem>
           <VCardTitle>Upcoming Event</VCardTitle>
@@ -347,7 +368,7 @@
           </template>
         </VCardItem>
 
-        <VCardText class="activity-card">
+        <VCardText>
           <VTimeline
             v-if="project?.upcoming_events.length > 0"
             density="compact"
@@ -465,7 +486,10 @@
       </VCard>
       </VCol>
     -->
-    <VCol cols="6">
+    <VCol
+      cols="12"
+      md="6"
+    >
       <VCard>
         <VCardItem>
           <VCardTitle>Recent Activity</VCardTitle>
@@ -556,9 +580,12 @@
     </VCol>
   </VRow>
   <VRow>
-    <VCol cols="6">
-      <VCard style="height: 295px;">
-        <!-- // check if project_manager is not null/ -->
+    <VCol
+      cols="12"
+      md="6"
+    >
+      <VCard style="height: 100%; min-height: 295px;">
+        <!-- Changed height to 100% for better responsiveness -->
         <template v-if="project?.project_manager">
           <VCardItem title="Your Project Manager">
             <template #append>
@@ -567,11 +594,12 @@
           </VCardItem>
           <VCardText>
             <VRow>
-              <VCol cols="4">
-                <div
-                  v-if="project?.project_manager?.info?.avatar"
-                  class="d-flex justify-center align-start pb-0 pt-2 mb-3"
-                >
+              <VCol
+                cols="12"
+                md="4"
+                class="d-flex justify-center align-start pb-0 pt-2 mb-3"
+              >
+                <div v-if="project?.project_manager?.info?.avatar">
                   <VAvatar
                     :size="140"
                     class="elevation-1"
@@ -582,10 +610,7 @@
                     />
                   </VAvatar>
                 </div>
-                <div
-                  v-else
-                  class="d-flex justify-start align-center pb-0"
-                >
+                <div v-else>
                   <VAvatar
                     :size="140"
                     color="light-primary"
@@ -597,7 +622,10 @@
                   </VAvatar>
                 </div>
               </VCol>
-              <VCol cols="8">
+              <VCol
+                cols="12"
+                md="8"
+              >
                 <div>
                   <div class="d-flex justify-space-between my-2 flex-wrap">
                     <div class="d-flex align-center">
@@ -626,13 +654,14 @@
                             class="text-high-emphasis"
                             :to="`/projects/${projectUuid}/calendar`"
                           >
-                            <span class="text-decoration-underline ">Schedule A Meeting</span>
+                            <span class="text-decoration-underline">Schedule A Meeting</span>
                           </RouterLink>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="my-5 d-flex gap-3">
+                  <div class="my-5 d-flex gap-3 flex-wrap">
+                    <!-- Use flex-wrap for better mobile handling -->
                     <RouterLink :to="`/projects/${projectUuid}/chat`">
                       <VBtn
                         size="small"
@@ -658,7 +687,6 @@
             </VRow>
           </VCardText>
         </template>
-        <!-- // else show the below -->
         <template v-else>
           <VCardItem title="No Project Manager Assigned">
             <template #append>
@@ -684,7 +712,10 @@
         </template>
       </VCard>
     </VCol>
-    <VCol cols="6">
+    <VCol
+      cols="12"
+      md="6"
+    >
       <VCard style="height:294px!important">
         <VCardItem title="Matching Services For Your Project">
           <template #append>
@@ -872,6 +903,7 @@ import { useRoute } from 'vue-router'
 import sketch from '@images/icons/project-icons/sketch.png'
 import { useProjectBucksStore } from "@/store/project_bucks"
 import { useAuthStore } from "@/store/auth"
+import { useUserStore } from "@/store/users"
 import { useUserSettingStore } from "@/store/user_settings"
 import { useToast } from "vue-toastification"
 
@@ -882,6 +914,7 @@ onBeforeMount(async () => {
 const projectStore = useProjectStore()
 const projectBucksStore = useProjectBucksStore()
 const authStore = useAuthStore()
+const userStore = useUserStore()
 const userSettingStore = useUserSettingStore()
 const $route = useRoute()
 const toast = useToast()
@@ -904,6 +937,7 @@ const getProjectProgress = async () => {
     showAwardBucksBtn.value = true
   }
   await projectStore.getProgress(projectUuid)
+  await fetchMembers()
   await fetchServices()
 }
 
@@ -918,6 +952,14 @@ const fetchProject = async () => {
 const fetchServices = async () => {
   try {
     await userSettingStore.getServicesByType(project?.value?.project_type_uuid)
+  } catch (error) {
+    toast.error('Error fetching services:', error)
+  }
+}
+
+const fetchMembers = async () => {
+  try {
+    await userStore.getByProjects(1, 10, null, null, null, projectUuid)
   } catch (error) {
     toast.error('Error fetching services:', error)
   }
@@ -1068,6 +1110,10 @@ const getServices = computed(() => {
   return userSettingStore.getProjectServicesByType
 })
 
+const getUsersByProjects = computed(() => {
+  return userStore.getUsersByProjects
+})
+
 watch(project, () => {
   useHead({ title: `${layoutConfig.app.title} | ${project?.value?.title} - Overview` })
 })
@@ -1085,6 +1131,11 @@ watch(project, () => {
 }
 .activity-card {
     max-height: 208px;
+    overflow-y: auto;
+    margin-bottom: 25px;
+}
+.inbox-card {
+    max-height: 280px;
     overflow-y: auto;
     margin-bottom: 25px;
 }
