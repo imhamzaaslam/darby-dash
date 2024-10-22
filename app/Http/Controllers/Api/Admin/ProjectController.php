@@ -16,7 +16,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use App\Services\NotificationService;
+use App\Services\ActivityService;
 use App\Enums\Management;
+use App\Enums\ActionType;
 
 class ProjectController extends Controller
 {
@@ -25,6 +27,7 @@ class ProjectController extends Controller
         protected UserRepositoryInterface $userRepository,
         protected TemplateRepositoryInterface $templateRepository,
         protected NotificationService $notificationService,
+        protected ActivityService $activityService,
     ) {}
 
     /**
@@ -110,8 +113,9 @@ class ProjectController extends Controller
             $this->projectRepository->createBacklogList($project);
         }
 
-        //Send Notification
+        //Send notification & create activity
         $this->notificationService->sendNotification(Management::PROJECT->value, 'project-created', $member_ids, $project->toArray());
+        $this->activityService->logActivity(Management::PROJECT, ActionType::CREATED, $project->id, $project->toArray(), $project->uuid);
 
         return (new ProjectResource($project))
             ->response()
@@ -178,14 +182,15 @@ class ProjectController extends Controller
         $data['completed_at'] = $request->has('is_completed') && $request->is_completed == 1 ? now() : null;
         $this->projectRepository->update($project, $data);
 
-        //Send Notification
+        //Send notification & create activity
         if($request->has('is_completed') && $request->is_completed == 1)
         {
             $member_ids = $project->members->pluck('id');
             $this->notificationService->sendNotification(Management::PROJECT->value, 'project-completed', $member_ids, $project->toArray());
+            $this->activityService->logActivity(Management::PROJECT, ActionType::COMPLETED, $project->id, $project->toArray(), $project->uuid);
         }
 
-        //Send Notification
+        //Send notification & create activity
         if($request->has('is_pm_bucks_awarded'))
         {
             $projectManager = $project->projectManager();
@@ -196,6 +201,7 @@ class ProjectController extends Controller
                     'title' => $project->title,
                 ];
                 $this->notificationService->sendNotification(Management::BUCKS->value, 'bucks-award', $projectManager->id, $projectData);
+                $this->activityService->logActivity(Management::BUCKS, ActionType::AWARDED, $project->id, $projectData, $project->uuid);
             }
         }
 
@@ -275,8 +281,12 @@ class ProjectController extends Controller
 
         $this->projectRepository->updateProjectMembers($project, $member_ids);
 
-        //Send Notification
+        //Send notification & create activity
         $this->notificationService->sendNotification(Management::MEMBER->value, 'memeber-created', $member_ids, $project->toArray());
+
+        foreach ($member_ids as $memberID) {
+           $this->activityService->logActivity(Management::MEMBER, ActionType::CREATED, $memberID, $project->toArray(), $project->uuid);
+        }
 
         return response()->json(['message' => 'Members updated successfully']);
     }
@@ -296,8 +306,10 @@ class ProjectController extends Controller
 
         $this->projectRepository->deleteProjectMember($project, $user);
 
-        //Send Notification
+        //Send notification & create activity
         $this->notificationService->sendNotification(Management::MEMBER->value, 'memeber-deleted', $user->id, $project->toArray());
+
+        $this->activityService->logActivity(Management::MEMBER, ActionType::DELETED, $user->id, $project->toArray(), $project->uuid);
 
         return response()->json(['message' => 'Member removed successfully']);
     }

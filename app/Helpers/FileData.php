@@ -14,4 +14,15 @@ class FileData
     {
 
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'path' => $this->path,
+            'url' => $this->url,
+            'mime_type' => $this->mimeType,
+            'size' => $this->size,
+        ];
+    }
 }

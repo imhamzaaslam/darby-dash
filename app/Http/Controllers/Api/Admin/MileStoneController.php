@@ -9,13 +9,17 @@ use App\Http\Resources\MileStoneResource;
 use App\Http\Requests\project\StoreMileStoneRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Services\ActivityService;
+use App\Enums\Management;
+use App\Enums\ActionType;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class MileStoneController extends Controller
 {
     public function __construct(
         protected MileStoneRepositoryInterface $mileStoneRepository,
-        protected ProjectRepositoryInterface $projectRepository
+        protected ProjectRepositoryInterface $projectRepository,
+        protected ActivityService $activityService,
     ) {}
 
     /**
@@ -58,6 +62,9 @@ class MileStoneController extends Controller
 
         $mileStone = $this->mileStoneRepository->getByUuidOrFail($res->uuid);
 
+        //Send notification & create activity
+        $this->activityService->logActivity(Management::MILESTONE, ActionType::CREATED, $mileStone->id, $mileStone->toArray(), $project->uuid);
+
         return (new MileStoneResource($mileStone))
             ->response()
             ->setStatusCode(201);
@@ -83,6 +90,9 @@ class MileStoneController extends Controller
         $this->mileStoneRepository->update($mileStone, $payload);
         $this->mileStoneRepository->syncProjectLists($mileStone, $validated['project_list_ids']);
 
+        //Send notification & create activity
+        $this->activityService->logActivity(Management::MILESTONE, ActionType::UPDATED, $mileStone->id, $mileStone->toArray(), $project->uuid);
+
         return (new MileStoneResource($mileStone))
             ->response()
             ->setStatusCode(200);
@@ -99,6 +109,10 @@ class MileStoneController extends Controller
         $mileStone = $this->mileStoneRepository->getByUuidOrFail($mileStoneUuid);
         $project = $mileStone->project;
         $this->authorize('delete', $project);
+        
+        //Send notification & create activity
+        $this->activityService->logActivity(Management::MILESTONE, ActionType::DELETED, $mileStone->id, $mileStone->toArray(), $project->uuid);
+        
         $this->mileStoneRepository->delete($mileStone);
 
         return response()->json(['message' => 'MileStone deleted successfully'], 200);

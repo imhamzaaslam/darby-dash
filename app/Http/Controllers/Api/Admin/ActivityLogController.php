@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Contracts\ActivityLogRepositoryInterface;
+use App\Contracts\ProjectRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Resources\ActivityLogResource;
 use Illuminate\Http\JsonResponse;
@@ -20,20 +21,20 @@ class ActivityLogController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
+     * @param string $uuid
      * @return AnonymousResourceCollection|JsonResponse
      */
-    public function index(Request $request): AnonymousResourceCollection | JsonResponse
+    public function index(string $uuid): AnonymousResourceCollection | JsonResponse
     {
         try {
 
-            $activityLogs = $this->activityLogRepository->get($request->keyword, $request->orderBy, $request->order);
+            $activityLogs = $this->activityLogRepository->get($uuid);
             return ActivityLogResource::collection($activityLogs);
 
         } catch (\Exception $e) {
             report($e);
             return response()->json([
-                'error' => 'Something went wrong while getting activity logs. Please try again later.'
+                'error' => 'Something went wrong while getting recent activity logs. Please try again later.'
             ], 500);
         }
     }

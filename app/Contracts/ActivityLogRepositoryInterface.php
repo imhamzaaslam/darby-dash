@@ -2,9 +2,9 @@
 
 namespace App\Contracts;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator as Paginator;
+use Illuminate\Support\Collection;
 
 interface ActivityLogRepositoryInterface
 {
-    public function get(?string $keyword, ?string $orderBy, ?string $order): Paginator;
+    public function get(string $uuid): Collection;
 }

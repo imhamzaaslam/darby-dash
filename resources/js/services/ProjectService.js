@@ -26,6 +26,9 @@ export default {
   getProject(id) {
     return apiClient.get(`admin/projects/${id}`)
   },
+  getProjectActivities(uuid) {
+    return apiClient.get(`admin/projects/${uuid}/activities`)
+  },
   createProject(project) {
     return apiClient.post('admin/projects', project)
   },

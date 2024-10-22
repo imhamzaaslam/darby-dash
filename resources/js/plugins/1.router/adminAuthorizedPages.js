@@ -19,6 +19,7 @@ let adminAuthorizedPages = [
   'roles-setting',
   'bucks-setting',
   'view-received-notifications',
+  'view-project-activities',
   'manage-templates',
 ]
 

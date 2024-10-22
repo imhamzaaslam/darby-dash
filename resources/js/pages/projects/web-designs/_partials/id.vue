@@ -490,7 +490,7 @@
       cols="12"
       md="6"
     >
-      <VCard>
+      <VCard style="height: 320px;">
         <VCardItem>
           <VCardTitle>Recent Activity</VCardTitle>
 
@@ -498,83 +498,46 @@
             <div>
               <MoreBtn
                 :menu-list="[
-                  { title: 'Share timeline', value: 'Share timeline' },
-                  { title: 'Suggest edits', value: 'Suggest edits' },
-                  { title: 'Report bug', value: 'Report bug' },
+                  { title: 'View All', value: 'view-all', to: { name: 'view-project-activities', params: { id: projectUuid } } },
                 ]"
               />
             </div>
           </template>
         </VCardItem>
-
         <VCardText class="activity-card">
-          <VTimeline
-            density="compact"
-            align="start"
-            truncate-line="both"
-            class="v-timeline-density-compact"
-          >
-            <VTimelineItem
-              dot-color="warning"
-              size="x-small"
+          <template v-if="getActivities.length">
+            <VTimeline
+              v-for="(activity, index) in getActivities"
+              :key="index"
+              density="compact"
+              align="start"
+              truncate-line="both"
+              class="v-timeline-density-compact"
             >
-              <div class="d-flex justify-space-between align-center flex-wrap">
-                <span class="app-timeline-title">
-                  Client Meeting
-                </span>
-                <span class="app-timeline-meta">Today</span>
-              </div>
-              <p class="app-timeline-text mb-2">
-                Project meeting with john @10:15am
+              <VTimelineItem
+                dot-color="primary"
+                size="x-small"
+              >
+                <div class="d-flex justify-space-between align-center flex-wrap">
+                  <span class="app-timeline-title">
+                    {{ activity.title }}
+                  </span>
+                  <span class="app-timeline-meta">{{ activity.time }}</span>
+                </div>
+                <p class="text-body-2 text-high-emphasis  mb-2">
+                  {{ truncateDescription(activity.subtitle, 55) }}
+                </p>
+              </VTimelineItem>
+            </VTimeline>
+          </template>
+  
+          <template v-else>
+            <div class="text-center py-10">
+              <p class="text-body-2 text-high-emphasis">
+                No activities created yet.
               </p>
-            </VTimelineItem>
-
-            <VTimelineItem
-              dot-color="primary"
-              size="x-small"
-            >
-              <div class="d-flex justify-space-between align-center flex-wrap">
-                <span class="app-timeline-title">
-                  Create a new project for client
-                </span>
-                <span class="app-timeline-meta">2 Day Ago</span>
-              </div>
-
-              <p class="app-timeline-text mb-1">
-                Add files to new design folder
-              </p>
-            </VTimelineItem>
-
-            <VTimelineItem
-              dot-color="primary"
-              size="x-small"
-            >
-              <div class="d-flex justify-space-between align-center flex-wrap">
-                <span class="app-timeline-title">
-                  Shared 2 New Project Files
-                </span>
-                <span class="app-timeline-meta">6 Day Ago</span>
-              </div>
-              <p class="app-timeline-text mb-0">
-                Sent by Mollie Dixon
-              </p>
-            </VTimelineItem>
-
-            <VTimelineItem
-              dot-color="primary"
-              size="x-small"
-            >
-              <div class="d-flex justify-space-between align-center flex-wrap">
-                <span class="app-timeline-title">
-                  Project status updated
-                </span>
-                <span class="app-timeline-meta">10 Day Ago</span>
-              </div>
-              <p class="app-timeline-text mb-1">
-                WooCommerce iOS App Completed
-              </p>
-            </VTimelineItem>
-          </VTimeline>
+            </div>
+          </template>
         </VCardText>
       </VCard>
     </VCol>
@@ -939,6 +902,7 @@ const getProjectProgress = async () => {
   await projectStore.getProgress(projectUuid)
   await fetchMembers()
   await fetchServices()
+  await fetchActivities()
 }
 
 const fetchProject = async () => {
@@ -956,6 +920,15 @@ const fetchServices = async () => {
     toast.error('Error fetching services:', error)
   }
 }
+
+const fetchActivities = async () => {
+  try {
+    await projectStore.getActivities(projectUuid)
+  } catch (error) {
+    toast.error('Error fetching activities:', error)
+  }
+}
+
 
 const fetchMembers = async () => {
   try {
@@ -1008,6 +981,7 @@ const handleProjectCompleteSwitchChange = async projectName => {
       if(isComplete)
       {
         showConfetti()
+        fetchActivities()
       }
     } else {
       isCompleted.value = originalState ? 0 : 1
@@ -1047,6 +1021,7 @@ const submitAwardedBucks = async () => {
           isCompleted.value = project.value.is_completed
           awardedBucks.value = project.value.is_pm_bucks_awarded
           comment.value = project.value.comments
+          await fetchActivities()
         }
       } catch (error) {
         toast.error(`Error awarding bucks to pm: ${error.message || error}`)
@@ -1112,6 +1087,10 @@ const getServices = computed(() => {
 
 const getUsersByProjects = computed(() => {
   return userStore.getUsersByProjects
+})
+
+const getActivities = computed(() => {
+  return projectStore.getProjectActivities
 })
 
 watch(project, () => {

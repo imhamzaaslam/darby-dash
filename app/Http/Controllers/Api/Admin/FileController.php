@@ -10,6 +10,10 @@ use App\Http\Requests\File\StoreFileRequest;
 use App\Http\Resources\FileResource;
 use App\Services\FileResolverService;
 use App\Services\FileUploadService;
+use App\Services\ActivityService;
+use App\Models\Project;
+use App\Enums\Management;
+use App\Enums\ActionType;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -22,6 +26,7 @@ class FileController extends Controller
         protected FolderRepositoryInterface $folderRepository,
         protected FileUploadService $fileUploadService,
         protected FileResolverService $fileResolverService,
+        protected ActivityService $activityService,
     ) {}
 
     /**
@@ -74,6 +79,9 @@ class FileController extends Controller
                 $fileResolver['morph_id'],
                 $fileData
             );
+
+            //Send notification & create activity
+            $this->activityService->logActivity(Management::FILE, ActionType::UPLOADED, $project->id, $fileData->toArray(), $project->uuid);
         }
 
         return FileResource::collection($storedFiles);
@@ -89,8 +97,14 @@ class FileController extends Controller
     public function delete(Request $request, string $fileUuid): JsonResponse
     {
         $file = $this->fileRepository->getByUuidOrFail($fileUuid);
+        $project = $file->fileable;
 
         $this->fileUploadService->deleteFile($file->path, 'public');
+
+        if ($project instanceof Project) {
+          //Send notification & create activity
+          $this->activityService->logActivity(Management::FILE, ActionType::DELETED, $file->id, $file->toArray(), $project->uuid);
+        }
 
         $file->delete();
 

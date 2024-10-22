@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\RoleRepositoryInterface;
+use App\Contracts\ActivityLogRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
 use App\Contracts\UserInfoRepositoryInterface;
 use App\Contracts\ProjectTypeRepositoryInterface;
@@ -23,6 +24,7 @@ use App\Contracts\TemplateTaskRepositoryInterface;
 use App\Contracts\ProjectServiceRepositoryInterface;
 use App\Contracts\NotificationRepositoryInterface;
 use App\Contracts\SettingRepositoryInterface;
+use App\Models\Activity;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -44,6 +46,7 @@ use App\Models\TemplateListTask;
 use App\Models\ProjectService;
 use App\Models\Notification;
 use App\Models\Settings_meta;
+use App\Repositories\ActivityLogRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
@@ -76,6 +79,11 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(
+            ActivityLogRepositoryInterface::class,
+            fn() => new ActivityLogRepository(new Activity)
+        );
+
         $this->app->bind(
             RoleRepositoryInterface::class,
             fn() => new RoleRepository(new Role)

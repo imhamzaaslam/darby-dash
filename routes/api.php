@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\Admin\TemplateTaskController;
 use App\Http\Controllers\Api\Admin\ProjectServiceController;
 use App\Http\Controllers\Api\Admin\NotificationController;
 use App\Http\Controllers\Api\Admin\SettingController;
+use App\Http\Controllers\Api\Admin\ActivityLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +87,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             Route::get('/', [ProjectController::class, 'index']);
             Route::post('/', [ProjectController::class, 'store']);
             Route::prefix('{uuid}')->group(function () {
+                Route::get('/activities', [ActivityLogController::class, 'index']);
                 Route::get('/', [ProjectController::class, 'show']);
                 Route::get('/users', [ProjectController::class, 'users']);
                 Route::get('/users/all', [ProjectController::class, 'allUsers']);

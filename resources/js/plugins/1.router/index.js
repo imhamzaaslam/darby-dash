@@ -20,6 +20,7 @@ import AuthorizationError from '@/pages/errors/authorization-error.vue'
 import Roles from '@/pages/roles/index.vue'
 import BucksSetting from '@/pages/projects/bucks.vue'
 import NotificationList from '@/views/pages/received-notifications-list.vue'
+import ProjectActivityList from '@/views/pages/project-activities-list.vue'
 import Templates from '@/pages/settings/templates/index.vue'
 import ManageTemplates from '@/pages/settings/templates/_partials/manage-templates.vue'
 import Services from '@/pages/settings/services/index.vue'
@@ -171,6 +172,15 @@ const router = createRouter({
         path: '/view/received/notifications',
         name: 'view-received-notifications',
         component: NotificationList,
+        meta: { layout: 'default' },
+        props: true,
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/view/project/:id/activities',
+        name: 'view-project-activities',
+        component: ProjectActivityList,
         meta: { layout: 'default' },
         props: true,
       },

@@ -13,6 +13,7 @@ let staffAuthorizedPages = [
   'account-setting',
   'bucks-setting',
   'view-received-notifications',
+  'view-project-activities',
 ]
 
 export default staffAuthorizedPages

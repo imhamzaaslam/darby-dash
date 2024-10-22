@@ -14,6 +14,7 @@ let projectManagerAuthorizedPages = [
   'payment-setting',
   'bucks-setting',
   'view-received-notifications',
+  'view-project-activities',
 ]
 
 export default projectManagerAuthorizedPages

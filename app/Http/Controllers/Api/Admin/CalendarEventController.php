@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Services\NotificationService;
+use App\Services\ActivityService;
+use App\Enums\ActionType;
 use App\Enums\Management;
 
 class CalendarEventController extends Controller
@@ -19,6 +21,7 @@ class CalendarEventController extends Controller
         protected CalendarEventRepositoryInterface $calendarEventRepository,
         protected ProjectRepositoryInterface $projectRepository,
         protected NotificationService $notificationService,
+        protected ActivityService $activityService,
     ) {}
 
     /**
@@ -57,8 +60,9 @@ class CalendarEventController extends Controller
         $calendarEventData = array_merge($calendarEvent->toArray(), ['project_title' => $project->title, 'project_uuid' => $project->uuid]);
 
 
-        //Send Notification
+        //Send notification & create activity
         $this->notificationService->sendNotification(Management::CALENDAR->value, 'new-event', $validated['guests_ids'], $calendarEventData);
+        $this->activityService->logActivity(Management::CALENDAR, ActionType::CREATED, $calendarEvent->id, $calendarEventData, $project->uuid);
 
         return (new CalendarEventResource($calendarEvent))
             ->response()
