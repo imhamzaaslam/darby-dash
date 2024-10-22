@@ -509,6 +509,7 @@
             <VTimeline
               v-for="(activity, index) in getActivities"
               :key="index"
+              side="end"
               density="compact"
               align="start"
               truncate-line="both"
@@ -1090,7 +1091,7 @@ const getUsersByProjects = computed(() => {
 })
 
 const getActivities = computed(() => {
-  return projectStore.getProjectActivities
+  return projectStore.getProjectActivities.slice(0, 14)
 })
 
 watch(project, () => {
