@@ -1132,7 +1132,7 @@ watch(project, () => {
 }
 
 .horizontal-scroll::-webkit-scrollbar {
-  height: 10px; /* Set height of the scrollbar */
+  height: 10px; /* Set height of the scrollbars */
 }
 
 .horizontal-scroll::-webkit-scrollbar-track {
