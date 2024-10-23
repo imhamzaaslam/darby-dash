@@ -13,6 +13,9 @@ use App\Http\Requests\File\StoreFileRequest;
 use App\Http\Resources\FileResource;
 use App\Services\FileUploadService;
 use App\Services\FileResolverService;
+use App\Services\ActivityService;
+use App\Enums\Management;
+use App\Enums\ActionType;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -25,6 +28,7 @@ class FolderController extends Controller
         protected ProjectRepositoryInterface $projectRepository,
         protected FileUploadService $fileUploadService,
         protected FileResolverService $fileResolverService,
+        protected ActivityService $activityService,
     ) {}
 
     /**
@@ -127,6 +131,7 @@ class FolderController extends Controller
     {
         $folder = $this->folderRepository->getByUuidOrFail($folderUuid);
         $files = $request->file('files');
+        $project = $this->projectRepository->getFirstBy('id', $folder->project_id);
 
         $fileResolver = $this->fileResolverService->resolve($request->segments(), $folderUuid);
         $disk = app()->environment('testing') ? 'testing' : 'public';
@@ -145,6 +150,9 @@ class FolderController extends Controller
                 $fileResolver['morph_id'],
                 $fileData
             );
+
+            //Send notification & create activity
+            $this->activityService->logActivity(Management::FILE, ActionType::UPLOADED, $project->id, $fileData->toArray(), $project->uuid);
         }
 
         return FileResource::collection($storedFiles);

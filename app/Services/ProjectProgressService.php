@@ -6,9 +6,18 @@ use App\Models\Project;
 use App\Models\MileStone;
 use App\Models\ProjectList;
 use Carbon\Carbon;
+use App\Services\ActivityService;
+use App\Enums\Management;
+use App\Enums\ActionType;
 
 class ProjectProgressService
 {
+
+    public function __construct()
+    {
+        $this->activityService = new ActivityService();
+    }
+
     public function getProgress(Project $project): array
     {
         $lists = $project->lists->map(function ($list) {
@@ -56,6 +65,7 @@ class ProjectProgressService
     public function getMileStoneProgress($uuid): array
     {
         $mileStone = MileStone::where('uuid', $uuid)->first();
+        $project = Project::findOrFail($mileStone->project_id);
         $totalTasks = $mileStone->lists->sum(function ($list) {
             return $list->tasks->count();
         });
@@ -66,6 +76,12 @@ class ProjectProgressService
         $allTasks = $mileStone->lists->map(function ($list) {
             return $list->tasks;
         })->flatten();
+        
+        if($this->getTaskBaseStatus($allTasks) == 'completed')
+        {
+            //Send notification & create activity
+            $this->activityService->logActivity(Management::MILESTONE, ActionType::COMPLETED, $mileStone->id, $mileStone->toArray(), $project->uuid);
+        }
 
         return [
             'totalTasks' => $totalTasks,

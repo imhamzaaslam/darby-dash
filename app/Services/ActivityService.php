@@ -162,6 +162,10 @@ class ActivityService
                 'title' => "Milestone '$entityName' updated.",
                 'subtitle' => "$userName updated the milestone '$entityName'."
             ],
+            ActionType::COMPLETED => [
+                'title' => "Milestone completed.",
+                'subtitle' => "Congratulations! We've successfully completed the milestone: '$entityName'."
+            ],
             ActionType::DELETED => [
                 'title' => "Milestone '$entityName' deleted.",
                 'subtitle' => "$userName deleted the milestone '$entityName'."
@@ -266,7 +270,7 @@ class ActivityService
         return match($entityType) {
             Management::PROJECT => \App\Models\Project::find($entityId),
             Management::USER => \App\Models\User::find($entityId),
-            Management::MEMBER => \App\Models\ProjectMember::find($entityId),
+            Management::MEMBER => \App\Models\User::find($entityId),
             Management::BUCKS => \App\Models\ProjectBucks::find($entityId),
             Management::TASK => \App\Models\Task::find($entityId),
             Management::MILESTONE => \App\Models\Milestone::find($entityId),
@@ -282,7 +286,7 @@ class ActivityService
         $entity = $this->getEntityInstance($entityType, $entityId);
 
         if ($entityType === Management::MEMBER && $entity) {
-            return "{$entity->user->name_first} {$entity->user->name_last}";
+            return "{$entity->name_first} {$entity->name_last}";
         }
 
         return $entity ? ($entity->name ?? $entity->title ?? 'Unknown') : 'Unknown';
