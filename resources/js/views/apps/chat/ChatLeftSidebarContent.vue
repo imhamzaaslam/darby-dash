@@ -91,12 +91,14 @@ const userDetails = computed(() => {
           >
             Add Member
           </VListItem>
-          <VListItem
+          <!--
+            <VListItem
             value="add-group"
             class="p-0"
-          >
+            >
             Add Group
-          </VListItem>
+            </VListItem> 
+          -->
         </VList>
       </VMenu>
     </IconBtn>
