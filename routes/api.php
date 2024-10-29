@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Admin\FileController;
 use App\Http\Controllers\Api\Admin\FolderController;
 use App\Http\Controllers\Api\Admin\PaymentController;
 use App\Http\Controllers\Api\Admin\ProjectBucksController;
+use App\Http\Controllers\Api\Admin\ChatController;
 use App\Http\Controllers\Api\Admin\TemplateController;
 use App\Http\Controllers\Api\Admin\TemplateListController;
 use App\Http\Controllers\Api\Admin\TemplateTaskController;
@@ -153,6 +154,14 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
                 Route::prefix('templates')->group(function () {
                     Route::post('/', [TemplateController::class, 'store']);
+                });
+
+                Route::prefix('chat')->group(function () {
+                    Route::get('/chats-and-contacts', [ChatController::class, 'chatsContacts']);
+                    Route::get('/{userUuid}', [ChatController::class, 'show']);
+                    Route::prefix('{chatUuid}')->group(function () {
+                        Route::post('/', [ChatController::class, 'sendMessage']);
+                    });
                 });
             });
         });

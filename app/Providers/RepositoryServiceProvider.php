@@ -18,6 +18,7 @@ use App\Contracts\FileRepositoryInterface;
 use App\Contracts\FolderRepositoryInterface;
 use App\Contracts\PaymentRepositoryInterface;
 use App\Contracts\ProjectBucksRepositoryInterface;
+use App\Contracts\ChatRepositoryInterface;
 use App\Contracts\TemplateRepositoryInterface;
 use App\Contracts\TemplateListRepositoryInterface;
 use App\Contracts\TemplateTaskRepositoryInterface;
@@ -40,6 +41,7 @@ use App\Models\File;
 use App\Models\Folder;
 use App\Models\Payment;
 use App\Models\ProjectBucks;
+use App\Models\Chat;
 use App\Models\Template;
 use App\Models\TemplateList;
 use App\Models\TemplateListTask;
@@ -62,6 +64,7 @@ use App\Repositories\FileRepository;
 use App\Repositories\FolderRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ProjectBucksRepository;
+use App\Repositories\ChatRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\TemplateListRepository;
 use App\Repositories\TemplateTaskRepository;
@@ -153,6 +156,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ProjectBucksRepositoryInterface::class,
             fn() => new ProjectBucksRepository(new ProjectBucks)
+        );
+        $this->app->bind(
+            ChatRepositoryInterface::class,
+            fn() => new ChatRepository(new Chat)
         );
         $this->app->bind(
             TemplateRepositoryInterface::class,

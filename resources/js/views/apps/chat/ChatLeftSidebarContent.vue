@@ -2,7 +2,8 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useChat } from './useChat'
 import ChatContact from '@/views/apps/chat/ChatContact.vue'
-import { useChatStore } from '@/views/apps/chat/useChatStore'
+import { useChatStore } from '@/store/chats'
+import { useUserStore } from "@/store/users"
 
 const props = defineProps({
   search: {
@@ -25,12 +26,24 @@ const emit = defineEmits([
 const { resolveAvatarBadgeVariant } = useChat()
 const search = useVModel(props, 'search', emit)
 const store = useChatStore()
+const userStore = useUserStore()
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+
+
+const userDetails = computed(() => {
+  return userStore.getUser
+})
 </script>
 
 <template>
   <!-- 👉 Chat list header -->
   <div
-    v-if="store.profileUser"
+    v-if="userDetails"
     class="chat-list-header"
   >
     <VBadge
@@ -38,18 +51,23 @@ const store = useChatStore()
       location="bottom right"
       offset-x="3"
       offset-y="3"
-      :color="resolveAvatarBadgeVariant(store.profileUser.status)"
+      color="success"
       bordered
     >
       <VAvatar
         size="40"
         class="cursor-pointer"
+        :color="!userDetails?.info?.avatar?.path ? 'primary': undefined"
         @click="$emit('showUserProfile')"
       >
-        <VImg
-          :src="store.profileUser.avatar"
-          alt="John Doe"
-        />
+        <template v-if="userDetails?.info?.avatar?.path">
+          <VImg :src="getImageUrl(userDetails?.info?.avatar.path)" />
+        </template>
+        <template v-else>
+          <span>
+            {{ userDetails?.name_first.charAt(0) + userDetails?.name_last.charAt(0) }}
+          </span>
+        </template>
       </VAvatar>
     </VBadge>
 
@@ -59,6 +77,29 @@ const store = useChatStore()
       prepend-inner-icon="tabler-search"
       class="ms-4 me-1 chat-list-search"
     />
+
+    <IconBtn @click.prevent>
+      <VIcon icon="tabler-dots-vertical" />
+      <VMenu 
+        activator="parent" 
+        class="p-0"
+      >
+        <VList class="p-0">
+          <VListItem
+            value="add-member"
+            class="p-0"
+          >
+            Add Member
+          </VListItem>
+          <VListItem
+            value="add-group"
+            class="p-0"
+          >
+            Add Group
+          </VListItem>
+        </VList>
+      </VMenu>
+    </IconBtn>
 
     <IconBtn
       v-if="$vuetify.display.smAndDown"
@@ -84,15 +125,15 @@ const store = useChatStore()
     </li>
 
     <ChatContact
-      v-for="contact in store.chatsContacts"
+      v-for="contact in store.getChatsContacts"
       :key="`chat-${contact.id}`"
       :user="contact"
       is-chat-contact
-      @click="$emit('openChatOfContact', contact.id)"
+      @click="$emit('openChatOfContact', contact.uuid)"
     />
 
     <span
-      v-show="!store.chatsContacts?.length"
+      v-show="!store.getChatsContacts?.length"
       class="no-chat-items-text text-disabled"
     >No chats found</span>
     <li class="list-none pt-2">
@@ -102,14 +143,14 @@ const store = useChatStore()
     </li>
 
     <ChatContact
-      v-for="contact in store.contacts"
+      v-for="contact in store.getContacts"
       :key="`chat-${contact.id}`"
       :user="contact"
-      @click="$emit('openChatOfContact', contact.id)"
+      @click="$emit('openChatOfContact', contact.uuid)"
     />
 
     <span
-      v-show="!store.contacts?.length"
+      v-show="!store.getContacts?.length"
       class="no-chat-items-text text-disabled"
     >No contacts found</span>
   </PerfectScrollbar>

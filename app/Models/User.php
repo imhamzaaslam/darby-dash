@@ -241,6 +241,16 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         return $this->belongsToMany(Permission::class, 'model_has_permissions', 'model_id', 'permission_id');
     }
 
+    public function sentMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasManyThrough(ChatMessage::class, Project::class, 'user_id', 'project_id', 'id', 'id');
+    }
+
     function scopeFiltered(Builder $query, ?string $name, ?string $email, ?string $roleId): Builder
     {
         $usersTable = (new User())->getTable();

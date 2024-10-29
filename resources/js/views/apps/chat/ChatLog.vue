@@ -1,11 +1,13 @@
 <script setup>
-import { useChatStore } from '@/views/apps/chat/useChatStore'
+import { useChatStore } from '@/store/chats'
+import { useUserStore } from "@/store/users"
 
 const store = useChatStore()
+const userStore = useUserStore()
 
 const contact = computed(() => ({
-  id: store.activeChat?.contact.id,
-  avatar: store.activeChat?.contact.avatar,
+  id: store.getActiveChat?.contact?.id,
+  avatar: store.getActiveChat?.contact?.info?.avatar?.path,
 }))
 
 const resolveFeedbackIcon = feedback => {
@@ -29,8 +31,8 @@ const resolveFeedbackIcon = feedback => {
 const msgGroups = computed(() => {
   let messages = []
   const _msgGroups = []
-  if (store.activeChat.chat) {
-    messages = store.activeChat.chat.messages
+  if (store.getActiveChat?.messages && store.getActiveChat.messages.length > 0) {
+    messages = store.getActiveChat?.messages
     let msgSenderId = messages[0].senderId
     let msgGroup = {
       senderId: msgSenderId,
@@ -40,7 +42,7 @@ const msgGroups = computed(() => {
       if (msgSenderId === msg.senderId) {
         msgGroup.messages.push({
           message: msg.message,
-          time: msg.time,
+          time: msg.created_at,
           feedback: msg.feedback,
         })
       } else {
@@ -50,7 +52,7 @@ const msgGroups = computed(() => {
           senderId: msg.senderId,
           messages: [{
             message: msg.message,
-            time: msg.time,
+            time: msg.created_at,
             feedback: msg.feedback,
           }],
         }
@@ -62,6 +64,16 @@ const msgGroups = computed(() => {
   
   return _msgGroups
 })
+
+const userDetails = computed(() => {
+  return userStore.getUser
+})
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 </script>
 
 <template>
@@ -80,7 +92,7 @@ const msgGroups = computed(() => {
         :class="msgGrp.senderId !== contact.id ? 'ms-4' : 'me-4'"
       >
         <VAvatar size="32">
-          <VImg :src="msgGrp.senderId === contact.id ? contact.avatar : store.profileUser?.avatar" />
+          <VImg :src="msgGrp.senderId === contact.id ? getImageUrl(contact.avatar) : getImageUrl(userDetails?.info?.avatar.info?.path)" />
         </VAvatar>
       </div>
       <div

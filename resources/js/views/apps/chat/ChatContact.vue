@@ -1,6 +1,6 @@
 <script setup>
 import { useChat } from '@/views/apps/chat/useChat'
-import { useChatStore } from '@/views/apps/chat/useChatStore'
+import { useChatStore } from '@/store/chats'
 
 const props = defineProps({
   isChatContact: {
@@ -18,12 +18,18 @@ const store = useChatStore()
 const { resolveAvatarBadgeVariant } = useChat()
 
 const isChatContactActive = computed(() => {
-  const isActive = store.activeChat?.contact.id === props.user.id
+  const isActive = store.getActiveChat?.user_id === props.user.id
   if (!props.isChatContact)
-    return !store.activeChat?.chat && isActive
+    return !store.getActiveChat?.messages && isActive
   
   return isActive
 })
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 </script>
 
 <template>
@@ -37,26 +43,26 @@ const isChatContactActive = computed(() => {
       location="bottom right"
       offset-x="3"
       offset-y="0"
-      :color="resolveAvatarBadgeVariant(props.user.status)"
+      :color="resolveAvatarBadgeVariant(props.user.is_online)"
       bordered
       :model-value="props.isChatContact"
     >
       <VAvatar
         size="40"
-        :variant="!props.user.avatar ? 'tonal' : undefined"
-        :color="!props.user.avatar ? resolveAvatarBadgeVariant(props.user.status) : undefined"
+        :variant="!props.user.info?.avatar ? 'tonal' : undefined"
+        :color="!props.user.info?.avatar ? 'primary' : undefined"
       >
         <VImg
-          v-if="props.user.avatar"
-          :src="props.user.avatar"
+          v-if="props.user?.info?.avatar?.path"
+          :src="getImageUrl(props.user?.info?.avatar.path)"
           alt="John Doe"
         />
-        <span v-else>{{ avatarText(user.fullName) }}</span>
+        <span v-else>{{ props.user?.name_first.charAt(0) + props.user?.name_last.charAt(0) }}</span>
       </VAvatar>
     </VBadge>
     <div class="flex-grow-1 ms-4 overflow-hidden">
       <p class="text-base text-high-emphasis mb-0">
-        {{ props.user.fullName }}
+        {{ props.user?.name_first + " " +props.user?.name_last }}
       </p>
       <p class="mb-0 text-truncate text-body-2">
         {{ props.isChatContact && 'chat' in props.user ? props.user.chat.lastMessage.message : props.user.about }}

@@ -103,6 +103,11 @@ class Project extends Base
         return $this->hasMany(ProjectBucks::class);
     }
 
+    public function chat()
+    {
+        return $this->hasOne(Chat::class);
+    }
+
     public function bucksEarnings(): float
     {
         $taskIds = $this->tasks->pluck('id');

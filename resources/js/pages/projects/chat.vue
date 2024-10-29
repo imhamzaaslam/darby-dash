@@ -1,107 +1,23 @@
-<script setup>
-import { layoutConfig } from '@layouts'
-import { useHead } from '@unhead/vue'
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import {
-  useDisplay,
-  useTheme,
-} from 'vuetify'
-import { themes } from '@/plugins/vuetify/theme'
-import ChatActiveChatUserProfileSidebarContent from '@/views/apps/chat/ChatActiveChatUserProfileSidebarContent.vue'
-import ChatLeftSidebarContent from '@/views/apps/chat/ChatLeftSidebarContent.vue'
-import ChatLog from '@/views/apps/chat/ChatLog.vue'
-import ChatUserProfileSidebarContent from '@/views/apps/chat/ChatUserProfileSidebarContent.vue'
-import { useChat } from '@/views/apps/chat/useChat'
-import { useChatStore } from '@/views/apps/chat/useChatStore'
-
-definePage({ meta: { layoutWrapperClasses: 'layout-content-height-fixed' } })
-useHead({ title: `${layoutConfig.app.title} | Chat` })
-
-// composables
-const vuetifyDisplays = useDisplay()
-const store = useChatStore()
-const { isLeftSidebarOpen } = useResponsiveLeftSidebar(vuetifyDisplays.smAndDown)
-const { resolveAvatarBadgeVariant } = useChat()
-
-// Perfect scrollbar
-const chatLogPS = ref()
-
-const scrollToBottomInChatLog = () => {
-  const scrollEl = chatLogPS.value.$el || chatLogPS.value
-
-  scrollEl.scrollTop = scrollEl.scrollHeight
-}
-
-// Search query
-const q = ref('')
-
-watch(q, val => store.fetchChatsAndContacts(val), { immediate: true })
-
-// Open Sidebar in smAndDown when "start conversation" is clicked
-const startConversation = () => {
-  if (vuetifyDisplays.mdAndUp.value)
-    return
-  isLeftSidebarOpen.value = true
-}
-
-// Chat message
-const msg = ref('')
-
-const sendMessage = async () => {
-  if (!msg.value)
-    return
-  await store.sendMsg(msg.value)
-
-  // Reset message input
-  msg.value = ''
-
-  // Scroll to bottom
-  nextTick(() => {
-    scrollToBottomInChatLog()
-  })
-}
-
-const openChatOfContact = async userId => {
-  await store.getChat(userId)
-
-  // Reset message input
-  msg.value = ''
-
-  // Set unseenMsgs to 0
-  const contact = store.chatsContacts.find(c => c.id === userId)
-  if (contact)
-    contact.chat.unseenMsgs = 0
-
-  // if smAndDown =>  Close Chat & Contacts left sidebar
-  if (vuetifyDisplays.smAndDown.value)
-    isLeftSidebarOpen.value = false
-
-  // Scroll to bottom
-  nextTick(() => {
-    scrollToBottomInChatLog()
-  })
-}
-
-// User profile sidebar
-const isUserProfileSidebarOpen = ref(false)
-
-// Active chat user profile sidebar
-const isActiveChatUserProfileSidebarOpen = ref(false)
-
-// file input
-const refInputEl = ref()
-const { name } = useTheme()
-
-const chatContentContainerBg = computed(() => {
-  let color = 'transparent'
-  if (themes)
-    color = themes?.[name.value].colors?.background
-
-  return color
-})
-</script>
-
 <template>
+  <Loader v-if="loadStatus === 1" />
+  <VRow>
+    <VCol
+      cols="12"
+      md="7"
+      class="d-flex"
+    >
+      <div class="d-flex justify-center align-center mb-5">
+        <VAvatar
+          :size="30"
+          class="me-1"
+          :image="sketch"
+        />
+        <h3 class="text-primary">
+          {{ project?.title }}
+        </h3>
+      </div>
+    </VCol>
+  </VRow>
   <VLayout class="chat-app-layout">
     <!-- 👉 user profile sidebar -->
     <VNavigationDrawer
@@ -153,7 +69,7 @@ const chatContentContainerBg = computed(() => {
     <VMain class="chat-content-container">
       <!-- 👉 Right content: Active Chat -->
       <div
-        v-if="store.activeChat"
+        v-if="store.getActiveChat"
         class="d-flex flex-column h-100"
       >
         <!-- 👉 Active chat header -->
@@ -176,30 +92,30 @@ const chatContentContainerBg = computed(() => {
               location="bottom right"
               offset-x="3"
               offset-y="0"
-              :color="resolveAvatarBadgeVariant(store.activeChat.contact.status)"
+              :color="resolveAvatarBadgeVariant(store.getActiveChat?.contact?.isOnline)"
               bordered
             >
               <VAvatar
                 size="40"
-                :variant="!store.activeChat.contact.avatar ? 'tonal' : undefined"
-                :color="!store.activeChat.contact.avatar ? resolveAvatarBadgeVariant(store.activeChat.contact.status) : undefined"
+                :variant="!store.getActiveChat?.contact?.info?.avatar?.path ? 'tonal' : undefined"
+                :color="!store.getActiveChat?.contact?.info?.avatar?.path ? 'primary' : undefined"
                 class="cursor-pointer"
               >
                 <VImg
-                  v-if="store.activeChat.contact.avatar"
-                  :src="store.activeChat.contact.avatar"
-                  :alt="store.activeChat.contact.fullName"
+                  v-if="store.getActiveChat?.contact?.info?.avatar"
+                  :src="getImageUrl(store.getActiveChat?.contact?.info?.avatar?.path)"
+                  :alt="store.getActiveChat?.contact?.name_first"
                 />
-                <span v-else>{{ avatarText(store.activeChat.contact.fullName) }}</span>
+                <span v-else>{{ store.getActiveChat?.contact?.name_first?.charAt(0) + store.getActiveChat?.contact?.name_last?.charAt(0) }}</span>
               </VAvatar>
             </VBadge>
 
             <div class="flex-grow-1 ms-4 overflow-hidden">
               <div class="text-h6 mb-0 font-weight-regular">
-                {{ store.activeChat.contact.fullName }}
+                {{ store.getActiveChat?.contact?.name_first+ " " + store.getActiveChat?.contact?.name_last }}
               </div>
               <p class="text-truncate mb-0 text-body-2">
-                {{ store.activeChat.contact.role }}
+                {{ store.getActiveChat?.contact?.role }}
               </p>
             </div>
           </div>
@@ -208,12 +124,13 @@ const chatContentContainerBg = computed(() => {
 
           <!-- Header right content -->
           <div class="d-sm-flex align-center d-none text-medium-emphasis">
-            <IconBtn>
-              <VIcon icon="tabler-search" />
-            </IconBtn>
-            <IconBtn>
-              <VIcon icon="tabler-dots-vertical" />
-            </IconBtn>
+            <AppTextField
+              v-model="search"
+              placeholder="Search..."
+              prepend-inner-icon="tabler-search"
+              class="ms-4 me-1 chat-list-search"
+              style="min-width: 200px;width: 100%;flex-grow: 1;"
+            />
           </div>
         </div>
 
@@ -235,7 +152,7 @@ const chatContentContainerBg = computed(() => {
           @submit.prevent="sendMessage"
         >
           <VTextField
-            :key="store.activeChat?.contact.id"
+            :key="store.getActiveChat?.user_id"
             v-model="msg"
             variant="solo"
             density="default"
@@ -311,6 +228,150 @@ const chatContentContainerBg = computed(() => {
     </VMain>
   </VLayout>
 </template>
+
+<script setup>
+import { layoutConfig } from '@layouts'
+import { useHead } from '@unhead/vue'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import Loader from "@/components/Loader.vue"
+import {
+  useDisplay,
+  useTheme,
+} from 'vuetify'
+import { themes } from '@/plugins/vuetify/theme'
+import sketch from '@images/icons/project-icons/sketch.png'
+import ChatActiveChatUserProfileSidebarContent from '@/views/apps/chat/ChatActiveChatUserProfileSidebarContent.vue'
+import ChatLeftSidebarContent from '@/views/apps/chat/ChatLeftSidebarContent.vue'
+import ChatLog from '@/views/apps/chat/ChatLog.vue'
+import ChatUserProfileSidebarContent from '@/views/apps/chat/ChatUserProfileSidebarContent.vue'
+import { useChat } from '@/views/apps/chat/useChat'
+import { useChatStore } from '@/store/chats'
+import { useProjectStore } from "@/store/projects"
+import { useRoute } from 'vue-router'
+
+definePage({ meta: { layoutWrapperClasses: 'layout-content-height-fixed' } })
+useHead({ title: `${layoutConfig.app.title} | Chat` })
+
+// composables
+const vuetifyDisplays = useDisplay()
+const store = useChatStore()
+const projectStore = useProjectStore()
+const $route = useRoute()
+const { isLeftSidebarOpen } = useResponsiveLeftSidebar(vuetifyDisplays.smAndDown)
+const { resolveAvatarBadgeVariant } = useChat()
+
+// Perfect scrollbar
+const chatLogPS = ref()
+
+const scrollToBottomInChatLog = () => {
+  const scrollEl = chatLogPS.value.$el || chatLogPS.value
+
+  scrollEl.scrollTop = scrollEl.scrollHeight
+}
+
+onBeforeMount(async () => {
+  await fetchProject()
+
+  const contacts = store.getChatsContacts
+  const firstContactId = contacts.length > 0 ? contacts[0].id : null
+  if(firstContactId)
+  {
+    openChatOfContact()
+  }
+})
+
+const fetchProject = async () => {
+  await projectStore.show(projectUuid)
+}
+
+// Search query
+const q = ref('')
+const projectUuid = $route.params.id
+
+watch(store.getProjectInbox(projectUuid), { immediate: true })
+
+// Open Sidebar in smAndDown when "start conversation" is clicked
+const startConversation = () => {
+  if (vuetifyDisplays.mdAndUp.value)
+    return
+  isLeftSidebarOpen.value = true
+}
+
+// Chat message
+const msg = ref('')
+
+const sendMessage = async () => {
+  if (!msg.value)
+    return
+  await store.sendMsg(msg.value)
+
+  // Reset message input
+  msg.value = ''
+
+  // Scroll to bottom
+  nextTick(() => {
+    scrollToBottomInChatLog()
+  })
+}
+
+const openChatOfContact = async userId => {
+  const payload = {
+    projectId: $route.params.id,
+    userId: userId,
+  }
+
+  await store.getChat(payload)
+
+  // Reset message input
+  msg.value = ''
+
+  // Set unseenMsgs to 0
+  const contact = store.getChatsContacts.find(c => c.id === userId)
+  if (contact)
+    contact.chat.unseenMsgs = 0
+
+  // if smAndDown =>  Close Chat & Contacts left sidebar
+  if (vuetifyDisplays.smAndDown.value)
+    isLeftSidebarOpen.value = false
+
+  // Scroll to bottom
+  nextTick(() => {
+    scrollToBottomInChatLog()
+  })
+}
+
+// User profile sidebar
+const isUserProfileSidebarOpen = ref(false)
+
+// Active chat user profile sidebar
+const isActiveChatUserProfileSidebarOpen = ref(false)
+
+// file input
+const refInputEl = ref()
+const { name } = useTheme()
+
+const chatContentContainerBg = computed(() => {
+  let color = 'transparent'
+  if (themes)
+    color = themes?.[name.value].colors?.background
+
+  return color
+})
+
+const project = computed(() =>{
+  return projectStore.getProject
+})
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+
+const loadStatus = computed(() => {
+  return store.getLoadStatus
+})
+</script>
 
 <style lang="scss">
 @use "@styles/variables/vuetify.scss";
