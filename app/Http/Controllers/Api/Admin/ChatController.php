@@ -36,12 +36,13 @@ class ChatController extends Controller
         $search = request()->query('search', '');
         $contacts = $project->members;
 
-        $superAdmin = User::where('company_id', $authUser->company_id)->whereHas('roles', function ($query) {
+        $superAdmins = User::where('company_id', $authUser->company_id)
+        ->whereHas('roles', function ($query) {
             $query->where('name', 'Super Admin');
-        })->first();
-        
-        if ($superAdmin) {
-            $contacts = $contacts->merge([$superAdmin]);
+        })->get();
+
+        if ($superAdmins->isNotEmpty()) {
+            $contacts = $contacts->merge($superAdmins);
         }
 
         if ($search) {
