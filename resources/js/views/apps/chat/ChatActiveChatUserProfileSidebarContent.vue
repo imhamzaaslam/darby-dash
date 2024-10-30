@@ -1,12 +1,18 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useChat } from './useChat'
-import { useChatStore } from '@/views/apps/chat/useChatStore'
+import { useChatStore } from '@/store/chats'
 
 const emit = defineEmits(['close'])
 
 const store = useChatStore()
 const { resolveAvatarBadgeVariant } = useChat()
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 </script>
 
 <template>
@@ -31,29 +37,29 @@ const { resolveAvatarBadgeVariant } = useChat()
         offset-x="7"
         offset-y="4"
         bordered
-        :color="resolveAvatarBadgeVariant(store.activeChat.contact.status)"
+        :color="resolveAvatarBadgeVariant(store.getActiveChat?.contact?.is_online)"
         class="chat-user-profile-badge mb-5"
       >
         <VAvatar
           size="84"
-          :variant="!store.activeChat.contact.avatar ? 'tonal' : undefined"
-          :color="!store.activeChat.contact.avatar ? resolveAvatarBadgeVariant(store.activeChat.contact.status) : undefined"
+          :variant="!store.getActiveChat?.contact?.info?.avatar ? 'tonal' : undefined"
+          :color="!store.getActiveChat?.contact?.info?.avatar ? 'primary' : undefined"
         >
           <VImg
-            v-if="store.activeChat.contact.avatar"
-            :src="store.activeChat.contact.avatar"
+            v-if="store.getActiveChat?.contact?.info?.avatar"
+            :src="getImageUrl(store.getActiveChat?.contact?.info?.avatar?.path)"
           />
           <span
             v-else
             class="text-3xl"
-          >{{ avatarText(store.activeChat.contact.fullName) }}</span>
+          >{{ store.getActiveChat?.contact?.name_first.charAt(0) + store.getActiveChat?.contact?.name_last.charAt(0) }}</span>
         </VAvatar>
       </VBadge>
       <h5 class="text-h5">
-        {{ store.activeChat.contact.fullName }}
+        {{ store.getActiveChat?.contact?.name_first + " " + store.getActiveChat?.contact?.name_last }}
       </h5>
       <p class="text-capitalize text-body-1 mb-0">
-        {{ store.activeChat.contact.role }}
+        {{ store.getActiveChat?.contact?.role }}
       </p>
     </div>
 
@@ -62,48 +68,41 @@ const { resolveAvatarBadgeVariant } = useChat()
       class="ps-chat-user-profile-sidebar-content text-medium-emphasis pb-6 px-6"
       :options="{ wheelPropagation: false }"
     >
-      <!-- About -->
-      <div class="my-6">
-        <div class="text-sm text-disabled">
-          ABOUT
-        </div>
-        <p class="mt-1 mb-6">
-          {{ store.activeChat.contact.about }}
-        </p>
-      </div>
-
       <!-- Personal Information -->
-      <div class="mb-6">
+      <div class="mb-6 mt-6">
         <div class="text-sm text-disabled mb-1">
           PERSONAL INFORMATION
         </div>
         <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
+            color="primary"
             icon="tabler-mail"
-            size="22"
+            size="18"
           />
-          <div class="text-base">
-            lucifer@email.com
+          <div class="text-sm">
+            {{ store.getActiveChat?.contact?.email }}
           </div>
         </div>
         <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
+            color="primary"
             icon="tabler-phone"
-            size="22"
+            size="18"
           />
-          <div class="text-base">
-            +1(123) 456 - 7890
+          <div class="text-sm">
+            {{ store.getActiveChat?.contact?.info?.phone }}
           </div>
         </div>
         <div class="d-flex align-center text-high-emphasis pa-2">
           <VIcon
             class="me-2"
             icon="tabler-clock"
-            size="22"
+            color="primary"
+            size="18"
           />
-          <div class="text-base">
+          <div class="text-sm">
             Mon - Fri 10AM - 8PM
           </div>
         </div>
@@ -111,60 +110,6 @@ const { resolveAvatarBadgeVariant } = useChat()
 
       <!-- Options -->
       <div>
-        <div class="text-sm text-disabled mb-1">
-          OPTIONS
-        </div>
-        <div class="d-flex align-center text-high-emphasis pa-2">
-          <VIcon
-            class="me-2"
-            icon="tabler-badge"
-            size="22"
-          />
-          <div class="text-base">
-            Add Tag
-          </div>
-        </div>
-        <div class="d-flex align-center text-high-emphasis pa-2">
-          <VIcon
-            class="me-2"
-            icon="tabler-star"
-            size="22"
-          />
-          <div class="text-base">
-            Important Contact
-          </div>
-        </div>
-        <div class="d-flex align-center text-high-emphasis pa-2">
-          <VIcon
-            class="me-2"
-            icon="tabler-photo"
-            size="22"
-          />
-          <div class="text-base">
-            Shared Media
-          </div>
-        </div>
-        <div class="d-flex align-center text-high-emphasis pa-2">
-          <VIcon
-            class="me-2"
-            icon="tabler-trash"
-            size="22"
-          />
-          <div class="text-base">
-            Delete Contact
-          </div>
-        </div>
-        <div class="d-flex align-center text-high-emphasis pa-2">
-          <VIcon
-            icon="tabler-ban"
-            class="me-2"
-            size="22"
-          />
-          <div class="text-base">
-            Block Contact
-          </div>
-        </div>
-
         <VBtn
           block
           color="error"

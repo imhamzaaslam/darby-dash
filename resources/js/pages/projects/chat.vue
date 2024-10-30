@@ -92,7 +92,7 @@
               location="bottom right"
               offset-x="3"
               offset-y="0"
-              :color="resolveAvatarBadgeVariant(store.getActiveChat?.contact?.isOnline)"
+              :color="resolveAvatarBadgeVariant(store.getActiveChat?.contact?.is_online)"
               bordered
             >
               <VAvatar
@@ -149,7 +149,7 @@
         <!-- Message form -->
         <VForm
           class="chat-log-message-form mb-5 mx-5"
-          @submit.prevent="sendMessage"
+          @submit.prevent="sendMessage(store.getActiveChat?.contact?.uuid, store.getActiveChat?.id)"
         >
           <VTextField
             :key="store.getActiveChat?.user_id"
@@ -162,31 +162,70 @@
           >
             <template #append-inner>
               <div class="d-flex gap-1">
-                <IconBtn @click="refInputEl?.click()">
+                <!-- File Attachment Icon -->
+                <IconBtn @click="triggerFileInput">
                   <VIcon
                     icon="tabler-paperclip"
                     size="22"
                   />
                 </IconBtn>
-                <VBtn @click="sendMessage">
+
+                <!-- File Preview -->
+                <div
+                  v-if="selectedFiles.length"
+                  class="file-preview"
+                >
+                  <div
+                    v-for="(file, index) in selectedFiles"
+                    :key="index"
+                    class="d-flex align-center"
+                  >
+                    <VIcon
+                      icon="tabler-file"
+                      class="me-1"
+                    />
+                    <span>{{ file.name }}</span>
+                    <IconBtn
+                      class="ms-2 text-danger"
+                      @click="removeFile(index)"
+                    >
+                      <VIcon
+                        icon="tabler-x"
+                        size="18"
+                      />
+                    </IconBtn>
+                  </div>
+                </div>
+                <VBtn
+                  :disabled="loadStatus === 1" 
+                  @click="sendMessage(store.getActiveChat?.contact?.uuid, store.getActiveChat?.id)"
+                >
                   <template #append>
                     <VIcon
                       icon="tabler-send"
                       color="#fff"
                     />
                   </template>
-                  Send
+                  <VProgressCircular
+                    v-if="loadStatus === 1"
+                    indeterminate
+                    size="16"
+                    color="white"
+                  />
+                  <span v-if="loadStatus === 1">Sending...</span>
+                  <span v-else>Send</span>
                 </VBtn>
               </div>
             </template>
           </VTextField>
 
           <input
-            ref="refInputEl"
+            ref="fileInput"
             type="file"
-            name="file"
-            accept=".jpeg,.png,.jpg,GIF"
+            accept=".jpeg,.png,.jpg,.gif,.pdf,.sql,.docx,.xls,.xlsx,.docx"
             hidden
+            multiple
+            @change="onFileSelected"
           >
         </VForm>
       </div>
@@ -240,6 +279,7 @@ import {
 } from 'vuetify'
 import { themes } from '@/plugins/vuetify/theme'
 import sketch from '@images/icons/project-icons/sketch.png'
+import { debounce, truncate } from 'lodash'
 import ChatActiveChatUserProfileSidebarContent from '@/views/apps/chat/ChatActiveChatUserProfileSidebarContent.vue'
 import ChatLeftSidebarContent from '@/views/apps/chat/ChatLeftSidebarContent.vue'
 import ChatLog from '@/views/apps/chat/ChatLog.vue'
@@ -262,6 +302,8 @@ const { resolveAvatarBadgeVariant } = useChat()
 
 // Perfect scrollbar
 const chatLogPS = ref()
+const fileInput = ref(null)
+const selectedFiles = ref([])
 
 const scrollToBottomInChatLog = () => {
   const scrollEl = chatLogPS.value.$el || chatLogPS.value
@@ -271,24 +313,33 @@ const scrollToBottomInChatLog = () => {
 
 onBeforeMount(async () => {
   await fetchProject()
-
-  const contacts = store.getChatsContacts
-  const firstContactId = contacts.length > 0 ? contacts[0].id : null
-  if(firstContactId)
-  {
-    openChatOfContact()
-  }
 })
 
 const fetchProject = async () => {
+  callFirstContact()
   await projectStore.show(projectUuid)
+}
+
+const callFirstContact = () => {
+  const inbox = store.getContacts
+  const firstContact = inbox?.[0]
+  
+  if (firstContact) {
+    openChatOfContact(firstContact.uuid)
+  } else {
+    console.log('No contacts available in the inbox')
+  }
 }
 
 // Search query
 const q = ref('')
 const projectUuid = $route.params.id
 
-watch(store.getProjectInbox(projectUuid), { immediate: true })
+watch(
+  q,
+  debounce(val => store.getProjectInbox(projectUuid, val), 300),
+  { immediate: true },
+)
 
 // Open Sidebar in smAndDown when "start conversation" is clicked
 const startConversation = () => {
@@ -300,10 +351,18 @@ const startConversation = () => {
 // Chat message
 const msg = ref('')
 
-const sendMessage = async () => {
+const sendMessage = async (contactId, chatId) => {
   if (!msg.value)
     return
-  await store.sendMsg(msg.value)
+
+  const payload = {
+    projectId: projectUuid,
+    userId: contactId,
+    chatId: chatId,
+    message: msg.value,
+  }
+
+  await store.sendMsg(payload)
 
   // Reset message input
   msg.value = ''
@@ -312,6 +371,18 @@ const sendMessage = async () => {
   nextTick(() => {
     scrollToBottomInChatLog()
   })
+}
+
+const triggerFileInput = () => {
+  fileInput.value.click()
+}
+
+const onFileSelected = event => {
+  selectedFiles.value = Array.from(event.target.files)
+}
+  
+const removeFile = index => {
+  selectedFiles.value.splice(index, 1)
 }
 
 const openChatOfContact = async userId => {
@@ -326,9 +397,9 @@ const openChatOfContact = async userId => {
   msg.value = ''
 
   // Set unseenMsgs to 0
-  const contact = store.getChatsContacts.find(c => c.id === userId)
+  const contact = store.getChatsContacts.find(c => c.contact.uuid === userId)
   if (contact)
-    contact.chat.unseenMsgs = 0
+    contact.unseenMsgs = 0
 
   // if smAndDown =>  Close Chat & Contacts left sidebar
   if (vuetifyDisplays.smAndDown.value)
@@ -455,5 +526,17 @@ $chat-app-header-height: 76px;
     min-width: 12px !important;
     height: 0.75rem;
   }
+}
+.file-preview {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  background-color: #f0f2f5;
+  border-radius: 4px;
+  font-size: 12px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

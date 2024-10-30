@@ -50,7 +50,7 @@ const getImageUrl = path => {
       <VAvatar
         size="40"
         :variant="!props.user.info?.avatar ? 'tonal' : undefined"
-        :color="!props.user.info?.avatar ? 'primary' : undefined"
+        :color="!props.user.info?.avatar ? isChatContactActive ? 'background' : 'primary' : undefined"
       >
         <VImg
           v-if="props.user?.info?.avatar?.path"

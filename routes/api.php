@@ -159,9 +159,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::prefix('chat')->group(function () {
                     Route::get('/chats-and-contacts', [ChatController::class, 'chatsContacts']);
                     Route::get('/{userUuid}', [ChatController::class, 'show']);
-                    Route::prefix('{chatUuid}')->group(function () {
-                        Route::post('/', [ChatController::class, 'sendMessage']);
-                    });
+                    Route::post('/{userUuid}', [ChatController::class, 'sendMessage']);
                 });
             });
         });
@@ -262,6 +260,13 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::prefix('settings')->group(function () {
             Route::get('/notifications', [SettingController::class, 'getNotificationSettings']);
             Route::patch('/notifications/{id}/update', [SettingController::class, 'updateNotificationSetting']);
+        });
+
+        Route::prefix('chat')->group(function () {
+            Route::prefix('{uuid}')->group(function () {
+                Route::post('/update-message', [ChatController::class, 'updateMessage']);
+                Route::post('/delete-message', [ChatController::class, 'deleteMessage']);
+            });
         });
 
         // Route::prefix('project/{id}/tasks')->group(function () {

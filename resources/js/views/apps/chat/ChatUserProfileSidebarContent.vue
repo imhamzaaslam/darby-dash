@@ -1,44 +1,18 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useChat } from './useChat'
-import { useChatStore } from '@/views/apps/chat/useChatStore'
+import { useUserStore } from "@/store/users"
 
 const emit = defineEmits(['close'])
 
 
 // composables
-const store = useChatStore()
+const store = useUserStore()
 const { resolveAvatarBadgeVariant } = useChat()
-
-const userStatusRadioOptions = [
-  {
-    title: 'Online',
-    value: 'online',
-    color: 'success',
-  },
-  {
-    title: 'Away',
-    value: 'away',
-    color: 'warning',
-  },
-  {
-    title: 'Do not disturb',
-    value: 'busy',
-    color: 'error',
-  },
-  {
-    title: 'Offline',
-    value: 'offline',
-    color: 'secondary',
-  },
-]
-
-const isAuthenticationEnabled = ref(true)
-const isNotificationEnabled = ref(false)
 </script>
 
 <template>
-  <template v-if="store.profileUser">
+  <template v-if="store.getUser">
     <!-- Close Button -->
     <div class="pt-2 me-2 text-end">
       <IconBtn @click="$emit('close')">
@@ -57,29 +31,29 @@ const isNotificationEnabled = ref(false)
         offset-x="7"
         offset-y="4"
         bordered
-        :color="resolveAvatarBadgeVariant(store.profileUser.status)"
-        class="chat-user-profile-badge mb-3"
+        :color="resolveAvatarBadgeVariant(store.getUser?.is_online)"
+        class="chat-user-profile-badge mb-5"
       >
         <VAvatar
           size="84"
-          :variant="!store.profileUser.avatar ? 'tonal' : undefined"
-          :color="!store.profileUser.avatar ? resolveAvatarBadgeVariant(store.profileUser.status) : undefined"
+          :variant="!store.getUser?.info?.avatar ? 'tonal' : undefined"
+          :color="!store.getUser?.info?.avatar ? 'primary' : undefined"
         >
           <VImg
-            v-if="store.profileUser.avatar"
-            :src="store.profileUser.avatar"
+            v-if="store.getUser?.info?.avatar"
+            :src="getImageUrl(store.getActiveChat.contact?.avatar?.path)"
           />
           <span
             v-else
             class="text-3xl"
-          >{{ avatarText(store.profileUser.fullName) }}</span>
+          >{{ store.getUser?.name_first.charAt(0) + store.getUser?.name_last.charAt(0) }}</span>
         </VAvatar>
       </VBadge>
       <h5 class="text-h5">
-        {{ store.profileUser.fullName }}
+        {{ store.getUser?.name_first + " " + store.getUser?.name_last }}
       </h5>
-      <p class="text-capitalize text-medium-emphasis mb-0">
-        {{ store.profileUser.role }}
+      <p class="text-capitalize text-body-1 mb-0">
+        {{ store.getUser?.role }}
       </p>
     </div>
 
@@ -88,111 +62,56 @@ const isNotificationEnabled = ref(false)
       class="ps-chat-user-profile-sidebar-content pb-5 px-6"
       :options="{ wheelPropagation: false }"
     >
+      <div class="mb-6 mt-6">
+        <div class="text-sm text-disabled mb-1">
+          PERSONAL INFORMATION
+        </div>
+        <div class="d-flex align-center text-high-emphasis pa-2">
+          <VIcon
+            class="me-2"
+            color="primary"
+            icon="tabler-mail"
+            size="18"
+          />
+          <div class="text-sm">
+            {{ store.getUser?.email }}
+          </div>
+        </div>
+        <div class="d-flex align-center text-high-emphasis pa-2">
+          <VIcon
+            class="me-2"
+            color="primary"
+            icon="tabler-phone"
+            size="18"
+          />
+          <div class="text-sm">
+            {{ store.getUser?.info?.phone }}
+          </div>
+        </div>
+        <div class="d-flex align-center text-high-emphasis pa-2">
+          <VIcon
+            class="me-2"
+            icon="tabler-clock"
+            color="primary"
+            size="18"
+          />
+          <div class="text-sm">
+            Mon - Fri 10AM - 8PM
+          </div>
+        </div>
+      </div>
       <!-- About -->
       <div class="my-6 text-medium-emphasis">
-        <div
-          for="textarea-user-about"
-          class="text-base text-disabled"
+        <!-- Logout Button -->
+        <VBtn
+          color="primary"
+          class="mt-12"
+          block
+          append-icon="tabler-logout"
         >
-          ABOUT
-        </div>
-        <AppTextarea
-          id="textarea-user-about"
-          v-model="store.profileUser.about"
-          auto-grow
-          class="mt-1"
-          rows="3"
-        />
+          Logout
+        </VBtn>
       </div>
-
-      <!-- Status -->
-      <div class="mb-6">
-        <div class="text-base text-disabled">
-          STATUS
-        </div>
-        <VRadioGroup
-          v-model="store.profileUser.status"
-          class="mt-1"
-        >
-          <VRadio
-            v-for="radioOption in userStatusRadioOptions"
-            :key="radioOption.title"
-            :label="radioOption.title"
-            :value="radioOption.value"
-            :color="radioOption.color"
-          />
-        </VRadioGroup>
-      </div>
-
-      <!-- Settings -->
-      <div class="text-medium-emphasis">
-        <div class="text-base text-disabled">
-          SETTINGS
-        </div>
-
-        <div class="d-flex align-center pa-2">
-          <VIcon
-            class="me-2 text-high-emphasis"
-            icon="tabler-lock"
-            size="22"
-          />
-          <div class="text-high-emphasis d-flex align-center justify-space-between flex-grow-1">
-            <div class="text-body-1 text-high-emphasis">
-              Two-step Verification
-            </div>
-            <VSwitch
-              v-model="isAuthenticationEnabled"
-              density="compact"
-            />
-          </div>
-        </div>
-        <div class="d-flex align-center pa-2">
-          <VIcon
-            class="me-2 text-high-emphasis"
-            icon="tabler-bell"
-            size="22"
-          />
-          <div class="text-high-emphasis d-flex align-center justify-space-between flex-grow-1">
-            <div class="text-body-1 text-high-emphasis">
-              Notification
-            </div>
-            <VSwitch
-              v-model="isNotificationEnabled"
-              density="compact"
-            />
-          </div>
-        </div>
-        <div class="d-flex align-center pa-2">
-          <VIcon
-            class="me-2 text-high-emphasis"
-            icon="tabler-user-plus"
-            size="22"
-          />
-          <div class="text-high-emphasis">
-            Invite Friends
-          </div>
-        </div>
-        <div class="d-flex align-center pa-2">
-          <VIcon
-            class="me-2 text-high-emphasis"
-            icon="tabler-trash"
-            size="22"
-          />
-          <div class="text-high-emphasis">
-            Delete Account
-          </div>
-        </div>
-      </div>
-
-      <!-- Logout Button -->
-      <VBtn
-        color="primary"
-        class="mt-12"
-        block
-        append-icon="tabler-logout"
-      >
-        Logout
-      </VBtn>
     </PerfectScrollbar>
   </template>
 </template>

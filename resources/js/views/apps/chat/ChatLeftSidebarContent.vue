@@ -127,11 +127,11 @@ const userDetails = computed(() => {
     </li>
 
     <ChatContact
-      v-for="contact in store.getChatsContacts"
-      :key="`chat-${contact.id}`"
-      :user="contact"
+      v-for="chat in store.getChatsContacts"
+      :key="`chat-${chat.id}`"
+      :user="chat.contact"
       is-chat-contact
-      @click="$emit('openChatOfContact', contact.uuid)"
+      @click="$emit('openChatOfContact', chat.contact?.uuid)"
     />
 
     <span
