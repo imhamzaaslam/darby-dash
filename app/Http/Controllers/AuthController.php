@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Company;
+use App\Enums\UserRole;
 use Validator;
 use Carbon\Carbon;
 use App\Services\EmailService;
@@ -41,7 +42,7 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
-        if (!$user->company) {
+        if (!$user->company && !$user->hasRole(UserRole::SUPER_ADMIN->value)) {
             Auth::logout();
             return response()->json([
                 'success' => false,
