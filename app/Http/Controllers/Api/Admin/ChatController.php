@@ -13,6 +13,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use App\Models\User;
+use App\Enums\UserRole;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ChatController extends Controller
@@ -38,7 +39,7 @@ class ChatController extends Controller
 
         $superAdmins = User::where('company_id', $authUser->company_id)
         ->whereHas('roles', function ($query) {
-            $query->where('name', 'Super Admin');
+            $query->where('name', UserRole::ADMIN->value);
         })->get();
 
         if ($superAdmins->isNotEmpty()) {

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use App\Enums\UserRole;
 use Spatie\Permission\Models\Permission;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -35,7 +36,7 @@ class RolesAndPermissionsSeeder extends Seeder
     private function roles(): array
     {
         return [
-            'Super Admin' => [
+            UserRole::ADMIN->value => [
                 'user' => ['create', 'view', 'edit', 'delete'],
                 'project' => ['create', 'view', 'edit', 'delete'],
                 'task' => ['create', 'view', 'edit', 'delete'],
@@ -45,7 +46,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'team' => ['create', 'view', 'edit', 'delete'],
                 'payment' => ['create', 'view', 'edit', 'delete'],
             ],
-            'Project Manager' => [
+            UserRole::PROJECT_MANAGER->value => [
                 'project' => ['create', 'view', 'edit', 'delete'],
                 'task' => ['create', 'view', 'edit', 'delete'],
                 'milestone' => ['create', 'view', 'edit', 'delete'],
@@ -54,7 +55,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'team' => ['create', 'view', 'edit', 'delete'],
                 'payment' => ['create', 'view', 'edit', 'delete'],
             ],
-            'Client User' => [
+            UserRole::CLIENT->value => [
                 'project' => ['view'],
                 'task' => ['view'],
                 'milestone' => ['view'],
@@ -63,7 +64,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'team' => ['view'],
                 'payment' => ['view'],
             ],
-            'Staff User' => [
+            UserRole::STAFF->value => [
                 'project' => ['view'],
                 'task' => ['view'],
                 'milestone' => ['view'],

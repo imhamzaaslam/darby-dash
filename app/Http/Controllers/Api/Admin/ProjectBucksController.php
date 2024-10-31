@@ -8,6 +8,7 @@ use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Resources\ProjectResource;
 use App\Models\ProjectBucks;
 use App\Models\Role;
+use App\Enums\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -64,7 +65,7 @@ class ProjectBucksController extends Controller
         $this->authorize('updatebucks', $project);
         
         // Step 1: Validate the roleId
-        $request->validate(['roleId' => 'required|in:' . implode(',', Role::where('name', '!=', 'Super Admin')->pluck('id')->toArray())]);
+        $request->validate(['roleId' => 'required|in:' . implode(',', Role::where('name', '!=', UserRole::ADMIN->value)->pluck('id')->toArray())]);
         
         // Step 2: Calculate remainingBucks
         $roleShare = $this->projectBucksRepository->getRoleShare($project, $request->roleId);

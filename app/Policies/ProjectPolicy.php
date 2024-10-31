@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Enums\UserRole;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProjectPolicy
@@ -18,7 +19,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('Super Admin');
+        return $user->hasRole(UserRole::ADMIN->value);
     }
 
     /**
@@ -29,7 +30,7 @@ class ProjectPolicy
      */
     public function viewAll(User $user): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') || $user->hasRole('Client User') || $user->hasRole('Staff User');
+        return $user->hasRole(UserRole::ADMIN->value) || $user->hasRole(UserRole::PROJECT_MANAGER->value) || $user->hasRole(UserRole::CLIENT->value) || $user->hasRole(UserRole::STAFF->value);
     }
 
     /**
@@ -41,7 +42,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return $user->hasRole('Super Admin') || $project->members->contains($user);
+        return $user->hasRole(UserRole::ADMIN->value) || $project->members->contains($user);
     }
 
     /**
@@ -52,7 +53,7 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager');
+        return $user->hasRole(UserRole::ADMIN->value) || $user->hasRole(UserRole::PROJECT_MANAGER->value);
     }
 
     /**
@@ -64,7 +65,7 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
+        return $user->hasRole(UserRole::ADMIN->value) || $user->hasRole(UserRole::PROJECT_MANAGER->value) && $project->members->contains($user);
     }
 
     /**
@@ -76,7 +77,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
+        return $user->hasRole(UserRole::ADMIN->value) || $user->hasRole(UserRole::PROJECT_MANAGER->value) && $project->members->contains($user);
     }
 
     /**
@@ -88,7 +89,7 @@ class ProjectPolicy
      */
     public function viewbucks(User $user, Project $project): bool
     {
-        return $user->hasRole('Super Admin') || $project->members->contains($user);
+        return $user->hasRole(UserRole::ADMIN->value) || $project->members->contains($user);
     }
     
     /**
@@ -100,6 +101,6 @@ class ProjectPolicy
      */
     public function updatebucks(User $user, Project $project): bool
     {
-        return $user->hasRole('Super Admin') || $user->hasRole('Project Manager') && $project->members->contains($user);
+        return $user->hasRole(UserRole::ADMIN->value) || $user->hasRole(UserRole::PROJECT_MANAGER->value) && $project->members->contains($user);
     }
 }

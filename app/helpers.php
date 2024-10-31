@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Enums\UserRole;
 
 if (!function_exists('getUser')) {
     /**
@@ -172,7 +173,7 @@ if (!function_exists('format_date')) {
 if (!function_exists('isAdminOrManager')) {
     function isAdminOrManager(): bool
     {
-        return auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Project Manager');
+        return auth()->user()->hasRole(UserRole::ADMIN->value) || auth()->user()->hasRole(UserRole::PROJECT_MANAGER->value);
     }
 }
 

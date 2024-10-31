@@ -27,6 +27,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Services\NotificationService;
 use App\Enums\Management;
+use App\Enums\UserRole;
 
 class UsersController extends Controller
 {
@@ -160,7 +161,7 @@ class UsersController extends Controller
         $this->userRepository->update($role, $user, $validatedUserInput);
         $this->userInfoRepository->update($user->info, $validatedInfoInput);
 
-        if ($user->hasRole('Super Admin') && $request->has('company') && !empty($validated['company'])) {
+        if ($user->hasRole(UserRole::ADMIN->value) && $request->has('company') && !empty($validated['company'])) {
             $companyName = $validated['company'];
             $user->company()->update([
                 'name' => $companyName,

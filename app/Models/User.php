@@ -35,6 +35,7 @@ use Kodeine\Metable\Metable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\UserRole;
 
 /**
  * App\Models\User
@@ -218,7 +219,7 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
 
     public function isAdmin(): bool
     {
-        return $this->hasRole('admin');
+        return $this->hasRole(UserRole::ADMIN->value);
     }
 
     public function emailIsVerified(): ?Carbon

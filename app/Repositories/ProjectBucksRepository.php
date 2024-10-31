@@ -11,6 +11,7 @@ use App\Models\ProjectBucks;
 use App\Models\Role;
 use App\Models\Task;
 use App\Models\TaskAssignee;
+use App\Enums\UserRole;
 use Illuminate\Support\Collection;
 
 class ProjectBucksRepository extends AbstractEloquentRepository implements ProjectBucksRepositoryInterface
@@ -27,7 +28,7 @@ class ProjectBucksRepository extends AbstractEloquentRepository implements Proje
 
     public function index(Project $project): Collection
     {
-        $roles = Role::where('name', '!=', 'Super Admin')->get();
+        $roles = Role::where('name', '!=', UserRole::ADMIN)->get();
         $shares = collect();
         foreach ($roles as $role) {
             $projectBuck = $project->projectBucks->where('role_id', $role->id)->first();

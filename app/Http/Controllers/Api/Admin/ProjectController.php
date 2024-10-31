@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Requests\project\StoreProjectRequest;
 use App\Http\Requests\project\UpdateProjectUsersRequest;
 use App\Models\Project;
+use App\Enums\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -40,7 +41,7 @@ class ProjectController extends Controller
         $user = Auth::user();
         $this->authorize('viewAll', Project::class);
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $projects = $this->projectRepository
                 ->getAllRecordsQuery()
                 ->filtered($request->keyword ?? '', $request->projectTypeId ?? null, $request->projectManagerId ?? null)

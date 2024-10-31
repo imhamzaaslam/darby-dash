@@ -2,6 +2,7 @@ import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { useAuthStore } from '@/store/auth'
 import authenticatedPages from './authenticatedPages'
+import superAdminAuthorizedPages from './superAdminAuthorizedPages'
 import adminAuthorizedPages from './adminAuthorizedPages'
 import projectManagerAuthorizedPages from './projectManagerAuthorizedPages'
 import staffAuthorizedPages from './staffAuthorizedPages'
@@ -36,7 +37,8 @@ const requireAuth = () => {
 const isAuthorized = to => {
   const authStore = useAuthStore()
 
-  return (authStore.isAdmin && adminAuthorizedPages.includes(to.name)) ||
+  return (authStore.isSuperAdmin && superAdminAuthorizedPages.includes(to.name)) ||
+         (authStore.isAdmin && adminAuthorizedPages.includes(to.name)) ||
          (authStore.isManager && projectManagerAuthorizedPages.includes(to.name)) ||
          (authStore.isStaff && staffAuthorizedPages.includes(to.name)) ||
          (authStore.isClient && clientAuthorizedPages.includes(to.name))

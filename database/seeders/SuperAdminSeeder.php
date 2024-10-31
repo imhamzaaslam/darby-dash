@@ -2,16 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Company;
 use App\Models\Role;
 use App\Enums\UserRole;
 use Faker\Generator;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class CompanySeeder extends Seeder
+class SuperAdminSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,14 +19,18 @@ class CompanySeeder extends Seeder
      */
     public function run(Generator $faker): void
     {
-        $company = Company::firstOrCreate([
-            'name' => 'SublimeLogics',
-        ]);
+        $user = [
+            'name_first' => 'Eric',
+            'name_last' => 'Wing',
+            'email' => 'super@admin.com',
+            'role' => UserRole::SUPER_ADMIN,
+        ];
 
-        $superadmin = User::firstOrCreate([
-            'name_first' => 'Hamza',
-            'name_last' => 'Aslam',
-            'email' => 'hamza@superadmin.com',
+        $superadmin = User::create([
+            'uuid' => $faker->uuid,
+            'name_first' => $user['name_first'],
+            'name_last' => $user['name_last'],
+            'email' => $user['email'],
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'state' => 'active',
@@ -36,8 +38,7 @@ class CompanySeeder extends Seeder
 
         $this->addDummyInfo($faker, $superadmin);
 
-        $role = Role::where('name', UserRole::SUPER_ADMIN)->first();
-
+        $role = Role::where('name', $user['role'])->first();
         if ($role) {
             $superadmin->assignRole($role);
         }
@@ -49,9 +50,9 @@ class CompanySeeder extends Seeder
      * @param Generator $faker
      * @param User $user
      */
-    private function addDummyInfo(Generator $faker, User $user): void
+    private function addDummyInfo(Generator $faker, User $superadmin): void
     {
-        $user->info()->create([
+        $superadmin->info()->create([
             'phone' => $faker->phoneNumber,
         ]);
     }

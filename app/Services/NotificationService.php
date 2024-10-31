@@ -6,6 +6,7 @@ use App\Notifications\GenericNotification;
 use App\Models\User;
 use App\Models\Settings_meta;
 use App\Enums\Management;
+use App\Enums\UserRole;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,7 @@ class NotificationService
         {
             $receivers = $this->getReceivers($receivers);
             $receivers = $receivers instanceof User ? [$receivers] : $receivers;
-            /* $admins = $this->getSuperAdmins();
+            /* $admins = $this->getAdmins();
             if ($admins && $admins->isNotEmpty()) {
                 $receivers = array_merge($receivers, $admins->all());
             } */
@@ -60,11 +61,11 @@ class NotificationService
     }
 
     /**
-    * Get Super Admins
+    * Get Admins
     * @return \Illuminate\Database\Eloquent\Collection|\App\Models\User|null
     */
 
-    private function getSuperAdmins()
+    private function getAdmins()
     {
         return User::whereHas('roles', function ($query) {
             $query->where('role_id', 1);

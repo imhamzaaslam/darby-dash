@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Enums\UserRole;
 use Faker\Generator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -22,38 +23,44 @@ class UserSeeder extends Seeder
             [
                 'name_first' => 'Eric',
                 'name_last' => 'Wing',
+                'email' => 'super@admin.com',
+                'role' => UserRole::SUPER_ADMIN,
+            ],
+            [
+                'name_first' => 'Eric',
+                'name_last' => 'Wing',
                 'email' => 'eric@darby.com',
-                'role' => 'Super Admin',
+                'role' => UserRole::ADMIN,
             ],
             [
                 'name_first' => 'Hamza',
                 'name_last' => 'Aslam',
                 'email' => 'hamza@gmail.com',
-                'role' => 'Project Manager',
+                'role' => UserRole::PROJECT_MANAGER,
             ],
             [
                 'name_first' => 'Noman',
                 'name_last' => 'Javeed',
                 'email' => 'noman@gmail.com',
-                'role' => 'Client User',
+                'role' => UserRole::CLIENT,
             ],
             [
                 'name_first' => 'Muzammil',
                 'name_last' => 'Shahzad',
                 'email' => 'muzammil@gmail.com',
-                'role' => 'Staff User',
+                'role' => UserRole::STAFF,
             ],
             [
                 'name_first' => 'Umer',
-                'name_last' => 'Khan',
+                'name_last' => 'Shehzad',
                 'email' => 'umer@gmail.com',
-                'role' => 'Staff User',
+                'role' => UserRole::STAFF,
             ],
             [
                 'name_first' => 'Awais',
                 'name_last' => 'Ali',
                 'email' => 'awais@gmail.com',
-                'role' => 'Staff User',
+                'role' => UserRole::STAFF,
             ],
         ];
 
@@ -66,6 +73,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'state' => 'active',
+                'company_id' => 1,
             ]);
 
             $this->addDummyInfo($faker, $user);

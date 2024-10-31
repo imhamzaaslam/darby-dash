@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Enums\FileType;
+use App\Enums\UserRole;
 use App\Models\File;
 use App\Models\ProjectService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -38,7 +39,7 @@ class ProjectServiceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $services = $this->projectServiceRepository
                 ->getServicesQuery()
                 ->filtered($request->projectTypeId ?? null)
@@ -58,7 +59,7 @@ class ProjectServiceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $services = $this->projectServiceRepository
             ->getServicesQuery()
             ->ordered('display_order')
@@ -91,7 +92,7 @@ class ProjectServiceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $attributes = $request->all();
             $service = $this->projectServiceRepository->create($attributes);
 
@@ -130,7 +131,7 @@ class ProjectServiceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $service = $this->projectServiceRepository->getByUuid($serviceUuid);
 
             return (new ProjectServiceResource($service))
@@ -149,7 +150,7 @@ class ProjectServiceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $service = $this->projectServiceRepository->getByUuid($serviceUuid);
             $attributes = $request->all();
             $this->projectServiceRepository->update($service, $attributes);
@@ -203,7 +204,7 @@ class ProjectServiceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
 
             $list = $this->projectServiceRepository->getByUuidOrFail($serviceUuid);
 
@@ -223,7 +224,7 @@ class ProjectServiceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $this->projectServiceRepository->sortServices($request->input('services'));
 
             return response()->json(['message' => 'Project services sorted successfully']);

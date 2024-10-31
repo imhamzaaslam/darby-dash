@@ -22,7 +22,7 @@ class RoleRepository extends AbstractEloquentRepository implements RoleRepositor
 
     public function get(): Collection
     {
-        return $this->model->where('name', '!=', 'admin')->get();
+        return $this->model->where('name', '!=', 'super admin')->get();
     }
 
     public function getPermissions(Role $role): array

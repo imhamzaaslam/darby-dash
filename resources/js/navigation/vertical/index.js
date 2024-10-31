@@ -1,6 +1,7 @@
 import { useAuthStore } from '@/store/auth'
 
 const isAdmin = useAuthStore().isAdmin
+const isSuperAdmin = useAuthStore().isSuperAdmin
 
 const routes = [
   {
@@ -8,7 +9,7 @@ const routes = [
     to: { name: 'root' },
     icon: { icon: 'tabler-align-box-bottom-center' },
   },
-  {
+  !isSuperAdmin &&{
     title: 'Projects',
     icon: { icon: 'tabler-chart-histogram' },
     to: { name: 'web-designs-list' },

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\UserRole;
 use App\Models\Base;
 
 class ProjectType extends Base
@@ -20,7 +21,7 @@ class ProjectType extends Base
 
     public function projects()
     {
-        if(auth()->user()->hasRole('Super Admin')){
+        if(auth()->user()->hasRole(UserRole::ADMIN->value)){
             return $this->hasMany(Project::class);
         }else{
             return $this->hasMany(Project::class)->whereHas('members', function ($query) {
@@ -36,7 +37,7 @@ class ProjectType extends Base
 
     public function tasks()
     {
-        if(auth()->user()->hasRole('Super Admin')){
+        if(auth()->user()->hasRole(UserRole::ADMIN->value)){
             return $this->hasManyThrough(Task::class, Project::class)->whereNull('parent_id');
         }else{
             return $this->hasManyThrough(Task::class, Project::class)->whereNull('parent_id')->whereHas('project', function ($query) {
@@ -49,7 +50,7 @@ class ProjectType extends Base
 
     public function members()
     {
-        if(auth()->user()->hasRole('Super Admin')){
+        if(auth()->user()->hasRole(UserRole::ADMIN->value)){
             return $this->hasManyThrough(ProjectMember::class, Project::class);
         }else{
             return $this->hasManyThrough(ProjectMember::class, Project::class)->whereHas('project', function ($query) {

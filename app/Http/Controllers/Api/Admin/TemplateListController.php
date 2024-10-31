@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\TemplateListRepositoryInterface;
 use App\Contracts\TemplateRepositoryInterface;
+use App\Enums\UserRole;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +29,7 @@ class TemplateListController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $template = $this->templateRepository->getByUuidOrFail($templateUuid);
             $attributes = $request->all();
 
@@ -48,7 +49,7 @@ class TemplateListController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $list = $this->templateListRepository->getByUuid($listUuid);
             $attributes = $request->all();
             $this->templateListRepository->update($list, $attributes);
@@ -67,7 +68,7 @@ class TemplateListController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
 
             $list = $this->templateListRepository->getByUuidOrFail($listUuid);
 
@@ -88,7 +89,7 @@ class TemplateListController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $template = $this->templateRepository->getByUuidOrFail($templateUuid);
             $this->templateListRepository->sortLists($request->input('lists'));
 

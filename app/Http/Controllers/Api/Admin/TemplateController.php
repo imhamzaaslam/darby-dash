@@ -7,6 +7,7 @@ use App\Contracts\TemplateRepositoryInterface;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Http\Requests\Template\StoreTemplateRequest;
 use App\Http\Resources\TemplateResource;
+use App\Enums\UserRole;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -39,7 +40,7 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $templates = $this->templateRepository
                 ->getTemplatesQuery()
                 ->filtered($request->keyword ?? '')
@@ -60,7 +61,7 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $project = $this->projectRepository->getByUuidOrFail($uuid);
             $validated = $request->validated();
 
@@ -86,7 +87,7 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $template = $this->templateRepository->getByUuid($uuid);
 
             return (new TemplateResource($template))
@@ -105,7 +106,7 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
 
             $template = $this->templateRepository->getByUuidOrFail($templateUuid);
 

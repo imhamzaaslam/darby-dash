@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             ProjectServiceSeeder::class,
             CompanySeeder::class,
+            SuperAdminSeeder::class,
         ]);
     }
 }

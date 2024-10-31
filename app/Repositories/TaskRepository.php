@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\TaskAssignee;
 use App\Models\Project;
 use App\Models\ProjectList;
+use App\Enums\UserRole;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
 
@@ -134,7 +135,7 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
 
         $taskAssignees = [];
         foreach ($taskAssigneeIds as $taskAssigneeId) {
-            if (!$loggedInUser->hasRole('Super Admin') && !$loggedInUser->hasRole('Project Manager')) {
+            if (!$loggedInUser->hasRole(UserRole::ADMIN) && !$loggedInUser->hasRole(UserRole::PROJECT_MANAGER->value)) {
                 $taskAssignee = TaskAssignee::where(['task_id' => $taskAssigneeId, 'user_id' => $loggedInUser->id])->get();
             } else {
                 $taskAssignee = TaskAssignee::where('task_id', $taskAssigneeId)->get();

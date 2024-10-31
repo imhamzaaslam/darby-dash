@@ -35,21 +35,20 @@
       </VWindowItem>
 
       <!-- Billing -->
-      <VWindowItem value="billing-plans">
+      <VWindowItem
+        v-if="!authStore.isSuperAdmin"
+        value="billing-plans"
+      >
         <AccountSettingsBillingAndPlans />
       </VWindowItem>
 
       <!-- Notification -->
-      <VWindowItem value="notifications">
+      <VWindowItem
+        v-if="!authStore.isSuperAdmin"
+        value="notifications"
+      >
         <AccountSettingsNotification />
       </VWindowItem>
-
-      <!-- Danger Zone -->
-      <!--
-        <VWindowItem value="danger-zone">
-        <AccountSettingsDangerZone />
-        </VWindowItem>
-      -->
     </VWindow>
   </div>
 </template>
@@ -59,69 +58,47 @@ import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
 import AccountSettingsBillingAndPlans from '@/views/pages/account-settings/AccountSettingsBillingAndPlans.vue'
-import AccountSettingsDangerZone from '@/views/pages/account-settings/AccountSettingsDangerZone.vue'
 import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue'
 import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
-import { watch, ref } from 'vue'
-
+import { useAuthStore } from "@/store/auth"
+import { watch, ref, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 
 useHead({ title: `${layoutConfig.app.title} | Account` })
-onBeforeMount(() => {
-  const searchParams = new URLSearchParams(window.location.search)
-  const activeTab = searchParams.get('tab')
-  if (activeTab && ['account', 'security', 'billing-plans', 'notifications'].includes(activeTab)) {
-    setActiveTab(activeTab)
-  }
-})
 
+const authStore = useAuthStore()
 const activeTab = ref('account')
 const router = useRouter()
 
-// tabs
+// Tabs
 const tabs = [
-  {
-    title: 'Account',
-    icon: 'tabler-users',
-    tab: 'account',
-  },
-  {
-    title: 'Security',
-    icon: 'tabler-lock',
-    tab: 'security',
-  },
-  {
-    title: 'Billing & Plans',
-    icon: 'tabler-file-text',
-    tab: 'billing-plans',
-  },
-  {
-    title: 'Notifications',
-    icon: 'tabler-bell',
-    tab: 'notifications',
-  },
+  { title: 'Account', icon: 'tabler-users', tab: 'account' },
+  { title: 'Security', icon: 'tabler-lock', tab: 'security' },
+  !authStore.isSuperAdmin && { title: 'Billing & Plans', icon: 'tabler-file-text', tab: 'billing-plans' },
+  !authStore.isSuperAdmin && { title: 'Notifications', icon: 'tabler-bell', tab: 'notifications' },
+].filter(Boolean) // filter out any `false` values
 
-  // {
-  //   title: 'Danger Zone',
-  //   icon: 'tabler-alert-triangle',
-  //   tab: 'danger-zone',
-  // },
-]
-
+// Function to set the active tab
 function setActiveTab(tab) {
   activeTab.value = tab
 }
 
-// use watch to change the active tab and then pass to the route as query param
-watch(activeTab, newActiveTab => {
-  router.push({
-    query: {
-      tab: newActiveTab,
-    },
-  })
+// Initialize active tab based on URL query and available tabs
+onBeforeMount(() => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const requestedTab = searchParams.get('tab')
+  
+  if (requestedTab && tabs.some(tab => tab.tab === requestedTab)) {
+    setActiveTab(requestedTab)
+  }
+})
 
+// Watch activeTab and update URL
+watch(activeTab, newActiveTab => {
+  router.push({ query: { tab: newActiveTab } })
   useHead({ title: `${layoutConfig.app.title} | ${tabs.find(tab => tab.tab === newActiveTab).title}` })
 })
 
+// Define page settings
 definePage({ meta: { navActiveLink: 'account-setting' } })
 </script>

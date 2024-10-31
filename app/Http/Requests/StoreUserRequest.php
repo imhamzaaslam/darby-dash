@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\CocNumberCheck;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\UserRole;
 
 class StoreUserRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasRole('Super Admin');
+        return $this->user()->hasRole(UserRole::ADMIN->value);
     }
 
     /**

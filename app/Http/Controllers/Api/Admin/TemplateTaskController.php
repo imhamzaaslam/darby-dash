@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Contracts\TemplateTaskRepositoryInterface;
 use App\Contracts\TemplateListRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -28,7 +29,7 @@ class TemplateTaskController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $list = $this->templateListRepository->getByUuidOrFail($listUuid);
             $attributes = $request->all();
 
@@ -48,7 +49,7 @@ class TemplateTaskController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
             $task = $this->templateTaskRepository->getByUuid($taskUuid);
             $attributes = $request->all();
             $this->templateTaskRepository->update($task, $attributes);
@@ -67,7 +68,7 @@ class TemplateTaskController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasRole(UserRole::ADMIN->value)) {
 
             $task = $this->templateTaskRepository->getByUuidOrFail($taskUuid);
 
