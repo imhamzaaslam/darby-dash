@@ -26,8 +26,16 @@ class ProjectResource extends JsonResource
             'project_members' => $this->members->map(function ($member) {
                 return [
                     'id' => $member->id,
+                    'uuid' => $member->uuid,
                     'name' => $member->name_first,
                     'role' => $member->roles->first()->name ?? 'N/A',
+                    'name_first' => $member->name_first,
+                    'name_last' => $member->name_last,
+                    'is_online' => $member->isOnline(),
+                    'info' => [
+                        'avatar' => $member->avatar,
+                    ],
+                    'unseen_messages' => auth()->user()->unseenMessagesFromTeamMember($member->id, $this->id) ?? 0,
                 ];
             }),
             'project_manager' => $this->projectManager() ? new UserResource($this->projectManager()) : null,
@@ -53,6 +61,7 @@ class ProjectResource extends JsonResource
             'total_tasks' => $this->total_tasks,
             'completed_tasks' => $this->completed_tasks,
             'created_at' => $this->created_at,
+            'total_unseen_messages' => $this->totalUnseenMessagesOfProject(),
             'updated_at' => $this->updated_at,
         ];
     }

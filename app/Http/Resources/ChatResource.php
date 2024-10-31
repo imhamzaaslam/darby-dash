@@ -19,15 +19,19 @@ class ChatResource extends JsonResource
     public function toArray($request): array|JsonSerializable|Arrayable
     {
         $authUserId = auth()->id();
+
         $contact = ($this->user_id === $authUserId || $this->contact->id === $authUserId)
-        ? new UserResource(getUser($this->messages->first()->sender_id))
-        : new UserResource($this->contact);
+        ? new UserResource(getUser($this->messages->first()->sender_id), $this->project_id)
+        : new UserResource($this->contact, $this->project_id);
+
+        $lastMessage = $this->messages()->latest()->first();
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
             'user_id' => $this->user_id,
             'unseen_msgs' => $this->unseen_msgs,
             'contact' => $contact,
+            
             'messages' => $this->messages->map(function ($message) {
                 return [
                     'id' => $message->id,
@@ -42,6 +46,7 @@ class ChatResource extends JsonResource
                     ],
                 ];
             }),
+            'last_message' => $lastMessage ?? [],
         ];
     }
 }

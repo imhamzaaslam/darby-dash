@@ -9,6 +9,12 @@ const emit = defineEmits(['close'])
 // composables
 const store = useUserStore()
 const { resolveAvatarBadgeVariant } = useChat()
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 </script>
 
 <template>
@@ -41,7 +47,7 @@ const { resolveAvatarBadgeVariant } = useChat()
         >
           <VImg
             v-if="store.getUser?.info?.avatar"
-            :src="getImageUrl(store.getActiveChat.contact?.avatar?.path)"
+            :src="getImageUrl(store.getUser?.info?.avatar?.path)"
           />
           <span
             v-else
@@ -103,14 +109,16 @@ const { resolveAvatarBadgeVariant } = useChat()
       <!-- About -->
       <div class="my-6 text-medium-emphasis">
         <!-- Logout Button -->
-        <VBtn
+        <!--
+          <VBtn
           color="primary"
           class="mt-12"
           block
           append-icon="tabler-logout"
-        >
+          >
           Logout
-        </VBtn>
+          </VBtn> 
+        -->
       </div>
     </PerfectScrollbar>
   </template>

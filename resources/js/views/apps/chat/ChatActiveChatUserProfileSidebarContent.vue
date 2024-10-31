@@ -109,16 +109,18 @@ const getImageUrl = path => {
       </div>
 
       <!-- Options -->
-      <div>
+      <!--
+        <div>
         <VBtn
-          block
-          color="error"
-          append-icon="tabler-trash"
-          class="mt-6"
+        block
+        color="error"
+        append-icon="tabler-trash"
+        class="mt-6"
         >
-          Delete Contact
+        Delete Contact
         </VBtn>
-      </div>
+        </div> 
+      -->
     </PerfectScrollbar>
   </template>
 </template>

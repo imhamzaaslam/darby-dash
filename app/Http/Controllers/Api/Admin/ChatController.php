@@ -69,7 +69,7 @@ class ChatController extends Controller
 
         return response()->json([
             'success' => true,
-            'contacts' => UserResource::collection($contacts),
+            'contacts' => UserResource::collection($contacts, $project->id),
             'chats' => ChatResource::collection($chats),
         ]);
     }

@@ -172,16 +172,15 @@ const project = computed(() =>{
               class="text-h6 me-5 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/chat` }"
             >
-              Inbox
-              <!--
-                <VBadge
+              <VBadge
+                v-if="project?.total_unseen_messages"
                 class="new-badge"
                 color="error"
-                content="14"
-                >
+                :content="project?.total_unseen_messages"
+              >
                 <span class="inner-badge-text">Inbox</span>
-                </VBadge>
-              -->
+              </VBadge>
+              <span v-else>Inbox</span>
             </span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/team`">

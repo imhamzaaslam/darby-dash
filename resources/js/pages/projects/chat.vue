@@ -123,15 +123,17 @@
           <VSpacer />
 
           <!-- Header right content -->
-          <div class="d-sm-flex align-center d-none text-medium-emphasis">
+          <!--
+            <div class="d-sm-flex align-center d-none text-medium-emphasis">
             <AppTextField
-              v-model="search"
-              placeholder="Search..."
-              prepend-inner-icon="tabler-search"
-              class="ms-4 me-1 chat-list-search"
-              style="min-width: 200px;width: 100%;flex-grow: 1;"
+            v-model="search"
+            placeholder="Search..."
+            prepend-inner-icon="tabler-search"
+            class="ms-4 me-1 chat-list-search"
+            style="min-width: 200px;width: 100%;flex-grow: 1;"
             />
-          </div>
+            </div> 
+          -->
         </div>
 
         <VDivider />
@@ -184,7 +186,7 @@
                       icon="tabler-file"
                       class="me-1"
                     />
-                    <span>{{ file.name }}</span>
+                    <span>{{ truncateDescription(file.name, 10) }}</span>
                     <IconBtn
                       class="ms-2 text-danger"
                       @click="removeFile(index)"
@@ -261,7 +263,7 @@
           style="max-inline-size: 40ch; text-wrap: balance;"
           class="text-center text-disabled"
         >
-          Start connecting with the people by selecting one of the contact on left
+          Start connecting with the people by selecting one of the chat or contact on left
         </p>
       </div>
     </VMain>
@@ -316,7 +318,12 @@ onBeforeMount(async () => {
 })
 
 const fetchProject = async () => {
-  callFirstContact()
+  const inboxId = $route.query.inbox
+  if (inboxId) {
+    openChatOfContact(inboxId) 
+  } else {
+    callFirstContact() 
+  }
   await projectStore.show(projectUuid)
 }
 
@@ -352,26 +359,26 @@ const startConversation = () => {
 const msg = ref('')
 
 const sendMessage = async (contactId, chatId) => {
-  if (!msg.value)
-    return
+  if (!msg.value && selectedFiles.value.length === 0) return 
 
   const payload = {
     projectId: projectUuid,
     userId: contactId,
     chatId: chatId,
     message: msg.value,
+    files: selectedFiles.value,
   }
 
   await store.sendMsg(payload)
 
-  // Reset message input
   msg.value = ''
+  selectedFiles.value = []
 
-  // Scroll to bottom
   nextTick(() => {
     scrollToBottomInChatLog()
   })
 }
+
 
 const triggerFileInput = () => {
   fileInput.value.click()
@@ -383,6 +390,12 @@ const onFileSelected = event => {
   
 const removeFile = index => {
   selectedFiles.value.splice(index, 1)
+}
+
+const truncateDescription = (description, length) => {
+  return description.length > length
+    ? description.slice(0, length) + '...'
+    : description
 }
 
 const openChatOfContact = async userId => {

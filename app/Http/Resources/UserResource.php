@@ -10,6 +10,14 @@ use JsonSerializable;
 
 class UserResource extends JsonResource
 {
+    protected $projectId;
+
+    public function __construct($resource, $projectId = null)
+    {
+        parent::__construct($resource);
+        $this->projectId = $projectId;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -39,6 +47,7 @@ class UserResource extends JsonResource
                 'avatar' => $this->avatar,
             ],
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y h:i:s A'),
+            'unseen_messages' => auth()->user()->unseenMessagesFromTeamMember($this->id, $this->projectId) ?? 0,
         ];
     }
 }

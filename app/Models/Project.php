@@ -108,6 +108,18 @@ class Project extends Base
         return $this->hasOne(Chat::class);
     }
 
+    public function totalUnseenMessagesOfProject()
+    {
+        $totalUnSeenCount = ChatMessage::where('sender_id', '!=', auth()->id())
+        ->whereHas('chat', function ($query) {
+            $query->where('project_id', $this->id);
+        })
+        ->where('is_seen', false) 
+        ->count();
+
+        return $totalUnSeenCount;
+    }
+
     public function bucksEarnings(): float
     {
         $taskIds = $this->tasks->pluck('id');

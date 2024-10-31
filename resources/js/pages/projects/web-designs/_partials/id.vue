@@ -200,7 +200,7 @@
       md="6"
     >
       <VCard style="height: 388px; position: relative;">
-        <VCardItem title="Inbox (0)">
+        <VCardItem :title="'Inbox (' + (project.project_members ? project.project_members?.filter(member => member.id != userDetails.id).length : 0) + ')'">
           <template #append>
             <MoreBtn />
           </template>
@@ -211,7 +211,7 @@
         >
           <VList class="card-list">
             <VListItem
-              v-for="inbox in getUsersByProjects"
+              v-for="inbox in project.project_members?.filter(member => member.id != userDetails.id)"
               :key="inbox.id"
             >
               <template #prepend>
@@ -221,15 +221,17 @@
                   :color="inbox.is_online ? 'success' : 'warning'"
                   location="bottom end"
                 >
-                  <VAvatar
-                    v-if="inbox?.info"
-                    color="primary"
-                    :image="inbox?.info?.avatar ? getImageUrl(inbox?.info?.avatar.path) : undefined"
-                    :variant="inbox?.info?.avatar ? undefined : 'tonal'"
-                    size="38"
-                  >
-                    <span v-if="!inbox?.info?.avatar">{{ avatarText(inbox.name_first + ' ' + inbox.name_last) }}</span>
-                  </VAvatar>
+                  <RouterLink :to="`/projects/${projectUuid}/chat?inbox=${inbox.uuid}`">
+                    <VAvatar
+                      v-if="inbox?.info"
+                      color="primary"
+                      :image="inbox?.info?.avatar ? getImageUrl(inbox?.info?.avatar.path) : undefined"
+                      :variant="inbox?.info?.avatar ? undefined : 'tonal'"
+                      size="38"
+                    >
+                      <span v-if="!inbox?.info?.avatar">{{ avatarText(inbox.name_first + ' ' + inbox.name_last) }}</span>
+                    </VAvatar>
+                  </RouterLink>
                 </VBadge>
               </template>
               <VListItemTitle class="font-weight-medium">
@@ -243,7 +245,7 @@
                 <span class="p-0">
                   <VBadge
                     color="primary"
-                    :content="0"
+                    :content="inbox.unseen_messages"
                   />
                 </span>
               </template>
@@ -255,6 +257,7 @@
             size="small"
             rounded="pill"
             color="primary"
+            :to="`/projects/${projectUuid}/chat`"
           >
             Write Message
           </VBtn>
@@ -1092,6 +1095,10 @@ const getUsersByProjects = computed(() => {
 
 const getActivities = computed(() => {
   return projectStore.getProjectActivities.slice(0, 14)
+})
+
+const userDetails = computed(() => {
+  return userStore.getUser
 })
 
 watch(project, () => {

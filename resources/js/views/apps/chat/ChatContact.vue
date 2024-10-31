@@ -76,10 +76,10 @@ const getImageUrl = path => {
         {{ formatDateToMonthShort(props.user.chat.lastMessage.time) }}
       </div>
       <VBadge
-        v-if="props.user.chat.unseenMsgs"
+        v-if="props.user?.unseen_messages"
         color="error"
         inline
-        :content="props.user.chat.unseenMsgs"
+        :content="props.user?.unseen_messages"
         class="ms-auto"
       />
     </div>

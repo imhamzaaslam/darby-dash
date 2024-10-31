@@ -241,16 +241,6 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         return $this->belongsToMany(Permission::class, 'model_has_permissions', 'model_id', 'permission_id');
     }
 
-    public function sentMessages()
-    {
-        return $this->hasMany(ChatMessage::class, 'sender_id');
-    }
-
-    public function receivedMessages()
-    {
-        return $this->hasManyThrough(ChatMessage::class, Project::class, 'user_id', 'project_id', 'id', 'id');
-    }
-
     function scopeFiltered(Builder $query, ?string $name, ?string $email, ?string $roleId): Builder
     {
         $usersTable = (new User())->getTable();
@@ -293,5 +283,21 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         $this->verification_code = null;
         $this->verification_expires_at = null;
         $this->save();
+    }
+
+    public function unseenMessagesFromTeamMember($teamMemberId, $projectId)
+    {
+        $unseenCount = ChatMessage::where('sender_id', $teamMemberId)
+        ->whereHas('chat', function ($query) use ($projectId, $teamMemberId) {
+            $query->where('project_id', $projectId)
+                  ->where(function ($q) use($teamMemberId) {
+                      $q->where('user_id', $this->id)
+                        ->orWhere('user_id', $teamMemberId);
+                  });
+        })
+        ->where('is_seen', false) 
+        ->count();
+
+        return $unseenCount;
     }
 }

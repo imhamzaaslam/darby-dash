@@ -23,8 +23,9 @@ class StoreChatMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => 'required|string|max:255',
+            'message' => 'sometimes|nullable|string|max:255',
             'chatId' => 'sometimes|nullable:chat_messages,id',
+            'files.*' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ];
     }
 }
