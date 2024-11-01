@@ -235,7 +235,9 @@
                 </VBadge>
               </template>
               <VListItemTitle class="font-weight-medium">
-                {{ inbox.name_first + ' ' + inbox.name_last }}
+                <RouterLink :to="`/projects/${projectUuid}/chat?inbox=${inbox.uuid}`">
+                  {{ inbox.name_first + ' ' + inbox.name_last }}
+                </RouterLink>
               </VListItemTitle>
               <VListItemSubtitle class="text-disabled">
                 {{ inbox.role }}
@@ -243,10 +245,12 @@
 
               <template #append>
                 <span class="p-0">
-                  <VBadge
-                    color="primary"
-                    :content="inbox.unseen_messages"
-                  />
+                  <RouterLink :to="`/projects/${projectUuid}/chat?inbox=${inbox.uuid}`">
+                    <VBadge
+                      color="primary"
+                      :content="inbox.unseen_messages"
+                    />
+                  </RouterLink>
                 </span>
               </template>
             </VListItem>
