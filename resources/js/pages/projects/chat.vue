@@ -165,12 +165,14 @@
             <template #append-inner>
               <div class="d-flex gap-1">
                 <!-- File Attachment Icon -->
-                <IconBtn @click="triggerFileInput">
+                <!--
+                  <IconBtn @click="triggerFileInput">
                   <VIcon
-                    icon="tabler-paperclip"
-                    size="22"
+                  icon="tabler-paperclip"
+                  size="22"
                   />
-                </IconBtn>
+                  </IconBtn> 
+                -->
 
                 <!-- File Preview -->
                 <div
