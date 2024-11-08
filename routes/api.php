@@ -44,6 +44,8 @@ Route::get('test', function () {
     return response()->json(['message' => 'Hello World!']);
 });
 
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);

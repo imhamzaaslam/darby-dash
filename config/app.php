@@ -203,6 +203,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\QueryBuilderMacroProvider::class,
         App\Providers\YukiServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 
     ],
 
