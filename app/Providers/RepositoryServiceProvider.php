@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Contracts\RoleRepositoryInterface;
 use App\Contracts\ActivityLogRepositoryInterface;
+use App\Contracts\CompanyRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
 use App\Contracts\UserInfoRepositoryInterface;
 use App\Contracts\ProjectTypeRepositoryInterface;
@@ -27,6 +28,7 @@ use App\Contracts\NotificationRepositoryInterface;
 use App\Contracts\SettingRepositoryInterface;
 use App\Models\Activity;
 use App\Models\Role;
+use App\Models\Company;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\ProjectType;
@@ -50,6 +52,7 @@ use App\Models\Notification;
 use App\Models\Settings_meta;
 use App\Repositories\ActivityLogRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\CompanyRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserInfoRepository;
 use App\Repositories\ProjectTypeRepository;
@@ -90,6 +93,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             RoleRepositoryInterface::class,
             fn() => new RoleRepository(new Role)
+        );
+
+        $this->app->bind(
+            CompanyRepositoryInterface::class,
+            fn() => new CompanyRepository(new Company)
         );
 
         $this->app->bind(

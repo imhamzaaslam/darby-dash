@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Base;
 
 class Company extends Base
@@ -21,5 +22,26 @@ class Company extends Base
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'company_id');
+    }
+
+    public function user()
+    {
+        return $this->users()->orderBy('created_at', 'asc')->first();
+    }
+
+    public static function totalCount(): int
+    {
+        return self::count();
+    }
+
+    function scopeFiltered(Builder $query, ?string $keyword): Builder
+    {
+        $companyTable = (new Company())->getTable();
+
+        return $query->when($keyword, function ($query, $keyword) use ($companyTable) {
+            return $query->where(function ($query) use ($companyTable, $keyword) {
+                $query->where($companyTable . '.name', 'like', '%' . $keyword . '%');
+            });
+        });
     }
 }

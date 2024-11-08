@@ -25,6 +25,7 @@ import ProjectActivityList from '@/views/pages/project-activities-list.vue'
 import Templates from '@/pages/settings/templates/index.vue'
 import ManageTemplates from '@/pages/settings/templates/_partials/manage-templates.vue'
 import Services from '@/pages/settings/services/index.vue'
+import Companies from '@/pages/super-admin/companies/index.vue'
 
 import TwoFactorAuth from '@/pages/TwoFactorAuth.vue'
 
@@ -64,6 +65,14 @@ const router = createRouter({
     return { top: 0 }
   },
   extendRoutes: pages => [
+    recursiveLayouts(
+      {
+        path: '/companies',
+        name: 'companies-list',
+        component: Companies,
+        meta: { layout: 'default' },
+      },
+    ),
     recursiveLayouts(
       {
         path: '/projects/web-designs',

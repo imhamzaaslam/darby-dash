@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\TokenValidationController;
+use App\Http\Controllers\Api\Admin\CompanyController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UsersController;
 use App\Http\Controllers\Api\Admin\ProjectTypeController;
@@ -65,6 +66,17 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::get('/roles', [RoleController::class, 'index']);
     Route::get('/roles/{id}/permissions', [RoleController::class, 'getPermissions']);
     Route::patch('/roles/{id}/permissions', [RoleController::class, 'updatePermissions']);
+
+    Route::prefix('super-admin')->group(function () {
+        Route::prefix('companies')->group(function () {
+            Route::get('/', [CompanyController::class, 'index']);
+            Route::post('/', [CompanyController::class, 'store']);
+            Route::prefix('{uuid}')->group(function () {
+                Route::patch('/', [CompanyController::class, 'update']);
+                Route::delete('/', [CompanyController::class, 'delete']);
+            });
+        });
+    });
 
     Route::prefix('admin')->group(function () {
         Route::prefix('users')->group(function () {

@@ -21,7 +21,7 @@
                 />
               </VAvatar>
               <h5 class="text-h6 text-center">
-                Companies: 0
+                Companies: {{ totalCompanies ?? 0 }}
               </h5>
             </div>
           </VCardText>
@@ -34,8 +34,30 @@
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
-  
+import { useCompanyStore } from "@/store/companies"
+import { useToast } from "vue-toastification"
+
 useHead({ title: `${layoutConfig.app.title} | Super Admin Dashboard` })
+
+const toast = useToast()
+const companyStore = useCompanyStore()
+
+onBeforeMount(async () => {
+  await fetchCompanies()
+})
+
+
+const fetchCompanies = async () => {
+  try {
+    await companyStore.getAll()
+  } catch (error) {
+    toast.error('Error fetching companies:', error)
+  }
+}
+
+const totalCompanies = computed(() => {
+  return companyStore.companiesCount
+}) 
 </script>
   
   <style lang="scss" scoped>
