@@ -30,7 +30,7 @@
                 <AppTextField
                   ref="focusInput"
                   v-model="props.editCompanyDetails.name"
-                  label="Name *"
+                  label="Company Name *"
                   :rules="[requiredValidator]"
                   :error-messages="editErrors.name"
                   placeholder="Company Name"

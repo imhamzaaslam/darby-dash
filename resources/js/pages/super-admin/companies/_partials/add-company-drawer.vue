@@ -8,7 +8,7 @@
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      title="Add Comoany Details"
+      title="Add Company Details"
       @cancel="$emit('update:isDrawerOpen', false)"
     />
 
@@ -31,9 +31,9 @@
               >
                 <AppTextField
                   v-model="newCompanyDetails.name"
-                  label="Name*"
+                  label="Company Name*"
                   :rules="[requiredValidator]"
-                  placeholder="Name"
+                  placeholder="Company Name"
                 />
               </VCol>
               <VCol cols="6">
