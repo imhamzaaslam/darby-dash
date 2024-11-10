@@ -123,17 +123,23 @@
           <VSpacer />
 
           <!-- Header right content -->
-          <!--
-            <div class="d-sm-flex align-center d-none text-medium-emphasis">
+          <div class="d-sm-flex align-center d-none text-medium-emphasis">
             <AppTextField
-            v-model="search"
-            placeholder="Search..."
-            prepend-inner-icon="tabler-search"
-            class="ms-4 me-1 chat-list-search"
-            style="min-width: 200px;width: 100%;flex-grow: 1;"
+              v-model="searchQuery"
+              placeholder="Search..."
+              prepend-inner-icon="tabler-search"
+              class="ms-4 me-1 chat-list-search"
+              style="min-width: 200px;width: 100%;flex-grow: 1;"
+              @keydown.down="moveSearchHighlight('down')"
+              @keydown.up="moveSearchHighlight('up')"
             />
-            </div> 
-          -->
+            <small
+              v-if="highlightedResults.length > 0"
+              class="text-high-emphasis"
+            >
+              {{ currentHighlightIndex + 1 }}/{{ highlightedResults.length }} results
+            </small>
+          </div> 
         </div>
 
         <VDivider />
@@ -145,7 +151,10 @@
           :options="{ wheelPropagation: false }"
           class="flex-grow-1"
         >
-          <ChatLog />
+          <ChatLog
+            :current-highlight-index="currentHighlightIndex"
+            :highlighted-results="highlightedResults"
+          />
         </PerfectScrollbar>
 
         <!-- Message form -->
@@ -309,6 +318,10 @@ const chatLogPS = ref()
 const fileInput = ref(null)
 const selectedFiles = ref([])
 
+const searchQuery = ref('')
+const currentHighlightIndex = ref(-1)
+const highlightedResults = ref([])
+
 const scrollToBottomInChatLog = () => {
   const scrollEl = chatLogPS.value.$el || chatLogPS.value
 
@@ -338,6 +351,60 @@ const callFirstContact = () => {
   } else {
     console.log('No contacts available in the inbox')
   }
+}
+
+const moveSearchHighlight = direction => {
+  if (highlightedResults.value.length === 0) return
+
+  let newIndex = currentHighlightIndex.value
+
+  if (direction === 'down') {
+    newIndex = (newIndex + 1) % highlightedResults.value.length
+  } else if (direction === 'up') {
+    newIndex = (newIndex - 1 + highlightedResults.value.length) % highlightedResults.value.length
+  }
+
+  const highlightedElement = document.querySelector(
+    `.highlight[data-index="${newIndex}"]`,
+  )
+
+  const chatlog = chatLogPS.value.$el || chatLogPS.value
+
+  if (highlightedElement && chatlog) {
+    const elementTop = highlightedElement.offsetTop
+    const containerHeight = chatlog.clientHeight
+
+    if (direction === 'down') {
+      chatlog.scrollTop = Math.min(
+        chatlog.scrollTop + containerHeight,
+        chatlog.scrollHeight - containerHeight, 
+      )
+    } else if (direction === 'up') {
+      chatlog.scrollTop = Math.max(chatlog.scrollTop - containerHeight, 0)
+    }
+
+    currentHighlightIndex.value = newIndex
+  }
+}
+
+watch(
+  searchQuery,
+  debounce(query => query.length >= 2 ?  updateHighlightedResults(query) : highlightedResults.value = [], 300),
+  { immediate: true },
+)
+
+const updateHighlightedResults = query => {
+  highlightedResults.value = []
+
+  const regex = new RegExp(query, 'gi')
+
+  store.getActiveChat?.messages.forEach((message, index) => {
+    if (regex.test(message.message)) {
+      highlightedResults.value.push({ index,
+        message: message.message,
+        query: query })
+    }
+  })
 }
 
 // Search query
@@ -380,7 +447,6 @@ const sendMessage = async (contactId, chatId) => {
     scrollToBottomInChatLog()
   })
 }
-
 
 const triggerFileInput = () => {
   fileInput.value.click()

@@ -27,7 +27,7 @@ class ChatRepository extends AbstractEloquentRepository implements ChatRepositor
         $authUserId = auth()->id();
         return $this->model->where('project_id', $project->id)
         ->whereHas('messages', function ($query) use ($authUserId) {
-            $query->where('sender_id', $authUserId);
+            $query->where('sender_id', $authUserId)->orWhere('receiver_id',$authUserId);
         })->orderBy('created_at', 'asc')->get();
     }
 
@@ -36,10 +36,20 @@ class ChatRepository extends AbstractEloquentRepository implements ChatRepositor
         $authUserId = auth()->id();
 
         $chat = $this->model->where('project_id', $project->id)
-            ->where('user_id', $user->id)
-            ->orWhereHas('messages', function ($query) use ($user) {
-                $query->where('sender_id', $user->id);
-            })->first();
+        ->where(function ($query) use ($authUserId, $user) {
+            $query->where('user_id', $authUserId)
+                  ->orWhere('user_id', $user->id);
+        })
+        ->whereHas('messages', function ($query) use ($authUserId, $user) {
+            $query->where(function ($q) use ($authUserId, $user) {
+                $q->where('sender_id', $authUserId)
+                  ->where('receiver_id', $user->id);
+            })->orWhere(function ($q) use ($authUserId, $user) {
+                $q->where('sender_id', $user->id)
+                  ->where('receiver_id', $authUserId);
+            });
+        })
+        ->first();
 
         if($chat)
         {
@@ -67,6 +77,7 @@ class ChatRepository extends AbstractEloquentRepository implements ChatRepositor
         {
             $chat->messages()->create([
                 'sender_id' => auth()->user()->id,
+                'receiver_id' => $user->id,
                 'message' => $data['message'],
                 'is_delivered' => $user->isOnline() ? true : false,
             ]);

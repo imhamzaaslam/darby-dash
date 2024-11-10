@@ -12,6 +12,10 @@ const props = defineProps({
     type: null,
     required: true,
   },
+  lastMessage: {
+    type: Array,
+    required: true,
+  },
 })
 
 const store = useChatStore()
@@ -65,18 +69,19 @@ const getImageUrl = path => {
         {{ props.user?.name_first + " " +props.user?.name_last }}
       </p>
       <p class="mb-0 text-truncate text-body-2">
-        {{ props.isChatContact && 'chat' in props.user ? props.user.chat.lastMessage.message : props.user.about }}
+        {{ props.user ? props.lastMessage?.message : '' }}
       </p>
     </div>
     <div
-      v-if="props.isChatContact && 'chat' in props.user"
+      v-if="props.user && props.lastMessage"
       class="d-flex flex-column align-self-start"
     >
       <div class="text-body-2 text-disabled whitespace-no-wrap">
-        {{ formatDateToMonthShort(props.user.chat.lastMessage.time) }}
+        {{ formatDateToMonthShort(props.lastMessage?.created_at) }}
       </div>
       <VBadge
         v-if="props.user?.unseen_messages"
+        :model-value="props.isChatContact"
         color="error"
         inline
         :content="props.user?.unseen_messages"

@@ -46,7 +46,7 @@ class ChatResource extends JsonResource
                     ],
                 ];
             }),
-            'last_message' => $lastMessage ?? [],
+            'last_message' => $lastMessage ?? null,
         ];
     }
 }

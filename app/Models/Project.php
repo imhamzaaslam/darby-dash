@@ -110,11 +110,10 @@ class Project extends Base
 
     public function totalUnseenMessagesOfProject()
     {
-        $totalUnSeenCount = ChatMessage::where('sender_id', '!=', auth()->id())
+        $totalUnSeenCount = ChatMessage::where('receiver_id', auth()->id())
         ->whereHas('chat', function ($query) {
             $query->where('project_id', $this->id);
-        })
-        ->where('is_seen', false) 
+        })->where('is_seen', false) 
         ->count();
 
         return $totalUnSeenCount;

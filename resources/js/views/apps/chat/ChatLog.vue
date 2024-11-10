@@ -2,6 +2,11 @@
 import { useChatStore } from '@/store/chats'
 import { useUserStore } from "@/store/users"
 
+const props = defineProps({
+  currentHighlightIndex: Number,
+  highlightedResults: Array,
+})
+
 const store = useChatStore()
 const userStore = useUserStore()
 
@@ -28,6 +33,21 @@ const resolveFeedbackIcon = feedback => {
       icon: 'tabler-check',
       color: undefined,
     }
+}
+
+const highlightText = message => {
+  if (!props.highlightedResults || props.highlightedResults.length === 0) return message
+
+  let highlightedMessage = message
+  props.highlightedResults.forEach((result, index) => {
+    const regex = new RegExp(`(${result.query})`, 'gi') 
+
+    highlightedMessage = highlightedMessage.replace(regex, match =>
+      `<span class="highlight" data-index="${index}">${match}</span>`,
+    )
+  })
+
+  return highlightedMessage
 }
 
 const msgGroups = computed(() => {
@@ -87,8 +107,6 @@ const saveEditedMessage = async () => {
         chatId: currentMessage.value,
         message: editedMessage.value,
       }
-
-      console.log('Payload', payload)
 
       await store.updateMsg(payload)
       editDialogVisible.value = false
@@ -171,7 +189,10 @@ const getImageUrl = path => {
         >
           <!-- Inline Message and Icon Button -->
           <p class="mb-0 text-base flex-grow-1 me-2">
-            {{ msgData.message }}
+            <span
+              :class="{ 'highlighted-active': currentHighlightIndex === index }"
+              v-html="highlightText(msgData.message)"
+            />
           </p>
   
           <!-- Icon Button for Menu -->
@@ -288,5 +309,10 @@ const getImageUrl = path => {
       }
     }
   }
+}
+.highlight {
+  background-color: yellow;
+  color: black!important;
+  font-weight: bold;
 }
 </style>

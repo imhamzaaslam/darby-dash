@@ -18,6 +18,7 @@ class ChatMessage extends Base
         'uuid',
         'chat_id',
         'sender_id',
+        'receiver_id',
         'message',
         'is_sent',
         'is_delivered',
@@ -32,5 +33,10 @@ class ChatMessage extends Base
     public function sender()
     {
         return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 }

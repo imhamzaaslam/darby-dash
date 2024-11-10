@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid();
             $table->foreignId('chat_id')->constrained('chats')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users');
+            $table->foreignId('receiver_id')->constrained('users');
             $table->text('message');
             $table->boolean('is_sent')->default(true);
             $table->boolean('is_delivered')->default(false);

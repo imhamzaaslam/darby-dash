@@ -78,30 +78,30 @@ const userDetails = computed(() => {
       class="ms-4 me-1 chat-list-search"
     />
 
-    <IconBtn @click.prevent>
+    <!--
+      <IconBtn @click.prevent>
       <VIcon icon="tabler-dots-vertical" />
       <VMenu 
-        activator="parent" 
-        class="p-0"
+      activator="parent" 
+      class="p-0"
       >
-        <VList class="p-0">
-          <VListItem
-            value="add-member"
-            class="p-0"
-          >
-            Add Member
-          </VListItem>
-          <!--
-            <VListItem
-            value="add-group"
-            class="p-0"
-            >
-            Add Group
-            </VListItem> 
-          -->
-        </VList>
+      <VList class="p-0">
+      <VListItem
+      value="add-member"
+      class="p-0"
+      >
+      Add Member
+      </VListItem>
+      <VListItem
+      value="add-group"
+      class="p-0"
+      >
+      Add Group
+      </VListItem> 
+      </VList>
       </VMenu>
-    </IconBtn>
+      </IconBtn> 
+    -->
 
     <IconBtn
       v-if="$vuetify.display.smAndDown"
@@ -130,6 +130,7 @@ const userDetails = computed(() => {
       v-for="chat in store.getChatsContacts"
       :key="`chat-${chat.id}`"
       :user="chat.contact"
+      :last-message="chat.last_message"
       is-chat-contact
       @click="$emit('openChatOfContact', chat.contact?.uuid)"
     />
@@ -148,6 +149,7 @@ const userDetails = computed(() => {
       v-for="contact in store.getContacts"
       :key="`chat-${contact.id}`"
       :user="contact"
+      :last-message="null"
       @click="$emit('openChatOfContact', contact.uuid)"
     />
 

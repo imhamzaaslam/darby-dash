@@ -288,15 +288,10 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
 
     public function unseenMessagesFromTeamMember($teamMemberId, $projectId)
     {
-        $unseenCount = ChatMessage::where('sender_id', $teamMemberId)
-        ->whereHas('chat', function ($query) use ($projectId, $teamMemberId) {
-            $query->where('project_id', $projectId)
-                  ->where(function ($q) use($teamMemberId) {
-                      $q->where('user_id', $this->id)
-                        ->orWhere('user_id', $teamMemberId);
-                  });
-        })
-        ->where('is_seen', false) 
+        $unseenCount = ChatMessage::where('sender_id', $teamMemberId)->where('receiver_id', $this->id)
+        ->whereHas('chat', function ($query) use ($projectId)  {
+            $query->where('project_id', $projectId);
+        })->where('is_seen', false) 
         ->count();
 
         return $unseenCount;
