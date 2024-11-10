@@ -28,9 +28,10 @@ class UpdateCompanyRequest extends FormRequest
     {
         $userUuid = $this->input('user_uuid');
         $user= User::where('uuid', $userUuid)->first();
+        $company = $user ? $user->company : null;
         return [
             'user_uuid' => 'sometimes|required|string',
-            'name' => 'sometimes|required|string|max:255|unique:companies,name',
+            'name' => 'sometimes|required|string|max:255|unique:companies,name,'.$company->id,
             'name_first' => 'sometimes|required|string|max:255',
             'name_last' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:users,email,'.$user->id,

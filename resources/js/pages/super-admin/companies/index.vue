@@ -84,7 +84,10 @@
           :key="company.id"
           cols="12"
         >
-          <VCard class="d-flex ps-4 py-1 list-side-border">
+          <VCard
+            class="d-flex ps-4 py-1 list-side-border"
+            @click.stop="editCompany(company)"
+          >
             <VCol cols="8">
               <div class="d-flex align-center gap-x-3">
                 <VAvatar
@@ -122,13 +125,13 @@
                   <VList>
                     <VListItem
                       value="edit"
-                      @click="editCompany(company)"
+                      @click.stop="editCompany(company)"
                     >
                       Edit
                     </VListItem>
                     <VListItem
                       value="delete"
-                      @click="deleteCompany(company)"
+                      @click.stop="deleteCompany(company)"
                     >
                       Delete
                     </VListItem>

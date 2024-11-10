@@ -36,7 +36,14 @@
                   placeholder="Company Name"
                 />
               </VCol>
-
+              <VCol
+                cols="12"
+                class="pb-0 mb-0"
+              >
+                <h3 class="text-high-emphasis text-primary">
+                  Admin Details
+                </h3>
+              </VCol>
               <!-- First Name -->
               <VCol cols="6">
                 <AppTextField
