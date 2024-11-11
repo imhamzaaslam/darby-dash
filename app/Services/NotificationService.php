@@ -250,10 +250,10 @@ class NotificationService
         switch ($messageType) {
             case 'new-message':
                 return [
-                    'title' => 'New Message from ' . $sender->name_first,
-                    'message' => 'You have received a new message: ' . $data['message'],
+                    'title' => 'New message in Project ' . $data['title']. '.',
+                    'message' => $sender->name_first. ' has sent a new message.',
                     'type' => 'new-message',
-                    'url' => null,
+                    'url' => "projects/{$data['uuid']}/chat",
                 ];
             case 'message-replied':
                 return [

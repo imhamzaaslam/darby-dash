@@ -13,6 +13,10 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use App\Models\User;
+use App\Services\NotificationService;
+use App\Services\ActivityService;
+use App\Enums\Management;
+use App\Enums\ActionType;
 use App\Enums\UserRole;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -22,6 +26,8 @@ class ChatController extends Controller
         protected ChatRepositoryInterface $chatRepository,
         protected ProjectRepositoryInterface $projectRepository,
         protected UserRepositoryInterface $userRepository,
+        protected NotificationService $notificationService,
+        protected ActivityService $activityService,
         ) {}
 
     /**
@@ -129,6 +135,9 @@ class ChatController extends Controller
         $this->chatRepository->sendMessage($project, $user, $validated);
 
         $chat = $this->chatRepository->getChat($user, $project);
+
+        //Send notification & create activity
+        $this->notificationService->sendNotification(Management::CHAT->value, 'new-message', $user->id, $project->toArray());
 
         return (new ChatResource($chat))
             ->response()
