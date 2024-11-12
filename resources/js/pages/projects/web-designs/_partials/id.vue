@@ -528,7 +528,7 @@
               >
                 <div class="d-flex justify-space-between align-center flex-wrap">
                   <span class="app-timeline-title">
-                    {{ activity.title }}
+                    {{ truncateDescription(activity.title, 40) }}
                   </span>
                   <span class="app-timeline-meta">{{ activity.time }}</span>
                 </div>
@@ -697,7 +697,65 @@
           <template v-if="getServices.length">
             <!-- Carousel of services if services exist -->
             <VCarousel
+              v-if="getServices.length > 1"
               progress="primary"
+              show-arrows="hover"
+              hide-delimiter
+              cycle
+              :interval="3000"
+              height="294px"
+            >
+              <VCarouselItem
+                v-for="(service, index) in getServices"
+                :key="index"
+              >
+                <VRow class="mt-2">
+                  <VCol
+                    v-if="service.image"
+                    cols="4"
+                  >
+                    <VImg
+                      :src="getImageUrl(service.image.path)"
+                      :alt="service.title"
+                      height="100"
+                      rounded="md"
+                    />
+                  </VCol>
+                  <VCol
+                    v-else
+                    cols="4"
+                  >
+                    <VImg
+                      :src="placeholderImg"
+                      :alt="service.title"
+                      height="100"
+                      rounded="md"
+                    />
+                  </VCol>
+                  <VCol
+                    cols="8"
+                    class="d-flex flex-column justify-center"
+                  >
+                    <span class="font-weight-bold text-sm text-primary mt-1 mb-2">{{ service.title }}</span>
+                    <p
+                      class="mb-0 text-body-2"
+                      v-html="truncateDescription(service.description, 140)"
+                    />
+                    <div>
+                      <VBtn
+                        size="small"
+                        rounded="pill"
+                        color="primary"
+                      >
+                        Learn More
+                      </VBtn>
+                    </div>
+                  </VCol>
+                </VRow>
+              </VCarouselItem>
+            </VCarousel>
+            <VCarousel
+              v-else
               show-arrows="hover"
               hide-delimiter
               cycle
@@ -923,7 +981,8 @@ const fetchProject = async () => {
 
 const fetchServices = async () => {
   try {
-    await userSettingStore.getServicesByType(project?.value?.project_type_uuid)
+    //await userSettingStore.getServicesByType(project?.value?.project_type_uuid)
+    await userSettingStore.getServicesWithoutPagination()
   } catch (error) {
     toast.error('Error fetching services:', error)
   }
@@ -1090,7 +1149,7 @@ const getErrors = computed(() => {
 })
 
 const getServices = computed(() => {
-  return userSettingStore.getProjectServicesByType
+  return userSettingStore.getProjectServicesWithoutPagination
 })
 
 const getUsersByProjects = computed(() => {

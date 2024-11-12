@@ -63,7 +63,9 @@
           />
           <span class="ml-2">Back</span>
         </div>
-        <h3 class="text-primary">{{ openFolder.name }}</h3>
+        <h3 class="text-primary">
+          {{ openFolder.name }}
+        </h3>
       </VCol>
     </VRow>
     <VRow
@@ -111,6 +113,12 @@
                 color="error"
                 @click.stop="deleteImage(file)"
               />
+              <VIcon
+                class="tabler-copy ms-1"
+                size="small"
+                color="info"
+                @click.stop="copyPath(file)"
+              />
             </div>
           </div>
         </div>
@@ -144,7 +152,10 @@
         @dblclick="setOpenFolder(folder)"
       >
         <div class="folder-container">
-          <IconBtn @click.prevent class="action-icon">
+          <IconBtn
+            class="action-icon"
+            @click.prevent
+          >
             <VIcon icon="tabler-dots-vertical" />
             <VMenu 
               activator="parent" 
@@ -227,6 +238,12 @@
                 color="error"
                 @click.stop="deleteImage(file)"
               />
+              <VIcon
+                class="tabler-copy ms-1"
+                size="small"
+                color="info"
+                @click.stop="copyPath(file)"
+              />
             </div>
           </div>
         </div>
@@ -308,6 +325,12 @@
               size="small"
               color="error"
               @click.stop="deleteImage(index)"
+            />
+            <VIcon
+              class="tabler-copy ms-1"
+              size="small"
+              color="info"
+              @click.stop="copyPath(image)"
             />
           </div>
         </div>
@@ -422,6 +445,7 @@ const chooseFile = () => {
 
 const filePicked = event => {
   const files = event.target.files
+
   uploadFiles(files)
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
@@ -586,6 +610,14 @@ const deleteFolder = async folder => {
 const setOpenFolder = async folder => {
   openFolder.value = folder
   await getFolderFiles(folder)
+}
+
+const copyPath = image => {
+  const path = getImageUrl(image.path)
+
+  navigator.clipboard.writeText(path)
+
+  toast.success('Link copy successfully!')
 }
 
 const getImageUrl = path => {

@@ -36,7 +36,17 @@ const resolveFeedbackIcon = feedback => {
 }
 
 const highlightText = message => {
-  if (!props.highlightedResults || props.highlightedResults.length === 0) return message
+
+  if (!props.highlightedResults || props.highlightedResults.length === 0)
+  {
+    const urlRegex = /(\bhttps?:\/\/\S+)/g
+
+    message = message.replace(urlRegex, url => 
+      `<a href="${url}" class="link" target="_blank" rel="noopener noreferrer">${url}</a>`,
+    )
+
+    return message
+  }
 
   let highlightedMessage = message
   props.highlightedResults.forEach((result, index) => {
@@ -46,6 +56,12 @@ const highlightText = message => {
       `<span class="highlight" data-index="${index}">${match}</span>`,
     )
   })
+
+  const urlRegex = /(\bhttps?:\/\/\S+)/g
+
+  highlightedMessage = highlightedMessage.replace(urlRegex, url => 
+    `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`,
+  )
 
   return highlightedMessage
 }
@@ -314,5 +330,9 @@ const getImageUrl = path => {
   background-color: yellow;
   color: black!important;
   font-weight: bold;
+}
+.link {
+  color: #4d98fa;
+  text-decoration: underline;
 }
 </style>
