@@ -1,18 +1,18 @@
 {
-  "_AppLoadingIndicator-94Z9EEEy.js": {
-    "file": "assets/AppLoadingIndicator-94Z9EEEy.js",
+  "_AppLoadingIndicator-Bc7NYpYB.js": {
+    "file": "assets/AppLoadingIndicator-Bc7NYpYB.js",
     "imports": [
       "resources/js/main.js"
     ]
   },
-  "_casl-DdyynZZj.js": {
-    "file": "assets/casl-DdyynZZj.js",
+  "_casl-B9slRht0.js": {
+    "file": "assets/casl-B9slRht0.js",
     "imports": [
       "resources/js/main.js"
     ]
   },
-  "_webfontloader-mmxRXUFY.js": {
-    "file": "assets/webfontloader-mmxRXUFY.js",
+  "_webfontloader-CCjIV-mI.js": {
+    "file": "assets/webfontloader-CCjIV-mI.js",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js"
@@ -87,7 +87,7 @@
     "src": "resources/images/pages/servicePlaceholder.png"
   },
   "resources/js/@core/components/AppBarSearch.vue": {
-    "file": "assets/AppBarSearch-Ba4LcJXI.js",
+    "file": "assets/AppBarSearch-DxNLfW6u.js",
     "src": "resources/js/@core/components/AppBarSearch.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -98,11 +98,11 @@
     ]
   },
   "resources/js/layouts/blank.vue": {
-    "file": "assets/blank-DkFRFgmU.js",
+    "file": "assets/blank-ZGXxTEPS.js",
     "src": "resources/js/layouts/blank.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_AppLoadingIndicator-94Z9EEEy.js",
+      "_AppLoadingIndicator-Bc7NYpYB.js",
       "resources/js/main.js"
     ],
     "css": [
@@ -110,36 +110,36 @@
     ]
   },
   "resources/js/layouts/components/DefaultLayoutWithHorizontalNav.vue": {
-    "file": "assets/DefaultLayoutWithHorizontalNav-Cty0-bJn.js",
+    "file": "assets/DefaultLayoutWithHorizontalNav-B_tGa-Ex.js",
     "src": "resources/js/layouts/components/DefaultLayoutWithHorizontalNav.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_AppLoadingIndicator-94Z9EEEy.js",
+      "_AppLoadingIndicator-Bc7NYpYB.js",
       "resources/js/main.js",
       "resources/js/layouts/components/Footer.vue",
       "resources/js/layouts/components/NavbarThemeSwitcher.vue",
       "resources/js/layouts/components/UserProfile.vue",
-      "_casl-DdyynZZj.js"
+      "_casl-B9slRht0.js"
     ]
   },
   "resources/js/layouts/components/DefaultLayoutWithVerticalNav.vue": {
-    "file": "assets/DefaultLayoutWithVerticalNav-BTjpXcpA.js",
+    "file": "assets/DefaultLayoutWithVerticalNav-Cggciv9a.js",
     "src": "resources/js/layouts/components/DefaultLayoutWithVerticalNav.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_AppLoadingIndicator-94Z9EEEy.js",
+      "_AppLoadingIndicator-Bc7NYpYB.js",
       "resources/js/main.js",
       "resources/js/layouts/components/NavbarThemeSwitcher.vue",
       "resources/js/layouts/components/NavBarNotifications.vue",
       "resources/js/layouts/components/UserProfile.vue",
-      "_casl-DdyynZZj.js"
+      "_casl-B9slRht0.js"
     ],
     "css": [
       "assets/DefaultLayoutWithVerticalNav-D0cl9tYY.css"
     ]
   },
   "resources/js/layouts/components/Footer.vue": {
-    "file": "assets/Footer-CmvOfd16.js",
+    "file": "assets/Footer-BSB_AJUf.js",
     "src": "resources/js/layouts/components/Footer.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -147,7 +147,7 @@
     ]
   },
   "resources/js/layouts/components/NavBarNotifications.vue": {
-    "file": "assets/NavBarNotifications-BJDbzhou.js",
+    "file": "assets/NavBarNotifications-BnXW9uqj.js",
     "src": "resources/js/layouts/components/NavBarNotifications.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -158,7 +158,7 @@
     ]
   },
   "resources/js/layouts/components/NavSearchBar.vue": {
-    "file": "assets/NavSearchBar-NwuaRsR4.js",
+    "file": "assets/NavSearchBar-DEHSYGac.js",
     "src": "resources/js/layouts/components/NavSearchBar.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -172,7 +172,7 @@
     ]
   },
   "resources/js/layouts/components/NavbarShortcuts.vue": {
-    "file": "assets/NavbarShortcuts-BG0RUeb0.js",
+    "file": "assets/NavbarShortcuts-JEvxM44_.js",
     "src": "resources/js/layouts/components/NavbarShortcuts.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -183,7 +183,7 @@
     ]
   },
   "resources/js/layouts/components/NavbarThemeSwitcher.vue": {
-    "file": "assets/NavbarThemeSwitcher-Sdi_6ESE.js",
+    "file": "assets/NavbarThemeSwitcher-Dzxg_ZG5.js",
     "src": "resources/js/layouts/components/NavbarThemeSwitcher.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -191,7 +191,7 @@
     ]
   },
   "resources/js/layouts/components/UserProfile.vue": {
-    "file": "assets/UserProfile-n1G_Rl4h.js",
+    "file": "assets/UserProfile-DwRa5fQo.js",
     "src": "resources/js/layouts/components/UserProfile.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -202,7 +202,7 @@
     ]
   },
   "resources/js/main.js": {
-    "file": "assets/main-C9c5k5-n.js",
+    "file": "assets/main-CTMdn_Nd.js",
     "src": "resources/js/main.js",
     "isEntry": true,
     "dynamicImports": [
@@ -225,10 +225,10 @@
       "resources/js/layouts/components/NavbarThemeSwitcher.vue",
       "resources/js/layouts/components/NavSearchBar.vue",
       "resources/js/layouts/components/UserProfile.vue",
-      "_webfontloader-mmxRXUFY.js"
+      "_webfontloader-CCjIV-mI.js"
     ],
     "css": [
-      "assets/main-11eGQNMJ.css"
+      "assets/main-5osKY_Jx.css"
     ],
     "assets": [
       "assets/logo-DOItVm1n.png",
@@ -240,7 +240,7 @@
     ]
   },
   "resources/js/pages/[...error].vue": {
-    "file": "assets/_...error_-CP1kpKgg.js",
+    "file": "assets/_...error_-B11ekzza.js",
     "src": "resources/js/pages/[...error].vue",
     "isDynamicEntry": true,
     "imports": [
@@ -256,7 +256,7 @@
     ]
   },
   "resources/js/pages/account-setting.vue": {
-    "file": "assets/account-setting-D8ZW_8Bg.js",
+    "file": "assets/account-setting-D-DnF43y.js",
     "src": "resources/js/pages/account-setting.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -273,7 +273,7 @@
     ]
   },
   "resources/js/pages/company-dashboard.vue": {
-    "file": "assets/company-dashboard-B5yQAJiY.js",
+    "file": "assets/company-dashboard-Dm-_wyNv.js",
     "src": "resources/js/pages/company-dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -284,7 +284,7 @@
     ]
   },
   "resources/js/pages/forgot-password.vue": {
-    "file": "assets/forgot-password-JP2e9WM6.js",
+    "file": "assets/forgot-password-Cr7fa54p.js",
     "src": "resources/js/pages/forgot-password.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -295,7 +295,7 @@
     ]
   },
   "resources/js/pages/index.vue": {
-    "file": "assets/index-D8uw_JE1.js",
+    "file": "assets/index-DoyTskVb.js",
     "src": "resources/js/pages/index.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -305,7 +305,7 @@
     ]
   },
   "resources/js/pages/logout.vue": {
-    "file": "assets/logout-LsWFrsVj.js",
+    "file": "assets/logout-x31l4nGT.js",
     "src": "resources/js/pages/logout.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -313,7 +313,7 @@
     ]
   },
   "resources/js/pages/roles/_partials/RoleManagementDialog.vue": {
-    "file": "assets/RoleManagementDialog-Bb5WUGQ9.js",
+    "file": "assets/RoleManagementDialog-rmfz-krt.js",
     "src": "resources/js/pages/roles/_partials/RoleManagementDialog.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -321,7 +321,7 @@
     ]
   },
   "resources/js/pages/super-dashboard.vue": {
-    "file": "assets/super-dashboard-BzlTGcgx.js",
+    "file": "assets/super-dashboard-DvBpSBkA.js",
     "src": "resources/js/pages/super-dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
