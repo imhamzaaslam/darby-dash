@@ -2,21 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Enums\UserRole;
-use Spatie\Permission\Models\Permission;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
     public function run()
     {
-        // Reset cached roles and permissions
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-
         $this->createPermissions();
-        
     }
 
     private function permissions(): array
@@ -80,7 +75,15 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         foreach ($this->permissions() as $module => $actions) {
             foreach ($actions as $action) {
-                Permission::create(['name' => "$module-$action"]);
+                $permissionName = "$module-$action";
+                if (!DB::table('permissions')->where('name', $permissionName)->exists()) {
+                    DB::table('permissions')->insert([
+                        'name' => $permissionName,
+                        'guard_name' => 'web',
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
             }
         }
         $this->createRoles();
@@ -89,11 +92,30 @@ class RolesAndPermissionsSeeder extends Seeder
     private function createRoles()
     {
         foreach ($this->roles() as $roleName => $modules) {
-            $role = Role::create(['name' => $roleName]);
-
-            foreach ($modules as $module => $actions) {
-                foreach ($actions as $action) {
-                    $role->givePermissionTo("$module-$action");
+            if (!DB::table('roles')->where('name', $roleName)->exists()) {
+                $roleId = DB::table('roles')->insertGetId([
+                    'name' => $roleName,
+                    'guard_name' => 'web',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+    
+                foreach ($modules as $module => $actions) {
+                    foreach ($actions as $action) {
+                        $permissionName = "$module-$action";
+                        $permission = DB::table('permissions')->where('name', $permissionName)->first();
+                        if ($permission) {
+                            if (!DB::table('role_has_permissions')
+                                ->where('role_id', $roleId)
+                                ->where('permission_id', $permission->id)
+                                ->exists()) {
+                                DB::table('role_has_permissions')->insert([
+                                    'role_id' => $roleId,
+                                    'permission_id' => $permission->id,
+                                ]);
+                            }
+                        }
+                    }
                 }
             }
         }

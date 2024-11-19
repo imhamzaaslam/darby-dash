@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class SettingSeeder extends Seeder
 {
@@ -23,8 +23,13 @@ class SettingSeeder extends Seeder
             ];
 
             foreach ($settings as $setting) {
-                if(!Setting::where('name', $setting['name'])->exists()) {
-                    Setting::create($setting);
+                $exists = DB::table('settings')->where('name', $setting['name'])->exists();
+                if (!$exists) {
+                    DB::table('settings')->insert([
+                        'name' => $setting['name'],
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
                 }
             }
 

@@ -6,7 +6,7 @@
       :key="index"
       cols="12"
       md="4"
-      sm="4"
+      sm="12"
     >
       <div>
         <RouterLink :to="{ path: '/projects/web-designs', query: { type: data.id } }">

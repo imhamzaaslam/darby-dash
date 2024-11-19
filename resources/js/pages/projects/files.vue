@@ -613,9 +613,11 @@ const setOpenFolder = async folder => {
 }
 
 const copyPath = image => {
+  const origin = window.location.origin
   const path = getImageUrl(image.path)
+  const fullUrl = `${origin}${path}`
 
-  navigator.clipboard.writeText(path)
+  navigator.clipboard.writeText(fullUrl)
 
   toast.success('Link copy successfully!')
 }

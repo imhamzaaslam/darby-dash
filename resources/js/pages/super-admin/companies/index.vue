@@ -98,14 +98,16 @@
                   <h6 class="text-h6 text-no-wrap">
                     <span class="d-block">{{ company.name }}</span>
                   </h6>
-                  <VChip
+                  <!--
+                    <VChip
                     color="primary"
                     size="x-small"
-                  >
+                    >
                     <span class="text-high-emphasis text-xs">
-                      {{ company?.name_first + ' ' + company?.name_last }} (Admin)
+                    {{ company?.name_first + ' ' + company?.name_last }} (Admin)
                     </span>
-                  </VChip>
+                    </VChip> 
+                  -->
                 </div>
               </div>
             </VCol>
@@ -167,14 +169,16 @@
                       <h6 class="text-h6 text-no-wrap">
                         {{ company.name }}
                       </h6>
-                      <VChip
+                      <!--
+                        <VChip
                         color="primary"
                         size="x-small"
-                      >
+                        >
                         <span class="text-high-emphasis text-xs">
-                          {{ company?.name_first + ' ' + company?.name_last }} (Admin)
+                        {{ company?.name_first + ' ' + company?.name_last }} (Admin)
                         </span>
-                      </VChip>
+                        </VChip> 
+                      -->
                     </div>
                   </div>
                 </VCol>

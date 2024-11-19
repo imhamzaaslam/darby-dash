@@ -32,6 +32,13 @@ class FileUploadService
             Storage::disk($disk)->makeDirectory($directory);
         }
         $path = $file->storeAs($directory, $fileName, ['disk' => $disk]);
+
+        //add tenant folder name in start if you are using tenant domain.
+        $tenantId = tenancy()->tenant ? tenancy()->tenant->id : null;
+        if ($tenantId) {
+            $path = "{$tenantId}/{$path}";
+        }
+
         $url = Storage::disk($disk)->url($directory . '/' . $fileName);
 
         // remove two slashes after the protocol

@@ -74,14 +74,16 @@ class FileController extends Controller
 
             $fileData = $this->fileUploadService->uploadFile($file, 'uploads', 'public');
 
-            $storedFiles[] = $this->fileRepository->store(
+            $storedFile = $this->fileRepository->store(
                 $fileResolver['morph_type'],
                 $fileResolver['morph_id'],
                 $fileData
             );
+    
+            $storedFiles[] = $storedFile;
 
             //Send notification & create activity
-            $this->activityService->logActivity(Management::FILE, ActionType::UPLOADED, $project->id, $fileData->toArray(), $project->uuid);
+            $this->activityService->logActivity(Management::FILE, ActionType::UPLOADED, $storedFile->id, $fileData->toArray(), $project->uuid);
         }
 
         return FileResource::collection($storedFiles);

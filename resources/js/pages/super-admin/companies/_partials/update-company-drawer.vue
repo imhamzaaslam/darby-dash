@@ -171,6 +171,7 @@ const resetFormFields = () => {
 }
 
 async function submitEditCompanyForm() {
+  return
   editCompanyForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {

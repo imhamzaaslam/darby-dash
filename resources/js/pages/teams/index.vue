@@ -102,7 +102,10 @@
         :key="user.id"
         cols="12"
       >
-        <VCard class="d-flex align-center ps-4 py-1 list-side-border">
+        <VCard
+          class="d-flex align-center ps-4 py-1 list-side-border"
+          @click.stop="editMember(user)"
+        >
           <VCol cols="4">
             <div class="d-flex align-center gap-x-3">
               <VBadge
@@ -189,7 +192,10 @@
         cols="12"
         md="4"
       >
-        <VCard class="pt-2">
+        <VCard
+          class="pt-2"
+          @click.stop="editMember(user)"
+        >
           <VCardTitle>
             <VRow>
               <VCol cols="10">

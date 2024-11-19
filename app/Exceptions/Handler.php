@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Illuminate\Validation\ValidationException;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use ErrorException;
 use Error;
 
@@ -97,6 +98,10 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof ValidationException) {
             return response()->json(['error' => 'validation-error', 'message' => $e->getMessage(), 'errors' => $e->errors()], 422);
+        }
+
+        if ($e instanceof TenantCouldNotBeIdentifiedOnDomainException) {
+            return response()->json(['error' => 'unauthorized', 'message' => $e->getMessage()], 404);
         }
 
         return parent::render($request, $e);

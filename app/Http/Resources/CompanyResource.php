@@ -15,18 +15,18 @@ class CompanyResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $firstUser = $this->user();
+        //$firstUser = $this->user();
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => ucwords($this->name),
             'created_at' => $this->created_at,
-            'user_uuid' => $firstUser->uuid,
+            /* 'user_uuid' => $firstUser->uuid,
             'name_first' => $firstUser->name_first,
             'name_last' => $firstUser->name_last,
             'email' => $firstUser->email,
             'role' => ucwords($firstUser->getRoleNames()->first() ?? ''),
-            'phone' => $firstUser->info->phone,
+            'phone' => $firstUser->info->phone, */
             'total_companies' => Company::count(),
         ];
     }
