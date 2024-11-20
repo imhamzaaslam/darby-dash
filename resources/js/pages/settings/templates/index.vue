@@ -149,80 +149,82 @@
           cols="12"
           md="4"
         >
-          <VCard class="mb-4 elevation-3">
-            <VCardTitle class="pb-0">
-              <div class="d-flex justify-space-between align-center">
-                <!-- Template Name with Icon -->
-                <div class="d-flex align-center">
-                  <VIcon
-                    color="primary"
-                    :size="28"
-                    icon="tabler-template"
-                    class="me-3"
-                  />
-                  <h6 class="mb-0 text-h6">
-                    {{ template.template_name }}
-                  </h6>
+          <RouterLink :to="{ name: 'manage-templates', params: { id: template.uuid } }">
+            <VCard class="mb-4 elevation-3">
+              <VCardTitle class="pb-0">
+                <div class="d-flex justify-space-between align-center">
+                  <!-- Template Name with Icon -->
+                  <div class="d-flex align-center">
+                    <VIcon
+                      color="primary"
+                      :size="28"
+                      icon="tabler-template"
+                      class="me-3"
+                    />
+                    <h6 class="mb-0 text-h6">
+                      {{ template.template_name }}
+                    </h6>
+                  </div>
+
+                  <!-- Options Menu -->
+                  <IconBtn @click.prevent>
+                    <VIcon icon="tabler-dots-vertical" />
+                    <VMenu activator="parent">
+                      <VList>
+                        <VListItem
+                          value="edit"
+                          :to="{ name: 'manage-templates', params: { id: template.uuid } }"
+                        >
+                          Edit
+                        </VListItem>
+                        <VListItem
+                          value="delete"
+                          @click="deleteTemplate(template)"
+                        >
+                          Delete
+                        </VListItem>
+                      </VList>
+                    </VMenu>
+                  </IconBtn>
+                </div>
+              </VCardTitle>
+
+              <VCardText class="px-4 pt-2 pb-4">
+                <!-- Template Info -->
+                <div class="d-flex justify-space-between mb-3">
+                  <div class="d-flex flex-column">
+                    <small class="text-high-emphasis">
+                      <span class="font-weight-bold">Type:</span> Web Designs
+                    </small>
+                    <small class="text-high-emphasis">
+                      <span class="font-weight-bold">Created At:</span> {{ formatDate(template.created_at) }}
+                    </small>
+                  </div>
                 </div>
 
-                <!-- Options Menu -->
-                <IconBtn @click.prevent>
-                  <VIcon icon="tabler-dots-vertical" />
-                  <VMenu activator="parent">
-                    <VList>
-                      <VListItem
-                        value="edit"
-                        :to="{ name: 'manage-templates', params: { id: template.uuid } }"
-                      >
-                        Edit
-                      </VListItem>
-                      <VListItem
-                        value="delete"
-                        @click="deleteTemplate(template)"
-                      >
-                        Delete
-                      </VListItem>
-                    </VList>
-                  </VMenu>
-                </IconBtn>
-              </div>
-            </VCardTitle>
-
-            <VCardText class="px-4 pt-2 pb-4">
-              <!-- Template Info -->
-              <div class="d-flex justify-space-between mb-3">
-                <div class="d-flex flex-column">
-                  <small class="text-high-emphasis">
-                    <span class="font-weight-bold">Type:</span> Web Designs
-                  </small>
-                  <small class="text-high-emphasis">
-                    <span class="font-weight-bold">Created At:</span> {{ formatDate(template.created_at) }}
-                  </small>
+                <!-- Lists and Chips -->
+                <div class="d-flex flex-wrap gap-1">
+                  <span
+                    v-for="(list, index) in template.lists"
+                    :key="index"
+                  >
+                    <VTooltip location="top">
+                      <template #activator="{ props }">
+                        <VChip
+                          v-bind="props"
+                          size="small"
+                          color="primary"
+                        >
+                          {{ list.name }} ({{ list.tasks_count }})
+                        </VChip>
+                      </template>
+                      <span>{{ list.tasks_count }} tasks</span>
+                    </VTooltip>
+                  </span>
                 </div>
-              </div>
-
-              <!-- Lists and Chips -->
-              <div class="d-flex flex-wrap gap-1">
-                <span
-                  v-for="(list, index) in template.lists"
-                  :key="index"
-                >
-                  <VTooltip location="top">
-                    <template #activator="{ props }">
-                      <VChip
-                        v-bind="props"
-                        size="small"
-                        color="primary"
-                      >
-                        {{ list.name }} ({{ list.tasks_count }})
-                      </VChip>
-                    </template>
-                    <span>{{ list.tasks_count }} tasks</span>
-                  </VTooltip>
-                </span>
-              </div>
-            </VCardText>
-          </VCard>
+              </VCardText>
+            </VCard>
+          </RouterLink>
         </VCol>
       </VRow>
     </div>

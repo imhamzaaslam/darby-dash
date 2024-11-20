@@ -598,7 +598,10 @@
                 md="8"
               >
                 <div>
-                  <div class="d-flex justify-space-between my-2 flex-wrap">
+                  <div
+                    class="d-flex my-2 flex-wrap"
+                    :class="isMobile ? 'justify-center' : 'justify-space-between'"
+                  >
                     <div class="d-flex align-center">
                       <div>
                         <h6 class="text-h5 text-high-emphasis d-inline-flex align-items-center">
@@ -896,6 +899,10 @@ const saveAwardedBucksForm = ref()
 const isAwardBucksDialogue = ref(false)
 const awardedBucks = ref(0)
 const comment = ref(null)
+
+const isMobile = () => {
+  return window.innerWidth <= 768 || window.innerWidth <= 926
+}
 
 const getProjectProgress = async () => {
   await fetchProject()

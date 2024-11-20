@@ -98,7 +98,7 @@
         >
           <VCard
             class="d-flex ps-4 py-1 list-side-border"
-            @click="editService(service)"
+            @click.stop="editService(service)"
           >
             <VCol cols="5">
               <div class="d-flex align-center gap-x-3">
@@ -190,7 +190,7 @@
           cols="12"
           md="4"
         >
-          <VCard>
+          <VCard @click.stop="editService(service)">
             <VCardTitle>
               <!-- Action Icon for Edit/Delete -->
               <div class="d-flex justify-space-between align-center">
