@@ -96,7 +96,18 @@
                 />
                 <div>
                   <h6 class="text-h6 text-no-wrap">
-                    <span class="d-block">{{ company.name }}</span>
+                    <span class="d-block">{{ company.name }}
+                      <VBtn
+                        v-if="company.url"
+                        :href="formattedUrl(company.url)"
+                        target="_blank"
+                        size="x-small"
+                        class="ms-2"
+                        rel="noopener noreferrer"
+                      >
+                        Open URL
+                      </VBtn>
+                    </span> 
                   </h6>
                   <!--
                     <VChip
@@ -168,6 +179,16 @@
                     <div>
                       <h6 class="text-h6 text-no-wrap">
                         {{ company.name }}
+                        <VBtn
+                          v-if="company.url"
+                          :href="formattedUrl(company.url)"
+                          target="_blank"
+                          size="x-small"
+                          class="ms-2"
+                          rel="noopener noreferrer"
+                        >
+                          Open URL
+                        </VBtn> 
                       </h6>
                       <!--
                         <VChip
@@ -297,6 +318,14 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
+
+const formattedUrl = url => {
+  if (!/^https?:\/\//i.test(url)) {
+    return 'http://' + url
+  }
+  
+  return url
+}
 
 const fetchCompanies = async () => {
   try {

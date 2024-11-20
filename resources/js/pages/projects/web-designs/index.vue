@@ -605,14 +605,14 @@ const getProjectTypes = computed(() => {
 
 const getClients = computed(() => {
   let members = userStore.getMembersList
-  let clients = members.filter(member => member.role === USER_ROLES.CLIENT)
+  let clients = members?.filter(member => member.role === USER_ROLES.CLIENT)
 
   return clients.map(client => ({ id: client.id, name: client.name_first + " " + client.name_last }))
 })
 
 const getProjectManagers = computed(() => {
   let members = userStore.getMembersList
-  let projectManagers = members.filter(member => member.role === USER_ROLES.PROJECT_MANAGER)
+  let projectManagers = members?.filter(member => member.role === USER_ROLES.PROJECT_MANAGER)
 
   return projectManagers.map(manager => ({ id: manager.id, name: manager.name_first + " " + manager.name_last }))
 })

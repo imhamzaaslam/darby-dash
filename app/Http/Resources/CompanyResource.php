@@ -28,6 +28,7 @@ class CompanyResource extends JsonResource
             'role' => ucwords($firstUser->getRoleNames()->first() ?? ''),
             'phone' => $firstUser->info->phone, */
             'total_companies' => Company::count(),
+            'url' => $this->makeDomainUrl(),
         ];
     }
 }

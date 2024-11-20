@@ -65,7 +65,7 @@
             prepend-icon="tabler-plus"
             @click="(isAddMemberDialogueOpen = !isAddMemberDialogueOpen, isMultiselectValid = true)"
           >
-            New Member
+            New Team Member
           </VBtn>
         </div>
       </VCol>
@@ -76,7 +76,7 @@
         class="pt-0 ps-4 pb-0"
       >
         <h3>
-          Manage Members
+          Manage Team
         </h3>
       </VCol>
     </VRow>
@@ -90,7 +90,7 @@
         v-html="NoTaskInList"
       />
       <span>
-        No members found
+        No team members found
       </span>
     </div>
 

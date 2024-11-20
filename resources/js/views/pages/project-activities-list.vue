@@ -11,44 +11,22 @@
       <div class="d-flex flex-wrap gap-4 mb-4">
         <VRow>
           <VCol cols="12">
-            <VTable
+            <VDataTable
               class="mt-4"
               density="compact"
+              :items="activities"
+              :headers="headers"
+              :items-per-page="-1"
               :style="{ border: '1px solid #e0e0e0' }"
             >
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    style="width: 20%;"
-                  >
-                    Created By
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 25%;"
-                  >
-                    Title
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 25%;"
-                  >
-                    Message
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 15%;"
-                  >
-                    Created At
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                v-for="activity in activities"
-                :key="activity.id"
-              >
-                <tr>
+              <template #[`item`]="{ item }">
+                <tr
+                  class="cursor-pointer"
+                  :class="[{ 'bg-td-hover': hoveredItem === item.id }]"
+                  @click="notifyClick(item)"
+                  @mouseenter="hoveredItem = item.id"
+                  @mouseleave="hoveredItem = null"
+                >
                   <td>
                     <div class="d-flex align-center gap-x-2">
                       <VBadge
@@ -56,15 +34,15 @@
                         location="top end"
                         offset-x="0"
                         offset-y="1"
-                        :color="activity.is_online ? 'success' : 'warning'"
+                        :color="item.is_online ? 'success' : 'warning'"
                       >
                         <VAvatar
                           size="34"
                           color="primary"
-                          :image="activity.img ? getImageUrl(activity.img.path) : undefined"
-                          :variant="activity.img ? undefined : 'tonal' "
+                          :image="item.img ? getImageUrl(item.img.path) : undefined"
+                          :variant="item.img ? undefined : 'tonal' "
                         >
-                          <span v-if="!activity.img">{{ avatarText(activity.name) }}</span>
+                          <span v-if="!item.img">{{ avatarText(item.name) }}</span>
                         </VAvatar>
                       </VBadge>
                       <div>
@@ -72,24 +50,25 @@
                           class="font-weight-semibold text-sm"
                           style="position: relative; top: 6px;"
                         >
-                          <span class="d-block">{{ activity.name }}</span>
+                          <span class="d-block">{{ item.name }}</span>
                         </h6>
-                        <small class="text-xs">{{ activity.role }}</small>
+                        <small class="text-xs">{{ item.role }}</small>
                       </div>
                     </div>
                   </td>
-                  <td class="text-sm">
-                    {{ activity.title }}
+                  <td class="text-sm text-primary">
+                    {{ item.title }}
                   </td>
                   <td class="text-sm">
-                    {{ activity.subtitle }}
+                    {{ item.subtitle }}
                   </td>
                   <td class="text-sm">
-                    {{ activity.time }}
+                    {{ item.time }}
                   </td>
                 </tr>
-              </tbody>
-            </VTable>
+              </template>
+              <template #bottom />
+            </VDataTable>
           </VCol>
         </VRow>
       </div>
@@ -99,7 +78,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import { useProjectStore } from "@/store/projects"
 import moment from 'moment'
 import { useRoute } from 'vue-router'
@@ -108,6 +87,7 @@ const $route = useRoute()
 const projectStore = useProjectStore()
 
 const projectUuid = $route.params.id
+const hoveredItem = ref(null)
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
 
@@ -127,16 +107,36 @@ const activities = computed(() => {
   return projectStore.getProjectActivities
 })
 
+const headers = [
+  { title: 'Created By', sortable: false, key: 'name', width: '20%' },
+  { title: 'Title', sortable: false, key: 'title', width: '25%' },
+  { title: 'Message', sortable: false, key: 'subtitle', width: '25%' },
+  { title: 'Created At', sortable: false, key: 'time', width: '15%' },
+]
+
 const getImageUrl = path => {
   const baseUrl = import.meta.env.VITE_APP_URL
-
+  
   return `${baseUrl}storage/${path}`
+}
+
+const avatarText = name => {
+  return name ? name.split(' ').map(word => word[0]).join('') : ''
+}
+
+const notifyClick = item => {
+  console.log('Row clicked')
 }
 </script>
 
 <style scoped>
-.v-table {
+.v-data-table {
   border-radius: 8px;
   overflow: hidden;
+}
+
+.v-data-table th {
+  font-weight: bold;
+  color: #4a4a4a;
 }
 </style>

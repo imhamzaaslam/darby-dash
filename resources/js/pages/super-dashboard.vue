@@ -7,25 +7,27 @@
       sm="4"
     >
       <div>
-        <VCard class="logistics-card-statistics cursor-pointer">
-          <VCardText>
-            <div class="d-flex align-center gap-x-4 mb-2">
-              <VAvatar
-                variant="tonal"
-                color="primary"
-                rounded
-              >
-                <VIcon
-                  icon="tabler-businessplan"
-                  size="28"
-                />
-              </VAvatar>
-              <h5 class="text-h6 text-center">
-                Companies: {{ totalCompanies ?? 0 }}
-              </h5>
-            </div>
-          </VCardText>
-        </VCard>
+        <RouterLink :to="{ name: 'companies-list' }">
+          <VCard class="logistics-card-statistics cursor-pointer">
+            <VCardText>
+              <div class="d-flex align-center gap-x-4 mb-2">
+                <VAvatar
+                  variant="tonal"
+                  color="primary"
+                  rounded
+                >
+                  <VIcon
+                    icon="tabler-businessplan"
+                    size="28"
+                  />
+                </VAvatar>
+                <h5 class="text-h6 text-center">
+                  Companies: {{ totalCompanies ?? 0 }}
+                </h5>
+              </div>
+            </VCardText>
+          </VCard>
+        </RouterLink>
       </div>
     </VCol>
   </VRow>

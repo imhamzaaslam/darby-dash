@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Base;
+use Illuminate\Support\Str;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class Company extends Base
 {
@@ -43,5 +45,17 @@ class Company extends Base
                 $query->where($companyTable . '.name', 'like', '%' . $keyword . '%');
             });
         });
+    }
+
+    public function makeDomainUrl()
+    {
+        if ($this->id == 1) {
+            return null;
+        }
+
+        $tenantId = Str::slug($this->name, '_');
+        $domain = Domain::where('tenant_id', $tenantId)->first();
+
+        return $domain ? $domain->domain : null;
     }
 }

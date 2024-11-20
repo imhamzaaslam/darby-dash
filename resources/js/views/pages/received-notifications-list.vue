@@ -11,52 +11,22 @@
       <div class="d-flex flex-wrap gap-4 mb-4">
         <VRow>
           <VCol cols="12">
-            <VTable
+            <VDataTable
               class="mt-4"
               density="compact"
+              :items="notifications"
+              :headers="headers"
+              item-key="id"
               :style="{ border: '1px solid #e0e0e0' }"
+              :items-per-page="-1"
             >
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    style="width: 20%;"
-                  >
-                    Notify By
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 25%;"
-                  >
-                    Title
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 25%;"
-                  >
-                    Message
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 15%;"
-                  >
-                    Received At
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 15%;"
-                  >
-                    Read At
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                v-for="notification in notifications"
-                :key="notification.id"
-              >
+              <template #[`item`]="{ item }">
                 <tr
                   class="cursor-pointer"
-                  @click="notifyClick(notification)"
+                  :class="[{ 'bg-td-hover': hoveredItem === item.id }]"
+                  @click="notifyClick(item)"
+                  @mouseenter="hoveredItem = item.id"
+                  @mouseleave="hoveredItem = null"
                 >
                   <td>
                     <div class="d-flex align-center gap-x-2">
@@ -65,15 +35,15 @@
                         location="top end"
                         offset-x="0"
                         offset-y="1"
-                        :color="notification.is_online ? 'success' : 'warning'"
+                        :color="item.is_online ? 'success' : 'warning'"
                       >
                         <VAvatar
                           size="34"
                           color="primary"
-                          :image="notification.img ? getImageUrl(notification.img.path) : undefined"
-                          :variant="notification.img ? undefined : 'tonal' "
+                          :image="item.img ? getImageUrl(item.img.path) : undefined"
+                          :variant="item.img ? undefined : 'tonal' "
                         >
-                          <span v-if="!notification.img">{{ avatarText(notification.name) }}</span>
+                          <span v-if="!item.img">{{ avatarText(item.name) }}</span>
                         </VAvatar>
                       </VBadge>
                       <div>
@@ -81,27 +51,28 @@
                           class="font-weight-semibold text-sm"
                           style="position: relative; top: 6px;"
                         >
-                          <span class="d-block">{{ notification.name }}</span>
+                          <span class="d-block">{{ item.name }}</span>
                         </h6>
-                        <small class="text-xs">{{ notification.role }}</small>
+                        <small class="text-xs">{{ item.role }}</small>
                       </div>
                     </div>
                   </td>
                   <td class="text-sm text-primary">
-                    {{ notification.title }}
+                    {{ item.title }}
                   </td>
                   <td class="text-sm">
-                    {{ notification.subtitle }}
+                    {{ item.subtitle }}
                   </td>
                   <td class="text-sm">
-                    {{ notification.time }}
+                    {{ item.time }}
                   </td>
                   <td class="text-sm">
-                    {{ notification.read_at ? formatDate(notification.read_at) : '---' }}
+                    {{ item.read_at ? formatDate(item.read_at) : '---' }}
                   </td>
                 </tr>
-              </tbody>
-            </VTable>
+              </template>
+              <template #bottom />
+            </VDataTable>
           </VCol>
         </VRow>
       </div>
@@ -119,11 +90,13 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const notificationStore = useNotificationStore()
 
+const hoveredItem = ref(null)
+
 const formatDate = date => moment(date).format('MM/DD/YYYY')
 
-const notifyClick = async notification => {
-  if (notification.url) {
-    const url = notification.url.startsWith('/') ? notification.url : `/${notification.url}`
+const notifyClick = async item => {
+  if (item.url) {
+    const url = item.url.startsWith('/') ? item.url : `/${item.url}`
 
     router.push(url)
   }
@@ -133,15 +106,27 @@ const notifications = computed(() => {
   return notificationStore.getNotifications
 })
 
+const headers = [
+  { title: 'Notify By', sortable: false, key: 'notify_by', width: '20%' },
+  { title: 'Title', sortable: false, key: 'title', width: '25%' },
+  { title: 'Message', sortable: false, key: 'subtitle', width: '25%' },
+  { title: 'Received At', sortable: false, key: 'time', width: '15%' },
+  { title: 'Read At', sortable: false, key: 'read_at', width: '15%' },
+]
+
 const getImageUrl = path => {
   const baseUrl = import.meta.env.VITE_APP_URL
-
+  
   return `${baseUrl}storage/${path}`
+}
+
+const avatarText = name => {
+  return name ? name.split(' ').map(word => word[0]).join('') : ''
 }
 </script>
 
 <style scoped>
-.v-table {
+.v-data-table {
   border-radius: 8px;
   overflow: hidden;
 }

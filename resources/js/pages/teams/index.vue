@@ -393,7 +393,22 @@ const applyFilters = async (name = '', email = null, roleId = null) => {
   await fetchMembers()
 }
 
-const editMember = member => {
+const editMember = async member => {
+  if (member.role === 'Admin') {
+    // If not, show a modal with the message
+    await Swal.fire({
+      title: "Permission Denied",
+      text: "Only super admins can change information.",
+      icon: "warning",
+      confirmButtonColor: "#a12592",
+      confirmButtonText: "OK",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+      },
+    })
+    
+    return
+  }
   const { role, ...rest } = member
 
   editMemberDetails.value = { ...rest, role: role }
