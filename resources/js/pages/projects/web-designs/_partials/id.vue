@@ -600,7 +600,7 @@
                 <div>
                   <div
                     class="d-flex my-2 flex-wrap"
-                    :class="isMobile ? 'justify-center' : 'justify-space-between'"
+                    :class="justifyPMInfo"
                   >
                     <div class="d-flex align-center">
                       <div>
@@ -862,6 +862,7 @@
 
 <script setup lang="js">
 import { layoutConfig } from '@layouts'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import Swal from 'sweetalert2'
 import confetti from 'canvas-confetti'
 import { useHead } from '@unhead/vue'
@@ -899,10 +900,24 @@ const saveAwardedBucksForm = ref()
 const isAwardBucksDialogue = ref(false)
 const awardedBucks = ref(0)
 const comment = ref(null)
+const justifyPMInfo = ref('justify-space-between')
 
 const isMobile = () => {
   return window.innerWidth <= 768 || window.innerWidth <= 926
 }
+
+const handleResize = () => {
+  justifyPMInfo.value = isMobile() ? 'justify-center' : 'justify-space-between'
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 const getProjectProgress = async () => {
   await fetchProject()
