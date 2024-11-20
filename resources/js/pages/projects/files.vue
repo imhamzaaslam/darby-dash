@@ -80,7 +80,7 @@
       >
         <div
           class="image-container"
-          @click="openFileViewer(file)"
+          @click="file.mime_type.includes('image/') ? openFileViewer(file) : copyPath(file, true)"
         >
           <img
             v-if="file.mime_type.includes('image/')"
@@ -205,7 +205,7 @@
       >
         <div
           class="image-container"
-          @click="openFileViewer(file)"
+          @click="file.mime_type.includes('image/') ? openFileViewer(file) : copyPath(file, true)"
         >
           <img
             v-if="file.mime_type.includes('image/')"
@@ -276,7 +276,7 @@
     > 
       <div
         class="image-container"
-        @click="openFileViewer(image)"
+        @click="image.mime_type.includes('image/') ? openFileViewer(image) : copyPath(image, true)"
       >
         <img
           v-if="image.type.startsWith('image/')"
@@ -612,14 +612,18 @@ const setOpenFolder = async folder => {
   await getFolderFiles(folder)
 }
 
-const copyPath = image => {
+const copyPath = (image, open = false) => {
   const origin = window.location.origin
   const path = getImageUrl(image.path)
   const fullUrl = `${origin}${path}`
 
-  navigator.clipboard.writeText(fullUrl)
+  if(open){
+    window.open(fullUrl, '_blank')
+  }else{
+    navigator.clipboard.writeText(fullUrl)
 
-  toast.success('Link copy successfully!')
+    toast.success('Link copy successfully!')
+  }
 }
 
 const getImageUrl = path => {
@@ -680,7 +684,7 @@ watch(project, () => {
   padding: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-  max-width: 150px; /* Reduced size */
+  max-width: 180px; /* Reduced size */
   cursor: pointer;
 }
 
