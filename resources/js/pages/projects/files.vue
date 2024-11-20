@@ -24,7 +24,7 @@
         ref="fileInputRef"
         type="file"
         hidden
-        accept=".jpeg, .jpg, .png, .pdf, .docx, .txt"
+        accept=".jpeg, .jpg, .png, .pdf, .docx, .txt, .webp"
         multiple
         @change="filePicked"
       >
