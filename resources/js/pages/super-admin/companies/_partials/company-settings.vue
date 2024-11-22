@@ -17,7 +17,7 @@
         cols="12"
         md="4"
       >
-        <VCard class="mb-4">
+        <VCard class="">
           <VCardTitle class="d-flex justify-space-between align-center">
             <h6 class="text-h6">
               Company Details
@@ -37,12 +37,34 @@
               :rules="[nameRule]"
             />
             <div class="mt-3">
-              <label class="text-sm text-high-emphasis">Domain Address</label>
+              <div class="d-flex align-items-center justify-content-between">
+                <label class="text-sm text-high-emphasis">
+                  Domain Address
+                  <VIcon
+                    v-if="!isCopied"
+                    class="ms-1 text-primary cursor-pointer"
+                    icon="tabler-copy"
+                    size="20"
+                    @click="copyToClipboard"
+                  />
+                  <span
+                    v-else
+                    class="ms-1"
+                  >
+                    <VIcon
+                      class="text-success"
+                      icon="tabler-check"
+                      size="20"
+                    />
+                    <span class="text-xs font-weight-bold">Copied</span>
+                  </span>
+                </label>
+              </div>
               <a
                 href="https://example.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-primary text-decoration-underline d-block"
+                class="text-primary text-decoration-underline d-block mt-1"
               >
                 https://example.com
               </a>
@@ -68,7 +90,7 @@
         md="4"
       >
         <VCard
-          style="height: 234px;"
+          style="height: 241px;"
           @mouseover="onLogoHover(true)"
           @mouseleave="onLogoHover(false)"
         >
@@ -142,7 +164,7 @@
         md="4"
       >
         <VCard
-          style="height: 234px;"
+          style="height: 241px;"
           @mouseover="onFaviconHover(true)"
           @mouseleave="onFaviconHover(false)"
         >
@@ -261,7 +283,7 @@
             <VBtn
               variant="elevated"
               color="primary"
-              size="x-small"
+              size="small"
               prepend-icon="tabler-plus"
               @click="isAddAdminDialogVisible = true"
             >
@@ -269,7 +291,7 @@
             </VBtn>
           </VCardTitle>
 
-          <VCardText class="mt-6">
+          <VCardText class="mt-7">
             <VList class="card-list">
               <VListItem
                 v-for="admin in admins"
@@ -303,19 +325,31 @@
                 <template #append>
                   <div class="d-flex align-center">
                     <VBtn
-                      variant="tonal"
+                      icon
+                      color="td-hover"
+                      class="ma-2"
                       size="x-small"
-                      icon="tabler-edit"
-                      class="me-2"
-                      @click="editAdmin(admin)"
-                    />
-                    <VBtn
-                      variant="tonal"
-                      size="x-small"
-                      color="error"
-                      icon="tabler-trash"
-                      @click="deleteAdmin(admin)"
-                    />
+                      rounded="pills"
+                      @click.prevent
+                    >
+                      <VIcon icon="tabler-dots" />
+                      <VMenu activator="parent">
+                        <VList>
+                          <VListItem
+                            value="edit"
+                            @click="editAdmin(admin)"
+                          >
+                            Edit
+                          </VListItem>
+                          <VListItem
+                            value="delete"
+                            @click="deleteAdmin(admin)"
+                          >
+                            Delete
+                          </VListItem>
+                        </VList>
+                      </VMenu>
+                    </VBtn>
                   </div>
                 </template>
               </VListItem>
@@ -544,6 +578,7 @@ const companyDetails = ref({
   
 const logo = ref(null)
 const isActive = ref(true)
+const isCopied = ref(false)
 const qrCode = ref(null)
 const isLogoCardHovered = ref(false)
 const isFaviconCardHovered = ref(false)
@@ -701,6 +736,17 @@ const deleteAdmin = async user => {
   } catch (error) {
     console.log('Failed to delete project list:', error)
   }
+}
+
+const copyToClipboard = () => {
+  const domain = "https://example.com"
+
+  navigator.clipboard.writeText(domain).then(() => {
+    isCopied.value = true
+    setTimeout(() => {
+      isCopied.value = false 
+    }, 1500)
+  })
 }
 </script>
   
