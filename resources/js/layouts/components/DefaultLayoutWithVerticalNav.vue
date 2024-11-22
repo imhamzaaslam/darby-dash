@@ -41,8 +41,9 @@ watch([
 
 const showNavigation = computed(() => {
   const isManageTemplatesRoute = $route.name === 'manage-templates'
+  const isManageCompanyRoute = $route.name === 'manage-company-settings'
 
-  return !isManageTemplatesRoute && $route.params.id !== undefined
+  return !(isManageTemplatesRoute || isManageCompanyRoute) && $route.params.id !== undefined
 })
 // !SECTION
 
