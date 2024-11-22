@@ -1,7 +1,7 @@
 <template>
   <VContainer fluid>
     <!-- Dashboard Header -->
-    <VRow class="dashboard-header">
+    <VRow class="pb-0">
       <VCol cols="12">
         <h3 class="text-h5">
           Company Settings
@@ -11,351 +11,388 @@
         </p>
       </VCol>
     </VRow>
-    <VRow>
-      <!-- Company Info Section -->
+    <VRow class="pt-0 mt-0">
       <VCol
         cols="12"
-        md="4"
+        md="2"
+        class="custom-tabs"
       >
-        <VCard class="">
-          <VCardTitle class="d-flex justify-space-between align-center">
-            <h6 class="text-h6">
-              Company Details
-            </h6>
-            <VSwitch
-              v-model="isActive"
-              label="Active"
-            />
-          </VCardTitle>
-
-          <VCardText class="px-5 pb-3">
-            <AppTextField
-              v-model="companyDetails.name"
-              label="Name"
-              outlined
-              dense
-              :rules="[nameRule]"
-            />
-            <div class="mt-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <label class="text-sm text-high-emphasis">
-                  Domain Address
-                  <VIcon
-                    v-if="!isCopied"
-                    class="ms-1 text-primary cursor-pointer"
-                    icon="tabler-copy"
-                    size="20"
-                    @click="copyToClipboard"
-                  />
-                  <span
-                    v-else
-                    class="ms-1"
-                  >
-                    <VIcon
-                      class="text-success"
-                      icon="tabler-check"
-                      size="20"
-                    />
-                    <span class="text-xs font-weight-bold">Copied</span>
-                  </span>
-                </label>
-              </div>
-              <a
-                href="https://example.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-primary text-decoration-underline d-block mt-1"
-              >
-                https://example.com
-              </a>
-            </div>
-          </VCardText>
-          <VCardActions class="px-5 py-3 d-flex justify-end">
-            <VBtn
-              color="primary"
-              :loading="isLoading"
-              size="small"
-              variant="flat"
-              @click="updateCompanyInfo"
-            >
-              Save
-            </VBtn>
-          </VCardActions>
-        </VCard>
+        <ul>
+          <li
+            v-for="(tab, index) in tabs"
+            :key="index"
+            :class="{ active: activeTab === index }"
+            @click="selectTab(index)"
+          >
+            {{ tab }}
+          </li>
+        </ul>
       </VCol>
-  
-      <!-- Branding Section -->
       <VCol
         cols="12"
-        md="4"
+        md="10"
       >
-        <VCard
-          style="height: 241px;"
-          @mouseover="onLogoHover(true)"
-          @mouseleave="onLogoHover(false)"
+        <VRow
+          v-if="activeTab === 0"
+          class="ms-1"
         >
-          <VCardTitle class="d-flex justify-space-between align-center">
-            <h5 class="text-h6 mt-2">
-              Company Logo
-            </h5>
-            <div
-              v-if="isLogoCardHovered"
-              class="d-flex gap-2"
-            >
-              <VTooltip location="top">
-                <template #activator="{ props }">
-                  <VBtn
-                    v-bind="props"
-                    variant="tonal"
-                    icon="tabler-download"
-                    size="x-small"
-                    @click="downloadQrCode"
-                  />
-                </template>
-                <span>Download</span>
-              </VTooltip>
-              <VTooltip location="top">
-                <template #activator="{ props }">
-                  <VBtn
-                    v-bind="props"
-                    variant="tonal"
-                    size="x-small"
-                    icon="tabler-upload"
-                    @click="uploadQrCode"
-                  />
-                </template>
-                <span>Upload</span>
-              </VTooltip>
-              <VTooltip location="top">
-                <template #activator="{ props }">
-                  <VBtn
-                    v-bind="props"
-                    variant="tonal"
-                    size="x-small"
-                    icon="tabler-trash"
-                    @click="deleteQrCode"
-                  />
-                </template>
-                <span>Delete</span>
-              </VTooltip>
-            </div>
-          </VCardTitle>
-          <VCardText class="text-center">
-            <VImg
-              v-if="logo"
-              :src="logo"
-              max-height="140"
-              class="mt-4"
-              alt="Company Logo"
-            />
-            <template v-else>
-              <div class="text-center py-15">
-                <p class="text-body-2 text-high-emphasis">
-                  No company logo uploaded yet.
-                </p>
-              </div>
-            </template>
-          </VCardText>
-        </VCard>
-      </VCol>
+          <!-- Company Info Section -->
+          <VCol
+            cols="12"
+            md="12"
+          >
+            <VCard class="px-3 py-2">
+              <VCardTitle class="d-flex justify-space-between align-center">
+                <h6 class="text-h6">
+                  Company Details
+                </h6>
+                <VSwitch
+                  v-model="isActive"
+                  label="Active"
+                />
+              </VCardTitle>
 
-      <VCol
-        cols="12"
-        md="4"
-      >
-        <VCard
-          style="height: 241px;"
-          @mouseover="onFaviconHover(true)"
-          @mouseleave="onFaviconHover(false)"
-        >
-          <VCardTitle class="d-flex justify-space-between align-center">
-            <h5 class="text-h6 mt-2">
-              Favicon
-            </h5>
-            <div
-              v-if="isFaviconCardHovered"
-              class="d-flex gap-2"
-            >
-              <VTooltip location="top">
-                <template #activator="{ props }">
-                  <VBtn
-                    v-bind="props"
-                    variant="tonal"
-                    icon="tabler-download"
-                    size="x-small"
-                    @click="downloadQrCode"
-                  />
-                </template>
-                <span>Download</span>
-              </VTooltip>
-              <VTooltip location="top">
-                <template #activator="{ props }">
-                  <VBtn
-                    v-bind="props"
-                    variant="tonal"
-                    size="x-small"
-                    icon="tabler-upload"
-                    @click="uploadQrCode"
-                  />
-                </template>
-                <span>Upload</span>
-              </VTooltip>
-              <VTooltip location="top">
-                <template #activator="{ props }">
-                  <VBtn
-                    v-bind="props"
-                    variant="tonal"
-                    size="x-small"
-                    icon="tabler-trash"
-                    @click="deleteQrCode"
-                  />
-                </template>
-                <span>Delete</span>
-              </VTooltip>
-            </div>
-          </VCardTitle>
-
-          <VCardText class="text-center">
-            <VImg
-              v-if="qrCode"
-              :src="qrCode"
-              max-height="140"
-              class="mt-4"
-              alt="Favicon"
-            />
-            <template v-else>
-              <div class="text-center py-15">
-                <p class="text-body-2 text-high-emphasis">
-                  No favicon uploaded yet.
-                </p>
-              </div>
-            </template>
-          </VCardText>
-        </VCard>
-      </VCol>
-
-      <!-- Theme Customization Section -->
-      <VCol
-        cols="12"
-        md="6"
-      >
-        <VCard>
-          <VCardTitle>
-            <h5 class="text-h6 mt-2">
-              Theme Customization
-            </h5>
-          </VCardTitle>
-          <VCardText>
-            <div class="d-flex justify-space-around">
-              <VColorPicker
-                v-model="primaryColor"
-                :swatches="swatches"
-                class="ma-2"
-                width="400"
-                show-swatches
-              />
-            </div>
-          </VCardText>
-          <VCardActions class="px-5 d-flex justify-end">
-            <VBtn
-              color="primary"
-              :loading="isLoading"
-              size="small"
-              variant="flat"
-              @click="saveColor"
-            >
-              Save
-            </VBtn>
-          </VCardActions>
-        </VCard>
-      </VCol>
-  
-      <!-- Users & Roles Section -->
-      <VCol
-        cols="12"
-        md="6"
-      >
-        <VCard>
-          <VCardTitle class="d-flex mb-4 justify-space-between align-center">
-            <h5 class="text-h6 mt-2">
-              Manage Admins
-            </h5>
-            <VBtn
-              variant="elevated"
-              color="primary"
-              size="small"
-              prepend-icon="tabler-plus"
-              @click="isAddAdminDialogVisible = true"
-            >
-              New Admin
-            </VBtn>
-          </VCardTitle>
-
-          <VCardText class="mt-7">
-            <VList class="card-list">
-              <VListItem
-                v-for="admin in admins"
-                :key="admin.name"
-              >
-                <template #prepend>
-                  <VBadge
-                    dot
-                    location="top end"
-                    offset-x="1"
-                    offset-y="1"
-                    color="warning"
+              <VCardText class="px-5 pb-3">
+                <AppTextField
+                  v-model="companyDetails.name"
+                  label="Name"
+                  outlined
+                  dense
+                  :rules="[nameRule]"
+                  :style="{ width: '300px' }"
+                />
+                <div class="mt-3">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <label class="text-sm text-high-emphasis">
+                      Domain Address
+                      <VIcon
+                        v-if="!isCopied"
+                        class="ms-1 text-primary cursor-pointer"
+                        icon="tabler-copy"
+                        size="20"
+                        @click="copyToClipboard"
+                      />
+                      <span
+                        v-else
+                        class="ms-1"
+                      >
+                        <VIcon
+                          class="text-success"
+                          icon="tabler-check"
+                          size="20"
+                        />
+                        <span class="text-xs font-weight-bold">Copied</span>
+                      </span>
+                    </label>
+                  </div>
+                  <a
+                    href="https://example.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary text-decoration-underline d-block mt-1"
                   >
-                    <VAvatar
-                      size="34"
-                      :class="admin.avatar ? '' : 'text-white bg-primary'"
-                      :variant="!admin.avatar ? 'tonal' : ''"
-                    >
-                      <span>{{ avatarText(admin.name) }}</span>
-                    </VAvatar>
-                  </VBadge>
-                </template>
-
-                <VListItemTitle class="text-sm text-high-emphasis font-weight-semibold">
-                  {{ admin.name }}
-                </VListItemTitle>
-                <VListItemSubtitle>
-                  {{ admin.email }}
-                </VListItemSubtitle>
-
-                <template #append>
-                  <div class="d-flex align-center">
-                    <VBtn
-                      icon
-                      color="td-hover"
-                      class="ma-2"
-                      size="x-small"
-                      rounded="pills"
-                      @click.prevent
-                    >
-                      <VIcon icon="tabler-dots" />
-                      <VMenu activator="parent">
-                        <VList>
-                          <VListItem
-                            value="edit"
-                            @click="editAdmin(admin)"
-                          >
-                            Edit
-                          </VListItem>
-                          <VListItem
-                            value="delete"
-                            @click="deleteAdmin(admin)"
-                          >
-                            Delete
-                          </VListItem>
-                        </VList>
-                      </VMenu>
-                    </VBtn>
+                    https://example.com
+                  </a>
+                </div>
+              </VCardText>
+              <VCardActions class="px-5 py-3 d-flex justify-end">
+                <VBtn
+                  color="primary"
+                  :loading="isLoading"
+                  size="small"
+                  variant="flat"
+                  @click="updateCompanyInfo"
+                >
+                  Save
+                </VBtn>
+              </VCardActions>
+            </VCard>
+          </VCol>
+  
+          <!-- Branding Section -->
+          <VCol
+            cols="12"
+            md="6"
+          >
+            <VCard
+              style="height: 241px;"
+              class="px-3 py-2"
+              @mouseover="onLogoHover(true)"
+              @mouseleave="onLogoHover(false)"
+            >
+              <VCardTitle class="d-flex justify-space-between align-center">
+                <h5 class="text-h6 mt-2">
+                  Company Logo
+                </h5>
+                <div
+                  v-if="isLogoCardHovered"
+                  class="d-flex gap-2"
+                >
+                  <VTooltip location="top">
+                    <template #activator="{ props }">
+                      <VBtn
+                        v-bind="props"
+                        variant="tonal"
+                        icon="tabler-download"
+                        size="x-small"
+                        @click="downloadQrCode"
+                      />
+                    </template>
+                    <span>Download</span>
+                  </VTooltip>
+                  <VTooltip location="top">
+                    <template #activator="{ props }">
+                      <VBtn
+                        v-bind="props"
+                        variant="tonal"
+                        size="x-small"
+                        icon="tabler-upload"
+                        @click="uploadQrCode"
+                      />
+                    </template>
+                    <span>Upload</span>
+                  </VTooltip>
+                  <VTooltip location="top">
+                    <template #activator="{ props }">
+                      <VBtn
+                        v-bind="props"
+                        variant="tonal"
+                        size="x-small"
+                        icon="tabler-trash"
+                        @click="deleteQrCode"
+                      />
+                    </template>
+                    <span>Delete</span>
+                  </VTooltip>
+                </div>
+              </VCardTitle>
+              <VCardText class="text-center">
+                <VImg
+                  v-if="logo"
+                  :src="logo"
+                  max-height="140"
+                  class="mt-4"
+                  alt="Company Logo"
+                />
+                <template v-else>
+                  <div class="text-center py-15">
+                    <p class="text-body-2 text-high-emphasis">
+                      No company logo uploaded yet.
+                    </p>
                   </div>
                 </template>
-              </VListItem>
-            </VList>
-          </VCardText>
-        </VCard>
+              </VCardText>
+            </VCard>
+          </VCol>
+
+          <VCol
+            cols="12"
+            md="6"
+          >
+            <VCard
+              style="height: 241px;"
+              class="px-3 py-2"
+              @mouseover="onFaviconHover(true)"
+              @mouseleave="onFaviconHover(false)"
+            >
+              <VCardTitle class="d-flex justify-space-between align-center">
+                <h5 class="text-h6 mt-2">
+                  Favicon
+                </h5>
+                <div
+                  v-if="isFaviconCardHovered"
+                  class="d-flex gap-2"
+                >
+                  <VTooltip location="top">
+                    <template #activator="{ props }">
+                      <VBtn
+                        v-bind="props"
+                        variant="tonal"
+                        icon="tabler-download"
+                        size="x-small"
+                        @click="downloadQrCode"
+                      />
+                    </template>
+                    <span>Download</span>
+                  </VTooltip>
+                  <VTooltip location="top">
+                    <template #activator="{ props }">
+                      <VBtn
+                        v-bind="props"
+                        variant="tonal"
+                        size="x-small"
+                        icon="tabler-upload"
+                        @click="uploadQrCode"
+                      />
+                    </template>
+                    <span>Upload</span>
+                  </VTooltip>
+                  <VTooltip location="top">
+                    <template #activator="{ props }">
+                      <VBtn
+                        v-bind="props"
+                        variant="tonal"
+                        size="x-small"
+                        icon="tabler-trash"
+                        @click="deleteQrCode"
+                      />
+                    </template>
+                    <span>Delete</span>
+                  </VTooltip>
+                </div>
+              </VCardTitle>
+
+              <VCardText class="text-center">
+                <VImg
+                  v-if="qrCode"
+                  :src="qrCode"
+                  max-height="140"
+                  class="mt-4"
+                  alt="Favicon"
+                />
+                <template v-else>
+                  <div class="text-center py-15">
+                    <p class="text-body-2 text-high-emphasis">
+                      No favicon uploaded yet.
+                    </p>
+                  </div>
+                </template>
+              </VCardText>
+            </VCard>
+          </VCol>
+        </VRow>
+        <VRow
+          v-if="activeTab === 1"
+          class="ms-1"
+        >
+          <!-- Theme Customization Section -->
+          <VCol
+            cols="12"
+            md="12"
+          >
+            <VCard class="px-3 py-2">
+              <VCardTitle>
+                <h5 class="text-h6 mt-2">
+                  Theme Customization
+                </h5>
+              </VCardTitle>
+              <VCardText>
+                <div class="d-flex justify-space-around">
+                  <VColorPicker
+                    v-model="primaryColor"
+                    :swatches="swatches"
+                    class="ma-2"
+                    width="800"
+                    show-swatches
+                  />
+                </div>
+              </VCardText>
+              <VCardActions class="px-5 d-flex justify-end">
+                <VBtn
+                  color="primary"
+                  :loading="isLoading"
+                  size="small"
+                  variant="flat"
+                  @click="saveColor"
+                >
+                  Save
+                </VBtn>
+              </VCardActions>
+            </VCard>
+          </VCol>
+        </VRow>
+        <VRow
+          v-if="activeTab === 2"
+          class="ms-1"
+        >
+          <!-- Users & Roles Section -->
+          <VCol
+            cols="12"
+            md="12"
+          >
+            <VCard class="px-3 py-2">
+              <VCardTitle class="d-flex mb-4 justify-space-between align-center">
+                <h5 class="text-h6">
+                  Manage Admins
+                </h5>
+                <VBtn
+                  variant="elevated"
+                  color="primary"
+                  size="small"
+                  prepend-icon="tabler-plus"
+                  @click="isAddAdminDialogVisible = true"
+                >
+                  New Admin
+                </VBtn>
+              </VCardTitle>
+
+              <VCardText class="mt-7">
+                <VList class="card-list">
+                  <VListItem
+                    v-for="admin in admins"
+                    :key="admin.name"
+                  >
+                    <template #prepend>
+                      <VBadge
+                        dot
+                        location="top end"
+                        offset-x="1"
+                        offset-y="1"
+                        color="warning"
+                      >
+                        <VAvatar
+                          size="34"
+                          :class="admin.avatar ? '' : 'text-white bg-primary'"
+                          :variant="!admin.avatar ? 'tonal' : ''"
+                        >
+                          <span>{{ avatarText(admin.name) }}</span>
+                        </VAvatar>
+                      </VBadge>
+                    </template>
+
+                    <VListItemTitle class="text-sm text-high-emphasis font-weight-semibold">
+                      {{ admin.name }}
+                    </VListItemTitle>
+                    <VListItemSubtitle>
+                      {{ admin.email }}
+                    </VListItemSubtitle>
+
+                    <template #append>
+                      <div class="d-flex align-center">
+                        <VBtn
+                          icon
+                          color="td-hover"
+                          class="ma-2"
+                          size="small"
+                          rounded="pills"
+                          @click.prevent
+                        >
+                          <VIcon icon="tabler-dots" />
+                          <VMenu activator="parent">
+                            <VList>
+                              <VListItem
+                                value="edit"
+                                @click="editAdmin(admin)"
+                              >
+                                Edit
+                              </VListItem>
+                              <VListItem
+                                value="delete"
+                                @click="deleteAdmin(admin)"
+                              >
+                                Delete
+                              </VListItem>
+                            </VList>
+                          </VMenu>
+                        </VBtn>
+                      </div>
+                    </template>
+                  </VListItem>
+                </VList>
+              </VCardText>
+            </VCard>
+          </VCol>
+        </VRow>
       </VCol>
     </VRow>
   </VContainer>
@@ -579,6 +616,7 @@ const companyDetails = ref({
 const logo = ref(null)
 const isActive = ref(true)
 const isCopied = ref(false)
+const activeTab = ref(0)
 const qrCode = ref(null)
 const isLogoCardHovered = ref(false)
 const isFaviconCardHovered = ref(false)
@@ -590,6 +628,7 @@ const addAdminForm = ref('')
 const isPasswordVisible = ref(false)
 const isConfirmPasswordVisible = ref(false)
 const editAdminDetails = ref({})
+const tabs = ref(["Basic Setting", "Theme Setting", "Users & Roles"])
 
 const newAdminDetails = ref({
   name: null,
@@ -653,6 +692,10 @@ const admins = [
 ]
   
 const nameRule = [v => !!v || "Company name is required"]
+
+const selectTab = tab => {
+  activeTab.value = tab
+}
 
 const editAdmin = admin => {
   editAdminDetails.value = { ...admin }
@@ -757,6 +800,43 @@ margin: auto;
 }
 .card-list {
   --v-card-list-gap: 19px;
+}
+.custom-tabs {
+  background-color: white; 
+  margin-top: 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.custom-tabs ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-tabs li {
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  color: #555;
+  background: white;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  border-bottom: 1px solid #ddd;
+}
+.custom-tabs li:first-child {
+  margin-top: 10px;
+}
+.custom-tabs li:last-child {
+  border-bottom: none;
+}
+
+.custom-tabs li.active,
+.custom-tabs li:hover {
+  background-color: #a12592;
+  color: white;
+  border-radius: 3px;
 }
 </style>
   
