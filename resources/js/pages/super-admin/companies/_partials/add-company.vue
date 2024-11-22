@@ -7,7 +7,7 @@
             Add Company Details
           </h3>
           <p class="text-body-1 text-muted">
-            Add and manage company's essential information to keep profile complete and professional.
+            Manage company's essential information to keep profile complete and professional.
           </p>
         </VCol>
       </VRow>
