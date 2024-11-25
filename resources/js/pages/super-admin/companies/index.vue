@@ -86,7 +86,7 @@
         >
           <RouterLink :to="{ name: 'manage-company-settings', params: { id: company.uuid } }">
             <VCard class="d-flex ps-4 py-1 list-side-border">
-              <VCol cols="8">
+              <VCol cols="4">
                 <div class="d-flex align-center gap-x-3">
                   <VAvatar
                     :size="34"
@@ -95,33 +95,70 @@
                   <div>
                     <h6 class="text-h6 text-no-wrap">
                       <span class="d-block">{{ company.name }}
-                        <VBtn
-                          v-if="company.url"
-                          :href="formattedUrl(company.url)"
-                          target="_blank"
-                          size="x-small"
-                          class="ms-2"
-                          rel="noopener noreferrer"
-                          @click.stop=""
-                        >
-                          Open URL
-                        </VBtn>
+                        <VTooltip location="top">
+                          <template #activator="{ props }">
+                            <VBtn
+                              v-bind="props"
+                              :href="formattedUrl(company.url)"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              icon="tabler-pin-invoke"
+                              variant="text"
+                              color="primary"
+                              @click.stop=""
+                            />
+                          </template>
+                          <span>Open URL</span>
+                        </VTooltip>
                       </span> 
                     </h6>
-                  <!--
-                    <VChip
-                    color="primary"
-                    size="x-small"
-                    >
-                    <span class="text-high-emphasis text-xs">
-                    {{ company?.name_first + ' ' + company?.name_last }} (Admin)
-                    </span>
-                    </VChip> 
-                  -->
                   </div>
                 </div>
               </VCol>
               <VCol cols="3">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <VBadge
+                      dot
+                      location="top end"
+                      offset-x="1"
+                      offset-y="1"
+                      :color="company?.admin?.is_online ? 'success' : 'warning'"
+                    >
+                      <VAvatar
+                        size="32"
+                        :class="company?.admin?.avatar ? '' : 'text-white bg-primary'"
+                        :variant="!company?.admin?.avatar ? 'tonal' : ''"
+                      >
+                        <span class="text-sm">
+                          {{ avatarText(company?.admin?.name_first + ' ' + company?.admin?.name_last) }}
+                        </span>
+                      </VAvatar>
+                    </VBadge>
+                    <div class="d-flex flex-column ms-3">
+                      <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">
+                        {{ company?.admin?.name_first }} {{ company?.admin?.name_last }}
+                      </span>
+                      <small class="mt-0 text-xs">
+                        {{ company?.admin?.email }}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </VCol>
+              <VCol
+                cols="2"
+                class="ms-2"
+              >
+                <VIcon
+                  color="primary"
+                  icon="tabler-phone"
+                />
+                <span class="ms-2">
+                  {{ company?.admin?.info.phone }}
+                </span>
+              </VCol>
+              <VCol cols="2">
                 <div class="d-flex flex-column ms-3">
                   <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Created At</span>
                   <small>{{ formatDate(company.created_at) }}</small>
@@ -160,59 +197,113 @@
         >
           <RouterLink :to="{ name: 'manage-company-settings', params: { id: company.uuid } }">
             <VCard
-              class="pt-2"
+              class="py-2 px-4"
               style="position: relative; overflow: visible;"
             >
               <VCardTitle>
                 <VRow>
-                  <VCol cols="10">
-                    <div class="d-flex align-center gap-x-3">
-                      <VAvatar
-                        :size="34"
-                        :image="sketch"
-                      />
-                      <div>
-                        <h6 class="text-h6 text-no-wrap">
-                          {{ company.name }}
-                          <VBtn
-                            v-if="company.url"
-                            :href="formattedUrl(company.url)"
-                            target="_blank"
-                            size="x-small"
-                            class="ms-2"
-                            rel="noopener noreferrer"
-                            @click.stop=""
+                  <VCol cols="12">
+                    <!-- Top Section: Company Name and Status -->
+                    <div class="d-flex align-center justify-space-between gap-x-3">
+                      <div class="d-flex align-center gap-x-3">
+                        <VAvatar
+                          :size="34"
+                          :image="sketch"
+                        />
+                        <div>
+                          <h6 class="text-h6 text-no-wrap">
+                            {{ company.name }} 
+                            <VTooltip location="top">
+                              <template #activator="{ props }">
+                                <VBtn
+                                  v-bind="props"
+                                  :href="formattedUrl(company.url)"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  icon="tabler-pin-invoke"
+                                  variant="text"
+                                  color="primary"
+                                  @click.stop=""
+                                />
+                              </template>
+                              <span>Open URL</span>
+                            </VTooltip>
+                          </h6>
+                        </div>
+                      </div>
+                      <VChip
+                        color="primary"
+                        variant="outlined"
+                        size="small"
+                      >
+                        Active
+                      </VChip>
+                    </div>
+
+                    <!-- Divider -->
+                    <VDivider
+                      color="primary"
+                      class="mt-2 mb-3"
+                    />
+
+                    <!-- Admin Details -->
+                    <div class="d-flex align-center justify-space-between">
+                      <div class="d-flex align-center">
+                        <VBadge
+                          dot
+                          location="top end"
+                          offset-x="1"
+                          offset-y="1"
+                          :color="company?.admin?.is_online ? 'success' : 'warning'"
+                        >
+                          <VAvatar
+                            size="32"
+                            :class="company?.admin?.avatar ? '' : 'text-white bg-primary'"
+                            :variant="!company?.admin?.avatar ? 'tonal' : ''"
                           >
-                            Open URL
-                          </VBtn> 
-                        </h6>
-                      <!--
-                        <VChip
+                            <span class="text-sm">
+                              {{ avatarText(company?.admin?.name_first + ' ' + company?.admin?.name_last) }}
+                            </span>
+                          </VAvatar>
+                        </VBadge>
+                        <div class="d-flex flex-column ms-3">
+                          <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">
+                            {{ company?.admin?.name_first }} {{ company?.admin?.name_last }}
+                          </span>
+                          <small class="mt-0 text-xs">
+                            Admin
+                          </small>
+                        </div>
+                      </div>
+                      <VBtn
+                        class="ms-auto"
                         color="primary"
                         size="x-small"
-                        >
-                        <span class="text-high-emphasis text-xs">
-                        {{ company?.name_first + ' ' + company?.name_last }} (Admin)
-                        </span>
-                        </VChip> 
-                      -->
-                      </div>
+                        variant="elevated"
+                        :to="{ name: 'manage-company-settings', params: { id: company.uuid } }"
+                      >
+                        View Details
+                      </VBtn>
                     </div>
-                  </VCol>
-                  <VCol cols="2">
-                    <IconBtn @click.prevent>
-                      <VIcon icon="tabler-dots-vertical" />
-                      <VMenu activator="parent">
-                        <VList>
-                          <VListItem
-                            value="edit"
-                            :to="{ name: 'manage-company-settings', params: { id: company.uuid } }"
-                          >
-                            Edit
-                          </VListItem>
-                        </VList>
-                      </VMenu>
-                    </IconBtn>
+                    <div class="d-flex mt-5 align-center justify-space-between">
+                      <small class="text-xs">
+                        <strong><VIcon
+                          color="primary"
+                          icon="tabler-mail"
+                        /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ company?.admin?.email }}</span>
+                      </small>
+                    </div>
+                    <div class="d-flex align-center mt-2 justify-space-between">
+                      <small class="text-xs">
+                        <strong><VIcon
+                          color="primary"
+                          icon="tabler-phone"
+                        /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ company?.admin?.info.phone }}</span>
+                      </small>
+                      <small class="text-xs">
+                        <strong>Created:</strong> <span class="text-xs text-secondary">{{ formatDate(company.created_at) }}</span>
+                      </small>
+                    </div>
                   </VCol>
                 </VRow>
               </VCardTitle>
@@ -265,7 +356,7 @@ const authStore = useAuthStore()
 const route = useRoute()
 
 const totalRecords = ref(0)
-const viewType = ref('list')
+const viewType = ref('grid')
 const isFilterDrawerOpen = ref(false)
 const isLoading = ref(false)
 const search = ref('')
@@ -278,7 +369,7 @@ const isMobile = () => {
 }
 
 const handleResize = () => {
-  viewType.value = isMobile() ? 'grid' : 'list'
+  viewType.value = isMobile() ?? 'grid'
 }
 
 onMounted(() => {

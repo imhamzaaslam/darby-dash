@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use App\Services\TenantService;
+use App\Models\User;
 use App\Models\Base;
 use Illuminate\Support\Str;
 use Stancl\Tenancy\Database\Models\Domain;
@@ -57,5 +59,22 @@ class Company extends Base
         $domain = Domain::where('tenant_id', $tenantId)->first();
 
         return $domain ? $domain->domain : null;
+    }
+
+    public function getClient()
+    {
+        $tenantService = app(TenantService::class);
+
+        $tenant = $tenantService->setTenant($this->name);
+
+        if (!$tenant) {
+            return null;
+        }
+
+        $admin = User::on('tenant')->role('Admin')->orderBy('id', 'asc')->first();
+
+        $tenantService->resetTenant();
+
+        return $admin ?? null;
     }
 }

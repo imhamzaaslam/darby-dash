@@ -721,24 +721,6 @@ const saveColor = () => {
   console.log('Primary color saved:', primaryColor.value)
   isLoading.value = false
 }
-  
-const sendCredentials = () => {
-  isLoading.value = true
-  console.log('Sending credentials...')
-  isLoading.value = false
-}
-  
-const addAdmin = () => {
-  console.log('Adding admin...')
-}
-  
-const viewUsers = () => {
-  console.log('Viewing users...')
-}
-  
-const viewEmailHistory = () => {
-  console.log('Viewing email history...')
-}
 
 const downloadQrCode = () => {
   console.log("Downloading QR Code...")

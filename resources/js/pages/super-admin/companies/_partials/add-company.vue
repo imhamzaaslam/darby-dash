@@ -206,7 +206,7 @@
               <VBtn
                 color="error"
                 variant="tonal"
-                @click="resetForm"
+                @click="resetFormFields"
               >
                 Reset
               </VBtn>
@@ -267,9 +267,8 @@ async function submitAddCompanyForm() {
   addCompanyForm.value?.validate().then(async ({ valid: isValid }) => {
     if(isValid){
       try {
-        resetErrors()
-        company = await companyStore.create(newCompanyDetails.value)
-        if(getErrors)
+        await companyStore.create(newCompanyDetails.value)
+        if(getErrors.value)
         {
           showError()
         }
@@ -278,7 +277,8 @@ async function submitAddCompanyForm() {
           toast.success('Company added successfully', { timeout: 1000 })
           resetFormFields()
           isLoading.value = false
-          router.push({ name: 'companies-list' })
+          
+          router.push(`/companies`)
         }
       } catch (error) {
         toast.error('Failed to add company:', error)
@@ -303,7 +303,7 @@ const showError = () => {
   if (getStatusCode === 500) {
     toast.error('Something went wrong. Please try again later.')
   } else {
-    addingErrors.value = getErrors
+    addingErrors.value = getErrors.value
   }
 }
   

@@ -48,6 +48,7 @@ class CompanyController extends Controller
             ->getAllRecordsQuery()
             ->filtered($request->name ?? '')
             ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+            ->whereNotIn('id', [1])
             ->paginate($request->per_page ?? config('pagination.per_page', 10));
             return CompanyResource::collection($companies);
         }
@@ -89,7 +90,7 @@ class CompanyController extends Controller
                 $tenancy = app(Tenancy::class);
                 $tenancy->initialize($tenant);
 
-                $company = $this->companyRepository->create($companyAttributes);
+                $tenantCompanyDetails = $this->companyRepository->create($companyAttributes);
 
                 Artisan::call('tenants:seed', [
                     '--class' => 'RolesAndPermissionsSeeder',
@@ -101,7 +102,7 @@ class CompanyController extends Controller
                     'name_last' => $validated['name_last'],
                     'email' => $validated['email'],
                     'password' => bcrypt($validated['password']),
-                    'company_id' => $company->id,
+                    'company_id' => $tenantCompanyDetails->id,
                 ];
 
                 $role = UserRole::ADMIN->value;
