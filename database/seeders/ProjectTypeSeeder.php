@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProjectTypeSeeder extends Seeder
 {
@@ -21,6 +22,7 @@ class ProjectTypeSeeder extends Seeder
                     'name' => 'Website Design Project',
                     'icon' => 'tabler-world',
                     'display_order' => 1,
+                    'uuid' => Str::uuid(),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
@@ -28,6 +30,7 @@ class ProjectTypeSeeder extends Seeder
                     'name' => 'SEO Program',
                     'icon' => 'tabler-military-rank',
                     'display_order' => 2,
+                    'uuid' => Str::uuid(),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
@@ -35,6 +38,7 @@ class ProjectTypeSeeder extends Seeder
                     'name' => 'Google Ads Program',
                     'icon' => 'tabler-brand-google',
                     'display_order' => 3,
+                    'uuid' => Str::uuid(),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],

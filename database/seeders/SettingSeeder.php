@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class SettingSeeder extends Seeder
 {
@@ -17,9 +18,9 @@ class SettingSeeder extends Seeder
         DB::beginTransaction();
         try {
             $settings = [
-                ['name' => 'General'],
-                ['name' => 'Notification'],
-                ['name' => 'Email'],
+                ['uuid' => Str::uuid(), 'name' => 'General'],
+                ['uuid' => Str::uuid(), 'name' => 'Notification'],
+                ['uuid' => Str::uuid(), 'name' => 'Email'],
             ];
 
             foreach ($settings as $setting) {

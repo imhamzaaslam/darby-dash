@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class StatusSeeder extends Seeder
 {
@@ -21,6 +22,7 @@ class StatusSeeder extends Seeder
                     'name' => 'PENDING',
                     'color' => 'secondary',
                     'display_order' => 0,
+                    'uuid' => Str::uuid(),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
@@ -28,6 +30,7 @@ class StatusSeeder extends Seeder
                     'name' => 'IN PROGRESS',
                     'color' => 'primary',
                     'display_order' => 1,
+                    'uuid' => Str::uuid(),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
@@ -35,6 +38,7 @@ class StatusSeeder extends Seeder
                     'name' => 'COMPLETED',
                     'color' => 'success',
                     'display_order' => 2,
+                    'uuid' => Str::uuid(),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
