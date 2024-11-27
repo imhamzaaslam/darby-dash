@@ -124,6 +124,8 @@ const handleDrawerModelValueUpdate = val => {
 }
 
 const filter = () => {
+  props.selectedProjectType = filterDetails.value.project_type_id
+  props.applyFilters(filterDetails.value.searchQuery, filterDetails.value.project_type_id, filterDetails.value.project_manager_id)
   emit('update:isFilterDrawerOpen', false)
 }
 

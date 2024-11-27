@@ -168,7 +168,7 @@ const service = computed(() => userSettingStore.getProjectService)
   
 const getRelatedServices = computed(() =>
   userSettingStore.getProjectServicesByType.filter(
-    relatedService => relatedService.uuid !== serviceUuid,
+    service => service.uuid !== serviceUuid,
   ),
 )
   
@@ -206,10 +206,9 @@ const userDetails = computed(() => {
   return userStore.getUser
 })
   
-watch(service, fetchRelatedServices)
-  
 onBeforeMount(async () => {
   await fetchService()
+  await fetchRelatedServices()
 })
 </script>
   
