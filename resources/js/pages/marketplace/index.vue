@@ -182,9 +182,7 @@ const fetchService = async () => {
   
 const fetchRelatedServices = async () => {
   try {
-    await userSettingStore.getServicesByType(
-      service?.value?.project_type_uuid,
-    )
+    await userSettingStore.getServicesByType(service?.value?.project_type_uuid)
   } catch (error) {
     console.error("Error fetching related services:", error)
   }
