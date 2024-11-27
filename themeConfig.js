@@ -8,19 +8,26 @@ import logo from '@images/logo.png'
 import logoHalf from '@images/half-logo.png'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
+const store = JSON.parse(localStorage.getItem('auth'))
+
+const getDynamicLogo = () => (store && store.tenant && store.logo  ? store.logo : logo)
+const getDynamicFavicon = () => (store && store.tenant && store.favicon  ? store.favicon : logoHalf)
+const getDynamicTitle = () => (store && store.tenant ? store.title : 'Darby Dash')
+
+
 const selectedTheme = localStorage.getItem('selectedTheme') || 'system'
 
 export const { themeConfig, layoutConfig } = defineThemeConfig({
   app: {
-    title: 'Darby Dash',
+    title: getDynamicTitle(),
     logo: h('div', {
-      innerHTML: `<img src="${logo}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
+      innerHTML: `<img src="${getDynamicLogo()}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
     }),
     logoHalf: h('div', {
-      innerHTML: `<img src="${logoHalf}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
+      innerHTML: `<img src="${getDynamicFavicon()}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
     }),
     watermarkLogo: h('div', {
-      innerHTML: `<img src="${logo}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`,
+      innerHTML: `<img src="${getDynamicLogo()}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`,
     }),
     contentWidth: ContentWidth.Boxed,
     contentLayoutNav: AppContentLayoutNav.Vertical,

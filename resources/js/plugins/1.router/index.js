@@ -25,6 +25,7 @@ import ProjectActivityList from '@/views/pages/project-activities-list.vue'
 import Templates from '@/pages/settings/templates/index.vue'
 import ManageTemplates from '@/pages/settings/templates/_partials/manage-templates.vue'
 import Services from '@/pages/settings/services/index.vue'
+import MarketPlace from '@/pages/marketplace/index.vue'
 import CompaniesList from '@/pages/super-admin/companies/index.vue'
 import Company from '@/pages/super-admin/companies/_partials/company-settings.vue'
 import AddCompanyDetails from '@/pages/super-admin/companies/_partials/add-company.vue'
@@ -88,6 +89,14 @@ const router = createRouter({
         path: '/companies/add-company-details',
         name: 'add-company-details',
         component: AddCompanyDetails,
+        meta: { layout: 'default' },
+      },
+    ),
+    recursiveLayouts(
+      {
+        path: '/marketplace/services/:id',
+        name: 'marketplace-service',
+        component: MarketPlace,
         meta: { layout: 'default' },
       },
     ),

@@ -8,6 +8,11 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     // initialize state from local storage to enable user to stay logged in
     user: getUserFromLocalStorage(),
+    tenant: false,
+    logo: null,
+    favicon: null,
+    title: null,
+    primaryColor: null,
     authUser: null,
     authenticated: false,
     token: null,
@@ -38,6 +43,25 @@ export const useAuthStore = defineStore('auth', {
         this.authenticated = false
 
         return error.response
+      }
+    },
+    async tenantInfo() {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        let res = await AuthService.tenantInfo()
+        this.loadStatus = 2
+        if(res.data.status)
+        {
+          this.tenant = res.data.isTenant
+          this.logo = this.getImageUrl(res.data.logo)
+          this.favicon = this.getImageUrl(res.data.favicon)
+          this.title = res.data.title
+          this.primaryColor = res.data.primaryColor
+        }
+      } catch (error) {
+        this.error = error.response
+        this.loadStatus = 3
       }
     },
     async logout() {
@@ -72,6 +96,11 @@ export const useAuthStore = defineStore('auth', {
         console.error('getUser error ', error)
       }
     },
+    getImageUrl (path) {
+      const baseUrl = import.meta.env.VITE_APP_URL
+    
+      return `${baseUrl}storage/${path}`
+    },
     async verifyTwoFactorCode(email, code) {
       this.error = null
       this.loadStatus = 1
@@ -101,6 +130,11 @@ export const useAuthStore = defineStore('auth', {
     getLoadStatus: state => state.loadStatus,
     getUser: state => state.user,
     isAuthenticated: state => state.authenticated,
+    isTenant: state => state.tenant,
+    getLogo: state => state.logo,
+    getFavicon: state => state.favicon,
+    getTitle: state => state.title,
+    getPrimaryColor: state => state.primaryColor,
     getErrors: state => state.error,
     isSuperAdmin: state => state.authUser?.user?.roles[0].name == 'Super Admin',
     isAdmin: state => state.authUser?.user?.roles[0].name == 'Admin',

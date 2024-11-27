@@ -4,7 +4,7 @@
     <VRow class="pb-0">
       <VCol cols="12">
         <h3 class="text-h5">
-          Company Settings
+          {{ company.name }} Settings
         </h3>
         <p class="text-body-1 text-muted">
           Manage company's details, branding, users, and settings with ease.
@@ -21,10 +21,10 @@
           <li
             v-for="(tab, index) in tabs"
             :key="index"
-            :class="{ active: activeTab === index }"
-            @click="selectTab(index)"
+            :class="{ active: activeTab == tab.tab }"
+            @click="selectTab(tab.tab)"
           >
-            {{ tab }}
+            {{ tab.title }}
           </li>
         </ul>
       </VCol>
@@ -33,7 +33,7 @@
         md="10"
       >
         <VRow
-          v-if="activeTab === 0"
+          v-if="activeTab == 'basic-setting'"
           class="ms-1"
         >
           <!-- Company Info Section -->
@@ -56,10 +56,11 @@
                 <AppTextField
                   v-model="companyDetails.name"
                   label="Name"
+                  class="cursor-not-allowed"
                   outlined
                   dense
-                  :rules="[nameRule]"
                   :style="{ width: '300px' }"
+                  disabled
                 />
                 <div class="mt-3">
                   <div class="d-flex align-items-center justify-content-between">
@@ -91,7 +92,7 @@
                     rel="noopener noreferrer"
                     class="text-primary text-decoration-underline d-block mt-1"
                   >
-                    https://example.com
+                    {{ company.url ? formattedUrl(company.url) : '' }}
                   </a>
                 </div>
               </VCardText>
@@ -135,7 +136,7 @@
                         variant="tonal"
                         icon="tabler-download"
                         size="x-small"
-                        @click="downloadQrCode"
+                        @click="downloadAsset(company?.logo)"
                       />
                     </template>
                     <span>Download</span>
@@ -147,7 +148,7 @@
                         variant="tonal"
                         size="x-small"
                         icon="tabler-upload"
-                        @click="uploadQrCode"
+                        @click="uploadLogo"
                       />
                     </template>
                     <span>Upload</span>
@@ -159,7 +160,7 @@
                         variant="tonal"
                         size="x-small"
                         icon="tabler-trash"
-                        @click="deleteQrCode"
+                        @click="deleteLogo(company?.logo?.uuid)"
                       />
                     </template>
                     <span>Delete</span>
@@ -168,8 +169,8 @@
               </VCardTitle>
               <VCardText class="text-center">
                 <VImg
-                  v-if="logo"
-                  :src="logo"
+                  v-if="company?.logo"
+                  :src="getImageUrl(company?.logo?.path)"
                   max-height="140"
                   class="mt-4"
                   alt="Company Logo"
@@ -182,6 +183,14 @@
                   </div>
                 </template>
               </VCardText>
+              <input
+                ref="logoInputRef"
+                :key="inputLogoKey"
+                type="file"
+                accept="image/*"
+                class="d-none"
+                @change="handleLogoChange"
+              >
             </VCard>
           </VCol>
 
@@ -210,7 +219,7 @@
                         variant="tonal"
                         icon="tabler-download"
                         size="x-small"
-                        @click="downloadQrCode"
+                        @click="downloadAsset(company?.favicon)"
                       />
                     </template>
                     <span>Download</span>
@@ -222,7 +231,7 @@
                         variant="tonal"
                         size="x-small"
                         icon="tabler-upload"
-                        @click="uploadQrCode"
+                        @click="uploadFavicon"
                       />
                     </template>
                     <span>Upload</span>
@@ -234,7 +243,7 @@
                         variant="tonal"
                         size="x-small"
                         icon="tabler-trash"
-                        @click="deleteQrCode"
+                        @click="deleteFavicon(company?.favicon?.uuid)"
                       />
                     </template>
                     <span>Delete</span>
@@ -244,8 +253,8 @@
 
               <VCardText class="text-center">
                 <VImg
-                  v-if="qrCode"
-                  :src="qrCode"
+                  v-if="company?.favicon"
+                  :src="getImageUrl(company?.favicon?.path)"
                   max-height="140"
                   class="mt-4"
                   alt="Favicon"
@@ -258,11 +267,19 @@
                   </div>
                 </template>
               </VCardText>
+              <input
+                ref="faviconInputRef"
+                :key="inputFaviconKey"
+                type="file"
+                accept="image/*"
+                class="d-none"
+                @change="handleFaviconChange"
+              >
             </VCard>
           </VCol>
         </VRow>
         <VRow
-          v-if="activeTab === 1"
+          v-if="activeTab == 'theme-setting'"
           class="ms-1"
         >
           <!-- Theme Customization Section -->
@@ -280,10 +297,9 @@
                 <div class="d-flex justify-space-around">
                   <VColorPicker
                     v-model="primaryColor"
-                    :swatches="swatches"
+                    mode="hexa"
                     class="ma-2"
                     width="800"
-                    show-swatches
                   />
                 </div>
               </VCardText>
@@ -302,7 +318,7 @@
           </VCol>
         </VRow>
         <VRow
-          v-if="activeTab === 2"
+          v-if="activeTab == 'users-and-roles'"
           class="ms-1"
         >
           <!-- Users & Roles Section -->
@@ -604,20 +620,35 @@
   
 <script setup>
 import { ref, computed } from 'vue'
+import { layoutConfig } from '@layouts'
 import Swal from 'sweetalert2'
+import { useToast } from "vue-toastification"
+import { useCompanyStore } from "@/store/companies"
+import { useRoute, useRouter } from 'vue-router'
+import { useHead } from '@unhead/vue'
+
+const toast = useToast()
+const $route = useRoute()
+const router = useRouter()
+const companyStore = useCompanyStore()
   
 const isLoading = ref(false)
+
+const companyUuid = $route.params.id
   
 const companyDetails = ref({
   name: '',
-  email: '',
 })
   
 const logo = ref(null)
+const favicon = ref(null)
+const logoInputRef = ref(null)
+const faviconInputRef = ref(null)
+const inputLogoKey = ref(0)
+const inputFaviconKey = ref(0)
 const isActive = ref(true)
 const isCopied = ref(false)
-const activeTab = ref(0)
-const qrCode = ref(null)
+const activeTab = ref('basic-setting')
 const isLogoCardHovered = ref(false)
 const isFaviconCardHovered = ref(false)
 const primaryColor = ref("#a12592")
@@ -628,7 +659,15 @@ const addAdminForm = ref('')
 const isPasswordVisible = ref(false)
 const isConfirmPasswordVisible = ref(false)
 const editAdminDetails = ref({})
-const tabs = ref(["Basic Setting", "Theme Setting", "Users & Roles"])
+
+const tabs = [
+  { title: 'Basic Setting', tab: 'basic-setting' },
+  { title: 'Theme Setting', tab: 'theme-setting' },
+  { title: 'Users & Roles', tab: 'users-and-roles' },
+]
+
+const allowedLogoTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/avif', 'image/webp']
+const allowedFaviconType = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/x-icon']
 
 const newAdminDetails = ref({
   name: null,
@@ -640,58 +679,34 @@ const newAdminDetails = ref({
   confirmPassword: '',
 })
 
-const swatches = ref([
-  ['#FF0000', '#AA0000', '#550000'],
-  ['#FFFF00', '#AAAA00', '#555500'],
-  ['#00FF00', '#00AA00', '#005500'],
-  ['#00FFFF', '#00AAAA', '#005555'],
-  ['#0000FF', '#0000AA', '#000055'],
-])
-
 const admins = [
   {
     avatar: null,
     name: 'Admin 1',
     email: 'admin1@gmail.com',
   },
-  {
-    avatar: null,
-    name: 'Admin 2',
-    email: 'admin2@gmail.com',
-  },
-  {
-    avatar: null,
-    name: 'Admin 3',
-    email: 'admin3@gmail.com',
-  },
-  {
-    avatar: null,
-    name: 'Admin 4',
-    email: 'admin4@gmail.com',
-  },
-  {
-    avatar: null,
-    name: 'Admin 5',
-    email: 'admin5@gmail.com',
-  },
-  {
-    avatar: null,
-    name: 'Admin 6',
-    email: 'admin6@gmail.com',
-  },
-  {
-    avatar: null,
-    name: 'Admin 7',
-    email: 'admin7@gmail.com',
-  },
-  {
-    avatar: null,
-    name: 'Admin 8',
-    email: 'admin8@gmail.com',
-  },
 ]
+
+onBeforeMount(async () => {
+  await fetchCompany()
+
+  const searchParams = new URLSearchParams(window.location.search)
+  const requestedTab = searchParams.get('tab')
   
-const nameRule = [v => !!v || "Company name is required"]
+  if (requestedTab && tabs.some(tab => tab.tab === requestedTab)) {
+    selectTab(requestedTab)
+  }
+})
+
+const fetchCompany = async () => {
+  try {
+    await companyStore.show(companyUuid)
+    companyDetails.value.name = company?.value?.name ?? ''
+    primaryColor.value = company?.value?.primary_color ?? '#a12592'
+  } catch (error) {
+    toast.error('Error fetching company:', error)
+  }
+}
 
 const selectTab = tab => {
   activeTab.value = tab
@@ -710,29 +725,157 @@ const onFaviconHover = state => {
   isFaviconCardHovered.value = state
 }
   
-const updateCompanyInfo = () => {
+const updateCompanyInfo = async() => {
   isLoading.value = true
-  console.log('Company Info updated:', companyDetails.value)
+  if (companyDetails.value.name.trim() === '') {
+    toast.error('Company name cannot be empty')
+    isLoading.value = false
+
+    return
+  }
+  try {
+
+    const response = await companyStore.saveCompanyDetails(companyDetails.value, companyUuid)
+    
+    toast.success('Details saved successfully.')
+    isLoading.value = false
+  } catch (error) {
+    console.error('company details failed:', error)
+    isLoading.value = false
+  }
   isLoading.value = false
 }
   
-const saveColor = () => {
+const saveColor = async () => {
   isLoading.value = true
-  console.log('Primary color saved:', primaryColor.value)
-  isLoading.value = false
+  if (primaryColor.value && !isValidHex.value) {
+    toast.error('Please enter a valid hex color code (e.g., #FFF or #FFFFFF).')
+    isLoading.value = false
+
+    return
+  }
+  try {
+    const payload = {
+      'primary_color': primaryColor.value,
+    }
+
+    const response = await companyStore.saveColors(payload, companyUuid)
+    
+    toast.success('Colors saved successfully.')
+    isLoading.value = false
+  } catch (error) {
+    console.error('Logo upload failed:', error)
+    isLoading.value = false
+  }
 }
 
-const downloadQrCode = () => {
-  console.log("Downloading QR Code...")
+const downloadAsset = file => {
+  const link = document.createElement('a')
+
+  link.href = getImageUrl(file.path)
+  link.download = file.name
+  link.click()
 }
 
-const uploadQrCode = () => {
-  console.log("Uploading QR Code...")
+const uploadLogo = () => {
+  inputLogoKey.value++
+  logoInputRef.value.click()
 }
 
-const deleteQrCode = () => {
-  qrCode.value = null
-  console.log("QR Code deleted.")
+const uploadFavicon = () => {
+  inputFaviconKey.value++
+  faviconInputRef.value.click()
+}
+
+const deleteFavicon = async fileId => {
+  try {
+    const response = await companyStore.deleteAsset(fileId, companyUuid)
+    
+    toast.success('Favicon deleted successfully.')
+    favicon.value = null
+    company.value.favicon = null
+    faviconInputRef.value = null
+  } catch (error) {
+    console.error('favicon delete failed:', error)
+  }
+}
+
+const deleteLogo = async fileId => {
+  try {
+    const response = await companyStore.deleteAsset(fileId, companyUuid)
+    
+    toast.success('Logo deleted successfully.')
+    logo.value = null
+    company.value.logo = null
+    logoInputRef.value = null
+  } catch (error) {
+    console.error('Logo delete failed:', error)
+  }
+}
+
+const handleLogoChange = async event => {
+  const file = event.target.files[0]
+  if (file) {
+    if (!allowedLogoTypes.includes(file.type)) {
+      toast.error('Please upload an SVG, PNG, JPG, AVIF or WEBP file for the logo.')
+      
+      return
+    }
+    const reader = new FileReader()
+
+    reader.onload = () => {
+      logo.value = reader.result
+    }
+    reader.readAsDataURL(file)
+
+    const formData = new FormData()
+
+    formData.append('file', file)
+
+    try {
+      const response = await companyStore.uploadLogo(formData, companyUuid)
+
+      toast.success('Logo uploaded successfully.')
+      fetchCompany()
+      logo.value = getImageUrl(response.data.url)
+      logoInputRef.value = null
+    } catch (error) {
+      console.error('Logo upload failed:', error)
+    }
+  }
+}
+
+const handleFaviconChange = async event => {
+  const file = event.target.files[0]
+  if (file) {
+    if (!allowedFaviconType.includes(file.type)) {
+      toast.error('Please upload an ICO, SVG, PNG, JPG, or WEBP file for the favicon.')
+
+      return
+    }
+    const reader = new FileReader()
+
+    reader.onload = () => {
+      favicon.value = reader.result
+    }
+    reader.readAsDataURL(file)
+
+    const formData = new FormData()
+
+    formData.append('file', file)
+
+    try {
+      const response = await companyStore.uploadFavicon(formData, companyUuid)
+
+      toast.success('Favicon uploaded successfully.')
+      console.log('RESPONSE', response.data.url)
+      favicon.value = getImageUrl(response.data.url)
+      faviconInputRef.value = null
+      fetchCompany()
+    } catch (error) {
+      console.error('Favicon upload failed:', error)
+    }
+  }
 }
 
 const deleteAdmin = async user => {
@@ -763,8 +906,22 @@ const deleteAdmin = async user => {
   }
 }
 
+const formattedUrl = url => {
+  if (!/^https?:\/\//i.test(url)) {
+    return 'http://' + url
+  }
+  
+  return url
+}
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+
 const copyToClipboard = () => {
-  const domain = "https://example.com"
+  const domain = formattedUrl(company?.value?.url) || ''
 
   navigator.clipboard.writeText(domain).then(() => {
     isCopied.value = true
@@ -773,6 +930,21 @@ const copyToClipboard = () => {
     }, 1500)
   })
 }
+
+const company = computed(() =>{
+  return companyStore.getCompany
+})
+
+const isValidHex = computed(() => {
+  const hexRegex = /^#([A-F\d]{3}){1,2}$/i
+  
+  return hexRegex.test(primaryColor.value)
+})
+
+watch(activeTab, newActiveTab => {
+  router.push({ query: { tab: newActiveTab } })
+  useHead({ title: `${layoutConfig.app.title} | ${tabs.find(tab => tab.tab === newActiveTab).title}` })
+})
 </script>
   
 <style scoped>

@@ -1,4 +1,6 @@
-export const staticPrimaryColor = '#a12592'
+const store = JSON.parse(localStorage.getItem('auth'))
+const getPrimaryColor = () => (store && store.tenant && store.primaryColor  ? store.primaryColor : '#a12592')
+export const staticPrimaryColor = getPrimaryColor()
 export const staticPrimaryDarkenColor = '#8f1f81'
 export const themes = {
   light: {

@@ -21,9 +21,13 @@ class CompanyResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => ucwords($this->name),
             'created_at' => $this->created_at,
-            'total_companies' => Company::count(),
+            'total_companies' => Company::count() - 1,
             'url' => $this->makeDomainUrl(),
             'admin' => $this->getClient() ? new UserResource($this->getClient()) : null,
+            'logo' => $this->getLogo(),
+            'favicon' => $this->getFavicon() ?? null,
+            'primary_color' => $this->getPimaryColor() ?? null
         ];
     }
+    
 }

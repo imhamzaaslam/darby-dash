@@ -47,6 +47,7 @@ declare module 'vue-router/auto/routes' {
     'forgot-password': RouteRecordInfo<'forgot-password', '/forgot-password', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
     'logout': RouteRecordInfo<'logout', '/logout', Record<never, never>, Record<never, never>>,
+    'marketplace': RouteRecordInfo<'marketplace', '/marketplace', Record<never, never>, Record<never, never>>,
     'projects-partials-add-payment-drawer': RouteRecordInfo<'projects-partials-add-payment-drawer', '/projects/_partials/add-payment-drawer', Record<never, never>, Record<never, never>>,
     'projects-partials-filter-members-drawer': RouteRecordInfo<'projects-partials-filter-members-drawer', '/projects/_partials/filter-members-drawer', Record<never, never>, Record<never, never>>,
     'projects-partials-team-grid-skeleton': RouteRecordInfo<'projects-partials-team-grid-skeleton', '/projects/_partials/team-grid-skeleton', Record<never, never>, Record<never, never>>,

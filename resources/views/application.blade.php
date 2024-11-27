@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="{{ asset('favicon.ico') }}" />
+    <link id="favicon" rel="icon" href="{{ asset('favicon.ico') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DarbyDash</title>
+    <title id="companyTitle">DarbyDash</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('loader.css') }}" />
     @vite(['resources/js/main.js'])
 </head>
@@ -25,7 +25,30 @@
 
     <script>
         const loaderColor = '#FFFFFF'
-        const primaryColor = '#a12592'
+        var primaryColor = null
+
+        const setCompanyDetails = () => {
+            const store = JSON.parse(localStorage.getItem('auth'))
+            const storedFavicon = store && store.tenant && store.favicon ? store.favicon : null;
+            const storedTitle = store && store.tenant && store.title ? store.title : null;
+            const storedPrimaryColor = store && store.tenant && store.primaryColor ? store.primaryColor : '#a12592';
+            const faviconElement = document.getElementById('favicon');
+            const titleElement = document.getElementById('companyTitle');
+
+            if (storedFavicon) {
+                faviconElement.href = storedFavicon;
+            }
+
+            if (storedTitle) {
+                titleElement.textContent = storedTitle;
+            }
+
+            if (storedPrimaryColor) {
+                primaryColor = storedPrimaryColor;
+            }
+        };
+
+        setCompanyDetails();
 
         if (loaderColor)
             document.documentElement.style.setProperty('--initial-loader-bg', loaderColor)

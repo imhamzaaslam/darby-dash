@@ -13,11 +13,28 @@ export default {
   createCompany(payload) {
     return apiClient.post(`/super-admin/companies`, payload)
   },
+  showCompany(companyId) {
+    return apiClient.get(`/super-admin/companies/${companyId}`)
+  },
   updateCompany(companyId, payload) {
     return apiClient.patch(`/super-admin/companies/${companyId}`, payload)
   },
-
   deleteCompany(companyId) {
     return apiClient.delete(`/super-admin/companies/${companyId}`)
+  },
+  logo(payload, companyId) {
+    return apiClient.post(`/super-admin/companies/${companyId}/upload/logo`, payload)
+  },
+  favicon(payload, companyId) {
+    return apiClient.post(`/super-admin/companies/${companyId}/upload/favicon`, payload)
+  },
+  deleteAsset(fileId, companyId) {
+    return apiClient.delete(`/super-admin/companies/${companyId}/delete-asset/${fileId}`)
+  },
+  saveCompanyDetails(payload, companyId) {
+    return apiClient.post(`/super-admin/companies/${companyId}/save-details`, payload)
+  },
+  saveColors(payload, companyId) {
+    return apiClient.post(`/super-admin/companies/${companyId}/save-colors`, payload)
   },
 }

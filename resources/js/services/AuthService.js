@@ -19,6 +19,7 @@ authClient.interceptors.response.use(
     // If it's a bad response from the user or the session is no longer active,
     // we log out the user.
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+
     if (error.response && [401, 419].includes(error.response.status) && user) {
       authStore.logout()
     }
@@ -49,6 +50,10 @@ export default {
     await getCookie()
 
     return await authClient.post('/api/auth/login', payload)
+  },
+
+  tenantInfo: async () => {
+    return await authClient.get('/api/auth/check-tenant')
   },
 
   logout: async token => {

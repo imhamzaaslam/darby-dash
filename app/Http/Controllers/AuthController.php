@@ -5,10 +5,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Company;
+use App\Models\Settings_meta;
 use App\Enums\UserRole;
+use App\Enums\Settings;
 use Validator;
 use Carbon\Carbon;
 use App\Services\EmailService;
+use App\Services\TenantService;
 use App\Events\UserCreated;
 
 class AuthController extends Controller
@@ -18,6 +21,7 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->mailer = new EmailService();
+        $this->tenantService = new TenantService();
     }
 
     public function login(Request $request)
@@ -127,5 +131,44 @@ class AuthController extends Controller
                 'success' => false,
             ], 500);
         }
+    }
+
+    public function tenantInfo(){
+
+        $isTenant = tenancy()->tenant ? true : false;
+        
+        if ($isTenant) {
+            $tenantId = tenancy()->tenant->id;
+            $tenantName = str_replace('_', ' ', $tenantId);
+            $company = Company::where('name', $tenantName)->first();
+            $tenant = $this->tenantService->setTenant($company->name);
+
+            if (!$tenant) {
+                return null;
+            }
+    
+            $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+            $favicon = $tenantCompany->favicon;
+            $logo = $tenantCompany->logo;
+
+            $primaryColor = Settings_meta::on('tenant')->where('setting_id', Settings::GENERAL->value)
+            ->where('key', 'primary_color')
+            ->value('value');
+
+            $this->tenantService->resetTenant();
+
+            return response()->json([
+                'isTenant' => $isTenant,
+                'logo' => $logo->path,
+                'favicon' => $favicon->path,
+                'title' => $company->name,
+                'primaryColor' => $primaryColor,
+                'status' => true,
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+        ]);
     }
 }

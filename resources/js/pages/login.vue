@@ -121,6 +121,18 @@ const $router = useRouter()
 const toast = useToast()
 const loadStatus = computed(() => authStore.getLoadStatus)
 
+onBeforeMount(async () => {
+  await getTenant()
+})
+
+const getTenant = async () => {
+  try {
+    await authStore.tenantInfo()
+  } catch (error) {
+    toast.error('Error fetching tenant:', error)
+  }
+}
+
 async function submit() {
   refForm.value?.validate().then(async ({ valid: isValid }) => {
     if (isValid) {

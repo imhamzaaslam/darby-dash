@@ -24,6 +24,10 @@ const authStore = useAuthStore()
 const projectId = ref(null)
 const projectType = ref(null)
 
+onMounted(() => {
+  authStore.tenantInfo()
+})
+
 watchEffect(() => {
   projectId.value = $route.params.id
 })
@@ -96,7 +100,7 @@ const project = computed(() =>{
                   { text: 'Files', route: `/projects/${projectId}/files` },
                   { text: 'Inbox', route: `/projects/${projectId}/chat` },
                   { text: 'Your Team', route: `/projects/${projectId}/team` },
-                  { text: 'Payments', route: `/projects/${projectId}/payments` }
+                  /* { text: 'Payments', route: `/projects/${projectId}/payments` } */
                 ]"
                 :key="link.text"
               >
@@ -190,12 +194,12 @@ const project = computed(() =>{
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
             >Your Team</span>
           </RouterLink>
-          <RouterLink :to="`/projects/${projectId}/payments`">
+          <!-- <RouterLink :to="`/projects/${projectId}/payments`">
             <span
               class="text-h6 me-8 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/payments` }"
             >Payments</span>
-          </RouterLink>
+          </RouterLink> -->
         </div>
         <VSpacer />
 

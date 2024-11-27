@@ -698,63 +698,47 @@
         </VCardItem>
         <VCardText>
           <template v-if="getServices.length">
-            <!-- Carousel of services if services exist -->
-            <VCarousel
-              show-arrows="hover"
-              hide-delimiter
-              cycle
-              :interval="3000"
-              height="294px"
+            <VSheet
+              class="mx-auto"
+              max-width="800"
             >
-              <VCarouselItem
-                v-for="(service, index) in getServices"
-                :key="index"
+              <VSlideGroup
+                v-model="model"
+                mandatory
+                show-arrows
               >
-                <VRow class="mt-2">
-                  <VCol
-                    v-if="service.image"
-                    cols="4"
+                <VSlideGroupItem
+                  v-for="(service, index) in getServices"
+                  :key="index"
+                >
+                  <VSheet
+                    class="mx-2 custom-border"
+                    height="180"
+                    width="250"
                   >
-                    <VImg
-                      :src="getImageUrl(service.image.path)"
-                      :alt="service.title"
-                      height="100"
-                      rounded="md"
-                    />
-                  </VCol>
-                  <VCol
-                    v-else
-                    cols="4"
-                  >
-                    <VImg
-                      :src="placeholderImg"
-                      :alt="service.title"
-                      height="100"
-                      rounded="md"
-                    />
-                  </VCol>
-                  <VCol
-                    cols="8"
-                    class="d-flex flex-column justify-center"
-                  >
-                    <span class="font-weight-bold text-sm text-primary mt-1 mb-2">{{ service.title }}</span>
-                    <p
-                      class="mb-0 text-body-2"
-                      v-html="truncateDescription(service.description, 140)"
-                    />
-                    <div>
-                      <VBtn
-                        size="small"
-                        rounded="pill"
-                        color="primary"
-                      >
-                        Learn More
-                      </VBtn>
+                    <div class="d-flex flex-column px-3 py-2 fill-height">
+                      <span class="font-weight-bold text-h6 text-primary mb-2">{{ service.title }}</span>
+                      <p 
+                        class="text-body-2 text-high-emphasis mb-0 justify-content-between" 
+                        v-html="truncateDescription(service.description, 130)" 
+                      />
+                      <div class="d-flex flex-grow-1" />
+                      <div class="d-flex justify-start">
+                        <VBtn
+                          size="small"
+                          variant="elevated"
+                          rounded="pill"
+                          color="primary"
+                          :to="{ name: 'marketplace-service', params: { id: service.uuid } }"
+                        >
+                          Learn More
+                        </VBtn>
+                      </div>
                     </div>
-                  </VCol>
-                </VRow>
-              </VCarouselItem>
-            </VCarousel>
+                  </VSheet>
+                </VSlideGroupItem>
+              </VSlideGroup>
+            </VSheet>
           </template>
           <template v-else>
             <!-- Fallback UI when no services are found -->
@@ -880,6 +864,7 @@ import { useAuthStore } from "@/store/auth"
 import { useUserStore } from "@/store/users"
 import { useUserSettingStore } from "@/store/user_settings"
 import { useToast } from "vue-toastification"
+import { VSheet } from 'vuetify/lib/components/index.mjs'
 
 onBeforeMount(async () => {
   await getProjectProgress()
@@ -895,6 +880,7 @@ const toast = useToast()
 
 const projectUuid = $route.params.id
 const isCompleted = ref(0)
+const model = ref(null)
 const showAwardBucksBtn = ref(0)
 const saveAwardedBucksForm = ref()
 const isAwardBucksDialogue = ref(false)
@@ -1157,6 +1143,10 @@ watch(project, () => {
 }
 .logistics-card-statistics:hover {
   border-bottom: 3px solid rgba(var(--v-theme-primary));
+}
+.custom-border {
+  border: 1px solid rgba(var(--v-theme-primary));
+  border-radius: 6px;
 }
 .horizontal-scroll {
   overflow-x: auto;

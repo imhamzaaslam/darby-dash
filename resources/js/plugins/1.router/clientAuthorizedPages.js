@@ -14,6 +14,7 @@ let clientAuthorizedPages = [
   'bucks-setting',
   'view-received-notifications',
   'view-project-activities',
+  'marketplace-service',
 ]
 
 export default clientAuthorizedPages

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\UserRole;
 
 /**
  * App\Models\Base
@@ -32,7 +33,7 @@ class Base extends Model implements BaseInterface
         parent::boot();
 
         static::addGlobalScope('company', function (Builder $builder) {
-            if (auth()->check()) {
+            if (auth()->check() && !(auth()->user()->hasRole(UserRole::SUPER_ADMIN->value))) {
                 $companyId = auth()->user()->company_id;
                 if (in_array((new static())->getTable(), self::$excludedFilters)) {
                     return;
@@ -52,19 +53,19 @@ class Base extends Model implements BaseInterface
                 $model->uuid = str()->uuid();
             }
 
-            if (auth()->check() && Schema::hasColumn($model->getTable(), 'created_by')) {
+            if (auth()->check() && !(auth()->user()->hasRole(UserRole::SUPER_ADMIN->value)) && Schema::hasColumn($model->getTable(), 'created_by')) {
                 $model->created_by = auth()->id();
             }
         });
 
         static::updating(function (self $model) {
-            if (auth()->check() && Schema::hasColumn($model->getTable(), 'updated_by')) {
+            if (auth()->check() && !(auth()->user()->hasRole(UserRole::SUPER_ADMIN->value)) && Schema::hasColumn($model->getTable(), 'updated_by')) {
                 $model->updated_by = auth()->id();
             }
         });
 
         static::deleting(function (self $model) {
-            if (auth()->check() && Schema::hasColumn($model->getTable(), 'deleted_by')) {
+            if (auth()->check() && !(auth()->user()->hasRole(UserRole::SUPER_ADMIN->value)) && Schema::hasColumn($model->getTable(), 'deleted_by')) {
                 $model->deleted_by = auth()->id();
                 $model->save();
             }

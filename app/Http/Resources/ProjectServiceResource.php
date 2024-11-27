@@ -19,6 +19,7 @@ class ProjectServiceResource extends JsonResource
             'uuid' => $this->uuid,
             'title' => $this->title,
             'project_type_id' => $this->project_type_id,
+            'project_type_uuid' => $this->projectType->uuid ?? null,
             'service_type' => $this->projectType->name ?? 'N/A',
             'description' => $this->description,
             'status' => $this->status,
