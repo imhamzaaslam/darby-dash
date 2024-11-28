@@ -232,11 +232,11 @@
                         </div>
                       </div>
                       <VChip
-                        color="primary"
+                        :color="company.is_active ? 'primary' : 'error'"
                         variant="outlined"
                         size="small"
                       >
-                        Active
+                        {{ company.is_active ? 'Active' : 'Inactive' }}
                       </VChip>
                     </div>
 

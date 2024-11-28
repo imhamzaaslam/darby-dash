@@ -17,6 +17,7 @@ use App\Http\Requests\Company\StoreCompanyLogoRequest;
 use App\Http\Requests\Company\StoreCompanyFaviconRequest;
 use App\Http\Requests\Company\StoreCompanyThemeColorsRequest;
 use App\Http\Resources\CompanyResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -252,23 +253,35 @@ class CompanyController extends Controller
                 return null;
             }
 
-            $tenant = $this->tenantService->setTenant($company->name);
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenant = $this->tenantService->setTenant($company->name);
 
-            if (!$tenant) {
-                return null;
+                if (!$tenant) {
+                    return null;
+                }
             }
     
             $file = $request->file('file');
-            $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+            else{
+                $tenantCompany = Company::where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+
             if ($file && $tenantCompany) {
                 $disk = app()->environment('testing') ? 'testing' : 'public';
                 $existingFile = $tenantCompany->logo;
                 if ($existingFile) {
                     $this->fileUploadService->deleteFile($existingFile->path, $disk);
                 }
+                $directory = Auth::user()->hasRole(UserRole::SUPER_ADMIN->value) ? strtolower(str_replace(' ', '_', $tenantCompany->name)) . '/assets/logo' : '/assets/logo';
                 $fileData = $this->fileUploadService->uploadFile(
                     $file,
-                    strtolower(str_replace(' ', '_', $tenantCompany->name)) . '/assets/logo',
+                    $directory,
                     $disk,
                     $file->getClientOriginalName()
                 );
@@ -282,20 +295,37 @@ class CompanyController extends Controller
                         'mime_type' => $fileData->mimeType,
                     ]);
                 } else {
-                    File::on('tenant')->create([
-                        'fileable_type' => Company::class,
-                        'fileable_id' => $tenantCompany->id,
-                        'path' => $fileData->path,
-                        'type' => FileType::AVATAR->value,
-                        'name' => $fileData->name,
-                        'size' => $fileData->size,
-                        'url' => $fileData->url,
-                        'mime_type' => $fileData->mimeType,
-                    ]);
+                    if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value)){
+                        File::on('tenant')->create([
+                            'fileable_type' => Company::class,
+                            'fileable_id' => $tenantCompany->id,
+                            'path' => $fileData->path,
+                            'type' => FileType::AVATAR->value,
+                            'name' => $fileData->name,
+                            'size' => $fileData->size,
+                            'url' => $fileData->url,
+                            'mime_type' => $fileData->mimeType,
+                        ]);
+                    }else{
+                        File::create([
+                            'fileable_type' => Company::class,
+                            'fileable_id' => $tenantCompany->id,
+                            'path' => $fileData->path,
+                            'type' => FileType::AVATAR->value,
+                            'name' => $fileData->name,
+                            'size' => $fileData->size,
+                            'url' => $fileData->url,
+                            'mime_type' => $fileData->mimeType,
+                        ]);
+                    }
                 }
             }
 
-            $this->tenantService->resetTenant();
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $this->tenantService->resetTenant();
+            }
+
             return response()->json([
                 'message' => 'Company logo uploaded successfully',
                 'url' => $fileData->path,
@@ -320,23 +350,35 @@ class CompanyController extends Controller
                 return null;
             }
 
-            $tenant = $this->tenantService->setTenant($company->name);
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenant = $this->tenantService->setTenant($company->name);
 
-            if (!$tenant) {
-                return null;
+                if (!$tenant) {
+                    return null;
+                }
             }
     
             $file = $request->file('file');
-            $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+            else{
+                $tenantCompany = Company::where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+
             if ($file && $tenantCompany) {
                 $disk = app()->environment('testing') ? 'testing' : 'public';
                 $existingFile = $tenantCompany->favicon;
                 if ($existingFile) {
                     $this->fileUploadService->deleteFile($existingFile->path, $disk);
                 }
+                $directory = Auth::user()->hasRole(UserRole::SUPER_ADMIN->value) ? strtolower(str_replace(' ', '_', $tenantCompany->name)) . '/assets/favicon' : '/assets/favicon';
                 $fileData = $this->fileUploadService->uploadFile(
                     $file,
-                    strtolower(str_replace(' ', '_', $tenantCompany->name)) . '/assets/favicon',
+                    $directory,
                     $disk,
                     $file->getClientOriginalName()
                 );
@@ -350,20 +392,36 @@ class CompanyController extends Controller
                         'mime_type' => $fileData->mimeType,
                     ]);
                 } else {
-                    File::on('tenant')->create([
-                        'fileable_type' => Company::class,
-                        'fileable_id' => $tenantCompany->id,
-                        'path' => $fileData->path,
-                        'type' => FileType::DOC->value,
-                        'name' => $fileData->name,
-                        'size' => $fileData->size,
-                        'url' => $fileData->url,
-                        'mime_type' => $fileData->mimeType,
-                    ]);
+                    if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value)){
+                        File::on('tenant')->create([
+                            'fileable_type' => Company::class,
+                            'fileable_id' => $tenantCompany->id,
+                            'path' => $fileData->path,
+                            'type' => FileType::DOC->value,
+                            'name' => $fileData->name,
+                            'size' => $fileData->size,
+                            'url' => $fileData->url,
+                            'mime_type' => $fileData->mimeType,
+                        ]);
+                    }else{
+                        File::create([
+                            'fileable_type' => Company::class,
+                            'fileable_id' => $tenantCompany->id,
+                            'path' => $fileData->path,
+                            'type' => FileType::DOC->value,
+                            'name' => $fileData->name,
+                            'size' => $fileData->size,
+                            'url' => $fileData->url,
+                            'mime_type' => $fileData->mimeType,
+                        ]);
+                    }
                 }
             }
 
-            $this->tenantService->resetTenant();
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $this->tenantService->resetTenant();
+            }
     
             return response()->json([
                 'message' => 'Company favicon uploaded successfully',
@@ -403,6 +461,82 @@ class CompanyController extends Controller
                 return null;
             }
 
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenant = $this->tenantService->setTenant($company->name);
+
+                if (!$tenant) {
+                    return null;
+                }
+            }
+    
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+            else{
+                $tenantCompany = Company::where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+
+            if($tenantCompany)
+            {
+                if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+                {
+                    $setting = Settings_meta::on('tenant')->updateOrCreate(
+                        [
+                            'user_id' => null,
+                            'setting_id' => Settings::GENERAL->value,
+                            'key' => 'primary_color',
+                        ],
+                        [
+                            'type' => 'string',
+                            'value' => $request->primary_color,
+                        ]
+                    );
+                }
+                else{
+                    $setting = Settings_meta::updateOrCreate(
+                        [
+                            'user_id' => null,
+                            'setting_id' => Settings::GENERAL->value,
+                            'key' => 'primary_color',
+                        ],
+                        [
+                            'type' => 'string',
+                            'value' => $request->primary_color,
+                        ]
+                    );
+                }
+            }
+
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $this->tenantService->resetTenant();
+            }
+
+            return response()->json([
+                'message' => 'Color setting saved successfully!'
+            ]);
+        }
+    }
+
+    /**
+     * Update Active state.
+     *
+     * @param Request $request
+     * @param  string  $uuid
+     * @return Response|JsonResponse
+     */
+    public function updateActiveState(Request $request, string $uuid): JsonResponse
+    {
+        if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value) || Auth::user()->hasRole(UserRole::ADMIN->value))
+        {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+
+            if (!$company) {
+                return null;
+            }
+
             $tenant = $this->tenantService->setTenant($company->name);
 
             if (!$tenant) {
@@ -413,23 +547,15 @@ class CompanyController extends Controller
 
             if($tenantCompany)
             {
-                $setting = Settings_meta::on('tenant')->updateOrCreate(
-                    [
-                        'user_id' => null,
-                        'setting_id' => Settings::GENERAL->value,
-                        'key' => 'primary_color',
-                    ],
-                    [
-                        'type' => 'string',
-                        'value' => $request->primary_color,
-                    ]
-                );
+                $tenantCompany->update([
+                    'status' => $request->isActive,
+                ]);
             }
 
             $this->tenantService->resetTenant();
 
             return response()->json([
-                'message' => 'Color setting saved successfully!'
+                'message' => 'State saved successfully!'
             ]);
         }
     }
@@ -451,27 +577,77 @@ class CompanyController extends Controller
                 return null;
             }
 
-            $tenant = $this->tenantService->setTenant($company->name);
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenant = $this->tenantService->setTenant($company->name);
 
-            if (!$tenant) {
-                return null;
+                if (!$tenant) {
+                    return null;
+                }
             }
-    
-            $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+            else{
+                $tenantCompany = Company::where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
 
             if($tenantCompany)
             {
-                $file = File::on('tenant')->where('uuid', $fileUuid)->first();
+                if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+                {
+                    $file = File::on('tenant')->where('uuid', $fileUuid)->first();
+                }
+                else{
+                    $file = File::where('uuid', $fileUuid)->first();
+                }
 
                 if($file)
                 {
                     $this->fileUploadService->deleteFile($file->path, 'public');
 
                     $file->delete();
-                }
-                
-                return response()->json(['message' => 'File deleted successfully']);
+                } 
             }
+
+            $this->tenantService->resetTenant();
+
+            return response()->json(['message' => 'File deleted successfully']);
         }        
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @param  string  $uuid
+     * @param Request $request
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function getAllUsers(Request $request, string $uuid): AnonymousResourceCollection|JsonResponse
+    {
+        if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+        {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+
+            if (!$company) {
+                return null;
+            }
+
+            $tenant = $this->tenantService->setTenant($company->name);
+
+            if (!$tenant) {
+                return null;
+            }
+
+            $users = User::on('tenant')
+            ->filtered($request->name ?? '', $request->email ?? '', $request->roleId ?? null)
+            ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+            ->paginate($request->per_page ?? config('pagination.per_page', 10));
+
+            $this->tenantService->resetTenant();
+
+            return UserResource::collection($users);
+        }
     }
 }

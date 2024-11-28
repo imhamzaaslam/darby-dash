@@ -4,8 +4,10 @@ import CompanyService from '../services/CompanyService'
 export const useCompanyStore = defineStore('companies', {
   state: () => ({
     companies: [],
+    users: [],
     company: [],
     companiesCount: 0,
+    usersCount: 0,
     loadStatus: 0,
     error: null,
   }),
@@ -154,10 +156,79 @@ export const useCompanyStore = defineStore('companies', {
         console.error('save color error ', error)
       }
     },
+    async updateActiveState(companyId, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await CompanyService.updateActiveState(companyId, payload)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updateActiveState error ', error)
+      }
+    },
+    async getAllUsers(companyId, page = 1, perPage = 10, searchName = null, searchEmail= null, roleId=null) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const res = await CompanyService.getAllUsers(companyId, page, perPage, searchName, searchEmail, roleId)
+
+        this.users = res.data.data
+        this.usersCount = res.data.meta.total
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getAllUsers error ', error)
+      }
+    },
+    async createUser(companyId, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await CompanyService.createUser(companyId, payload)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('createUser error ', error)
+      }
+    },
+    async updateUser(companyId, userId, payload) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await CompanyService.updateUser(companyId, userId, payload)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updateUser error ', error)
+      }
+    },
+    async deleteUser(companyId, userId) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await CompanyService.deleteUser(companyId, userId)
+
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('deleteUser error ', error)
+      }
+    },
   },
   getters: {
     getLoadStatus: state => state.loadStatus,
     getCompanies: state => state.companies,
+    getUsers: state => state.users,
     getCompany: state => state.company,
     getErrors: state => state?.error?.response?.data?.errors || state?.error?.response?.data?.message,
     getStatusCode: state => state.error?.response?.status,

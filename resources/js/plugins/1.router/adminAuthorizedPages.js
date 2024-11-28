@@ -22,6 +22,7 @@ let adminAuthorizedPages = [
   'view-project-activities',
   'manage-templates',
   'marketplace-service',
+  'manage-company-settings',
 ]
 
 export default adminAuthorizedPages

@@ -77,8 +77,25 @@ Route::middleware([
                 Route::get('/', [CompanyController::class, 'index']);
                 Route::post('/', [CompanyController::class, 'store']);
                 Route::prefix('{uuid}')->group(function () {
+                    Route::get('/', [CompanyController::class, 'show']);
                     Route::patch('/', [CompanyController::class, 'update']);
                     Route::delete('/', [CompanyController::class, 'delete']);
+                    Route::post('/save-details', [CompanyController::class, 'saveDetails']);
+                    Route::post('/save-colors', [CompanyController::class, 'saveColors']);
+                    Route::patch('/update-active-state', [CompanyController::class, 'updateActiveState']);
+                    Route::delete('/delete-asset/{fileUuid}', [CompanyController::class, 'deleteAsset']);
+                    Route::prefix('users')->group(function () {
+                        Route::get('/', [CompanyController::class, 'getAllUsers']);
+                        Route::post('/store', [CompanyController::class, 'storeUser']);
+                        Route::prefix('{userUuid}')->group(function () {
+                            Route::patch('/update', [CompanyController::class, 'updateUser']);
+                            Route::patch('/delete', [CompanyController::class, 'deleteUser']);
+                        });
+                    });
+                    Route::prefix('upload')->group(function () {
+                        Route::post('/logo', [CompanyController::class, 'uploadLogo']);
+                        Route::post('/favicon', [CompanyController::class, 'uploadFavicon']);
+                    });
                 });
             });
         });

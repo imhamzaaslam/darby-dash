@@ -47,8 +47,12 @@
                   Company Details
                 </h6>
                 <VSwitch
+                  v-if="authStore.isSuperAdmin"
                   v-model="isActive"
                   label="Active"
+                  :true-value="1"
+                  :false-value="0"
+                  @change="handleActiveChange"
                 />
               </VCardTitle>
 
@@ -62,7 +66,10 @@
                   :style="{ width: '300px' }"
                   disabled
                 />
-                <div class="mt-3">
+                <div
+                  v-if="authStore.isSuperAdmin"
+                  class="mt-3"
+                >
                   <div class="d-flex align-items-center justify-content-between">
                     <label class="text-sm text-high-emphasis">
                       Domain Address
@@ -87,7 +94,7 @@
                     </label>
                   </div>
                   <a
-                    href="https://example.com"
+                    :href="formattedUrl(company.url)"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-primary text-decoration-underline d-block mt-1"
@@ -317,120 +324,159 @@
             </VCard>
           </VCol>
         </VRow>
+        <!-- Users & Roles Section -->
         <VRow
-          v-if="activeTab == 'users-and-roles'"
+          v-if="(activeTab == 'users-and-roles') && authStore.isSuperAdmin"
           class="ms-1"
         >
-          <!-- Users & Roles Section -->
-          <VCol
-            cols="12"
-            md="12"
-          >
+          <VCol cols="12">
             <VCard class="px-3 py-2">
-              <VCardTitle class="d-flex mb-4 justify-space-between align-center">
+              <VCardTitle class="d-flex mb-2 justify-space-between align-center">
                 <h5 class="text-h6">
-                  Manage Admins
+                  Manage Users
                 </h5>
                 <VBtn
                   variant="elevated"
                   color="primary"
                   size="small"
                   prepend-icon="tabler-plus"
-                  @click="isAddAdminDialogVisible = true"
+                  @click="isAddMemberDialogVisible = true"
                 >
-                  New Admin
+                  New User
                 </VBtn>
               </VCardTitle>
-
-              <VCardText class="mt-7">
-                <VList class="card-list">
-                  <VListItem
-                    v-for="admin in admins"
-                    :key="admin.name"
+              <VCol
+                v-if="getUsers.length === 0"
+                cols="12"
+                class="mt-7"
+              >
+                <VCard class="px-3 py-3 text-center">
+                  <span>No users found</span>
+                </VCard>
+              </VCol>
+              <VRow v-else>
+                <VCol
+                  v-for="user in getUsers"
+                  :key="user.id"
+                  cols="12"
+                  class="mt-1"
+                >
+                  <VCard
+                    class="d-flex align-center ps-4 py-1 list-side-border"
+                    @click.stop="editMember(user)"
                   >
-                    <template #prepend>
-                      <VBadge
-                        dot
-                        location="top end"
-                        offset-x="1"
-                        offset-y="1"
-                        color="warning"
-                      >
-                        <VAvatar
-                          size="34"
-                          :class="admin.avatar ? '' : 'text-white bg-primary'"
-                          :variant="!admin.avatar ? 'tonal' : ''"
+                    <VCol cols="3">
+                      <div class="d-flex align-center gap-x-3">
+                        <VBadge
+                          dot
+                          location="top end"
+                          offset-x="1"
+                          offset-y="1"
+                          :color="user.is_online ? 'success' : 'warning'"
                         >
-                          <span>{{ avatarText(admin.name) }}</span>
-                        </VAvatar>
-                      </VBadge>
-                    </template>
-
-                    <VListItemTitle class="text-sm text-high-emphasis font-weight-semibold">
-                      {{ admin.name }}
-                    </VListItemTitle>
-                    <VListItemSubtitle>
-                      {{ admin.email }}
-                    </VListItemSubtitle>
-
-                    <template #append>
-                      <div class="d-flex align-center">
-                        <VBtn
-                          icon
-                          color="td-hover"
-                          class="ma-2"
+                          <VAvatar
+                            size="34"
+                            :class="user.avatar ? '' : 'text-white bg-primary'"
+                            :variant="!user.avatar ? 'tonal' : ''"
+                          >
+                            <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                          </VAvatar>
+                        </VBadge>
+                        <div>
+                          <h6 class="text-h6 text-no-wrap">
+                            <span class="d-block">{{ user.name_first }} {{ user.name_last }}</span>
+                          </h6>
+                          <small>{{ roleStore.capitalizeFirstLetter(user.role) }}</small>
+                        </div>
+                      </div>
+                    </VCol>
+                    <VCol cols="3">
+                      <small class="text-xs">
+                        <strong><VIcon
+                          color="primary"
+                          icon="tabler-mail"
+                        /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ user.email }}</span>
+                      </small>
+                    </VCol>
+                    <VCol cols="3">
+                      <small class="text-xs">
+                        <strong><VIcon
+                          color="primary"
+                          icon="tabler-phone"
+                        /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ user?.info?.phone }}</span>
+                      </small>
+                    </VCol>
+                    <VCol cols="2">
+                      <div class="">
+                        <VChip
+                          :color="getStatusColor(user.state)"
+                          variant="outlined"
                           size="small"
-                          rounded="pills"
-                          @click.prevent
+                          class="user-state-chip"
                         >
-                          <VIcon icon="tabler-dots" />
-                          <VMenu activator="parent">
+                          {{ roleStore.capitalizeFirstLetter(user.state) }}
+                        </VChip>
+                      </div>
+                    </VCol>
+                    <VCol cols="1">
+                      <IconBtn @click.prevent>
+                        <VIcon icon="tabler-dots" />
+                        <VMenu activator="parent">
+                          <VList>
                             <VList>
                               <VListItem
                                 value="edit"
-                                @click="editAdmin(admin)"
+                                @click="editMember(user)"
                               >
                                 Edit
                               </VListItem>
                               <VListItem
                                 value="delete"
-                                @click="deleteAdmin(admin)"
+                                @click="deleteMember(user)"
                               >
                                 Delete
                               </VListItem>
                             </VList>
-                          </VMenu>
-                        </VBtn>
-                      </div>
-                    </template>
-                  </VListItem>
-                </VList>
-              </VCardText>
+                          </VList>
+                        </VMenu>
+                      </IconBtn>
+                    </VCol>
+                  </VCard>
+                </VCol>
+              </VRow>
+              <TablePagination
+                v-if="!isLoading && getUsers.length > 0"
+                v-model:page="options.page"
+                :items-per-page="options.itemsPerPage"
+                :total-items="totalUsers"
+                class="custom-pagination"
+                @update:page="handlePageChange"
+              />
             </VCard>
           </VCol>
         </VRow>
-      </VCol>
-    </VRow>
+      </vcol>
+    </vrow>
   </VContainer>
   <VDialog
-    v-model="isAddAdminDialogVisible"
+    v-model="isAddMemberDialogVisible"
     persistent
     class="v-dialog-sm"
   >
     <!-- Dialog close btn -->
-    <DialogCloseBtn @click="isAddAdminDialogVisible = !isAddAdminDialogVisible" />
+    <DialogCloseBtn @click="isAddMemberDialogVisible = !isAddMemberDialogVisible" />
 
     <!-- Dialog Content -->
     <VCard title="Add Admin Details">
       <VForm
-        ref="addAdminForm"
+        ref="addMemberForm"
         @submit.prevent=""
       >
         <VCardText>
           <VRow>
             <VCol cols="6">
               <AppTextField
-                v-model="newAdminDetails.name_first"
+                v-model="newMemberDetails.name_first"
                 label="First Name *"
                 :rules="[requiredValidator]"
                 placeholder="First Name"
@@ -440,7 +486,7 @@
             <!-- Last Name -->
             <VCol cols="6">
               <AppTextField
-                v-model="newAdminDetails.name_last"
+                v-model="newMemberDetails.name_last"
                 label="Last Name *"
                 :rules="[requiredValidator]"
                 placeholder="Last Name"
@@ -450,7 +496,7 @@
             <!-- Email -->
             <VCol cols="6">
               <AppTextField
-                v-model="newAdminDetails.email"
+                v-model="newMemberDetails.email"
                 label="Email *"
                 :rules="[requiredValidator, emailValidator]"
                 placeholder="Email"
@@ -460,7 +506,7 @@
             <!-- Phone Mask Field -->
             <VCol cols="6">
               <AppTextField
-                v-model="newAdminDetails.phone"
+                v-model="newMemberDetails.phone"
                 v-mask="'(###) ###-####'"
                 label="Phone *"
                 :rules="[requiredValidator]"
@@ -471,7 +517,7 @@
             <!-- Password -->
             <VCol cols="6">
               <AppTextField
-                v-model="newAdminDetails.password"
+                v-model="newMemberDetails.password"
                 label="Password *"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
@@ -485,11 +531,11 @@
             <!-- Confirm Password -->
             <VCol cols="6">
               <AppTextField
-                v-model="newAdminDetails.confirmPassword"
+                v-model="newMemberDetails.confirmPassword"
                 :type="isConfirmPasswordVisible ? 'text' : 'password'"
                 label="Confirm Password *"
                 :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                :rules="[requiredValidator, confirmedValidator(newAdminDetails.confirmPassword, newAdminDetails.password)]"
+                :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
                 placeholder="Confirm Password"
                 @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
               />
@@ -500,13 +546,13 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             color="secondary"
-            @click="isAddAdminDialogVisible = false"
+            @click="isAddMemberDialogVisible = false"
           >
             Cancel
           </VBtn>
           <VBtn
             type="submit"
-            @click="addAdminForm?.validate()"
+            @click="addMemberForm?.validate()"
           >
             Save
           </VBtn>
@@ -515,24 +561,24 @@
     </VCard>
   </VDialog>
   <VDialog
-    v-model="isEditAdminDialogVisible"
+    v-model="isEditMemberDialogVisible"
     persistent
     class="v-dialog-sm"
   >
     <!-- Dialog close btn -->
-    <DialogCloseBtn @click="isEditAdminDialogVisible = !isEditAdminDialogVisible" />
+    <DialogCloseBtn @click="isEditMemberDialogVisible = !isEditMemberDialogVisible" />
 
     <!-- Dialog Content -->
     <VCard title="Edit Admin Details">
       <VForm
-        ref="editAdminForm"
+        ref="editMemberForm"
         @submit.prevent=""
       >
         <VCardText>
           <VRow>
             <VCol cols="6">
               <AppTextField
-                v-model="editAdminDetails.name_first"
+                v-model="editMemberDetails.name_first"
                 label="First Name *"
                 :rules="[requiredValidator]"
                 placeholder="First Name"
@@ -542,7 +588,7 @@
             <!-- Last Name -->
             <VCol cols="6">
               <AppTextField
-                v-model="editAdminDetails.name_last"
+                v-model="editMemberDetails.name_last"
                 label="Last Name *"
                 :rules="[requiredValidator]"
                 placeholder="Last Name"
@@ -552,7 +598,7 @@
             <!-- Email -->
             <VCol cols="6">
               <AppTextField
-                v-model="editAdminDetails.email"
+                v-model="editMemberDetails.email"
                 label="Email *"
                 :rules="[requiredValidator, emailValidator]"
                 placeholder="Email"
@@ -562,7 +608,7 @@
             <!-- Phone Mask Field -->
             <VCol cols="6">
               <AppTextField
-                v-model="editAdminDetails.phone"
+                v-model="editMemberDetails.phone"
                 v-mask="'(###) ###-####'"
                 label="Phone *"
                 :rules="[requiredValidator]"
@@ -573,7 +619,7 @@
             <!-- Password -->
             <VCol cols="6">
               <AppTextField
-                v-model="editAdminDetails.password"
+                v-model="editMemberDetails.password"
                 label="Password *"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
@@ -587,11 +633,11 @@
             <!-- Confirm Password -->
             <VCol cols="6">
               <AppTextField
-                v-model="editAdminDetails.confirmPassword"
+                v-model="editMemberDetails.confirmPassword"
                 :type="isConfirmPasswordVisible ? 'text' : 'password'"
                 label="Confirm Password *"
                 :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                :rules="[requiredValidator, confirmedValidator(editAdminDetails.confirmPassword, editAdminDetails.password)]"
+                :rules="[requiredValidator, confirmedValidator(editMemberDetails.confirmPassword, editMemberDetails.password)]"
                 placeholder="Confirm Password"
                 @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
               />
@@ -602,13 +648,13 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             color="secondary"
-            @click="isEditAdminDialogVisible = false"
+            @click="isEditMemberDialogVisible = false"
           >
             Cancel
           </VBtn>
           <VBtn
             type="submit"
-            @click="editAdminForm?.validate()"
+            @click="editMemberForm?.validate()"
           >
             Save
           </VBtn>
@@ -624,6 +670,8 @@ import { layoutConfig } from '@layouts'
 import Swal from 'sweetalert2'
 import { useToast } from "vue-toastification"
 import { useCompanyStore } from "@/store/companies"
+import { useRoleStore } from "@/store/roles"
+import { useAuthStore } from "@/store/auth"
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 
@@ -631,6 +679,8 @@ const toast = useToast()
 const $route = useRoute()
 const router = useRouter()
 const companyStore = useCompanyStore()
+const roleStore = useRoleStore()
+const authStore = useAuthStore()
   
 const isLoading = ref(false)
 
@@ -646,30 +696,34 @@ const logoInputRef = ref(null)
 const faviconInputRef = ref(null)
 const inputLogoKey = ref(0)
 const inputFaviconKey = ref(0)
-const isActive = ref(true)
+const isActive = ref(1)
 const isCopied = ref(false)
 const activeTab = ref('basic-setting')
 const isLogoCardHovered = ref(false)
 const isFaviconCardHovered = ref(false)
 const primaryColor = ref("#a12592")
-const isEditAdminDialogVisible = ref(false)
-const editAdminForm = ref('')
-const isAddAdminDialogVisible = ref(false)
-const addAdminForm = ref('')
+const isEditMemberDialogVisible = ref(false)
+const editMemberForm = ref('')
+const isAddMemberDialogVisible = ref(false)
+const addMemberForm = ref('')
 const isPasswordVisible = ref(false)
 const isConfirmPasswordVisible = ref(false)
-const editAdminDetails = ref({})
+const editMemberDetails = ref({})
+const selectedRole = ref(null)
+const searchName = ref('')
+const searchEmail = ref('')
+const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const tabs = [
   { title: 'Basic Setting', tab: 'basic-setting' },
   { title: 'Theme Setting', tab: 'theme-setting' },
-  { title: 'Users & Roles', tab: 'users-and-roles' },
+  authStore.isSuperAdmin && { title: 'Users & Roles', tab: 'users-and-roles' },
 ]
 
 const allowedLogoTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/avif', 'image/webp']
 const allowedFaviconType = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/x-icon']
 
-const newAdminDetails = ref({
+const newMemberDetails = ref({
   name: null,
   name_first: '',
   name_last: '',
@@ -678,14 +732,6 @@ const newAdminDetails = ref({
   password: '',
   confirmPassword: '',
 })
-
-const admins = [
-  {
-    avatar: null,
-    name: 'Admin 1',
-    email: 'admin1@gmail.com',
-  },
-]
 
 onBeforeMount(async () => {
   await fetchCompany()
@@ -696,6 +742,9 @@ onBeforeMount(async () => {
   if (requestedTab && tabs.some(tab => tab.tab === requestedTab)) {
     selectTab(requestedTab)
   }
+
+  await fetchUsers()
+  await fetchRoles()
 })
 
 const fetchCompany = async () => {
@@ -703,18 +752,48 @@ const fetchCompany = async () => {
     await companyStore.show(companyUuid)
     companyDetails.value.name = company?.value?.name ?? ''
     primaryColor.value = company?.value?.primary_color ?? '#a12592'
+    isActive.value = company?.value?.is_active
   } catch (error) {
     toast.error('Error fetching company:', error)
   }
+}
+
+const fetchUsers = async () => {
+  try {
+    await companyStore.getAllUsers(companyUuid, options.value.page, options.value.itemsPerPage, searchName.value, searchEmail.value, selectedRole.value)
+  } catch (error) {
+    toast.error('Error fetching users:', error)
+  }
+}
+
+const fetchRoles = async () => {
+  try {
+    isLoading.value = true
+
+    await roleStore.getAll()
+  } catch (error) {
+    toast.error('Failed to get roles:', error.message || error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
+const applyFilters = async (name = '', email = null, roleId = null) => {
+  searchName.value = name
+  searchEmail.value = email
+  selectedRole.value = roleId
+  options.value.page = 1
+  await fetchUsers()
 }
 
 const selectTab = tab => {
   activeTab.value = tab
 }
 
-const editAdmin = admin => {
-  editAdminDetails.value = { ...admin }
-  isEditAdminDialogVisible.value = true
+const editMember = member => {
+  editMemberDetails.value = { ...member }
+  isEditMemberDialogVisible.value = true
 }
 
 const onLogoHover = state => {
@@ -767,6 +846,21 @@ const saveColor = async () => {
     console.error('Logo upload failed:', error)
     isLoading.value = false
   }
+}
+
+const handleActiveChange = async () => {
+
+  const payload = {
+    isActive: isActive.value,
+  }
+
+  await companyStore.updateActiveState(companyUuid, payload)
+  toast.success(isActive.value ? 'Company active successfully.' : 'Company inactive successfully.')
+}
+
+const handlePageChange = async page => {
+  options.value.page = page
+  await fetchUsers()
 }
 
 const downloadAsset = file => {
@@ -878,7 +972,7 @@ const handleFaviconChange = async event => {
   }
 }
 
-const deleteAdmin = async user => {
+const deleteMember = async member => {
   try {
 
     const confirmDelete = await Swal.fire({
@@ -886,7 +980,7 @@ const deleteAdmin = async user => {
       html: `
         <div>
         <p>
-            Do you want to delete <strong>${user.name}</strong>?
+            Do you want to delete <strong>${member.name_first} ${member.name_last}</strong>?
             <br>
             <small>This action will also delete all associated tasks.</small>
         </p>
@@ -904,6 +998,15 @@ const deleteAdmin = async user => {
   } catch (error) {
     console.log('Failed to delete project list:', error)
   }
+}
+
+const getStatusColor = role => {
+  const colors = {
+    'active': 'success',
+    'inactive': 'error',
+  }
+
+  return colors[role] ?? 'warning'
 }
 
 const formattedUrl = url => {
@@ -933,6 +1036,18 @@ const copyToClipboard = () => {
 
 const company = computed(() =>{
   return companyStore.getCompany
+})
+
+const getRoles = computed(() => {
+  return roleStore.getRoles
+})
+
+const getUsers = computed(() => {
+  return companyStore.getUsers
+})
+
+const totalUsers = computed(() => {
+  return companyStore.usersCount
 })
 
 const isValidHex = computed(() => {
@@ -988,7 +1103,7 @@ margin: auto;
 
 .custom-tabs li.active,
 .custom-tabs li:hover {
-  background-color: #a12592;
+  background-color: rgba(var(--v-theme-primary));
   color: white;
   border-radius: 3px;
 }

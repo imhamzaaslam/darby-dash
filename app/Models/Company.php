@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use App\Services\TenantService;
 use App\Models\User;
 use App\Models\Base;
 use App\Enums\FileType;
+use App\Enums\UserRole;
 use App\Enums\Settings;
 use Illuminate\Support\Str;
 use Stancl\Tenancy\Database\Models\Domain;
@@ -24,6 +26,7 @@ class Company extends Base
     protected $fillable = [
         'uuid',
         'name',
+        'status',
     ];
 
     public function users(): HasMany
@@ -80,6 +83,13 @@ class Company extends Base
 
     public function getClient()
     {
+        if(Auth::user()->hasRole(UserRole::ADMIN->value))
+        {
+            $admin = User::role('Admin')->orderBy('id', 'asc')->first();
+
+            return $admin ?? null;
+        }
+
         $tenantService = app(TenantService::class);
 
         $tenant = $tenantService->setTenant($this->name);
@@ -129,8 +139,33 @@ class Company extends Base
         return $favicon ?? null;
     }
 
+    public function active()
+    {
+        $tenantService = app(TenantService::class);
+
+        $tenant = $tenantService->setTenant($this->name);
+
+        if (!$tenant) {
+            return null;
+        }
+
+        $company = Company::on('tenant')->where('name', $this->name)->orderBy('id', 'asc')->first();
+        $status = $company->status;
+        $tenantService->resetTenant();
+        return $status ? 1 : 0;
+    }
+
     public function getPimaryColor()
     {
+        if(Auth::user()->hasRole(UserRole::ADMIN->value))
+        {
+            $primaryColor = Settings_meta::where('setting_id', Settings::GENERAL->value)
+            ->where('key', 'primary_color')
+            ->value('value');
+
+            return $primaryColor ?? null;
+        }
+
         $tenantService = app(TenantService::class);
 
         $tenant = $tenantService->setTenant($this->name);

@@ -28,6 +28,7 @@ class SettingSeeder extends Seeder
                 if (!$exists) {
                     DB::table('settings')->insert([
                         'name' => $setting['name'],
+                        'uuid' => $setting['uuid'],
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ]);

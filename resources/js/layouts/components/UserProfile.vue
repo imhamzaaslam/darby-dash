@@ -70,7 +70,10 @@
                 class="company-name text-primary"
                 style="position: relative;top:-5px;"
               >
-                {{ userDetails?.company }}
+                <span v-if="authStore.isAdmin">
+                  <RouterLink :to="{ name: 'manage-company-settings', params: { id: userDetails?.company_uuid } }">{{ userDetails?.company }}</RouterLink>
+                </span>
+                <span v-else>{{ userDetails?.company }}</span>
               </div>
             </VListItemSubtitle>
           </VListItem>
