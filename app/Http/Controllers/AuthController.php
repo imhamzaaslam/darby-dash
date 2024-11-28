@@ -159,8 +159,8 @@ class AuthController extends Controller
 
             return response()->json([
                 'isTenant' => $isTenant,
-                'logo' => $logo->path,
-                'favicon' => $favicon->path,
+                'logo' => $logo->path ?? null,
+                'favicon' => $favicon->path ?? null,
                 'title' => $company->name,
                 'primaryColor' => $primaryColor,
                 'status' => true,
