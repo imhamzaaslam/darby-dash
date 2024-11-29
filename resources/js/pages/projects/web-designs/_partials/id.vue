@@ -729,7 +729,7 @@
                           variant="elevated"
                           rounded="pill"
                           color="primary"
-                          :to="{ name: 'marketplace-service', params: { id: service.uuid } }"
+                          :to="{ name: 'marketplace-service-detail', params: { id: service.uuid } }"
                         >
                           Learn More
                         </VBtn>

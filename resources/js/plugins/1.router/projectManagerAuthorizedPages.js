@@ -15,6 +15,8 @@ let projectManagerAuthorizedPages = [
   'bucks-setting',
   'view-received-notifications',
   'view-project-activities',
+  'marketplace-services',
+  'marketplace-service-detail',
 ]
 
 export default projectManagerAuthorizedPages

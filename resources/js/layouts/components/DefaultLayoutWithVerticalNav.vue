@@ -100,6 +100,7 @@ const project = computed(() =>{
                   { text: 'Files', route: `/projects/${projectId}/files` },
                   { text: 'Inbox', route: `/projects/${projectId}/chat` },
                   { text: 'Your Team', route: `/projects/${projectId}/team` },
+                  { text: 'Marketplace', route: `/projects/${projectId}/marketplace` },
                   /* { text: 'Payments', route: `/projects/${projectId}/payments` } */
                 ]"
                 :key="link.text"
@@ -194,6 +195,12 @@ const project = computed(() =>{
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
             >Your Team</span>
           </RouterLink>
+          <RouterLink :to="`/projects/${projectId}/marketplace`">
+            <span
+              class="text-h6 me-8 inner-badge-text"
+              :class="{ 'text-primary': $route.path === `/projects/${projectId}/marketplace` }"
+            >Marketplace</span>
+          </RouterLink> 
           <!-- <RouterLink :to="`/projects/${projectId}/payments`">
             <span
               class="text-h6 me-8 inner-badge-text"

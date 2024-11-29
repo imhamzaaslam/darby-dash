@@ -21,7 +21,8 @@ let adminAuthorizedPages = [
   'view-received-notifications',
   'view-project-activities',
   'manage-templates',
-  'marketplace-service',
+  'marketplace-services',
+  'marketplace-service-detail',
   'manage-company-settings',
 ]
 

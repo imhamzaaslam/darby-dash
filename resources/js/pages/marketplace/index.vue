@@ -6,120 +6,47 @@
         {{ userDetails?.company }} Marketplace
       </h4>
       <p class="text-body-2 mt-1">
-        <strong>Active Project Type:</strong> {{ service?.service_type }}
+        Explore a wide range of services offered by {{ userDetails?.company }} to meet all your needs.
       </p>
     </div>
   
-    <!-- Main Service Section -->
-    <VRow class="align-stretch mt-3">
-      <!-- Image Section -->
-      <VCol
-        cols="12"
-        md="3"
-      >
-        <VCard class="rounded-lg">
-          <VImg
-            :src="getImageUrl(service?.image?.path)"
-            class="related-image"
-            height="200"
-            cover
-            gradient="to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)"
-          />
-          <VCardText class="pa-4">
-            <strong class="text-h6 text-primary font-weight-bold mb-2 d-block">Server Stats</strong>
-            <VDivider
-              color="primary"
-              class="mb-3"
-            />
-            <div class="stats-text d-flex flex-column align-items-start">
-              <div class="d-flex align-items-center w-100 pb-2 border-bottom">
-                <VIcon
-                  class="text-primary me-2"
-                  icon="tabler-circle-check"
-                />
-                <strong>Uptime:</strong> <span class="ms-2">99.9%</span>
-              </div>
-              <div class="d-flex align-items-center w-100 pb-2 border-bottom">
-                <VIcon
-                  class="text-primary me-2"
-                  icon="tabler-circle-check"
-                />
-                <strong>Requests:</strong> <span class="ms-2">1200/hr</span>
-              </div>
-              <div class="d-flex align-items-center w-100 pb-2 border-bottom">
-                <VIcon
-                  class="text-primary me-2"
-                  icon="tabler-circle-check"
-                />
-                <strong>Response Time:</strong> <span class="ms-2">250ms</span>
-              </div>
-              <div class="mt-3 text-center text-primary text-h6 w-100">
-                $10/month
-              </div>
-              <div class="d-flex mt-4 justify-center w-100">
-                <VBtn
-                  size="small"
-                  variant="elevated"
-                  rounded="pill"
-                  color="primary"
-                >
-                  Add to Project
-                </VBtn>
-              </div>
-            </div>
-          </VCardText>
-        </VCard>
-      </VCol>
-  
-      <!-- Title and Description Section -->
-      <VCol
-        cols="12"
-        md="9"
-      >
-        <VCard
-          class="rounded-lg pa-6"
-          style="height: 440px;"
-        >
-          <VCardTitle class="text-h5 font-weight-bold text-primary">
-            {{ service?.title || "Service Title" }}
-          </VCardTitle>
-          <VCardText>
-            <p
-              class="text-body-1 text-secondary"
-              v-html="service?.description || ''"
-            />
-          </VCardText>
-        </VCard>
-      </VCol>
-    </VRow>
-  
     <!-- Related Services Section -->
     <div class="related-section">
-      <h4 class="text-h5 font-weight-bold text-primary">
-        Related Services
-      </h4>
+      <VRow
+        class="mt-4"
+        dense
+      >
+        <VCol v-if="getServices ? getServices.length === 0 : 0">
+          <p class="text-h6 text-center">
+            No services found.
+          </p>
+        </VCol>
+      </VRow>
       <VRow
         class="mt-4"
         dense
       >
         <VCol
-          v-for="related in getRelatedServices"
-          :key="related.id"
+          v-for="service in getServices"
+          :key="service.id"
           cols="12"
           sm="6"
           md="4"
         >
-          <VCard class="elevation-3 hover-card rounded-lg overflow-hidden">
+          <VCard
+            class="elevation-3 hover-card rounded-lg overflow-hidden"
+            style="height: 335px;"
+          >
             <!-- Service Image -->
             <VImg
-              :src="getImageUrl(related?.image?.path)"
+              :src="getImageUrl(service?.image?.path)"
               class="related-image"
               height="200"
               cover
               gradient="to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)"
             >
               <div class="text-white px-3 text-h6 font-weight-bold related-title-overlay">
-                {{ related.title || "Related Service Title" }}
+                {{ service.title || "Related Service Title" }}
               </div>
             </VImg>
 
@@ -127,7 +54,7 @@
             <VCardText class="pa-4">
               <p 
                 class="text-body-2 text-high-emphasis mb-0 text-align-between" 
-                v-html="truncateDescription(service.description, 130)" 
+                v-html="truncateDescription(service.description, 100)" 
               />
             </VCardText>
 
@@ -138,7 +65,7 @@
                 variant="elevated"
                 rounded="pill"
                 size="small"
-                :to="{ name: 'marketplace-service', params: { id: related.uuid } }"
+                :to="{ name: 'marketplace-service-detail', params: { id: service.uuid } }"
                 target="_blank"
               >
                 Learn More
@@ -153,38 +80,21 @@
   
 <script setup lang="js">
 import { computed, watch, onBeforeMount } from "vue"
-import { useRoute } from "vue-router"
 import { useUserSettingStore } from "@/store/user_settings"
 import { useUserStore } from "@/store/users"
-import { VDivider } from "vuetify/lib/components/index.mjs"
   
 const userSettingStore = useUserSettingStore()
 const userStore = useUserStore()
-const $route = useRoute()
   
-const serviceUuid = $route.params.id
-  
-const service = computed(() => userSettingStore.getProjectService)
-  
-const getRelatedServices = computed(() =>
-  userSettingStore.getProjectServicesByType.filter(
-    service => service.uuid !== serviceUuid,
-  ),
+const getServices = computed(() =>
+  userSettingStore.getProjectServicesWithoutPagination,
 )
   
-const fetchService = async () => {
+const fetchServices = async () => {
   try {
-    await userSettingStore.showService(serviceUuid)
+    await userSettingStore.getServicesWithoutPagination()
   } catch (error) {
-    console.error("Error fetching service:", error)
-  }
-}
-  
-const fetchRelatedServices = async () => {
-  try {
-    await userSettingStore.getServicesByType(service?.value?.project_type_uuid)
-  } catch (error) {
-    console.error("Error fetching related services:", error)
+    console.error("Error fetching services:", error)
   }
 }
   
@@ -205,8 +115,7 @@ const userDetails = computed(() => {
 })
   
 onBeforeMount(async () => {
-  await fetchService()
-  await fetchRelatedServices()
+  await fetchServices()
 })
 </script>
   
