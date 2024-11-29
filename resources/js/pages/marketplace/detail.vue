@@ -19,7 +19,7 @@
       >
         <VCard class="rounded-lg">
           <VImg
-            :src="getImageUrl(service?.image?.path)"
+            :src="service.image ? getImageUrl(service?.image?.path) : placeholderImg"
             class="related-image"
             height="200"
             cover
@@ -119,10 +119,13 @@
           sm="6"
           md="4"
         >
-          <VCard class="elevation-3 hover-card rounded-lg overflow-hidden">
+          <VCard
+            class="elevation-3 hover-card rounded-lg overflow-hidden"
+            style="height: 335px;"
+          >
             <!-- Service Image -->
             <VImg
-              :src="getImageUrl(related?.image?.path)"
+              :src="related.image ? getImageUrl(related?.image?.path) : placeholderImg"
               class="related-image"
               height="200"
               cover
@@ -137,7 +140,7 @@
             <VCardText class="pa-4">
               <p 
                 class="text-body-2 text-high-emphasis mb-0 text-align-between" 
-                v-html="truncateDescription(service.description, 130)" 
+                v-html="truncateDescription(service.description, 90)" 
               />
             </VCardText>
 
@@ -163,6 +166,7 @@
   
 <script setup lang="js">
 import { computed, watch, onBeforeMount } from "vue"
+import placeholderImg from '@images/pages/servicePlaceholder.png'
 import { useRoute } from "vue-router"
 import { useUserSettingStore } from "@/store/user_settings"
 import { useUserStore } from "@/store/users"

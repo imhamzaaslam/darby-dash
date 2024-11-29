@@ -39,7 +39,7 @@
           >
             <!-- Service Image -->
             <VImg
-              :src="getImageUrl(service?.image?.path)"
+              :src="service.image ? getImageUrl(service?.image?.path) : placeholderImg"
               class="related-image"
               height="200"
               cover
@@ -54,7 +54,7 @@
             <VCardText class="pa-4">
               <p 
                 class="text-body-2 text-high-emphasis mb-0 text-align-between" 
-                v-html="truncateDescription(service.description, 100)" 
+                v-html="truncateDescription(service.description, 90)" 
               />
             </VCardText>
 
@@ -80,6 +80,7 @@
   
 <script setup lang="js">
 import { computed, watch, onBeforeMount } from "vue"
+import placeholderImg from '@images/pages/servicePlaceholder.png'
 import { useUserSettingStore } from "@/store/user_settings"
 import { useUserStore } from "@/store/users"
   
