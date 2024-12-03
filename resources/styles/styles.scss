@@ -15,9 +15,9 @@
 }
 
 .multiselect-purple {
-  --ms-tag-bg: #a12592;
-  --ms-border-color: #a12592;
-  --ms-border-color-active: #a12592 !important;
+  --ms-tag-bg: rgba(var(--v-theme-primary));
+  --ms-border-color: rgba(var(--v-theme-primary));
+  --ms-border-color-active: rgba(var(--v-theme-primary)) !important;
 }
 
 .multiselect-purple.is-active {
@@ -27,7 +27,7 @@
 .dots-loader {
   width: 35px;
   aspect-ratio: 4;
-  --_g: no-repeat radial-gradient(circle closest-side,#a12592 90%,#0000);
+  --_g: no-repeat radial-gradient(circle closest-side,rgba(var(--v-theme-primary)) 90%,#0000);
   background:
     var(--_g) 0%   50%,
     var(--_g) 50%  50%,
@@ -42,8 +42,8 @@
 }
 
 div:where(.swal2-icon).swal2-warning {
-  border-color: #a12592 !important;
-  color: #a12592 !important;
+  border-color: rgba(var(--v-theme-primary)) !important;
+  color: rgba(var(--v-theme-primary)) !important;
 }
 
 @keyframes vertical-spin-pause {
@@ -97,7 +97,7 @@ th {
     height: 100%;
     top: 0;
     left: 0;
-    background-color: #a12592;
+    background-color: rgba(var(--v-theme-primary));
     border-radius: 50%;
     animation: ping 1.5s infinite;
     z-index: -1;

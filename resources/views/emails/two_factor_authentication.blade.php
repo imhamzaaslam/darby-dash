@@ -23,7 +23,7 @@
         }
 
         .email-header {
-            background-color: #a12592;
+            background-color: rgba(var(--v-theme-primary));
             color: #ffffff;
             padding: 20px;
             border-radius: 8px 8px 0 0;
@@ -51,7 +51,7 @@
             color: #333333;
             background-color: #f8f9fa;
             padding: 15px;
-            border: 2px dashed #a12592;
+            border: 2px dashed rgba(var(--v-theme-primary));
             text-align: center;
             margin: 20px 0;
             border-radius: 4px;
@@ -67,7 +67,7 @@
         }
 
         .email-footer a {
-            color: #a12592;
+            color: rgba(var(--v-theme-primary));
             text-decoration: none;
         }
     </style>

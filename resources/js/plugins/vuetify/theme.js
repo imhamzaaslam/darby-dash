@@ -1,7 +1,25 @@
 const store = JSON.parse(localStorage.getItem('auth'))
 const getPrimaryColor = () => (store && store.tenant && store.primaryColor  ? store.primaryColor : '#a12592')
 export const staticPrimaryColor = getPrimaryColor()
-export const staticPrimaryDarkenColor = '#8f1f81'
+
+const adjustColor = (color, amount) => {
+  const colorWithoutHash = color.replace('#', '')
+  const num = parseInt(colorWithoutHash, 16)
+
+  let r = (num >> 16) + amount
+  let g = ((num >> 8) & 0x00ff) + amount
+  let b = (num & 0x0000ff) + amount
+
+  r = Math.max(Math.min(255, r), 0)
+  g = Math.max(Math.min(255, g), 0)
+  b = Math.max(Math.min(255, b), 0)
+
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+}
+
+export const staticPrimaryDarkenColor = adjustColor(staticPrimaryColor, -20)
+export const staticPrimaryLightenColor = adjustColor(staticPrimaryColor, 200)
+
 export const themes = {
   light: {
     dark: false,
@@ -16,7 +34,7 @@ export const themes = {
       'on-success': '#fff',
       'success-darken-1': '#24B364',
       'info': '#00BAD1',
-      'td-hover': '#F0D9EB',
+      'td-hover': staticPrimaryLightenColor,
       'on-td-hover': '#2F2B3D',
       'on-info': '#fff',
       'info-darken-1': '#00A7BC',

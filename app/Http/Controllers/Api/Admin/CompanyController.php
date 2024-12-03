@@ -16,6 +16,8 @@ use App\Http\Requests\Company\UpdateCompanyRequest;
 use App\Http\Requests\Company\StoreCompanyLogoRequest;
 use App\Http\Requests\Company\StoreCompanyFaviconRequest;
 use App\Http\Requests\Company\StoreCompanyThemeColorsRequest;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserAdminRequest;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -36,9 +38,11 @@ use App\Enums\Settings;
 use App\Models\File;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\UserInfo;
 use App\Models\Settings_meta;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
 {
@@ -648,6 +652,173 @@ class CompanyController extends Controller
             $this->tenantService->resetTenant();
 
             return UserResource::collection($users);
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     * @param  string  $uuid
+     * @param StoreUserRequest  $request
+     * @return JsonResponse
+     */
+    public function storeUser(StoreUserRequest $request, string $uuid): JsonResponse
+    {
+        $validated = $request->validated();
+
+        if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+        {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+
+            if (!$company) {
+                return null;
+            }
+
+            $tenant = $this->tenantService->setTenant($company->name);
+
+            if (!$tenant) {
+                return null;
+            }
+
+            $attributes = [
+                'name_first' => $validated['name_first'],
+                'name_last' => $validated['name_last'],
+                'email' => $validated['email'],
+                'password' => bcrypt($validated['password']),
+                'company_id' => 1,
+            ];
+
+            $role = $validated['role'];
+
+            $infoAttributes = [
+                'phone' => $validated['phone'] ?? '',
+            ];
+
+            $user = User::on('tenant')->create($attributes ?? []);
+            $user->assignRole($role);
+            UserInfo::on('tenant')->create([
+                'user_id' => $user->id,
+                ...$infoAttributes,
+            ]);
+
+            $this->tenantService->resetTenant();
+
+            return response()->json(['message' => 'Member added successfully']);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param  string  $uuid
+     * @param  string  $userUuid
+     * @return Response|JsonResponse
+     */
+    public function updateUser(Request $request, string $uuid, string $userUuid): Response|JsonResponse
+    {
+
+        if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+        {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+
+            if (!$company) {
+                return null;
+            }
+
+            $tenant = $this->tenantService->setTenant($company->name);
+
+            if (!$tenant) {
+                return null;
+            }
+
+            $rules = [
+                'name_first' => 'required|string|max:255',
+                'name_last' => 'required|string|max:255',
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('tenant.users', 'email')
+                        ->ignore($userUuid, 'uuid'),
+                ],
+                'password' => 'sometimes|string|min:8|confirmed',
+                'phone' => 'required|string|max:20',
+                'role' => [
+                    'required',
+                    'string',
+                    Rule::exists('tenant.roles', 'name')
+                ],
+            ];
+
+            $validated = $request->validate($rules);
+            
+            $user = User::on('tenant')->where('uuid', $userUuid)->first();
+
+            if($user)
+            {
+                $validatedUserInput = $request->only([
+                    'name_first',
+                    'name_last',
+                    'email',
+                    'password',
+                ]);
+    
+                $validatedInfoInput = $request->only([
+                    'phone' => $validated['phone'] ?? '',
+                ]);
+    
+                $role = $validated['role'];
+
+                $user->update($validatedUserInput);
+
+                if ($role !== $user->getRoleNames()->first()) {
+                    $user->syncRoles($role);
+                }
+
+                $userInfo = UserInfo::on('tenant')->where('user_id', $user->id)->first();
+                $userInfo->update($validatedInfoInput);
+
+                $this->tenantService->resetTenant();
+
+                return response()->json(['message' => 'Member updated successfully']);
+            }
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  string  $uuid
+     * @param  string  $userUuid
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteUser(string $uuid, string $userUuid): JsonResponse
+    {
+        if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+        {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+            
+            if (!$company) {
+                return null;
+            }
+            
+            $tenant = $this->tenantService->setTenant($company->name);
+            
+            if (!$tenant) {
+                return null;
+            }
+            
+            $user = User::on('tenant')->where('uuid', $userUuid)->first();
+
+            if($user)
+            {
+                $user->delete();
+
+                $this->tenantService->resetTenant();
+
+                return response()->json([
+                    'message' => 'Member deleted successfully',
+                ]);
+            }
         }
     }
 }

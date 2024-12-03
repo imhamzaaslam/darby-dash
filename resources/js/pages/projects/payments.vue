@@ -1,5 +1,5 @@
 <template>
-  <VRow class=mb-2>
+  <VRow class="mb-2">
     <VCol
       cols="12"
       md="7"
@@ -7,9 +7,11 @@
     >
       <div class="d-flex justify-center align-center">
         <VAvatar
-          :size="30"
+          icon="tabler-diamond-filled"
+          size="30"
           class="me-1"
-          :image="sketch"
+          color="primary"
+          variant="tonal"
         />
         <h3 class="text-primary">
           {{ project?.title }}

@@ -392,7 +392,7 @@ const deleteService = async service => {
       text: `Once it’s gone, it’s gone.`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#a12592",
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {

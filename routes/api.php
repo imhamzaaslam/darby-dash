@@ -83,10 +83,10 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::delete('/delete-asset/{fileUuid}', [CompanyController::class, 'deleteAsset']);
                 Route::prefix('users')->group(function () {
                     Route::get('/', [CompanyController::class, 'getAllUsers']);
-                    Route::post('/store', [CompanyController::class, 'storeUser']);
+                    Route::post('/', [CompanyController::class, 'storeUser']);
                     Route::prefix('{userUuid}')->group(function () {
-                        Route::patch('/update', [CompanyController::class, 'updateUser']);
-                        Route::patch('/delete', [CompanyController::class, 'deleteUser']);
+                        Route::patch('/', [CompanyController::class, 'updateUser']);
+                        Route::delete('/', [CompanyController::class, 'deleteUser']);
                     });
                 });
                 Route::prefix('upload')->group(function () {

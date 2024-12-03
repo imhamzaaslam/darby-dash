@@ -19,7 +19,7 @@
       >
         <VCard class="rounded-lg">
           <VImg
-            :src="service.image ? getImageUrl(service?.image?.path) : placeholderImg"
+            :src="service?.image ? getImageUrl(service?.image?.path) : placeholderImg"
             class="related-image"
             height="200"
             cover
@@ -125,7 +125,7 @@
           >
             <!-- Service Image -->
             <VImg
-              :src="related.image ? getImageUrl(related?.image?.path) : placeholderImg"
+              :src="related?.image ? getImageUrl(related?.image?.path) : placeholderImg"
               class="related-image"
               height="200"
               cover
@@ -140,7 +140,7 @@
             <VCardText class="pa-4">
               <p 
                 class="text-body-2 text-high-emphasis mb-0 text-align-between" 
-                v-html="truncateDescription(service.description, 90)" 
+                v-html="truncateDescription(related.description, 80)" 
               />
             </VCardText>
 

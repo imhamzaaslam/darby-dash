@@ -400,7 +400,7 @@ const editMember = async member => {
       title: "Permission Denied",
       text: "Only super admins can change information.",
       icon: "warning",
-      confirmButtonColor: "#a12592",
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
       confirmButtonText: "OK",
       didOpen: () => {
         document.querySelector('.swal2-confirm').blur()
@@ -422,7 +422,7 @@ const deleteMember = async member => {
       text: `Do you want to delete ${member.name_first} ${member.name_last}?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#a12592",
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {

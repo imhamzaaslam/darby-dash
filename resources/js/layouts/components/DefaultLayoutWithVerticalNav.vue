@@ -24,8 +24,8 @@ const authStore = useAuthStore()
 const projectId = ref(null)
 const projectType = ref(null)
 
-onMounted(() => {
-  authStore.tenantInfo()
+onMounted(async () => {
+  await authStore.tenantInfo()
 })
 
 watchEffect(() => {

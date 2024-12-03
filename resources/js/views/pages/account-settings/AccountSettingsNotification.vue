@@ -155,7 +155,7 @@ onBeforeMount(fetchNotificationSettings)
 }
 
 .v-chip--active {
-  background-color: #a12592;
+  background-color: rgba(var(--v-theme-primary));
   color: white !important;
 }
 

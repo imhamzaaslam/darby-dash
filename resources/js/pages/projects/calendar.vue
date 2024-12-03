@@ -4,9 +4,11 @@
     <VCol cols="12">
       <div class="d-flex justify-start align-center">
         <VAvatar
-          :size="30"
+          icon="tabler-diamond-filled"
+          size="30"
           class="me-1"
-          :image="sketch"
+          color="primary"
+          variant="tonal"
         />
         <h3 class="text-primary">
           {{ project?.title }}

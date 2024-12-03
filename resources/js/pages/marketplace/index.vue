@@ -54,7 +54,7 @@
             <VCardText class="pa-4">
               <p 
                 class="text-body-2 text-high-emphasis mb-0 text-align-between" 
-                v-html="truncateDescription(service.description, 90)" 
+                v-html="truncateDescription(service.description, 80)" 
               />
             </VCardText>
 

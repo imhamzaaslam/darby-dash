@@ -7,7 +7,7 @@
           {{ company.name }} Settings
         </h3>
         <p class="text-body-1 text-muted">
-          Manage company's details, branding, users, and settings with ease.
+          Manage {{ company.name }}'s details, branding, users, and settings with ease.
         </p>
       </VCol>
     </VRow>
@@ -390,7 +390,7 @@
                         </div>
                       </div>
                     </VCol>
-                    <VCol cols="3">
+                    <VCol cols="4">
                       <small class="text-xs">
                         <strong><VIcon
                           color="primary"
@@ -398,7 +398,7 @@
                         /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ user.email }}</span>
                       </small>
                     </VCol>
-                    <VCol cols="3">
+                    <VCol cols="2">
                       <small class="text-xs">
                         <strong><VIcon
                           color="primary"
@@ -467,10 +467,10 @@
     <DialogCloseBtn @click="isAddMemberDialogVisible = !isAddMemberDialogVisible" />
 
     <!-- Dialog Content -->
-    <VCard title="Add Admin Details">
+    <VCard title="Add Member Details">
       <VForm
         ref="addMemberForm"
-        @submit.prevent=""
+        @submit.prevent="submitAddMemberForm"
       >
         <VCardText>
           <VRow>
@@ -480,6 +480,7 @@
                 label="First Name *"
                 :rules="[requiredValidator]"
                 placeholder="First Name"
+                :error-messages="addingErrors.name_first"
               />
             </VCol>
 
@@ -490,16 +491,32 @@
                 label="Last Name *"
                 :rules="[requiredValidator]"
                 placeholder="Last Name"
+                :error-messages="addingErrors.name_last"
               />
             </VCol>
 
             <!-- Email -->
-            <VCol cols="6">
+            <VCol cols="12">
               <AppTextField
                 v-model="newMemberDetails.email"
                 label="Email *"
                 :rules="[requiredValidator, emailValidator]"
                 placeholder="Email"
+                :error-messages="addingErrors.email"
+              />
+            </VCol>
+
+            <!-- Role -->
+            <VCol cols="6">
+              <AppSelect
+                v-model="newMemberDetails.role"
+                label="Select Role *"
+                placeholder="Select Role"
+                :items="getRoles"
+                item-title="name"
+                item-value="name"
+                :rules="[requiredValidator]"
+                :error-messages="addingErrors.role"
               />
             </VCol>
 
@@ -511,6 +528,7 @@
                 label="Phone *"
                 :rules="[requiredValidator]"
                 placeholder="(123) 456-7890"
+                :error-messages="addingErrors.phone"
               />
             </VCol>
 
@@ -524,6 +542,7 @@
                 :rules="[requiredValidator]"
                 placeholder="Password"
                 autocomplete="new-password"
+                :error-messages="addingErrors.password"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
             </VCol>
@@ -537,6 +556,7 @@
                 :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                 :rules="[requiredValidator, confirmedValidator(newMemberDetails.confirmPassword, newMemberDetails.password)]"
                 placeholder="Confirm Password"
+                :error-messages="addingErrors.confirmPassword"
                 @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
               />
             </VCol>
@@ -552,9 +572,20 @@
           </VBtn>
           <VBtn
             type="submit"
+            :disabled="getLoadStatus === 1"
             @click="addMemberForm?.validate()"
           >
-            Save
+            <span v-if="getLoadStatus === 1">
+              <VProgressCircular
+                :size="16"
+                width="3"
+                indeterminate
+              />
+              Loading...
+            </span>
+            <span v-else>
+              Save
+            </span>
           </VBtn>
         </VCardText>
       </VForm>
@@ -569,10 +600,10 @@
     <DialogCloseBtn @click="isEditMemberDialogVisible = !isEditMemberDialogVisible" />
 
     <!-- Dialog Content -->
-    <VCard title="Edit Admin Details">
+    <VCard title="Edit Member Details">
       <VForm
         ref="editMemberForm"
-        @submit.prevent=""
+        @submit.prevent="submitEditMemberForm"
       >
         <VCardText>
           <VRow>
@@ -596,12 +627,25 @@
             </VCol>
 
             <!-- Email -->
-            <VCol cols="6">
+            <VCol cols="12">
               <AppTextField
                 v-model="editMemberDetails.email"
                 label="Email *"
                 :rules="[requiredValidator, emailValidator]"
                 placeholder="Email"
+              />
+            </VCol>
+
+            <!-- Role -->
+            <VCol cols="6">
+              <AppSelect
+                v-model="editMemberDetails.role"
+                label="Select Role *"
+                placeholder="Select Role"
+                :items="getRoles"
+                item-title="name"
+                item-value="name"
+                :rules="[requiredValidator]"
               />
             </VCol>
 
@@ -620,10 +664,9 @@
             <VCol cols="6">
               <AppTextField
                 v-model="editMemberDetails.password"
-                label="Password *"
+                label="Password"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                :rules="[requiredValidator]"
                 placeholder="Password"
                 autocomplete="new-password"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
@@ -635,9 +678,9 @@
               <AppTextField
                 v-model="editMemberDetails.confirmPassword"
                 :type="isConfirmPasswordVisible ? 'text' : 'password'"
-                label="Confirm Password *"
+                label="Confirm Password"
                 :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                :rules="[requiredValidator, confirmedValidator(editMemberDetails.confirmPassword, editMemberDetails.password)]"
+                :rules="[confirmedValidator(editMemberDetails.confirmPassword, editMemberDetails.password)]"
                 placeholder="Confirm Password"
                 @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
               />
@@ -654,9 +697,21 @@
           </VBtn>
           <VBtn
             type="submit"
+            class="me-2"
+            :disabled="getLoadStatus === 1"
             @click="editMemberForm?.validate()"
           >
-            Save
+            <span v-if="getLoadStatus === 1">
+              Loading...
+              <VProgressCircular
+                :size="20"
+                width="3"
+                indeterminate
+              />
+            </span>
+            <span v-else>
+              Update
+            </span>
           </VBtn>
         </VCardText>
       </VForm>
@@ -724,10 +779,20 @@ const allowedLogoTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg
 const allowedFaviconType = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/x-icon']
 
 const newMemberDetails = ref({
-  name: null,
+  name_first: '',
+  name_last: '',
+  role: null,
+  email: '',
+  phone: '',
+  password: '',
+  confirmPassword: '',
+})
+
+const addingErrors = ref({
   name_first: '',
   name_last: '',
   email: '',
+  role: '',
   phone: '',
   password: '',
   confirmPassword: '',
@@ -777,6 +842,66 @@ const fetchRoles = async () => {
   finally {
     isLoading.value = false
   }
+}
+
+async function submitAddMemberForm() {
+  addMemberForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
+        resetErrors()
+        await companyStore.createUser(companyUuid, newMemberDetails.value)
+        if(getErrors.value)
+        {
+          showError()
+        }
+        else{
+          isLoading.value = true
+          toast.success('Member added successfully', { timeout: 1000 })
+          isAddMemberDialogVisible.value = false
+          await fetchUsers()
+          addMemberForm.value?.reset()
+          isLoading.value = false
+        }
+      } catch (error) {
+        toast.error('Failed to add member:', error)
+      }
+    }
+  })
+}
+
+async function submitEditMemberForm() {
+  editMemberForm.value?.validate().then(async ({ valid: isValid }) => {
+    if(isValid){
+      try {
+        await companyStore.updateUser(companyUuid, editMemberDetails.value.uuid, editMemberDetails.value)
+        if(getErrors.value)
+        {
+          showError()
+        }
+        else{
+          isLoading.value = true
+          isEditMemberDialogVisible.value = false
+          toast.success('Member updated successfully', { timeout: 1000 })
+          await fetchUsers()
+          isLoading.value = false
+        }
+      } catch (error) {
+        toast.error('Failed to update member:', error.message || error)
+      }
+    }
+  })
+}
+
+const showError = () => {
+  if (getStatusCode === 500) {
+    toast.error('Something went wrong. Please try again later.')
+  } else {
+    addingErrors.value = getErrors.value
+  }
+}
+
+const resetErrors = () => {
+  addingErrors.value = Object.fromEntries(Object.keys(addingErrors.value).map(key => [key, '']))
 }
 
 const applyFilters = async (name = '', email = null, roleId = null) => {
@@ -988,15 +1113,25 @@ const deleteMember = async member => {
       `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#a12592",
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
         document.querySelector('.swal2-confirm').blur()
       },
     })
+
+    if (confirmDelete.isConfirmed) {
+
+      await companyStore.deleteUser(companyUuid, member.uuid)
+
+      isLoading.value = true
+      toast.success('Member deleted successfully', { timeout: 1000 })
+      await fetchUsers()
+      isLoading.value = false
+    }
   } catch (error) {
-    console.log('Failed to delete project list:', error)
+    console.log('Failed to delete user:', error)
   }
 }
 
@@ -1054,6 +1189,18 @@ const isValidHex = computed(() => {
   const hexRegex = /^#([A-F\d]{3}){1,2}$/i
   
   return hexRegex.test(primaryColor.value)
+})
+
+const getErrors = computed(() => {
+  return companyStore.getErrors
+})
+
+const getLoadStatus = computed(() => {
+  return companyStore.getLoadStatus
+})
+
+const getStatusCode = computed(() => {
+  return companyStore.getStatusCode
 })
 
 watch(activeTab, newActiveTab => {

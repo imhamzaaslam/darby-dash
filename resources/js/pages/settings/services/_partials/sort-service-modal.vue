@@ -234,7 +234,7 @@ const deleteService = async service => {
         `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#a12592",
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
@@ -278,7 +278,7 @@ const loadStatus = computed(() => userSettingStore.getLoadStatus)
 }
 
 .sort-item:hover {
-  background-color: #F0D9EB;
+  background-color: rgba(var(--v-theme-td-hover));
 }
 
 .drag-handle {
@@ -289,7 +289,7 @@ const loadStatus = computed(() => userSettingStore.getLoadStatus)
 .sort-item:hover .list-text,
 .sort-item:hover .progress-text,
 .sort-item:hover .progress-complete-task-text {
-  color: #a12592 !important;
+  color: rgba(var(--v-theme-primary)) !important;
   font-weight: normal;
 }
 

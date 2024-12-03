@@ -54,11 +54,14 @@ export default {
     
     return apiClient.get(baseUrl + queryString)
   },
-  updateActiveState: async (companyId, payload) => {
-    return await apiClient.patch(`super-admin/companies/${companyId}/update-active-state`, payload)
+  createUser(companyId, payload) {
+    return apiClient.post(`/super-admin/companies/${companyId}/users`, payload)
   },
-  updateActiveState: async (companyId, payload) => {
-    return await apiClient.patch(`super-admin/companies/${companyId}/update-active-state`, payload)
+  updateUser(companyId, userId, payload) {
+    return apiClient.patch(`/super-admin/companies/${companyId}/users/${userId}`, payload)
+  },
+  deleteUser(companyId, userId) {
+    return apiClient.delete(`/super-admin/companies/${companyId}/users/${userId}`)
   },
   updateActiveState: async (companyId, payload) => {
     return await apiClient.patch(`super-admin/companies/${companyId}/update-active-state`, payload)

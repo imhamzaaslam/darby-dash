@@ -663,7 +663,7 @@ const deleteTemplateList = async list => {
       `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#a12592",
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
@@ -768,7 +768,7 @@ watch(template, () => {
   }
 
   .task-card:hover {
-      border: 1px solid #a12592;
+      border: 1px solid rgba(var(--v-theme-primary));
   }
   .expanded-row, .expanded-td{
       padding: 0 !important;

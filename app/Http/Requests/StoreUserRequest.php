@@ -15,7 +15,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasRole(UserRole::ADMIN->value);
+        return $this->user()->hasRole(UserRole::ADMIN->value) || $this->user()->hasRole(UserRole::SUPER_ADMIN->value);
     }
 
     /**

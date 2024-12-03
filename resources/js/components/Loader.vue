@@ -40,7 +40,7 @@
   .text {
       margin-top: 5px;
       font-weight: bold;
-      color: #a12592;
+      color: rgba(var(--v-theme-primary));
       font-size: 14px;
       text-align: center;
   }
@@ -56,7 +56,7 @@
       bottom: 0;
       width: 10px;
       height: 50%;
-      background: linear-gradient(45deg, rgba(161, 37, 146, 0.7), rgba(161, 37, 146, 0.7));
+      background: linear-gradient(45deg, rgba(var(--v-theme-primary), 0.7), rgba(var(--v-theme-primary), 0.7));
       transform-origin: center bottom;
       box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
   }
@@ -97,7 +97,7 @@
       left: 0;
       width: 10px;
       height: 10px;
-      background: linear-gradient(45deg, rgba(161, 37, 146, 0.7), rgba(161, 37, 146, 0.7));
+      background: linear-gradient(45deg, rgba(var(--v-theme-primary), 0.7), rgba(var(--v-theme-primary), 0.7));
       border-radius: 50%;
       animation: ball 4s infinite;
   }

@@ -4,9 +4,11 @@
     <VCol cols="12">
       <div class="d-flex justify-start align-center">
         <VAvatar
-          :size="30"
+          icon="tabler-diamond-filled"
+          size="30"
           class="me-1"
-          :image="sketch"
+          color="primary"
+          variant="tonal"
         />
         <h3 class="text-primary">
           {{ project?.title }}
@@ -560,7 +562,7 @@ const deleteImage = async file => {
     html: `<small>Do you want to delete this file?</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#a12592",
+    confirmButtonColor: "rgba(var(--v-theme-primary))",
     cancelButtonColor: "#808390",
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
@@ -593,7 +595,7 @@ const deleteFolder = async folder => {
     html: `<p class="mb-0">Do you want to delete this <b>${folder.name}</b> folder?</p><small>All files inside this folder will also be deleted.</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#a12592",
+    confirmButtonColor: "rgba(var(--v-theme-primary))",
     cancelButtonColor: "#808390",
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
@@ -679,7 +681,7 @@ watch(project, () => {
 <style scoped>
 .image-container {
   position: relative;
-  border: 2px solid #a12592;
+  border: 2px solid rgba(var(--v-theme-primary));
   border-radius: 10px;
   padding: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -741,7 +743,7 @@ watch(project, () => {
 
 .progress-bar {
   height: 100%;
-  background-color: #a12592;
+  background-color: rgba(var(--v-theme-primary));
   transition: width 0.6s ease;
   position: relative;
 }

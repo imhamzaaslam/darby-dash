@@ -14,9 +14,11 @@
         >
           <div class="d-flex justify-center align-center">
             <VAvatar
-              :size="30"
+              icon="tabler-diamond-filled"
+              size="30"
               class="me-1"
-              :image="sketch"
+              color="primary"
+              variant="tonal"
             />
             <h3 class="text-primary">
               {{ project?.title }}
@@ -480,7 +482,7 @@ const deleteMember = async member => {
       html: `<small>Do you want to remove <b>${member.name_first + ' ' + member.name_last}</b> from <b>${project.value?.title}</b>?</small>`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#a12592",
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
       cancelButtonColor: "#808390",
       confirmButtonText: "Yes, remove it!",
       didOpen: () => {
