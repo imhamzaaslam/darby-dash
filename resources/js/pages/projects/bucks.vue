@@ -2,16 +2,17 @@
   <div v-if="project?.bucks_share">
     <VRow>
       <VCol cols="12">
-        <div class="d-flex justify-start align-center">
+        <div class="d-flex align-center">
           <VAvatar
             icon="tabler-diamond-filled"
-            size="30"
-            class="me-1"
+            size="36"
+            class="me-2"
             color="primary"
             variant="tonal"
           />
           <h3 class="text-primary">
             {{ project?.title }}
+            <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
           </h3>
         </div>
       </VCol>

@@ -12,21 +12,22 @@
         class="d-toggle align-center-important"
         rounded="0"
       >
-        <div class="d-flex justify-center align-center">
+        <div class="d-flex align-center">
           <VAvatar
             icon="tabler-diamond-filled"
-            size="30"
-            class="me-1"
+            size="36"
+            class="me-2"
             color="primary"
             variant="tonal"
           />
           <h3 class="text-primary">
             {{ project?.title }}
+            <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
           </h3>
         </div>
         <VIcon
           icon="tabler-list"
-          class="me-1 ms-2"
+          class="me-1 ms-4"
           :class="{ 'bg-primary': viewType === 'list' }"
           @click="viewType = 'list'"
         />

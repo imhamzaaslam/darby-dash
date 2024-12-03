@@ -6,16 +6,17 @@
       md="7"
       class="d-flex"
     >
-      <div class="d-flex justify-center align-center mb-5">
+      <div class="d-flex align-center mb-5">
         <VAvatar
           icon="tabler-diamond-filled"
-          size="30"
-          class="me-1"
+          size="36"
+          class="me-2"
           color="primary"
           variant="tonal"
         />
         <h3 class="text-primary">
           {{ project?.title }}
+          <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
         </h3>
       </div>
     </VCol>
