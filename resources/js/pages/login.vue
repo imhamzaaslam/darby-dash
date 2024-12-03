@@ -14,8 +14,9 @@
       class="d-flex align-center justify-center"
     >
       <VCard
-        flat
         :max-width="500"
+        width="100%"
+        style="min-height: 400px;"
         class="mt-12 mt-sm-0 pa-4"
       >
         <VCardText>
