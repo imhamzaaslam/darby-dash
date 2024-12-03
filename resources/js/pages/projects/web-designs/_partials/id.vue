@@ -828,8 +828,8 @@
                     <div class="d-flex flex-column px-3 py-2 fill-height">
                       <span class="font-weight-bold text-h6 text-primary mb-2">{{ service.title }}</span>
                       <p 
-                        class="text-body-2 text-high-emphasis mb-0 text-wrap justify-content-between" style="max-height: 80px;" 
-                        v-html="service.description" 
+                        class="text-body-2 text-high-emphasis mb-0 text-wrap justify-content-between"
+                        v-html="truncateDescription(service.description, 85)" 
                       />
                       <div class="d-flex flex-grow-1" />
                       <div class="d-flex justify-start">
