@@ -39,6 +39,7 @@ class ProjectResource extends JsonResource
                 ];
             }),
             'project_manager' => $this->projectManager() ? new UserResource($this->projectManager()) : null,
+            'project_client' => $this->projectClient() ? new UserResource($this->projectClient()) : null,
             'member_ids' => $this->members->pluck('id'),
             'budget_amount' => round($this->budget_amount, 2),
             'bucks_share' => $this->bucks_share ? round($this->bucks_share, 2) : null,

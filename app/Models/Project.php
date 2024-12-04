@@ -53,6 +53,13 @@ class Project extends Base
         });
     }
 
+    public function projectClient()
+    {
+        return $this->members->first(function ($member) {
+            return $member->roles->contains('id', 3);
+        });
+    }
+
     public function lists()
     {
         return $this->hasMany(ProjectList::class)->orderBy('display_order', 'asc');
