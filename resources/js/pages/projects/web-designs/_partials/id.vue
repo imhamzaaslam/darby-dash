@@ -331,7 +331,7 @@
                 class="elevation-2"
                 rounded="lg"
               >
-                <span class="text-md text-primary font-weight-medium">
+                <span class="text-h4 text-primary font-weight-medium">
                   {{ avatarText(project?.project_client?.name_first + ' ' + project?.project_client?.name_last) }}
                 </span>
               </VAvatar>
