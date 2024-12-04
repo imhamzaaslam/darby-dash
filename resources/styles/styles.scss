@@ -24,14 +24,14 @@ body .layout-wrapper.layout-nav-type-vertical.layout-navbar-sticky .layout-navba
   box-shadow: none !important;
 }
 
-.project-navbar {
-  position: sticky !important;
-  z-index: 10 !important;
-}
-
 .logo-navbar {
   position: sticky !important;
   z-index: 11 !important;
+}
+
+.project-navbar {
+  position: sticky !important;
+  z-index: 10 !important;
 }
 
 /* Hide the up and down arrows for number inputs */
