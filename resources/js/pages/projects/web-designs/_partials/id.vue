@@ -837,10 +837,11 @@
                     width="250"
                   >
                     <div class="d-flex flex-column px-3 py-2 fill-height">
-                      <span class="font-weight-bold text-h6 text-primary mb-2">{{ service.title }}</span>
+                      <span class="font-weight-bold text-h5 text-primary mb-2">{{ service.title }}</span>
                       <p 
-                        class="text-body-2 text-high-emphasis mb-0 text-wrap justify-content-between"
-                        v-html="truncateDescription(service.description, 85)" 
+                        class="text-body-2 text-high-emphasis text-wrap"
+                        style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;margin-bottom: 10px;"
+                        v-html="service.description"
                       />
                       <div class="d-flex flex-grow-1" />
                       <div class="d-flex justify-start">
@@ -1266,7 +1267,8 @@ watch(project, () => {
 }
 .custom-border {
   border: 1px solid rgba(var(--v-theme-primary));
-  border-radius: 6px;
+  border-radius: 4px;
+  background-color: #f7f7f7;
 }
 .horizontal-scroll {
   overflow-x: auto;

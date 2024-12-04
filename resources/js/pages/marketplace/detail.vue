@@ -22,7 +22,7 @@
           class="related-image"
           height="200"
           cover
-          gradient="to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)"
+          gradient="to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3)"
         />
         <VCardText class="pa-4">
           <strong class="text-h6 text-primary font-weight-bold mb-2 d-block">Server Stats</strong>
@@ -119,7 +119,7 @@
         md="3"
       >
         <VCard
-          class="elevation-3 hover-card rounded-lg overflow-hidden"
+          class="elevation-3 hover-card rounded-sm overflow-hidden"
           style="height: 335px;"
         >
           <!-- Service Image -->
@@ -128,9 +128,9 @@
             class="related-image"
             height="200"
             cover
-            gradient="to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)"
+            gradient="to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3)"
           >
-            <div class="text-white px-3 text-h6 font-weight-bold related-title-overlay">
+            <div class="text-white px-3 text-h5 font-weight-bold related-title-overlay">
               {{ related.title || "Related Service Title" }}
             </div>
           </VImg>
@@ -224,7 +224,8 @@ onBeforeMount(async () => {
   
   <style scoped>
  .related-image { 
-  border-radius: 8px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
   
   .header-section {
