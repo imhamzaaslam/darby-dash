@@ -729,10 +729,15 @@ import { useRoleStore } from "@/store/roles"
 import { useAuthStore } from "@/store/auth"
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
+import { useTheme } from 'vuetify'
+import { useStorage } from '@vueuse/core'
+import { cookieRef, namespaceConfig } from '@layouts/stores/config'
+import { updateSystemLogo, updateSystemFavicon } from '@themeConfig'
 
 const toast = useToast()
 const $route = useRoute()
 const router = useRouter()
+const vuetifyTheme = useTheme()
 const companyStore = useCompanyStore()
 const roleStore = useRoleStore()
 const authStore = useAuthStore()
@@ -965,13 +970,26 @@ const saveColor = async () => {
 
     const response = await companyStore.saveColors(payload, companyUuid)
     
+    if(authStore.isTenant){
+      await authStore.tenantInfo()
+      setPrimaryColor(authStore.getPrimaryColor)
+    }
+
     toast.success('Colors saved successfully.')
     isLoading.value = false
   } catch (error) {
-    console.error('Logo upload failed:', error)
+    console.error('color update failed:', error)
     isLoading.value = false
   }
 }
+
+const setPrimaryColor = useDebounceFn(color => {
+  vuetifyTheme.themes.value[vuetifyTheme.name.value].colors.primary = color
+  vuetifyTheme.themes.value[vuetifyTheme.name.value].colors['primary-darken-1'] = color
+  cookieRef(`${ vuetifyTheme.name.value }ThemePrimaryColor`, null).value = color
+  cookieRef(`${ vuetifyTheme.name.value }ThemePrimaryDarkenColor`, null).value = color
+  useStorage(namespaceConfig('initial-loader-color'), null).value = color
+}, 100)
 
 const handleActiveChange = async () => {
 
@@ -1054,6 +1072,12 @@ const handleLogoChange = async event => {
     try {
       const response = await companyStore.uploadLogo(formData, companyUuid)
 
+      if(authStore.isTenant){
+        await authStore.tenantInfo()
+        updateSystemLogo(authStore.getLogo)
+        console.log('At here')
+      }
+
       toast.success('Logo uploaded successfully.')
       fetchCompany()
       logo.value = getImageUrl(response.data.url)
@@ -1086,8 +1110,12 @@ const handleFaviconChange = async event => {
     try {
       const response = await companyStore.uploadFavicon(formData, companyUuid)
 
+      if(authStore.isTenant){
+        await authStore.tenantInfo()
+        updateSystemFavicon(authStore.getFavicon)
+      }
+
       toast.success('Favicon uploaded successfully.')
-      console.log('RESPONSE', response.data.url)
       favicon.value = getImageUrl(response.data.url)
       faviconInputRef.value = null
       fetchCompany()

@@ -157,12 +157,16 @@
       </VCol> 
     -->
     <VCol
-      cols="8"
+      cols="12"
+      md="8"
+      sm="12"
       class="pb-0"
     >
       <VRow>
         <VCol
-          cols="4"
+          cols="12"
+          md="4"
+          sm="12"
           class="pb-0"
         >
           <VCard
@@ -193,7 +197,9 @@
           </VCard>
         </VCol>
         <VCol
-          cols="4"
+          cols="12"
+          md="4"
+          sm="12"
           class="pb-0"
         >
           <VCard
@@ -224,7 +230,9 @@
           </VCard>
         </VCol>
         <VCol
-          cols="4"
+          cols="12"
+          md="4"
+          sm="12"
           class="pb-0"
         >
           <VCard
@@ -257,7 +265,9 @@
       </VRow>
     </VCol>
     <VCol
-      cols="4"
+      cols="12"
+      md="4"
+      sm="12"
       class="pb-0"
     >
       <VCard

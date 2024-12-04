@@ -2,6 +2,7 @@ import { breakpointsVuetify } from '@vueuse/core'
 import { VIcon } from 'vuetify/components/VIcon'
 import { defineThemeConfig } from '@core'
 import { Skins } from '@core/enums'
+import { ref } from 'vue'
 
 // ❗ Logo SVG must be imported with ?raw suffix
 import logo from '@images/logo.png'
@@ -9,11 +10,40 @@ import logoHalf from '@images/half-logo.png'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
 const store = JSON.parse(localStorage.getItem('auth'))
-
-const getDynamicLogo = () => (store && store.tenant && store.logo  ? store.logo : logo)
-const getDynamicFavicon = () => (store && store.tenant && store.favicon  ? store.favicon : logoHalf)
+const getDynamicLogo = () => (store && (store.tenant && store.logo)  ? store.logo : logo)
+const getDynamicFavicon = () => (store && (store.tenant && store.favicon)  ? store.favicon : logoHalf)
 const getDynamicTitle = () => (store && store.tenant ? store.title : 'Darby Dash')
 
+const systemLogo = ref(getDynamicLogo())
+const systemLogoHalf = ref(getDynamicFavicon())
+
+export const updateSystemLogo = async newLogo => {
+  systemLogo.value = newLogo || logo
+  updateLogoInDOM()
+}
+
+export const updateSystemFavicon = async newFavicon => {
+  systemLogoHalf.value = newFavicon || logoHalf
+  updateFaviconInDOM()
+}
+
+const updateLogoInDOM = () => {
+  const logoElement = document.querySelector('.system-company-logo')
+  const watermarkLogoElement = document.querySelector('.system-watermark-company-logo')
+  if (logoElement) {
+    logoElement.innerHTML = `<img src="${systemLogo.value}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:45px;">`
+  }
+  if (watermarkLogoElement) {
+    watermarkLogoElement.innerHTML = `<img src="${systemLogo.value}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`
+  }
+}
+
+const updateFaviconInDOM = () => {
+  const faviconElement = document.querySelector('.system-company-favicon')
+  if (faviconElement) {
+    faviconElement.innerHTML = `<img src="${systemLogoHalf.value}" alt="Favicon" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`
+  }
+}
 
 const selectedTheme = localStorage.getItem('selectedTheme') || 'system'
 
@@ -21,13 +51,16 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
   app: {
     title: getDynamicTitle(),
     logo: h('div', {
-      innerHTML: `<img src="${getDynamicLogo()}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
+      class: 'system-company-logo',
+      innerHTML: `<img src="${systemLogo.value}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:45px;">`,
     }),
     logoHalf: h('div', {
-      innerHTML: `<img src="${getDynamicFavicon()}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
+      class: 'system-company-favicon',
+      innerHTML: `<img src="${systemLogoHalf.value}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:40px;">`,
     }),
     watermarkLogo: h('div', {
-      innerHTML: `<img src="${getDynamicLogo()}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`,
+      class: 'system-watermark-company-logo',
+      innerHTML: `<img src="${systemLogo.value}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`,
     }),
     contentWidth: ContentWidth.Boxed,
     contentLayoutNav: AppContentLayoutNav.Vertical,
@@ -63,7 +96,7 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
   },
   footer: { type: FooterType.Static },
   verticalNav: {
-    isVerticalNavCollapsed: false,
+    isVerticalNavCollapsed: true,
     defaultNavItemIconProps: { icon: 'tabler-circle' },
     isVerticalNavSemiDark: false,
   },

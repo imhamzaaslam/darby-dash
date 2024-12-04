@@ -1,6 +1,8 @@
 <script setup>
 import navItems from '@/navigation/vertical'
 import { themeConfig } from '@themeConfig'
+import { layoutConfig } from '@layouts'
+import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import NavBarNotifications from '@/layouts/components/NavBarNotifications.vue'
@@ -49,6 +51,7 @@ const showNavigation = computed(() => {
 
   return !(isManageTemplatesRoute || isManageCompanyRoute) && $route.params.id !== undefined
 })
+
 // !SECTION
 
 const project = computed(() =>{
@@ -59,6 +62,20 @@ const project = computed(() =>{
 <template>
   <VerticalNavLayout :nav-items="navItems">
     <!-- 👉 navbar -->
+    <template #logoNavbar>
+      <div class="d-flex h-100 align-center">
+        <RouterLink
+          to="/"
+          class="app-logo app-title-wrapper"
+        >
+          <VNodeRenderer :nodes="layoutConfig.app.logo" />
+        </RouterLink>
+        <NavbarThemeSwitcher />
+        <NavBarNotifications class="me-2" />
+        <UserProfile />
+      </div>
+    </template>
+
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
         <IconBtn
@@ -71,8 +88,6 @@ const project = computed(() =>{
             icon="tabler-menu-2"
           />
         </IconBtn>
-
-        <NavbarThemeSwitcher />
 
         <!-- Dropdown for router links on mobile view -->
 
@@ -201,12 +216,14 @@ const project = computed(() =>{
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/marketplace` }"
             >Marketplace</span>
           </RouterLink> 
-          <!-- <RouterLink :to="`/projects/${projectId}/payments`">
+          <!--
+            <RouterLink :to="`/projects/${projectId}/payments`">
             <span
-              class="text-h6 me-8 inner-badge-text"
-              :class="{ 'text-primary': $route.path === `/projects/${projectId}/payments` }"
+            class="text-h6 me-8 inner-badge-text"
+            :class="{ 'text-primary': $route.path === `/projects/${projectId}/payments` }"
             >Payments</span>
-          </RouterLink> -->
+            </RouterLink> 
+          -->
         </div>
         <VSpacer />
 
@@ -225,8 +242,6 @@ const project = computed(() =>{
             </RouterLink>
           </span>
         </span>
-        <NavBarNotifications class="me-2" />
-        <UserProfile />
       </div>
     </template>
 
@@ -252,4 +267,7 @@ const project = computed(() =>{
 .inner-badge-text{
     font-size: .85rem!important;
 }
+.app-title-wrapper {
+    margin-inline-end: auto;
+  }
 </style>

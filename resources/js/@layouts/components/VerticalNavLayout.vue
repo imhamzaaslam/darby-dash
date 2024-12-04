@@ -1,6 +1,7 @@
 <script>
 import { VerticalNav } from '@layouts/components'
 import { useLayoutConfigStore } from '@layouts/stores/config'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   props: {
@@ -13,13 +14,25 @@ export default defineComponent({
       default: () => ({}),
     },
   },
+
   setup(props, { slots }) {
+
     const { width: windowWidth } = useWindowSize()
     const configStore = useLayoutConfigStore()
     const isOverlayNavActive = ref(false)
     const isLayoutOverlayVisible = ref(false)
     const toggleIsOverlayNavActive = useToggle(isOverlayNavActive)
+    const route = useRoute()
 
+    const shouldShowNavbar = computed(() => {
+      const isMatching = route.matched.some(match =>
+        match.path.startsWith('/projects'),
+      )
+
+      const hasUUID = route.params.id
+
+      return isMatching && !!hasUUID
+    })
 
     // ℹ️ This is alternative to below two commented watcher
     // We want to show overlay if overlay nav is visible and want to hide overlay if overlay is hidden and vice versa.
@@ -52,11 +65,17 @@ export default defineComponent({
 
 
       // 👉 Navbar
-      const navbar = h('header', { class: ['layout-navbar', { 'navbar-blur': configStore.isNavbarBlurEnabled }] }, [
-        h('div', { class: 'navbar-content-container' }, slots.navbar?.({
-          toggleVerticalOverlayNavActive: toggleIsOverlayNavActive,
-        })),
+      const logoNavbar = h('header', { class: ['layout-navbar', 'logo-navbar', { 'navbar-blur': configStore.isNavbarBlurEnabled }] }, [
+        h('div', { class: ['navbar-content-container', 'logo-navbar-content-container'] }, slots.logoNavbar?.()),
       ])
+
+      const navbar = shouldShowNavbar.value
+        ? h('header', { class: ['layout-navbar', 'project-navbar'] }, [
+          h('div', { class: 'navbar-content-container' }, slots.navbar?.({
+            toggleVerticalOverlayNavActive: toggleIsOverlayNavActive,
+          })),
+        ])
+        : null
 
 
       // 👉 Content area
@@ -78,6 +97,7 @@ export default defineComponent({
       return h('div', { class: ['layout-wrapper', ...configStore._layoutClasses] }, [
         verticalNavWrapper ? h(verticalNavWrapper, verticalNavWrapperProps, { default: () => verticalNav }) : verticalNav,
         h('div', { class: 'layout-content-wrapper' }, [
+          logoNavbar,
           navbar,
           main,
           footer,

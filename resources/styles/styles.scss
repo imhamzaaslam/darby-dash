@@ -3,6 +3,37 @@
     border-left: 4px solid rgb(var(--v-global-theme-primary));
 }
 
+.layout-wrapper.layout-nav-type-vertical .layout-navbar, .layout-wrapper.layout-nav-type-vertical .layout-footer {
+  padding-inline: 0 !important;
+}
+
+body .layout-wrapper.layout-nav-type-vertical.layout-navbar-sticky .layout-navbar {
+  inset-block-start: 0 !important;
+}
+
+.layout-wrapper.layout-nav-type-vertical .layout-navbar .navbar-content-container {
+  border-radius: 0 !important;
+  border: 1px solid #eeecec !important;
+}
+
+.layout-wrapper.layout-nav-type-vertical .layout-navbar .logo-navbar-content-container {
+  block-size: 70px!important;
+}
+
+.layout-wrapper.layout-nav-type-vertical .layout-navbar .navbar-content-container {
+  box-shadow: none !important;
+}
+
+.project-navbar {
+  position: sticky !important;
+  z-index: 10 !important;
+}
+
+.logo-navbar {
+  position: sticky !important;
+  z-index: 11 !important;
+}
+
 /* Hide the up and down arrows for number inputs */
 .no-arrows input::-webkit-outer-spin-button,
 .no-arrows input::-webkit-inner-spin-button {

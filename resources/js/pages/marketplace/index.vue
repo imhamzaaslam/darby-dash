@@ -1,81 +1,79 @@
 <template>
-  <VContainer>
-    <!-- Title Section -->
-    <div class="header-section">
-      <h4 class="text-h4 font-weight-bold text-primary">
-        {{ userDetails?.company }} Marketplace
-      </h4>
-      <p class="text-body-2 mt-1">
-        Explore a wide range of services offered by {{ userDetails?.company }} to meet all your needs.
-      </p>
-    </div>
+  <!-- Title Section -->
+  <div class="header-section">
+    <h4 class="text-h4 font-weight-bold text-primary">
+      {{ userDetails?.company }} Marketplace
+    </h4>
+    <p class="text-body-2 mt-1">
+      Explore a wide range of services offered by {{ userDetails?.company }} to meet all your needs.
+    </p>
+  </div>
   
-    <!-- Related Services Section -->
-    <div class="related-section">
-      <VRow
-        class="mt-4"
-        dense
+  <!-- Related Services Section -->
+  <div class="related-section">
+    <VRow
+      class="mt-4"
+      dense
+    >
+      <VCol v-if="getServices ? getServices.length === 0 : 0">
+        <p class="text-h6 text-center">
+          No services found.
+        </p>
+      </VCol>
+    </VRow>
+    <VRow
+      class="mt-4"
+      dense
+    >
+      <VCol
+        v-for="service in getServices"
+        :key="service.id"
+        cols="12"
+        sm="12"
+        md="3"
       >
-        <VCol v-if="getServices ? getServices.length === 0 : 0">
-          <p class="text-h6 text-center">
-            No services found.
-          </p>
-        </VCol>
-      </VRow>
-      <VRow
-        class="mt-4"
-        dense
-      >
-        <VCol
-          v-for="service in getServices"
-          :key="service.id"
-          cols="12"
-          sm="6"
-          md="4"
+        <VCard
+          class="elevation-3 hover-card rounded-lg overflow-hidden"
+          style="height: 335px;"
         >
-          <VCard
-            class="elevation-3 hover-card rounded-lg overflow-hidden"
-            style="height: 335px;"
+          <!-- Service Image -->
+          <VImg
+            :src="service.image ? getImageUrl(service?.image?.path) : placeholderImg"
+            class="related-image"
+            height="200"
+            cover
+            gradient="to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)"
           >
-            <!-- Service Image -->
-            <VImg
-              :src="service.image ? getImageUrl(service?.image?.path) : placeholderImg"
-              class="related-image"
-              height="200"
-              cover
-              gradient="to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)"
+            <div class="text-white px-3 text-h6 font-weight-bold related-title-overlay">
+              {{ service.title || "Related Service Title" }}
+            </div>
+          </VImg>
+
+          <!-- Card Content -->
+          <VCardText class="pa-4">
+            <p 
+              class="text-body-2 text-high-emphasis mb-0 text-align-between" 
+              v-html="truncateDescription(service.description, 80)" 
+            />
+          </VCardText>
+
+          <!-- Card Actions -->
+          <VCardActions class="justify-center pb-4">
+            <VBtn
+              color="primary"
+              variant="elevated"
+              rounded="pill"
+              size="small"
+              :to="{ name: 'marketplace-service-detail', params: { id: service.uuid } }"
+              target="_blank"
             >
-              <div class="text-white px-3 text-h6 font-weight-bold related-title-overlay">
-                {{ service.title || "Related Service Title" }}
-              </div>
-            </VImg>
-
-            <!-- Card Content -->
-            <VCardText class="pa-4">
-              <p 
-                class="text-body-2 text-high-emphasis mb-0 text-align-between" 
-                v-html="truncateDescription(service.description, 80)" 
-              />
-            </VCardText>
-
-            <!-- Card Actions -->
-            <VCardActions class="justify-center pb-4">
-              <VBtn
-                color="primary"
-                variant="elevated"
-                rounded="pill"
-                size="small"
-                :to="{ name: 'marketplace-service-detail', params: { id: service.uuid } }"
-                target="_blank"
-              >
-                Learn More
-              </VBtn>
-            </VCardActions>
-          </VCard>
-        </VCol>
-      </VRow>
-    </div>
-  </VContainer>
+              Learn More
+            </VBtn>
+          </VCardActions>
+        </VCard>
+      </VCol>
+    </VRow>
+  </div>
 </template>
   
 <script setup lang="js">

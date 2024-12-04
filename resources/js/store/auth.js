@@ -132,6 +132,7 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: state => state.authenticated,
     isTenant: state => state.tenant,
     getLogo: state => state.logo,
+    getCompanyUuid: state => state.authUser?.user?.company?.uuid,
     getFavicon: state => state.favicon,
     getTitle: state => state.title,
     getPrimaryColor: state => state.primaryColor,
