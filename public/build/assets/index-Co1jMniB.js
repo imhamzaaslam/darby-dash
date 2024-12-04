@@ -1,0 +1,1 @@
+import a from"./company-dashboard-YesFso7K.js";import t from"./super-dashboard-BtvtBhlF.js";import{aa as s,n,o as r,f as e}from"./main-CVF-TlDw.js";const i={__name:"index",setup(p){const o=s();return(m,u)=>n(o).isSuperAdmin?(r(),e(t,{key:0})):(r(),e(a,{key:1}))}};export{i as default};
