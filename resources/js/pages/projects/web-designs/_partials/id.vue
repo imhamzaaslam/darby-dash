@@ -187,27 +187,88 @@
     
             <!-- Task Details Section -->
             <div class="flex-grow-1">
-              <div class="mb-2">
-                <span class="text-body-2 text-primary font-weight-semibold">Pending Tasks:</span>
-                <VChip
-                  color="warning"
-                  class="text-body-2 text-high-emphasis font-weight-medium ms-2"
-                  variant="outlined"
-                  size="x-small"
-                >
-                  {{ project?.total_tasks - project?.completed_tasks > 0 ? project?.total_tasks - project?.completed_tasks : 0 }} / {{ project?.total_tasks }} 
-                </VChip>
-              </div>
               <div>
                 <span class="text-body-2 text-primary font-weight-semibold">Completed Tasks:</span>
                 <VChip
-                  color="success"
+                  color="primary"
                   class="text-body-2 text-high-emphasis font-weight-medium ms-2"
                   variant="outlined"
                   size="x-small"
                 >
                   {{ project?.completed_tasks }} / {{ project?.total_tasks }}
                 </VChip>
+              </div>
+            </div>
+          </div>
+        </VCardText>
+      </VCard>
+    </VCol>
+    <VCol
+      cols="12"
+      md="3"
+      sm="12"
+      class="pb-0"
+    >
+      <VCard
+        style="height: 120px;"
+        class="logistics-card-statistics cursor-pointer p-1"
+      >
+        <VCardText>
+          <div class="d-flex align-center h-100">
+            <!-- Avatar Section -->
+            <div class="me-4 text-center">
+              <VAvatar
+                v-if="project?.project_client?.info?.avatar"
+                :size="70"
+                class="elevation-2"
+                rounded="lg"
+              >
+                <VImg
+                  :src="getImageUrl(project?.project_client?.info?.avatar.path)"
+                  alt="Project Manager Avatar"
+                />
+              </VAvatar>
+              <VAvatar
+                v-else
+                :size="70"
+                color="light-primary"
+                class="elevation-2"
+                rounded="lg"
+              >
+                <span class="text-h4 text-primary font-weight-medium">
+                  {{ avatarText(project?.project_client?.name_first + ' ' + project?.project_client?.name_last) }}
+                </span>
+              </VAvatar>
+            </div>
+
+            <!-- Client Details Section -->
+            <div class="flex-grow-1">
+              <h6 class="text-h6 text-high-emphasis font-weight-bold mb-1 d-flex align-items-center">
+                {{ project?.project_client?.name_first + ' ' + project?.project_client?.name_last }}
+                <VBadge
+                  dot
+                  :color="project?.project_client?.is_online ? 'success' : 'warning'"
+                  class="ms-3 mt-1"
+                />
+              </h6>
+              <div class="text-sm text-secondary d-flex align-items-center mb-1">
+                <VIcon
+                  class="me-2 text-primary"
+                  icon="tabler-phone"
+                />
+                {{ project?.project_client?.info?.phone }}
+              </div>
+              <div class="text-sm d-flex align-items-center">
+                <VIcon
+                  class="me-2 text-primary"
+                  icon="tabler-calendar"
+                />
+                <RouterLink
+                  class="text-secondary text-decoration-underline font-weight-medium"
+                  :to="`/projects/${projectUuid}/calendar`"
+                >
+                  Schedule A Meeting
+                </RouterLink>
               </div>
             </div>
           </div>
@@ -293,78 +354,6 @@
                     ({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})
                   </small>
                 </div>
-              </div>
-            </div>
-          </div>
-        </VCardText>
-      </VCard>
-    </VCol>
-    <VCol
-      cols="12"
-      md="3"
-      sm="12"
-      class="pb-0"
-    >
-      <VCard
-        style="height: 120px;"
-        class="logistics-card-statistics cursor-pointer p-1"
-      >
-        <VCardText>
-          <div class="d-flex align-center h-100">
-            <!-- Avatar Section -->
-            <div class="me-4 text-center">
-              <VAvatar
-                v-if="project?.project_client?.info?.avatar"
-                :size="70"
-                class="elevation-2"
-                rounded="lg"
-              >
-                <VImg
-                  :src="getImageUrl(project?.project_client?.info?.avatar.path)"
-                  alt="Project Manager Avatar"
-                />
-              </VAvatar>
-              <VAvatar
-                v-else
-                :size="70"
-                color="light-primary"
-                class="elevation-2"
-                rounded="lg"
-              >
-                <span class="text-h4 text-primary font-weight-medium">
-                  {{ avatarText(project?.project_client?.name_first + ' ' + project?.project_client?.name_last) }}
-                </span>
-              </VAvatar>
-            </div>
-
-            <!-- Client Details Section -->
-            <div class="flex-grow-1">
-              <h6 class="text-h6 text-high-emphasis font-weight-bold mb-1 d-flex align-items-center">
-                {{ project?.project_client?.name_first + ' ' + project?.project_client?.name_last }}
-                <VBadge
-                  dot
-                  :color="project?.project_client?.is_online ? 'success' : 'warning'"
-                  class="ms-3 mt-1"
-                />
-              </h6>
-              <div class="text-sm text-secondary d-flex align-items-center mb-1">
-                <VIcon
-                  class="me-2 text-primary"
-                  icon="tabler-phone"
-                />
-                {{ project?.project_client?.info?.phone }}
-              </div>
-              <div class="text-sm d-flex align-items-center">
-                <VIcon
-                  class="me-2 text-primary"
-                  icon="tabler-calendar"
-                />
-                <RouterLink
-                  class="text-secondary text-decoration-underline font-weight-medium"
-                  :to="`/projects/${projectUuid}/calendar`"
-                >
-                  Schedule A Meeting
-                </RouterLink>
               </div>
             </div>
           </div>

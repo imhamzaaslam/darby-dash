@@ -1,463 +1,466 @@
 <template>
-  <VContainer fluid>
-    <!-- Dashboard Header -->
-    <VRow class="pb-0">
-      <VCol cols="12">
-        <h3 class="text-h5">
-          {{ company.name }} Settings
-        </h3>
-        <p class="text-body-1 text-muted">
-          Manage {{ company.name }}'s details, branding, users, and settings with ease.
-        </p>
-      </VCol>
-    </VRow>
-    <VRow class="pt-0 mt-0">
-      <VCol
-        cols="12"
-        md="2"
-        class="custom-tabs"
-      >
-        <ul>
-          <li
-            v-for="(tab, index) in tabs"
-            :key="index"
-            :class="{ active: activeTab == tab.tab }"
-            @click="selectTab(tab.tab)"
-          >
-            {{ tab.title }}
-          </li>
-        </ul>
-      </VCol>
-      <VCol
-        cols="12"
-        md="10"
-      >
-        <VRow
-          v-if="activeTab == 'basic-setting'"
-          class="ms-1"
+  <!-- Dashboard Header -->
+  <VRow class="pb-0">
+    <VCol cols="12">
+      <h3>
+        {{ company.name }} Settings
+      </h3>
+      <p class="text-body-1 text-muted">
+        Manage {{ company.name }}'s details, branding, users, and settings with ease.
+      </p>
+    </VCol>
+  </VRow>
+  <VRow class="pt-0 mt-0">
+    <VCol
+      cols="12"
+      md="2"
+      class="custom-tabs"
+    >
+      <ul>
+        <li
+          v-for="(tab, index) in tabs"
+          :key="index"
+          :class="{ active: activeTab == tab.tab }"
+          @click="selectTab(tab.tab)"
         >
-          <!-- Company Info Section -->
-          <VCol
-            cols="12"
-            md="12"
-          >
-            <VCard class="px-3 py-2">
-              <VCardTitle class="d-flex justify-space-between align-center">
-                <h6 class="text-h6">
-                  Company Details
-                </h6>
-                <VSwitch
-                  v-if="authStore.isSuperAdmin"
-                  v-model="isActive"
-                  label="Active"
-                  :true-value="1"
-                  :false-value="0"
-                  @change="handleActiveChange"
-                />
-              </VCardTitle>
+          {{ tab.title }}
+        </li>
+      </ul>
+    </VCol>
+    <VCol
+      cols="12"
+      md="10"
+    >
+      <VRow
+        v-if="activeTab == 'basic-setting'"
+        class="ms-1"
+      >
+        <!-- Company Info Section -->
+        <VCol
+          cols="12"
+          md="12"
+        >
+          <VCard class="px-3 py-2">
+            <VCardTitle class="d-flex justify-space-between align-center">
+              <h6 class="text-h6 mt-2">
+                Company Details
+              </h6>
+              <VSwitch
+                v-if="authStore.isSuperAdmin"
+                v-model="isActive"
+                label="Active"
+                :true-value="1"
+                :false-value="0"
+                @change="handleActiveChange"
+              />
+            </VCardTitle>
 
-              <VCardText class="px-5 pb-3">
+            <VCardText class="px-4 pb-3 mt-3">
+              <!--
                 <AppTextField
-                  v-model="companyDetails.name"
-                  label="Name"
-                  class="cursor-not-allowed"
-                  outlined
-                  dense
-                  :style="{ width: '300px' }"
-                  disabled
-                />
-                <div
-                  v-if="authStore.isSuperAdmin"
-                  class="mt-3"
-                >
-                  <div class="d-flex align-items-center justify-content-between">
-                    <label class="text-sm text-high-emphasis">
-                      Domain Address
+                v-model="companyDetails.name"
+                label="Name"
+                class="cursor-not-allowed"
+                outlined
+                dense
+                :style="{ width: '300px' }"
+                disabled
+                /> 
+              -->
+              <label><span class="text-high-emphasis text-h6">Name:</span> {{ companyDetails.name }}</label>
+              <div
+                v-if="authStore.isSuperAdmin"
+                class="mt-3"
+              >
+                <div class="d-flex align-items-center justify-content-between">
+                  <label class="text-sm text-high-emphasis">
+                    Domain Address
+                    <VIcon
+                      v-if="!isCopied"
+                      class="ms-1 text-primary cursor-pointer"
+                      icon="tabler-copy"
+                      size="20"
+                      @click="copyToClipboard"
+                    />
+                    <span
+                      v-else
+                      class="ms-1"
+                    >
                       <VIcon
-                        v-if="!isCopied"
-                        class="ms-1 text-primary cursor-pointer"
-                        icon="tabler-copy"
+                        class="text-success"
+                        icon="tabler-check"
                         size="20"
-                        @click="copyToClipboard"
                       />
-                      <span
-                        v-else
-                        class="ms-1"
-                      >
-                        <VIcon
-                          class="text-success"
-                          icon="tabler-check"
-                          size="20"
-                        />
-                        <span class="text-xs font-weight-bold">Copied</span>
-                      </span>
-                    </label>
-                  </div>
-                  <a
-                    :href="formattedUrl(company.url)"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary text-decoration-underline d-block mt-1"
-                  >
-                    {{ company.url ? formattedUrl(company.url) : '' }}
-                  </a>
+                      <span class="text-xs font-weight-bold">Copied</span>
+                    </span>
+                  </label>
                 </div>
-              </VCardText>
+                <a
+                  :href="formattedUrl(company.url)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-primary text-decoration-underline d-block mt-1"
+                >
+                  {{ company.url ? formattedUrl(company.url) : '' }}
+                </a>
+              </div>
+            </VCardText>
+            <!--
               <VCardActions class="px-5 py-3 d-flex justify-end">
-                <VBtn
-                  color="primary"
-                  :loading="isLoading"
-                  size="small"
-                  variant="flat"
-                  @click="updateCompanyInfo"
-                >
-                  Save
-                </VBtn>
-              </VCardActions>
-            </VCard>
-          </VCol>
+              <VBtn
+              color="primary"
+              :loading="isLoading"
+              size="small"
+              variant="flat"
+              @click="updateCompanyInfo"
+              >
+              Save
+              </VBtn>
+              </VCardActions> 
+            -->
+          </VCard>
+        </VCol>
   
-          <!-- Branding Section -->
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <VCard
-              style="height: 241px;"
-              class="px-3 py-2"
-              @mouseover="onLogoHover(true)"
-              @mouseleave="onLogoHover(false)"
-            >
-              <VCardTitle class="d-flex justify-space-between align-center">
-                <h5 class="text-h6 mt-2">
-                  Company Logo
-                </h5>
-                <div
-                  v-if="isLogoCardHovered"
-                  class="d-flex gap-2"
-                >
-                  <VTooltip location="top">
-                    <template #activator="{ props }">
-                      <VBtn
-                        v-bind="props"
-                        variant="tonal"
-                        icon="tabler-download"
-                        size="x-small"
-                        @click="downloadAsset(company?.logo)"
-                      />
-                    </template>
-                    <span>Download</span>
-                  </VTooltip>
-                  <VTooltip location="top">
-                    <template #activator="{ props }">
-                      <VBtn
-                        v-bind="props"
-                        variant="tonal"
-                        size="x-small"
-                        icon="tabler-upload"
-                        @click="uploadLogo"
-                      />
-                    </template>
-                    <span>Upload</span>
-                  </VTooltip>
-                  <VTooltip location="top">
-                    <template #activator="{ props }">
-                      <VBtn
-                        v-bind="props"
-                        variant="tonal"
-                        size="x-small"
-                        icon="tabler-trash"
-                        @click="deleteLogo(company?.logo?.uuid)"
-                      />
-                    </template>
-                    <span>Delete</span>
-                  </VTooltip>
-                </div>
-              </VCardTitle>
-              <VCardText class="text-center">
-                <VImg
-                  v-if="company?.logo"
-                  :src="getImageUrl(company?.logo?.path)"
-                  max-height="140"
-                  class="mt-4"
-                  alt="Company Logo"
-                />
-                <template v-else>
-                  <div class="text-center py-15">
-                    <p class="text-body-2 text-high-emphasis">
-                      No company logo uploaded yet.
-                    </p>
-                  </div>
-                </template>
-              </VCardText>
-              <input
-                ref="logoInputRef"
-                :key="inputLogoKey"
-                type="file"
-                accept="image/*"
-                class="d-none"
-                @change="handleLogoChange"
-              >
-            </VCard>
-          </VCol>
-
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <VCard
-              style="height: 241px;"
-              class="px-3 py-2"
-              @mouseover="onFaviconHover(true)"
-              @mouseleave="onFaviconHover(false)"
-            >
-              <VCardTitle class="d-flex justify-space-between align-center">
-                <h5 class="text-h6 mt-2">
-                  Favicon
-                </h5>
-                <div
-                  v-if="isFaviconCardHovered"
-                  class="d-flex gap-2"
-                >
-                  <VTooltip location="top">
-                    <template #activator="{ props }">
-                      <VBtn
-                        v-bind="props"
-                        variant="tonal"
-                        icon="tabler-download"
-                        size="x-small"
-                        @click="downloadAsset(company?.favicon)"
-                      />
-                    </template>
-                    <span>Download</span>
-                  </VTooltip>
-                  <VTooltip location="top">
-                    <template #activator="{ props }">
-                      <VBtn
-                        v-bind="props"
-                        variant="tonal"
-                        size="x-small"
-                        icon="tabler-upload"
-                        @click="uploadFavicon"
-                      />
-                    </template>
-                    <span>Upload</span>
-                  </VTooltip>
-                  <VTooltip location="top">
-                    <template #activator="{ props }">
-                      <VBtn
-                        v-bind="props"
-                        variant="tonal"
-                        size="x-small"
-                        icon="tabler-trash"
-                        @click="deleteFavicon(company?.favicon?.uuid)"
-                      />
-                    </template>
-                    <span>Delete</span>
-                  </VTooltip>
-                </div>
-              </VCardTitle>
-
-              <VCardText class="text-center">
-                <VImg
-                  v-if="company?.favicon"
-                  :src="getImageUrl(company?.favicon?.path)"
-                  max-height="140"
-                  class="mt-4"
-                  alt="Favicon"
-                />
-                <template v-else>
-                  <div class="text-center py-15">
-                    <p class="text-body-2 text-high-emphasis">
-                      No favicon uploaded yet.
-                    </p>
-                  </div>
-                </template>
-              </VCardText>
-              <input
-                ref="faviconInputRef"
-                :key="inputFaviconKey"
-                type="file"
-                accept="image/*"
-                class="d-none"
-                @change="handleFaviconChange"
-              >
-            </VCard>
-          </VCol>
-        </VRow>
-        <VRow
-          v-if="activeTab == 'theme-setting'"
-          class="ms-1"
+        <!-- Branding Section -->
+        <VCol
+          cols="12"
+          md="6"
         >
-          <!-- Theme Customization Section -->
-          <VCol
-            cols="12"
-            md="12"
+          <VCard
+            style="height: 241px;"
+            class="px-3 py-2"
+            @mouseover="onLogoHover(true)"
+            @mouseleave="onLogoHover(false)"
           >
-            <VCard class="px-3 py-2">
-              <VCardTitle>
-                <h5 class="text-h6 mt-2">
-                  Theme Customization
-                </h5>
-              </VCardTitle>
-              <VCardText>
-                <div class="d-flex justify-space-around">
-                  <VColorPicker
-                    v-model="primaryColor"
-                    mode="hexa"
-                    class="ma-2"
-                    width="800"
-                  />
+            <VCardTitle class="d-flex justify-space-between align-center">
+              <h5 class="text-h6 mt-2">
+                Company Logo
+              </h5>
+              <div
+                v-if="isLogoCardHovered"
+                class="d-flex gap-2"
+              >
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-bind="props"
+                      variant="tonal"
+                      icon="tabler-download"
+                      size="x-small"
+                      @click="downloadAsset(company?.logo)"
+                    />
+                  </template>
+                  <span>Download</span>
+                </VTooltip>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-bind="props"
+                      variant="tonal"
+                      size="x-small"
+                      icon="tabler-upload"
+                      @click="uploadLogo"
+                    />
+                  </template>
+                  <span>Upload</span>
+                </VTooltip>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-bind="props"
+                      variant="tonal"
+                      size="x-small"
+                      icon="tabler-trash"
+                      @click="deleteLogo(company?.logo?.uuid)"
+                    />
+                  </template>
+                  <span>Delete</span>
+                </VTooltip>
+              </div>
+            </VCardTitle>
+            <VCardText class="text-center">
+              <VImg
+                v-if="company?.logo"
+                :src="getImageUrl(company?.logo?.path)"
+                max-height="140"
+                class="mt-4"
+                alt="Company Logo"
+              />
+              <template v-else>
+                <div class="text-center py-15">
+                  <p class="text-body-2 text-high-emphasis">
+                    No company logo uploaded yet.
+                  </p>
                 </div>
-              </VCardText>
-              <VCardActions class="px-5 d-flex justify-end">
-                <VBtn
-                  color="primary"
-                  :loading="isLoading"
-                  size="small"
-                  variant="flat"
-                  @click="saveColor"
-                >
-                  Save
-                </VBtn>
-              </VCardActions>
-            </VCard>
-          </VCol>
-        </VRow>
-        <!-- Users & Roles Section -->
-        <VRow
-          v-if="(activeTab == 'users-and-roles') && authStore.isSuperAdmin"
-          class="ms-1"
+              </template>
+            </VCardText>
+            <input
+              ref="logoInputRef"
+              :key="inputLogoKey"
+              type="file"
+              accept="image/*"
+              class="d-none"
+              @change="handleLogoChange"
+            >
+          </VCard>
+        </VCol>
+
+        <VCol
+          cols="12"
+          md="6"
         >
-          <VCol cols="12">
-            <VCard class="px-3 py-2">
-              <VCardTitle class="d-flex mb-2 justify-space-between align-center">
-                <h5 class="text-h6">
-                  Manage Users
-                </h5>
-                <VBtn
-                  variant="elevated"
-                  color="primary"
-                  size="small"
-                  prepend-icon="tabler-plus"
-                  @click="isAddMemberDialogVisible = true"
-                >
-                  New User
-                </VBtn>
-              </VCardTitle>
+          <VCard
+            style="height: 241px;"
+            class="px-3 py-2"
+            @mouseover="onFaviconHover(true)"
+            @mouseleave="onFaviconHover(false)"
+          >
+            <VCardTitle class="d-flex justify-space-between align-center">
+              <h5 class="text-h6 mt-2">
+                Favicon
+              </h5>
+              <div
+                v-if="isFaviconCardHovered"
+                class="d-flex gap-2"
+              >
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-bind="props"
+                      variant="tonal"
+                      icon="tabler-download"
+                      size="x-small"
+                      @click="downloadAsset(company?.favicon)"
+                    />
+                  </template>
+                  <span>Download</span>
+                </VTooltip>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-bind="props"
+                      variant="tonal"
+                      size="x-small"
+                      icon="tabler-upload"
+                      @click="uploadFavicon"
+                    />
+                  </template>
+                  <span>Upload</span>
+                </VTooltip>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-bind="props"
+                      variant="tonal"
+                      size="x-small"
+                      icon="tabler-trash"
+                      @click="deleteFavicon(company?.favicon?.uuid)"
+                    />
+                  </template>
+                  <span>Delete</span>
+                </VTooltip>
+              </div>
+            </VCardTitle>
+
+            <VCardText class="text-center">
+              <VImg
+                v-if="company?.favicon"
+                :src="getImageUrl(company?.favicon?.path)"
+                max-height="140"
+                class="mt-4"
+                alt="Favicon"
+              />
+              <template v-else>
+                <div class="text-center py-15">
+                  <p class="text-body-2 text-high-emphasis">
+                    No favicon uploaded yet.
+                  </p>
+                </div>
+              </template>
+            </VCardText>
+            <input
+              ref="faviconInputRef"
+              :key="inputFaviconKey"
+              type="file"
+              accept="image/*"
+              class="d-none"
+              @change="handleFaviconChange"
+            >
+          </VCard>
+        </VCol>
+      </VRow>
+      <VRow
+        v-if="activeTab == 'theme-setting'"
+        class="ms-1"
+      >
+        <!-- Theme Customization Section -->
+        <VCol
+          cols="12"
+          md="12"
+        >
+          <VCard class="px-3 py-2">
+            <VCardTitle>
+              <h5 class="text-h6 mt-2">
+                Theme Customization
+              </h5>
+            </VCardTitle>
+            <VCardText>
+              <div class="d-flex justify-space-around">
+                <VColorPicker
+                  v-model="primaryColor"
+                  mode="hexa"
+                  class="ma-2"
+                  width="800"
+                />
+              </div>
+            </VCardText>
+            <VCardActions class="px-5 d-flex justify-end">
+              <VBtn
+                color="primary"
+                :loading="isLoading"
+                size="small"
+                variant="flat"
+                @click="saveColor"
+              >
+                Save
+              </VBtn>
+            </VCardActions>
+          </VCard>
+        </VCol>
+      </VRow>
+      <!-- Users & Roles Section -->
+      <VRow
+        v-if="(activeTab == 'users-and-roles') && authStore.isSuperAdmin"
+        class="ms-1"
+      >
+        <VCol cols="12">
+          <VCard class="px-3 py-2">
+            <VCardTitle class="d-flex mb-2 justify-space-between align-center">
+              <h5 class="text-h6">
+                Manage Users
+              </h5>
+              <VBtn
+                variant="elevated"
+                color="primary"
+                size="small"
+                prepend-icon="tabler-plus"
+                @click="isAddMemberDialogVisible = true"
+              >
+                New User
+              </VBtn>
+            </VCardTitle>
+            <VCol
+              v-if="getUsers.length === 0"
+              cols="12"
+              class="mt-7"
+            >
+              <VCard class="px-3 py-3 text-center">
+                <span>No users found</span>
+              </VCard>
+            </VCol>
+            <VRow v-else>
               <VCol
-                v-if="getUsers.length === 0"
+                v-for="user in getUsers"
+                :key="user.id"
                 cols="12"
-                class="mt-7"
+                class="mt-1"
               >
-                <VCard class="px-3 py-3 text-center">
-                  <span>No users found</span>
+                <VCard
+                  class="d-flex align-center ps-4 py-1 list-side-border"
+                  @click.stop="editMember(user)"
+                >
+                  <VCol cols="3">
+                    <div class="d-flex align-center gap-x-3">
+                      <VBadge
+                        dot
+                        location="top end"
+                        offset-x="1"
+                        offset-y="1"
+                        :color="user.is_online ? 'success' : 'warning'"
+                      >
+                        <VAvatar
+                          size="34"
+                          :class="user.avatar ? '' : 'text-white bg-primary'"
+                          :variant="!user.avatar ? 'tonal' : ''"
+                        >
+                          <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                        </VAvatar>
+                      </VBadge>
+                      <div>
+                        <h6 class="text-h6 text-no-wrap">
+                          <span class="d-block">{{ user.name_first }} {{ user.name_last }}</span>
+                        </h6>
+                        <small>{{ roleStore.capitalizeFirstLetter(user.role) }}</small>
+                      </div>
+                    </div>
+                  </VCol>
+                  <VCol cols="4">
+                    <small class="text-xs">
+                      <strong><VIcon
+                        color="primary"
+                        icon="tabler-mail"
+                      /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ user.email }}</span>
+                    </small>
+                  </VCol>
+                  <VCol cols="2">
+                    <small class="text-xs">
+                      <strong><VIcon
+                        color="primary"
+                        icon="tabler-phone"
+                      /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ user?.info?.phone }}</span>
+                    </small>
+                  </VCol>
+                  <VCol cols="2">
+                    <div class="">
+                      <VChip
+                        :color="getStatusColor(user.state)"
+                        variant="outlined"
+                        size="small"
+                        class="user-state-chip"
+                      >
+                        {{ roleStore.capitalizeFirstLetter(user.state) }}
+                      </VChip>
+                    </div>
+                  </VCol>
+                  <VCol cols="1">
+                    <IconBtn @click.prevent>
+                      <VIcon icon="tabler-dots" />
+                      <VMenu activator="parent">
+                        <VList>
+                          <VList>
+                            <VListItem
+                              value="edit"
+                              @click="editMember(user)"
+                            >
+                              Edit
+                            </VListItem>
+                            <VListItem
+                              value="delete"
+                              @click="deleteMember(user)"
+                            >
+                              Delete
+                            </VListItem>
+                          </VList>
+                        </VList>
+                      </VMenu>
+                    </IconBtn>
+                  </VCol>
                 </VCard>
               </VCol>
-              <VRow v-else>
-                <VCol
-                  v-for="user in getUsers"
-                  :key="user.id"
-                  cols="12"
-                  class="mt-1"
-                >
-                  <VCard
-                    class="d-flex align-center ps-4 py-1 list-side-border"
-                    @click.stop="editMember(user)"
-                  >
-                    <VCol cols="3">
-                      <div class="d-flex align-center gap-x-3">
-                        <VBadge
-                          dot
-                          location="top end"
-                          offset-x="1"
-                          offset-y="1"
-                          :color="user.is_online ? 'success' : 'warning'"
-                        >
-                          <VAvatar
-                            size="34"
-                            :class="user.avatar ? '' : 'text-white bg-primary'"
-                            :variant="!user.avatar ? 'tonal' : ''"
-                          >
-                            <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
-                          </VAvatar>
-                        </VBadge>
-                        <div>
-                          <h6 class="text-h6 text-no-wrap">
-                            <span class="d-block">{{ user.name_first }} {{ user.name_last }}</span>
-                          </h6>
-                          <small>{{ roleStore.capitalizeFirstLetter(user.role) }}</small>
-                        </div>
-                      </div>
-                    </VCol>
-                    <VCol cols="4">
-                      <small class="text-xs">
-                        <strong><VIcon
-                          color="primary"
-                          icon="tabler-mail"
-                        /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ user.email }}</span>
-                      </small>
-                    </VCol>
-                    <VCol cols="2">
-                      <small class="text-xs">
-                        <strong><VIcon
-                          color="primary"
-                          icon="tabler-phone"
-                        /></strong> <span class="text-sm ms-1 text-high-emphasis">{{ user?.info?.phone }}</span>
-                      </small>
-                    </VCol>
-                    <VCol cols="2">
-                      <div class="">
-                        <VChip
-                          :color="getStatusColor(user.state)"
-                          variant="outlined"
-                          size="small"
-                          class="user-state-chip"
-                        >
-                          {{ roleStore.capitalizeFirstLetter(user.state) }}
-                        </VChip>
-                      </div>
-                    </VCol>
-                    <VCol cols="1">
-                      <IconBtn @click.prevent>
-                        <VIcon icon="tabler-dots" />
-                        <VMenu activator="parent">
-                          <VList>
-                            <VList>
-                              <VListItem
-                                value="edit"
-                                @click="editMember(user)"
-                              >
-                                Edit
-                              </VListItem>
-                              <VListItem
-                                value="delete"
-                                @click="deleteMember(user)"
-                              >
-                                Delete
-                              </VListItem>
-                            </VList>
-                          </VList>
-                        </VMenu>
-                      </IconBtn>
-                    </VCol>
-                  </VCard>
-                </VCol>
-              </VRow>
-              <TablePagination
-                v-if="!isLoading && getUsers.length > 0"
-                v-model:page="options.page"
-                :items-per-page="options.itemsPerPage"
-                :total-items="totalUsers"
-                class="custom-pagination"
-                @update:page="handlePageChange"
-              />
-            </VCard>
-          </VCol>
-        </VRow>
-      </vcol>
-    </vrow>
-  </VContainer>
+            </VRow>
+            <TablePagination
+              v-if="!isLoading && getUsers.length > 0"
+              v-model:page="options.page"
+              :items-per-page="options.itemsPerPage"
+              :total-items="totalUsers"
+              class="custom-pagination"
+              @update:page="handlePageChange"
+            />
+          </VCard>
+        </VCol>
+      </VRow>
+    </vcol>
+  </VRow>
   <VDialog
     v-model="isAddMemberDialogVisible"
     persistent
@@ -898,7 +901,7 @@ async function submitEditMemberForm() {
 }
 
 const showError = () => {
-  if (getStatusCode === 500) {
+  if (getStatusCode.value === 500) {
     toast.error('Something went wrong. Please try again later.')
   } else {
     addingErrors.value = getErrors.value
