@@ -4,7 +4,7 @@
       <VCol cols="12">
         <div class="d-flex align-center">
           <VAvatar
-            icon="tabler-diamond-filled"
+            icon="tabler-cube"
             size="36"
             class="me-2"
             color="primary"

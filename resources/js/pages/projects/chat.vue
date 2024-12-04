@@ -8,7 +8,7 @@
     >
       <div class="d-flex align-center mb-5">
         <VAvatar
-          icon="tabler-diamond-filled"
+          icon="tabler-cube"
           size="36"
           class="me-2"
           color="primary"

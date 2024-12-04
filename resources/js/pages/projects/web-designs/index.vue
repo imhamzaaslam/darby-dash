@@ -111,7 +111,7 @@
               <VCol cols="3">
                 <div class="d-flex align-center gap-x-3">
                   <VAvatar
-                    icon="tabler-diamond-filled"
+                    icon="tabler-cube"
                     size="34"
                     class="me-1"
                     color="primary"
@@ -266,7 +266,7 @@
                   <VCol cols="10">
                     <div class="d-flex align-center gap-x-3">
                       <VAvatar
-                        icon="tabler-diamond-filled"
+                        icon="tabler-cube"
                         size="34"
                         class="me-1"
                         color="primary"
