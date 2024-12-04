@@ -1268,7 +1268,7 @@ watch(project, () => {
 .custom-border {
   border: 1px solid rgba(var(--v-theme-primary));
   border-radius: 4px;
-  background-color: #f7f7f7;
+  background-color: rgb(var(--v-theme-grey-50));
 }
 .horizontal-scroll {
   overflow-x: auto;

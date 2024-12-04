@@ -61,12 +61,14 @@
                     v-model="form.remember"
                     label="Remember me"
                   />
-                  <a
+                  <!--
+                    <a
                     class="text-primary ms-2 mb-1"
                     href="#"
-                  >
+                    >
                     Forgot Password?
-                  </a>
+                    </a> 
+                  -->
                 </div>
 
                 <VBtn

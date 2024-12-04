@@ -1246,7 +1246,7 @@ margin: auto;
   --v-card-list-gap: 19px;
 }
 .custom-tabs {
-  background-color: white; 
+  background-color: rgb(var(--v-theme-surface)); 
   margin-top: 12px;
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -1263,8 +1263,7 @@ margin: auto;
   padding: 10px 15px;
   cursor: pointer;
   margin-bottom: 5px;
-  color: #555;
-  background: white;
+  color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
   font-weight: 500;
   transition: all 0.3s ease-in-out;
   border-bottom: 1px solid #ddd;
@@ -1279,7 +1278,7 @@ margin: auto;
 .custom-tabs li.active,
 .custom-tabs li:hover {
   background-color: rgba(var(--v-theme-primary));
-  color: white;
+  color: white !important;
   border-radius: 3px;
 }
 </style>
