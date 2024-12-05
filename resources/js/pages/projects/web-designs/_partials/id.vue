@@ -252,7 +252,7 @@
               </div>
             </VSheet>
             <VSheet
-              v-if="projectProgress?.lists?.length < 3 ? true : false"
+              v-if="projectProgress?.lists?.length < 2 ? true : false"
               class="mx-2 custom-border-list px-3 py-5"
               height="163"
               width="600"
