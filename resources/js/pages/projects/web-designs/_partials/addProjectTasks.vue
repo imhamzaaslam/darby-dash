@@ -4,66 +4,28 @@
   <VRow>
     <VCol
       cols="12"
-      md="6"
+      md="8"
+      sm="12"
       class="d-flex align-center"
     >
-      <VBtnToggle
-        v-model="viewType"
-        class="d-toggle align-center-important"
-        rounded="0"
-      >
-        <div class="d-flex align-center">
-          <VAvatar
-            icon="tabler-cube"
-            size="36"
-            class="me-2"
-            color="primary"
-            variant="tonal"
-          />
-          <h3 class="text-primary">
-            {{ project?.title }}
-            <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
-          </h3>
-        </div>
-        <VIcon
-          icon="tabler-list"
-          class="me-1 ms-4"
-          :class="{ 'bg-primary': viewType === 'list' }"
-          @click="viewType = 'list'"
+      <div class="d-flex align-center">
+        <VAvatar
+          icon="tabler-cube"
+          size="36"
+          class="me-2"
+          color="primary"
+          variant="tonal"
         />
-        <VIcon
-          icon="tabler-layout-grid"
-          :class="{ 'bg-primary': viewType === 'grid' }"
-          @click="viewType = 'grid'"
-        />
-        <VIcon
-          icon="tabler-filter"
-          class="bg-primary ms-2"
-          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
-        />
-        <span
-          v-if="filtersApplied"
-          class="filter-indicator"
-          @click.stop="resetFilter"
-        >
-          <VTooltip bottom>
-            <template #activator="{ props }">
-              <VIcon
-                color="error"
-                icon="tabler-circle-x-filled"
-                size="20"
-                class="cursor-pointer"
-                v-bind="props"
-              />
-            </template>
-            <span>Reset Filter</span>
-          </VTooltip>
-        </span>
-      </VBtnToggle>
+        <h3 class="text-primary">
+          {{ project?.title }}
+          <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
+        </h3>
+      </div>
     </VCol>
     <VCol
       cols="12"
-      md="6"
+      md="4"
+      sm="12"
     >
       <div class="d-flex flex-column flex-md-row align-center justify-end">
         <!-- Dropdown -->
@@ -75,9 +37,49 @@
           :items="getProjectLists"
           item-title="name"
           item-value="uuid"
-          class="mb-3 ms-16 mb-md-0 me-md-3"
-          style="max-width:70%;"
+          class="mb-3 mb-md-0 me-md-3"
         />
+
+        <VBtnToggle
+          v-model="viewType"
+          class="d-toggle align-center-important"
+          rounded="0"
+        >
+          <VIcon
+            icon="tabler-list"
+            class="me-1 ms-4"
+            :class="{ 'bg-primary': viewType === 'list' }"
+            @click="viewType = 'list'"
+          />
+          <VIcon
+            icon="tabler-layout-grid"
+            :class="{ 'bg-primary': viewType === 'grid' }"
+            @click="viewType = 'grid'"
+          />
+          <VIcon
+            icon="tabler-filter"
+            class="bg-primary ms-2"
+            @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+          />
+          <span
+            v-if="filtersApplied"
+            class="filter-indicator"
+            @click.stop="resetFilter"
+          >
+            <VTooltip bottom>
+              <template #activator="{ props }">
+                <VIcon
+                  color="error"
+                  icon="tabler-circle-x-filled"
+                  size="20"
+                  class="cursor-pointer"
+                  v-bind="props"
+                />
+              </template>
+              <span>Reset Filter</span>
+            </VTooltip>
+          </span>
+        </VBtnToggle>
 
         <!-- Button and Dialog -->
         <VBtn
@@ -613,7 +615,11 @@
                       <template #activator="{ props }">
                         <VChip
                           class="cursor-pointer"
-                          style="background: #d7e3fb; color: #3f51b5; width: 115px;"
+                          :style="{
+                            background: isDueDateOverdue(item.due_date) ? '#FF4C51' : '#d7e3fb',
+                            color: isDueDateOverdue(item.due_date) ? '#ffffff' : '#3f51b5',
+                            width: '115px'
+                          }"
                           size="small"
                           v-bind="props"
                         >
@@ -622,7 +628,12 @@
                             class="me-1"
                             left
                           />
-                          <span v-if="item.due_date">{{ formatDate(item.due_date) }}</span>
+                          <span v-if="item.due_date">
+                            <small v-if="isDueDateToday(item.due_date)">Due Today</small>
+                            <span v-else>
+                              {{ formatDate(item.due_date) }}
+                            </span>
+                          </span>
                           <span v-else><small>Set Due Date</small></span>
                         </VChip>
                       </template>
@@ -1010,7 +1021,11 @@
                         <template #activator="{ props }">
                           <VChip
                             class="cursor-pointer"
-                            style="background: #d7e3fb; color: #3f51b5; width: 115px;"
+                            :style="{
+                              background: isDueDateOverdue(subtask.due_date) ? '#FF4C51' : '#d7e3fb',
+                              color: isDueDateOverdue(subtask.due_date) ? '#ffffff' : '#3f51b5',
+                              width: '115px'
+                            }"
                             size="small"
                             v-bind="props"
                           >
@@ -1019,7 +1034,12 @@
                               class="me-1"
                               left
                             />
-                            <span v-if="subtask.due_date">{{ formatDate(subtask.due_date) }}</span>
+                            <span v-if="subtask.due_date">
+                              <small v-if="isDueDateToday(subtask.due_date)">Due Today</small>
+                              <span v-else>
+                                {{ formatDate(subtask.due_date) }}
+                              </span>
+                            </span>
                             <span v-else><small>Set Due Date</small></span>
                           </VChip>
                         </template>
@@ -1810,15 +1830,28 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
 
-const validateMinutes = (event, item) => {
-  const inputValue = event.target.value
-  const minutes = parseInt(inputValue.split(' ')[1])
-  if (isNaN(minutes) || minutes < 0 || minutes > 59) {
-    const sanitizedValue = inputValue.replace(/\d{2}m/, '00m')
+const isDueDateToday = dueDate => {
+  if (!dueDate) return false
 
-    event.target.value = sanitizedValue
-    inputHours[item.id] = sanitizedValue
-  }
+  const today = new Date()
+  const dueDateObj = new Date(dueDate)
+
+  today.setHours(0, 0, 0, 0)
+  dueDateObj.setHours(0, 0, 0, 0)
+
+  return dueDateObj.getTime() === today.getTime()
+}
+
+const isDueDateOverdue = dueDate => {
+  if (!dueDate) return false
+
+  const today = new Date()
+  const dueDateObj = new Date(dueDate)
+
+  today.setHours(0, 0, 0, 0)
+  dueDateObj.setHours(0, 0, 0, 0)
+
+  return dueDateObj <= today 
 }
 
 onBeforeMount(async () => {

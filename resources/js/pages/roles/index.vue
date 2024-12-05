@@ -1,11 +1,22 @@
 <template>
   <Loader v-if="isRoleFetching" />
-  <VRow class="mt-0 pt-0">
-    <VCol
-      cols="12"
-      class="pt-0 ps-4"
-    >
-      <h3>Manage Roles & Permissions</h3>
+  <VRow class="pb-0">
+    <VCol cols="12">
+      <div class="d-flex align-center">
+        <VAvatar
+          icon="tabler-settings"
+          size="36"
+          class="me-2"
+          color="primary"
+          variant="tonal"
+        />
+        <h3 class="text-primary">
+          Manage Roles & Permissions
+        </h3>
+      </div>
+      <p class="text-body-1 text-muted mt-1">
+        Effortlessly manage {{ userDetails?.company }}'s roles, permissions, user details, and settings to optimize team workflows.
+      </p>
     </VCol>
   </VRow>
   <VRow>
@@ -65,9 +76,11 @@
 
 <script setup>
 import { useRoleStore } from "@/store/roles"
+import { useUserStore } from "@/store/users"
 import Loader from "@/components/Loader.vue"
 
 const roleStore = useRoleStore()
+const userStore = useUserStore()
 
 const isRoleFetching = ref(false)
 
@@ -99,4 +112,8 @@ const editPermission = value => {
   selectedRoleId.value = value.id
   selectedRoleName.value = value.name
 }
+
+const userDetails = computed(() => {
+  return userStore.getUser
+})
 </script>

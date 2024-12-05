@@ -1,9 +1,18 @@
 <template>
   <!-- Title Section -->
   <div class="header-section">
-    <h4 class="text-h4 font-weight-bold text-primary">
-      {{ userDetails?.company }} Marketplace
-    </h4>
+    <div class="d-flex align-center">
+      <VAvatar
+        icon="tabler-building-store"
+        size="36"
+        class="me-2"
+        color="primary"
+        variant="tonal"
+      />
+      <h3 class="text-primary">
+        {{ userDetails?.company }} Marketplace
+      </h3>
+    </div>
     <p class="text-body-2 mt-1">
       <strong>Active Project Type:</strong> {{ service?.service_type }}
     </p>

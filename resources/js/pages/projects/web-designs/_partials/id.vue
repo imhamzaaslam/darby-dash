@@ -51,124 +51,264 @@
       </div>
     </VCol>
   </VRow>
-  <VRow>
+  <!--
+    <VRow>
     <VCol cols="12">
-      <VProgressLinear
-        v-model="projectProgress.overallProgress"
-        color="success"
-        height="20"
-      >
-        <template #default="{ value }">
-          <span :class="Math.ceil(value) < 50 ? 'text-primary' : 'text-white'">
-            {{ Math.ceil(value) }}%
-          </span>
-        </template>
-      </VProgressLinear>
+    <VProgressLinear
+    v-model="projectProgress.overallProgress"
+    color="success"
+    height="20"
+    >
+    <template #default="{ value }">
+    <span :class="Math.ceil(value) < 50 ? 'text-primary' : 'text-white'">
+    {{ Math.ceil(value) }}%
+    </span>
+    </template>
+    </VProgressLinear>
     </VCol>
-  </VRow>
-  <VRow>
+    </VRow> 
+  -->
+  <!--
+    <VRow>
     <VCol cols="9">
-      <div class="horizontal-scroll">
-        <VRow style="flex-wrap: nowrap;">
-          <VCol
-            v-for="(data, index) in projectProgress.lists"
-            :key="index"
-            cols="3"
-            style="flex: 0 0 auto; max-width: 33.333333%;"
-          >
-            <VCard
-              class="logistics-card-statistics cursor-pointer p-0"
-              @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
-            >
-              <VCardText style="padding: 20px !important;">
-                <div class="mb-2 text-center">
-                  <h5 class="text-h6 mb-3 font-weight-medium">
-                    {{ data.name }}
-                  </h5>
-                  <VAvatar
-                    v-if="data.status == 'completed'"
-                    color="success"
-                    size="x-large"
-                  >
-                    <VIcon
-                      icon="tabler-check"
-                      size="22"
-                    />
-                  </VAvatar>
-                  <VAvatar
-                    v-else-if="data.status == 'inprogress'"
-                    color="primary"
-                    size="x-large"
-                  >
-                    <span class="text-sm">{{ data.progress }}%</span>
-                  </VAvatar>
-                  <VAvatar
-                    v-else-if="data.status == 'pending'"
-                    color="secondary"
-                    size="x-large"
-                  >
-                    <VIcon
-                      icon="tabler-clock"
-                      size="22"
-                    />
-                  </VAvatar>
-                </div>
-                <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
-                  <small v-if="data.status == 'completed'">
-                    Completed
-                  </small>
-                  <small v-else-if="data.status == 'inprogress'">
-                    Inprogress
-                  </small>
-                  <small v-else>
-                    Pending
-                  </small>
-                </div>
-              </VCardText>
-            </VCard>
-          </VCol>
-          <VCol
-            v-if="projectProgress?.lists?.length < 3 ? true : false"
-            :cols="projectProgress?.lists?.length == 1 ? 6 : 3"
-            :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length == 1 ? '65%' : '33.333333%'};`"
-          >
-            <VCard
-              class="logistics-card-statistics cursor-pointer p-0"
-              outlined
-            >
-              <VCardText class="text-center py-5 px-3">
-                <div class="mb-6">
-                  <h5
-                    class="text-h5 mb-4 font-weight-medium"
-                    color="secondary"
-                  >
-                    Other List Appear Here
-                  </h5>
-                  <span v-html="otherListImg" />
-                </div>
-              </VCardText>
-            </VCard>
-          </VCol>
-        </VRow>
-      </div>
+    <div class="horizontal-scroll">
+    <VRow style="flex-wrap: nowrap;">
+    <VCol
+    v-for="(data, index) in projectProgress.lists"
+    :key="index"
+    cols="3"
+    style="flex: 0 0 auto; max-width: 33.333333%;"
+    >
+    <VCard
+    class="logistics-card-statistics cursor-pointer p-0"
+    @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
+    >
+    <VCardText style="padding: 20px !important;">
+    <div class="mb-2 text-center">
+    <h5 class="text-h6 mb-3 font-weight-medium">
+    {{ data.name }}
+    </h5>
+    <VAvatar
+    v-if="data.status == 'completed'"
+    color="success"
+    size="x-large"
+    >
+    <VIcon
+    icon="tabler-check"
+    size="22"
+    />
+    </VAvatar>
+    <VAvatar
+    v-else-if="data.status == 'inprogress'"
+    color="primary"
+    size="x-large"
+    >
+    <span class="text-sm">{{ data.progress }}%</span>
+    </VAvatar>
+    <VAvatar
+    v-else-if="data.status == 'pending'"
+    color="secondary"
+    size="x-large"
+    >
+    <VIcon
+    icon="tabler-clock"
+    size="22"
+    />
+    </VAvatar>
+    </div>
+    <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
+    <small v-if="data.status == 'completed'">
+    Completed
+    </small>
+    <small v-else-if="data.status == 'inprogress'">
+    Inprogress
+    </small>
+    <small v-else>
+    Pending
+    </small>
+    </div>
+    </VCardText>
+    </VCard>
+    </VCol>
+    <VCol
+    v-if="projectProgress?.lists?.length < 3 ? true : false"
+    :cols="projectProgress?.lists?.length == 1 ? 6 : 3"
+    :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length == 1 ? '65%' : '33.333333%'};`"
+    >
+    <VCard
+    class="logistics-card-statistics cursor-pointer p-0"
+    outlined
+    >
+    <VCardText class="text-center py-5 px-3">
+    <div class="mb-6">
+    <h5
+    class="text-h5 mb-4 font-weight-medium"
+    color="secondary"
+    >
+    Other List Appear Here
+    </h5>
+    <span v-html="otherListImg" />
+    </div>
+    </VCardText>
+    </VCard>
+    </VCol>
+    </VRow>
+    </div>
     </VCol> 
     <VCol
-      cols="3"
+    cols="3"
+    class="pb-0"
+    >
+    <VCard
+    style="height: 163px;"
+    class="logistics-card-statistics cursor-pointer p-1"
+    >
+    <VCardText>
+    <div class="text-body-1 text-center d-flex align-center mb-4">
+    <span class="text-primary font-weight-bold me-1">Start Date:</span>{{ formatDate(project?.created_at) }}
+    </div>
+    <div class="text-body-1 text-center d-flex align-center mb-4">
+    <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
+    </div>
+    <div class="text-body-1 text-center d-flex align-center mb-4">
+    <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
+    </div>
+    </VCardText>
+    </VCard>
+    </VCol>
+    </VRow> 
+  -->
+  <VRow>
+    <VCol
+      cols="12"
+      md="8"
+      sm="12"
+    >
+      <VSheet
+        class=""
+        max-width="900"
+        style="background-color: unset !important"
+      >
+        <VSlideGroup
+          v-model="model"
+          mandatory
+          show-arrows
+        >
+          <VSlideGroupItem
+            v-for="(data, index) in projectProgress.lists"
+            :key="index"
+          >
+            <VSheet
+              class="mx-2 custom-border-list px-3 py-5"
+              height="163"
+              width="250"
+              @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
+            >
+              <div class="mb-2 text-center">
+                <h5
+                  class="text-h6 mb-3 font-weight-medium text-truncate"
+                  style="max-width:200px"
+                >
+                  {{ data.name }}
+                </h5>
+                <VAvatar
+                  v-if="data.status == 'completed'"
+                  color="success"
+                  size="x-large"
+                >
+                  <VIcon
+                    icon="tabler-check"
+                    size="22"
+                  />
+                </VAvatar>
+                <VAvatar
+                  v-else-if="data.status == 'inprogress'"
+                  color="primary"
+                  size="x-large"
+                >
+                  <span class="text-sm">{{ data.progress }}%</span>
+                </VAvatar>
+                <VAvatar
+                  v-else-if="data.status == 'pending'"
+                  color="secondary"
+                  size="x-large"
+                >
+                  <VIcon
+                    icon="tabler-clock"
+                    size="22"
+                  />
+                </VAvatar>
+              </div>
+              <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
+                <small v-if="data.status == 'completed'">
+                  Completed
+                </small>
+                <small v-else-if="data.status == 'inprogress'">
+                  Inprogress
+                </small>
+                <small v-else>
+                  Pending
+                </small>
+              </div>
+            </VSheet>
+            <VSheet
+              v-if="projectProgress?.lists?.length < 3 ? true : false"
+              class="mx-2 custom-border-list px-3 py-5"
+              height="163"
+              width="600"
+            >
+              <div class="mb-6 text-center">
+                <h5
+                  class="text-h6 mb-4 font-weight-medium"
+                  color="secondary"
+                >
+                  Other List Appear Here
+                </h5>
+                <span v-html="otherListImg" />
+              </div>
+            </VSheet>
+          </VSlideGroupItem>
+        </VSlideGroup>
+      </VSheet>
+    </VCol>
+    <VCol
+      cols="12"
+      md="4"
+      sm="12"
       class="pb-0"
     >
       <VCard
-        style="height: 163px;"
+        style="height: 161px;"
         class="logistics-card-statistics cursor-pointer p-1"
       >
         <VCardText>
-          <div class="text-body-1 text-center d-flex align-center mb-4">
-            <span class="text-primary font-weight-bold me-1">Start Date:</span>{{ formatDate(project?.created_at) }}
-          </div>
-          <div class="text-body-1 text-center d-flex align-center mb-4">
-            <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
-          </div>
-          <div class="text-body-1 text-center d-flex align-center mb-4">
-            <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
+          <div class="d-flex align-center">
+            <div class="text-center me-6">
+              <VProgressCircular
+                v-model="projectProgress.overallProgress"
+                :size="isMobile() ? 50 : 110"
+                :width="isMobile() ? 3 : 8"
+                color="primary"
+                class="shadow-sm"
+              >
+                <template #default="{ value }">
+                  <span class="text-h6 font-weight-bold">
+                    {{ Math.ceil(value) }}%
+                  </span>
+                </template>
+              </VProgressCircular>
+            </div>
+            <div class="flex-grow-1">
+              <div class="text-body-1 text-center d-flex align-center mb-4">
+                <span class="text-primary font-weight-bold me-1">Start Date:</span>{{ formatDate(project?.created_at) }}
+              </div>
+              <div class="text-body-1 text-center d-flex align-center mb-4">
+                <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
+              </div>
+              <div class="text-body-1 text-center d-flex align-center mb-4">
+                <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
+              </div>
+            </div>
           </div>
         </VCardText>
       </VCard>
@@ -182,7 +322,13 @@
       <VCard style="height: 388px; position: relative;">
         <VCardItem :title="'Inbox (' + (project.project_members ? project.project_members?.filter(member => member.id != userDetails.id).length : 0) + ')'">
           <template #append>
-            <MoreBtn />
+            <div>
+              <MoreBtn
+                :menu-list="[
+                  { title: 'View All', value: 'view-all', to: { name: 'chat', params: { id: projectUuid } } },
+                ]"
+              />
+            </div>
           </template>
         </VCardItem>
         <VCardText
@@ -259,7 +405,11 @@
       >
         <VCardItem :title="`Your Tasks (${projectProgress.totalTasks})`">
           <template #append>
-            <MoreBtn />
+            <MoreBtn
+              :menu-list="[
+                { title: 'View All', value: 'view-all', to: { name: 'add-project-tasks', params: { id: projectUuid } } },
+              ]"
+            />
           </template>
         </VCardItem>
         <VCardText style="overflow-y: auto; max-height: calc(100% - 56px);">
@@ -350,7 +500,11 @@
 
           <template #append>
             <div>
-              <MoreBtn />
+              <MoreBtn
+                :menu-list="[
+                  { title: 'View All', value: 'view-all', to: { name: 'calendar', params: { id: projectUuid } } },
+                ]"
+              />
             </div>
           </template>
         </VCardItem>
@@ -540,7 +694,11 @@
         <template v-if="project?.project_manager">
           <VCardItem title="Your Project Manager">
             <template #append>
-              <MoreBtn />
+              <MoreBtn
+                :menu-list="[
+                  { title: 'View Team', value: 'view-all', to: { name: 'team', params: { id: projectUuid } } },
+                ]"
+              />
             </template>
           </VCardItem>
           <VCardText>
@@ -644,7 +802,11 @@
         <template v-else>
           <VCardItem title="No Project Manager Assigned">
             <template #append>
-              <MoreBtn />
+              <MoreBtn
+                :menu-list="[
+                  { title: 'View Team', value: 'view-all', to: { name: 'team', params: { id: projectUuid } } },
+                ]"
+              />
             </template>
           </VCardItem>
           <VCardText>
@@ -673,7 +835,11 @@
       <VCard style="height:294px!important">
         <VCardItem title="Matching Services For Your Project">
           <template #append>
-            <MoreBtn />
+            <MoreBtn
+              :menu-list="[
+                { title: 'View All', value: 'view-all', to: { name: 'services-setting'} },
+              ]"
+            />
           </template>
         </VCardItem>
         <VCardText>
@@ -1130,6 +1296,16 @@ watch(project, () => {
   border-radius: 4px;
   background-color: rgb(var(--v-theme-grey-50));
 }
+.custom-border-list{
+    box-shadow: 0 3px 12px rgba(var(--v-shadow-key-umbra-color), var(--v-shadow-md-opacity));
+    border-block-end: 3px solid rgba(var(--v-theme-primary), var(--v-pressed-opacity));
+    border-radius: 6px;
+    background-color: rgb(var(--v-theme-surface));
+    cursor: pointer;
+  }
+  .custom-border-list:hover{
+    border-bottom: 3px solid rgba(var(--v-theme-primary));
+  }
 .horizontal-scroll {
   overflow-x: auto;
   overflow-y: hidden;

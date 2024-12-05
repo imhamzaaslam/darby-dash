@@ -28,10 +28,24 @@
       >
         <div class="d-flex justify-end">
           <VBtn
-            prepend-icon="tabler-plus"
-            @click="isAddMileStoneDialogueOpen = !isAddMileStoneDialogueOpen"
+            icon
+            color="td-hover"
+            class="ma-2"
+            size="small"
+            rounded="pills"
+            @click.prevent
           >
-            Add Milestone
+            <VIcon icon="tabler-dots" />
+            <VMenu activator="parent">
+              <VList>
+                <VListItem
+                  value="save-template"
+                  @click="isAddMileStoneDialogueOpen = true"
+                >
+                  Add Milestone
+                </VListItem>
+              </VList>
+            </VMenu>
           </VBtn>
         </div>
       </VCol>

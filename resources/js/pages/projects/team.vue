@@ -4,71 +4,69 @@
     <VRow>
       <VCol
         cols="12"
-        md="7"
+        md="9"
         class="d-flex"
       >
-        <VBtnToggle
-          v-model="viewType"
-          class="d-toggle align-center-important"
-          rounded="0"
-        >
-          <div class="d-flex align-center">
-            <VAvatar
-              icon="tabler-cube"
-              size="36"
-              class="me-2"
-              color="primary"
-              variant="tonal"
-            />
-            <h3 class="text-primary">
-              {{ project?.title }}
-              <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
-            </h3>
-          </div>
-          <VIcon
-            icon="tabler-list"
-            class="me-1 ms-4"
-            :class="{ 'bg-primary': viewType === 'list' }"
-            @click="viewType = 'list'"
+        <div class="d-flex align-center">
+          <VAvatar
+            icon="tabler-cube"
+            size="36"
+            class="me-2"
+            color="primary"
+            variant="tonal"
           />
-          <VIcon
-            icon="tabler-layout-grid"
-            :class="{ 'bg-primary': viewType === 'grid' }"
-            @click="viewType = 'grid'"
-          />
-          <VIcon
-            icon="tabler-filter"
-            class="bg-primary ms-1"
-            @click="isFilterDrawerOpen = !isFilterDrawerOpen"
-          />
-        </VBtnToggle>
-      </VCol>
-      <VCol
-        cols="12"
-        md="3"
-        class="pb-0"
-      >
-        <div class="d-flex justify-end">
-          <AppAutocomplete
-            v-model="selectedRole"
-            placeholder="Select Type"
-            :items="rolesWithFirstOption('All Members')"
-            item-title="name"
-            item-value="id"
-            @update:model-value="onFilter"
-          />
+          <h3 class="text-primary">
+            {{ project?.title }}
+            <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
+          </h3>
         </div>
       </VCol>
       <VCol
         cols="12"
-        md="2"
+        md="3"
       >
         <div class="d-flex justify-end">
-          <VBtn
-            prepend-icon="tabler-plus"
-            @click="(isAddMemberDialogueOpen = !isAddMemberDialogueOpen, isMultiselectValid = true)"
+          <VBtnToggle
+            v-model="viewType"
+            class="d-toggle align-center-important"
+            rounded="0"
           >
-            New Team Member
+            <VIcon
+              icon="tabler-list"
+              class="me-1 ms-4"
+              :class="{ 'bg-primary': viewType === 'list' }"
+              @click="viewType = 'list'"
+            />
+            <VIcon
+              icon="tabler-layout-grid"
+              :class="{ 'bg-primary': viewType === 'grid' }"
+              @click="viewType = 'grid'"
+            />
+            <VIcon
+              icon="tabler-filter"
+              class="bg-primary ms-1"
+              @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+            />
+          </VBtnToggle>
+          <VBtn
+            icon
+            color="td-hover"
+            class="ma-2"
+            size="small"
+            rounded="pills"
+            @click.prevent
+          >
+            <VIcon icon="tabler-dots" />
+            <VMenu activator="parent">
+              <VList>
+                <VListItem
+                  value="add-member"
+                  @click="(isAddMemberDialogueOpen = !isAddMemberDialogueOpen, isMultiselectValid = true)"
+                >
+                  Team Member
+                </VListItem>
+              </VList>
+            </VMenu>
           </VBtn>
         </div>
       </VCol>

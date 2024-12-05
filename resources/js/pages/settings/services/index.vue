@@ -1,69 +1,78 @@
 <template>
   <div>
-    <VRow class="d-flex align-items-center">
-      <VCol
-        cols="6"
-        class="d-flex justify-start justify-md-start"
-      >
-        <VBtnToggle
-          v-model="viewType"
-          class="d-toggle align-center-important"
-          rounded="0"
-        >
-          <VIcon
-            icon="tabler-list"
-            class="me-1"
-            :class="{ 'bg-primary': viewType === 'list' }"
-            @click="viewType = 'list'"
-          />
-          <VIcon
-            icon="tabler-layout-grid"
-            class="ms-1"
-            :class="{ 'bg-primary': viewType === 'grid' }"
-            @click="viewType = 'grid'"
-          />
-        </VBtnToggle>
-      </VCol>
-      <VCol
-        cols="6"
-        class="d-flex justify-end justify-md-end mb-3"
-      >
-        <VBtn
-          icon
-          color="td-hover"
-          class="ms-3"
-          size="small"
-          rounded="pills"
-          @click.prevent
-        >
-          <VIcon icon="tabler-dots" />
-          <VMenu activator="parent">
-            <VList>
-              <VListItem
-                value="add-service"
-                @click="isAddServiceDrawerOpen = !isAddServiceDrawerOpen"
-              >
-                Add Service
-              </VListItem>
-              <VListItem
-                value="sort-service"
-                @click="isSortServiceModalOpen = true"
-              >
-                Manage Services
-              </VListItem>
-            </VList>
-          </VMenu>
-        </VBtn>
-      </VCol>
-    </VRow>
-    <VRow class="mb-3 pt-0 pb-0">
+    <VRow class="pb-0">
       <VCol
         cols="12"
-        class="pt-0 ps-4 pb-0"
+        md="9"
+        class="d-flex pb-0"
       >
-        <h3>
-          Manage Services
-        </h3>
+        <div>
+          <div class="d-flex align-center">
+            <VAvatar
+              icon="tabler-settings"
+              size="36"
+              class="me-2"
+              color="primary"
+              variant="tonal"
+            />
+            <h3 class="text-primary">
+              Manage Services
+            </h3>
+          </div>
+          <p class="text-body-1 text-muted mt-1">
+            Efficiently manage and organize the services offered by {{ userDetails?.company }} to enhance operations and deliver exceptional results.
+          </p>
+        </div>
+      </VCol>
+      <VCol
+        cols="12"
+        md="3"
+      >
+        <div class="d-flex flex-row align-center justify-end">
+          <VBtnToggle
+            v-model="viewType"
+            class="d-toggle"
+            rounded="0"
+          >
+            <VIcon
+              icon="tabler-list"
+              class="me-1"
+              :class="{ 'bg-primary': viewType === 'list' }"
+              @click="viewType = 'list'"
+            />
+            <VIcon
+              icon="tabler-layout-grid"
+              :class="{ 'bg-primary': viewType === 'grid' }"
+              @click="viewType = 'grid'"
+            />
+          </VBtnToggle>
+          <VBtn
+            icon
+            color="td-hover"
+            class="ms-2"
+            size="small"
+            rounded="pills"
+            @click.prevent
+          >
+            <VIcon icon="tabler-dots" />
+            <VMenu activator="parent">
+              <VList>
+                <VListItem
+                  value="add-service"
+                  @click="isAddServiceDrawerOpen = !isAddServiceDrawerOpen"
+                >
+                  Add Service
+                </VListItem>
+                <VListItem
+                  value="sort-service"
+                  @click="isSortServiceModalOpen = true"
+                >
+                  Manage Services
+                </VListItem>
+              </VList>
+            </VMenu>
+          </VBtn>
+        </div>
       </VCol>
     </VRow>
     <!-- Skeleton Loader -->
@@ -312,6 +321,7 @@ import SortServiceModal from '@/pages/settings/services/_partials/sort-service-m
 import { computed, onBeforeMount, onMounted, onUnmounted, watch, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useUserSettingStore } from '@/store/user_settings'
+import { useUserStore } from '@/store/users'
 import { useProjectTypeStore } from "@/store/project_types"
 import moment from 'moment'
 
@@ -346,6 +356,7 @@ onBeforeMount(async () => {
 
 const toast = useToast()
 const userSettingStore = useUserSettingStore()
+const userStore = useUserStore()
 const projectTypeStore = useProjectTypeStore()
 const router = useRouter()
 
@@ -464,6 +475,10 @@ const getImageUrl = path => {
 
 const getProjectTypes = computed(() => {
   return projectTypeStore.getProjectTypes
+})
+
+const userDetails = computed(() => {
+  return userStore.getUser
 })
 
 watch([viewType], ([newViewType]) => {

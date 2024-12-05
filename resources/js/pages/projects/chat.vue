@@ -6,7 +6,7 @@
       md="7"
       class="d-flex"
     >
-      <div class="d-flex align-center mb-5">
+      <div class="d-flex align-center mb-2">
         <VAvatar
           icon="tabler-cube"
           size="36"
@@ -19,6 +19,16 @@
           <span class="d-block text-xs text-high-emphasis">{{ project?.project_type }}</span>
         </h3>
       </div>
+    </VCol>
+  </VRow>
+  <VRow class="mb-2 pt-0 pb-0">
+    <VCol
+      cols="12"
+      class="pt-0 ps-4 pb-0"
+    >
+      <h3>
+        Manage Chats & Contacts
+      </h3>
     </VCol>
   </VRow>
   <VLayout class="chat-app-layout">

@@ -1,34 +1,54 @@
 <template>
   <div>
-    <VRow class="mt-0 pt-0">
+    <VRow class="pb-0">
       <VCol
         cols="12"
-        class="pt-0 ps-4 d-flex align-items-center"
+        md="9"
+        class="d-flex pb-0"
       >
-        <h3 class="mb-0">
-          Manage Templates
-        </h3>
-
-        <VBtnToggle
-          v-model="viewType"
-          class="d-toggle"
-          rounded="0"
-        >
-          <VIcon
-            icon="tabler-list"
-            class="me-1 ms-2"
-            :class="{ 'bg-primary': viewType === 'list' }"
-            @click="viewType = 'list'"
-          />
-          <VIcon
-            icon="tabler-layout-grid"
-            :class="{ 'bg-primary': viewType === 'grid' }"
-            @click="viewType = 'grid'"
-          />
-        </VBtnToggle>
+        <div>
+          <div class="d-flex align-center">
+            <VAvatar
+              icon="tabler-settings"
+              size="36"
+              class="me-2"
+              color="primary"
+              variant="tonal"
+            />
+            <h3 class="text-primary">
+              Manage Templates
+            </h3>
+          </div>
+          <p class="text-body-1 text-muted mt-1">
+            Seamlessly manage and organize project templates for {{ userDetails?.company }} to streamline your processes and improve efficiency.
+          </p>
+        </div>
+      </VCol>
+      <VCol
+        cols="12"
+        md="3"
+      >
+        <div class="d-flex justify-end">
+          <VBtnToggle
+            v-model="viewType"
+            class="d-toggle"
+            rounded="0"
+          >
+            <VIcon
+              icon="tabler-list"
+              class="me-1"
+              :class="{ 'bg-primary': viewType === 'list' }"
+              @click="viewType = 'list'"
+            />
+            <VIcon
+              icon="tabler-layout-grid"
+              :class="{ 'bg-primary': viewType === 'grid' }"
+              @click="viewType = 'grid'"
+            />
+          </VBtnToggle>
+        </div>
       </VCol>
     </VRow>
-
     <!-- Skeleton Loader -->
     <div v-if="getLoadStatus == 1">
       <VRow
@@ -250,12 +270,14 @@ import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useToast } from "vue-toastification"
 import { useTemplateStore } from '@/store/templates'
+import { useUserStore } from '@/store/users'
 import moment from 'moment'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Templates` })
 
 const toast = useToast()
 const templateStore = useTemplateStore()
+const userStore = useUserStore()
 const router = useRouter()
 
 const totalRecords = ref(0)
@@ -374,6 +396,10 @@ const getLoadStatus = computed(() => {
 
 const totalTemplates = computed(() => {
   return templateStore.templatesCount
+})
+
+const userDetails = computed(() => {
+  return userStore.getUser
 })
 
 watch([viewType], ([newViewType]) => {

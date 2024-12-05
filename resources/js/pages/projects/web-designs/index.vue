@@ -1,76 +1,81 @@
 <template>
   <div>
-    <!-- Toggle -->
-    <VRow class="mb-0">
+    <VRow class="mb-3">
       <VCol
         cols="12"
-        :md="!(authStore.hasPermission('project-create')) ? 9 : 7"
+        md="9"
         class="d-flex pb-0"
       >
-        <VBtnToggle
-          v-model="viewType"
-          class="d-toggle"
-          rounded="0"
-        >
-          <VIcon
-            icon="tabler-list"
-            class="me-1"
-            :class="{ 'bg-primary': viewType === 'list' }"
-            @click="viewType = 'list'"
-          />
-          <VIcon
-            icon="tabler-layout-grid"
-            :class="{ 'bg-primary': viewType === 'grid' }"
-            @click="viewType = 'grid'"
-          />
-        </VBtnToggle>
-        <VIcon
-          icon="tabler-filter"
-          class="bg-primary ms-2"
-          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
-        />
+        <div>
+          <div class="d-flex align-center">
+            <VAvatar
+              icon="tabler-chart-histogram"
+              size="36"
+              class="me-2"
+              color="primary"
+              variant="tonal"
+            />
+            <h3 class="text-primary">
+              {{ userDetails?.company }} Projects
+            </h3>
+          </div>
+          <p class="text-body-1 text-muted mt-1">
+            Discover the diverse projects and solutions offered by {{ userDetails?.company }} to fulfill goals.
+          </p>
+        </div>
       </VCol>
       <VCol
         cols="12"
         md="3"
         class="pb-0"
       >
-        <div class="d-flex justify-end">
-          <AppAutocomplete
-            v-model="selectedProjectType"
-            placeholder="Select Project Type"
-            :items="projectTypesWithFirstOption('All Projects')"
-            item-title="name"
-            item-value="id"
-            @update:model-value="onFilter"
-          />
-        </div>
-      </VCol>
-      <VCol
-        v-if="authStore.hasPermission('project-create')"
-        cols="12"
-        md="2"
-        class="pb-0"
-      >
-        <div class="d-flex justify-end">
-          <VBtn
-            prepend-icon="tabler-plus"
-            @click="isAddProjectDrawerOpen = !isAddProjectDrawerOpen"
+        <div class="d-flex flex-row align-center justify-end">
+          <VBtnToggle
+            v-model="viewType"
+            class="d-toggle"
+            rounded="0"
           >
-            New Project
+            <VIcon
+              icon="tabler-list"
+              class="me-1"
+              :class="{ 'bg-primary': viewType === 'list' }"
+              @click="viewType = 'list'"
+            />
+            <VIcon
+              icon="tabler-layout-grid"
+              :class="{ 'bg-primary': viewType === 'grid' }"
+              @click="viewType = 'grid'"
+            />
+          </VBtnToggle>
+          <VIcon
+            icon="tabler-filter"
+            class="bg-primary ms-2"
+            @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+          />
+          <VBtn
+            icon
+            color="td-hover"
+            class="ma-2"
+            size="small"
+            rounded="pills"
+            @click.prevent
+          >
+            <VIcon icon="tabler-dots" />
+            <VMenu activator="parent">
+              <VList>
+                <VListItem
+                  v-if="authStore.hasPermission('project-create')"
+                  value="add-project"
+                  @click="isAddProjectDrawerOpen = true"
+                >
+                  Add Project
+                </VListItem>
+              </VList>
+            </VMenu>
           </VBtn>
         </div>
       </VCol>
     </VRow>
-    <VRow class="mt-0 pt-0">
-      <VCol
-        cols="12"
-        class="pt-0 ps-4"
-      >
-        <h3>Manage Projects</h3>
-      </VCol>
-    </VRow>
-
     <!-- Skeleton Loader -->
     <div v-if="getLoadStatus == 1">
       <VRow
@@ -668,6 +673,10 @@ const getLoadStatus = computed(() => {
 
 const totalProjects = computed(() => {
   return projectStore.projectsCount
+})
+
+const userDetails = computed(() => {
+  return userStore.getUser
 })
 
 const getImageUrl = path => {

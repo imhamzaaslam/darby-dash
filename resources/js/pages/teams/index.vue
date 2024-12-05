@@ -1,71 +1,78 @@
 <template>
   <!-- Toggle -->
-  <VRow class="mb-0">
+  <VRow class="mb-3">
     <VCol
       cols="12"
-      md="7"
+      md="9"
       class="d-flex pb-0"
     >
-      <VBtnToggle
-        v-model="viewType"
-        class="d-toggle"
-        rounded="0"
-      >
-        <VIcon
-          icon="tabler-list"
-          class="me-1"
-          :class="{ 'bg-primary': viewType === 'list' }"
-          @click="viewType = 'list'"
-        />
-        <VIcon
-          icon="tabler-layout-grid"
-          :class="{ 'bg-primary': viewType === 'grid' }"
-          @click="viewType = 'grid'"
-        />
-      </VBtnToggle>
-      <VIcon
-        icon="tabler-filter"
-        class="bg-primary ms-2"
-        @click="isFilterDrawerOpen = !isFilterDrawerOpen"
-      />
+      <div>
+        <div class="d-flex align-center">
+          <VAvatar
+            icon="tabler-users"
+            size="36"
+            class="me-2"
+            color="primary"
+            variant="tonal"
+          />
+          <h3 class="text-primary">
+            {{ userDetails?.company }} Members
+          </h3>
+        </div>
+        <p class="text-body-1 text-muted mt-1">
+          Meet the dedicated team members of {{ userDetails?.company }} who drive innovation and success.
+        </p>
+      </div>
     </VCol>
     <VCol
       cols="12"
       md="3"
       class="pb-0"
     >
-      <div class="d-flex justify-end">
-        <AppAutocomplete
-          v-model="selectedRole"
-          placeholder="Select Type"
-          :items="rolesWithFirstOption('All Members')"
-          item-title="name"
-          item-value="id"
-          @update:model-value="onFilter"
-        />
-      </div>
-    </VCol>
-    <VCol
-      cols="12"
-      md="2"
-      class="pb-0"
-    >
-      <div class="d-flex justify-end">
-        <VBtn
-          prepend-icon="tabler-plus"
-          @click="isAddMemberDrawerOpen = !isAddMemberDrawerOpen"
+      <div class="d-flex flex-row align-center justify-end">
+        <VBtnToggle
+          v-model="viewType"
+          class="d-toggle"
+          rounded="0"
         >
-          New Member
+          <VIcon
+            icon="tabler-list"
+            class="me-1"
+            :class="{ 'bg-primary': viewType === 'list' }"
+            @click="viewType = 'list'"
+          />
+          <VIcon
+            icon="tabler-layout-grid"
+            :class="{ 'bg-primary': viewType === 'grid' }"
+            @click="viewType = 'grid'"
+          />
+        </VBtnToggle>
+        <VIcon
+          icon="tabler-filter"
+          class="bg-primary ms-2"
+          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+        />
+        <VBtn
+          icon
+          color="td-hover"
+          class="ma-2"
+          size="small"
+          rounded="pills"
+          @click.prevent
+        >
+          <VIcon icon="tabler-dots" />
+          <VMenu activator="parent">
+            <VList>
+              <VListItem
+                value="add-member"
+                @click="isAddMemberDrawerOpen = true"
+              >
+                Add Member
+              </VListItem>
+            </VList>
+          </VMenu>
         </VBtn>
       </div>
-    </VCol>
-  </VRow>
-  <VRow class="mt-0 pt-0">
-    <VCol
-      cols="12"
-      class="pt-0 ps-4"
-    >
-      <h3>Manage Members</h3>
     </VCol>
   </VRow>
 
@@ -512,6 +519,10 @@ const getStatusCode = computed(() => {
 
 const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
+})
+
+const userDetails = computed(() => {
+  return userStore.getUser
 })
 
 watch([viewType], ([newViewType]) => {

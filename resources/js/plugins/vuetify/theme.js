@@ -17,8 +17,23 @@ const adjustColor = (color, amount) => {
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
 }
 
+const adjustLightColor = (color, opacity = 1) => {
+  const colorWithoutHash = color.replace('#', '')
+  const num = parseInt(colorWithoutHash, 16)
+
+  const r = (num >> 16) & 0xff 
+  const g = (num >> 8) & 0xff  
+  const b = num & 0xff         
+
+  const blendedR = Math.round(r * opacity + 255 * (1 - opacity))
+  const blendedG = Math.round(g * opacity + 255 * (1 - opacity))
+  const blendedB = Math.round(b * opacity + 255 * (1 - opacity))
+
+  return `#${blendedR.toString(16).padStart(2, '0')}${blendedG.toString(16).padStart(2, '0')}${blendedB.toString(16).padStart(2, '0')}`
+}
+
 export const staticPrimaryDarkenColor = adjustColor(staticPrimaryColor, -20)
-export const staticPrimaryLightenColor = adjustColor(staticPrimaryColor, 200)
+export const staticPrimaryLightenColor = adjustLightColor(staticPrimaryColor, 0.2)
 
 export const themes = {
   light: {

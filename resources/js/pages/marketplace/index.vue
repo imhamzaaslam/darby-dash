@@ -1,10 +1,19 @@
 <template>
   <!-- Title Section -->
   <div class="header-section">
-    <h4 class="text-h4 font-weight-bold text-primary">
-      {{ userDetails?.company }} Marketplace
-    </h4>
-    <p class="text-body-2 mt-1">
+    <div class="d-flex align-center">
+      <VAvatar
+        icon="tabler-building-store"
+        size="36"
+        class="me-2"
+        color="primary"
+        variant="tonal"
+      />
+      <h3 class="text-primary">
+        {{ userDetails?.company }} Marketplace
+      </h3>
+    </div>
+    <p class="text-body-1 text-muted mt-1">
       Explore a wide range of services offered by {{ userDetails?.company }} to meet all your needs.
     </p>
   </div>

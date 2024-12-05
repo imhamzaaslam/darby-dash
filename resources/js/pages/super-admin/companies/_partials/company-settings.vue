@@ -2,10 +2,19 @@
   <!-- Dashboard Header -->
   <VRow class="pb-0">
     <VCol cols="12">
-      <h3>
-        {{ company.name }} Settings
-      </h3>
-      <p class="text-body-1 text-muted">
+      <div class="d-flex align-center">
+        <VAvatar
+          icon="tabler-settings"
+          size="36"
+          class="me-2"
+          color="primary"
+          variant="tonal"
+        />
+        <h3 class="text-primary">
+          {{ company.name }} Settings
+        </h3>
+      </div>
+      <p class="text-body-1 text-muted mt-1">
         Manage {{ company.name }}'s details, branding, users, and settings with ease.
       </p>
     </VCol>

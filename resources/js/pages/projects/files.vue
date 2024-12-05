@@ -17,12 +17,38 @@
       </div>
     </VCol>
   </VRow>
-  <VRow>
+  <VRow class="mt-0 pb-0">
     <VCol
       cols="12"
       class="d-flex justify-space-between align-center"
     >
       <h3>Media Files</h3>
+      <VBtn
+        icon
+        color="td-hover"
+        class="ma-2"
+        size="small"
+        rounded="pills"
+        @click.prevent
+      >
+        <VIcon icon="tabler-dots" />
+        <VMenu activator="parent">
+          <VList>
+            <VListItem
+              value="create-folder"
+              @click="isCreateFolderDialogOpen = true"
+            >
+              Create Folder
+            </VListItem>
+            <VListItem
+              value="upload file"
+              @click="chooseFile"
+            >
+              Upload File
+            </VListItem>
+          </VList>
+        </VMenu>
+      </VBtn>
       <input
         ref="fileInputRef"
         type="file"
@@ -31,23 +57,6 @@
         multiple
         @change="filePicked"
       >
-      <div class="d-flex gap-2">
-        <VBtn
-          v-if="!openFolder"
-          prepend-icon="tabler-folder-plus"
-          color="primary"
-          @click="isCreateFolderDialogOpen = true"
-        >
-          Create Folder
-        </VBtn>
-        <VBtn
-          prepend-icon="tabler-upload"
-          color="primary"
-          @click="chooseFile"
-        >
-          Upload File
-        </VBtn>
-      </div>
     </VCol>
   </VRow>
 
