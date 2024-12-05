@@ -41,6 +41,10 @@ body .layout-wrapper.layout-nav-type-vertical.layout-navbar-sticky .layout-navba
   margin: 0;
 }
 
+.layout-nav-type-vertical .layout-vertical-nav .nav-header {
+  padding: 0.25rem 0.2rem !important;
+}
+
 .no-arrows input {
   -moz-appearance: textfield;
 }

@@ -82,21 +82,25 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
     <!-- 👉 Header -->
     <div class="nav-header">
       <slot name="nav-header">
-        <!--
-          <RouterLink
+        <RouterLink
           to="/"
           class="app-logo app-title-wrapper"
+        >
+          <span
+            v-if="!hideTitleAndIcon"
+            class="app-title text-h4 text-primary text-truncate"
+            style="max-width: 200px;"
+          >{{ layoutConfig.app.title }}</span>
+          <VAvatar
+            v-else
+            color="primary"
+            variant="tonal"
+            class="app-title-short"
+            size="40"
           >
-          <VNodeRenderer
-          v-if="!hideTitleAndIcon"
-          :nodes="layoutConfig.app.logo"
-          />
-          <VNodeRenderer
-          v-else
-          :nodes="layoutConfig.app.logoHalf"
-          />
-          </RouterLink> 
-        -->
+            <span>{{ avatarText(layoutConfig.app.title) }}</span>
+          </VAvatar>
+        </RouterLink>
 
         <Component
           :is="layoutConfig.app.iconRenderer || 'div'"
