@@ -46,6 +46,7 @@
       >
         <!-- Company Info Section -->
         <VCol
+          v-if="authStore.isSuperAdmin"
           cols="12"
           md="12"
         >
@@ -1262,6 +1263,7 @@ margin: auto;
   margin-top: 12px;
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 500px;
 }
 .custom-tabs ul {
   list-style: none;

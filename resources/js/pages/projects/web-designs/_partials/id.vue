@@ -310,6 +310,23 @@
               </div>
             </VSheet>
           </VSlideGroupItem>
+          <template #prev>
+            <VAvatar
+              icon="tabler-chevron-left"
+              size="30"
+              color="primary"
+              variant="tonal"
+            />
+          </template>
+      
+          <template #next>
+            <VAvatar
+              icon="tabler-chevron-right"
+              size="30"
+              color="primary"
+              variant="tonal"
+            />
+          </template>
         </VSlideGroup>
       </VSheet>
     </VCol>
