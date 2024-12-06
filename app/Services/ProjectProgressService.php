@@ -38,10 +38,12 @@ class ProjectProgressService
         $completedLists = $lists->filter(function ($list) {
             return $list['status'] == 'completed';
         });
+
         $otherLists = $lists->filter(function ($list) {
             return $list['status'] != 'completed';
         });
-        $sortedList = $otherLists->merge($completedLists);
+
+        $sortedList = $lists->sortBy('display_order');
 
 
         return [

@@ -202,7 +202,7 @@
             <VSheet
               class="me-2 custom-border-list px-5 py-9"
               height="130"
-              width="310"
+              :width="projectProgress?.lists?.length < 4 ? 350 : 310"
               @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
             >
               <div class="mb-2">
@@ -263,16 +263,48 @@
             </VSheet>
             <VSheet
               v-if="projectProgress?.lists?.length < 2 ? true : false"
-              class="mx-2 custom-border-list px-5 py-9"
+              class="me-2 custom-border-list px-5 py-7"
               height="130"
-              width="900"
+              :width="projectProgress?.lists?.length < 4 ? 350 : 310"
             >
-              <div class="mb-6 text-center">
+              <div class="mb-4 text-center">
                 <h5
-                  class="text-h6 mb-4 font-weight-medium"
+                  class="text-h6 mb-2 font-weight-medium"
                   color="secondary"
                 >
-                  Other List Appear Here
+                  Phase 2 Appear Here
+                </h5>
+                <span v-html="otherListImg" />
+              </div>
+            </VSheet>
+            <VSheet
+              v-if="((projectProgress?.lists?.length == 1) && index == 0) ? true : false"
+              class="me-2 custom-border-list px-5 py-7"
+              height="130"
+              :width="projectProgress?.lists?.length < 4 ? 350 : 310"
+            >
+              <div class="mb-4 text-center">
+                <h5
+                  class="text-h6 mb-2 font-weight-medium"
+                  color="secondary"
+                >
+                  Phase 3 Appear Here
+                </h5>
+                <span v-html="otherListImg" />
+              </div>
+            </VSheet>
+            <VSheet
+              v-if="((projectProgress?.lists?.length == 2) && index == 1) ? true : false"
+              class="me-2 custom-border-list px-5 py-7"
+              height="130"
+              :width="projectProgress?.lists?.length < 4 ? 350 : 310"
+            >
+              <div class="mb-4 text-center">
+                <h5
+                  class="text-h6 mb-2 font-weight-medium"
+                  color="secondary"
+                >
+                  Phase 3 Appear Here
                 </h5>
                 <span v-html="otherListImg" />
               </div>
@@ -437,7 +469,7 @@
             class="text-center py-10"
           >
             <p class="text-body-2 text-high-emphasis">
-              No task added for this project.
+              No upcoming task found.
             </p>
             <RouterLink :to="`/projects/${projectUuid}/tasks/add`">
               <VBtn
@@ -449,14 +481,18 @@
               </VBtn>
             </RouterLink>
           </div>
-          <VList v-else class="card-list">
+          <VList
+            v-else
+            class="card-list"
+          >
             <VListItem
-              v-for="task in upcomingTasks"
-              :key="task.id"
+              v-for="(task,index) in upcomingTasks"
+              :key="index"
             >
               <VListItemTitle
                 class="font-weight-medium me-4 text-truncate"
                 style="max-width: 300px;"
+                :class="{'mb-1': index === 0}"
               >
                 <VAvatar
                   icon="tabler-playstation-circle"
