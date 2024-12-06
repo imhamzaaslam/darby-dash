@@ -587,7 +587,10 @@
                     size="small"
                     color="error"
                   >
-                    {{ formatDate(task.due_date) }}
+                    <small v-if="isDueDateToday(task.due_date)">Due Today</small>
+                    <span v-else>
+                      {{ formatDate(task.due_date) }}
+                    </span>
                   </VChip>
                   <VChip
                     v-else
@@ -1150,6 +1153,18 @@ const isAwardBucksDialogue = ref(false)
 const awardedBucks = ref(0)
 const comment = ref(null)
 const justifyPMInfo = ref('justify-space-between')
+
+const isDueDateToday = dueDate => {
+  if (!dueDate) return false
+
+  const today = new Date()
+  const dueDateObj = new Date(dueDate)
+
+  today.setHours(0, 0, 0, 0)
+  dueDateObj.setHours(0, 0, 0, 0)
+
+  return dueDateObj.getTime() === today.getTime()
+}
 
 const isMobile = () => {
   return window.innerWidth <= 768 || window.innerWidth <= 926

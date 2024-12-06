@@ -8,6 +8,7 @@ use App\Models\Base;
 use App\Models\Task;
 use App\Models\TaskAssignee;
 use App\Models\ProjectBucks;
+use Carbon\Carbon;
 use App\Services\ProjectProgressService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -73,14 +74,16 @@ class Project extends Base
     public function upcomingTasks()
     {
         return $this->tasks()
-            ->where(function ($query) {
-                $query->where('due_date', '>=', now())
-                        ->orWhereNull('due_date')
-                        ->where('created_at', '<', now()->subMonths(3));
-            })
-            ->where('status', '!=', 3)
-            ->orderByRaw('due_date IS NULL, due_date ASC')
-            ->take(10);
+        ->where(function ($query) {
+            $query->where('due_date', '>=', Carbon::now()->startOfDay())
+                  ->orWhere(function ($query) {
+                      $query->whereNull('due_date')
+                            ->where('created_at', '<', Carbon::now()->subMonths(3));
+                  });
+        })
+        ->where('status', '!=', 3)
+        ->orderByRaw('due_date IS NULL, due_date ASC')
+        ->take(10);
     }
 
     public function uncompletedTasks()
