@@ -70,6 +70,19 @@ class Project extends Base
         return $this->hasMany(Task::class);
     }
 
+    public function upcomingTasks()
+    {
+        return $this->tasks()
+            ->where(function ($query) {
+                $query->where('due_date', '>=', now())
+                        ->orWhereNull('due_date')
+                        ->where('created_at', '<', now()->subMonths(3));
+            })
+            ->where('status', '!=', 3)
+            ->orderByRaw('due_date IS NULL, due_date ASC')
+            ->take(10);
+    }
+
     public function uncompletedTasks()
     {
         return $this->hasMany(Task::class)->where('status', '!=', 3);

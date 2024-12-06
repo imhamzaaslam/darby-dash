@@ -8,6 +8,7 @@ export const useProjectStore = defineStore('projects', {
     activities: [],
     project: null,
     progress: [],
+    upcomingTasks: [],
     projectsCount: 0,
     loadStatus: 0,
     error: null,
@@ -138,6 +139,7 @@ export const useProjectStore = defineStore('projects', {
         const response = await ProjectService.getProgress(uuid)
 
         this.progress = response.data.data
+        this.upcomingTasks = response.data.upcoming_tasks
         this.loadStatus = 2
       } catch (error) {
         this.error = error
@@ -179,6 +181,7 @@ export const useProjectStore = defineStore('projects', {
     getProjectActivities: state => state.activities,
     getProjectsByType: state => state.projectsByType,
     getProjectProgress: state => state.progress,
+    getProjectUpcomingTasks: state => state.upcomingTasks,
     getProject: state => state.project,
     getErrors: state => state.error,
   },

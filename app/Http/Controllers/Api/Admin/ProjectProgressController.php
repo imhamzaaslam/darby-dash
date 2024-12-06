@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Contracts\ProjectRepositoryInterface;
 use App\Services\ProjectProgressService;
+use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 
 class ProjectProgressController extends Controller
@@ -17,9 +18,8 @@ class ProjectProgressController extends Controller
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
         $progress = (new ProjectProgressService())->getProgress($project);
-
-
-
-        return response()->json(['data' => $progress]);
+        $upcoming_tasks = TaskResource::collection((new ProjectProgressService())->getUpcomingTasks($project));
+      
+        return response()->json(['data' => $progress, 'upcoming_tasks' => $upcoming_tasks]);
     }
 }

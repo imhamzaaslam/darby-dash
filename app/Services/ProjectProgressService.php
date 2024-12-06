@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Services\ActivityService;
 use App\Enums\Management;
 use App\Enums\ActionType;
+use Illuminate\Support\Collection;
 
 class ProjectProgressService
 {
@@ -51,6 +52,13 @@ class ProjectProgressService
             'overallProgress' => $this->getOverallProgress($project),
             'totalTasks' => $project->tasks->whereNull('parent_id')->count(),
         ];
+    }
+
+    public function getUpcomingTasks(Project $project): Collection
+    {
+        $upcomingTasks = $project->upcomingTasks()->get();
+
+        return $upcomingTasks;
     }
 
     public function getProjectListProgress(ProjectList $list): int

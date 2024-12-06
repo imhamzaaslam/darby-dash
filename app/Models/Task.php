@@ -58,6 +58,11 @@ class Task extends Base
         return $this->belongsToMany(User::class, 'task_assignees')->withTimestamps();
     }
 
+    public function list()
+    {
+        return $this->belongsTo(ProjectList::class, 'list_id');
+    }
+
     public function getRoleWiseRemainingBucks()
     {
         $assignees = $this->assignees()->with('roles')->get();
