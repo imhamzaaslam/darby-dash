@@ -432,7 +432,24 @@
           </template>
         </VCardItem>
         <VCardText style="overflow-y: auto; max-height: calc(100% - 56px);">
-          <VList class="card-list">
+          <div
+            v-if="upcomingTasks ? upcomingTasks.length == 0 : 0"
+            class="text-center py-10"
+          >
+            <p class="text-body-2 text-high-emphasis">
+              No task added for this project.
+            </p>
+            <RouterLink :to="`/projects/${projectUuid}/tasks/add`">
+              <VBtn
+                size="small"
+                rounded="pill"
+                color="primary"
+              >
+                Add Task
+              </VBtn>
+            </RouterLink>
+          </div>
+          <VList v-else class="card-list">
             <VListItem
               v-for="task in upcomingTasks"
               :key="task.id"
