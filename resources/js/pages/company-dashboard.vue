@@ -1,5 +1,21 @@
 <template>
-  <h3>Project Dashboards</h3>
+  <div>
+    <div class="d-flex align-center">
+      <VAvatar
+        icon="tabler-align-box-bottom-center"
+        size="36"
+        class="me-2"
+        color="primary"
+        variant="tonal"
+      />
+      <h3 class="text-primary">
+        Project Dashboards
+      </h3>
+    </div>
+    <p class="text-body-1 text-muted mt-1">
+      View real-time insights and analytics to effectively track and manage project performance and progress.
+    </p>
+  </div>
   <VRow class="mt-3">
     <VCol
       v-for="(data, index) in getProjectTypes"
