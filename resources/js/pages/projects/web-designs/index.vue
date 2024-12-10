@@ -137,7 +137,7 @@
                     </VChip>
                     <RouterLink
                       v-else
-                      :to="`projects/${project?.uuid}/team`"
+                      :to="{ name: 'team', params: { id: project?.uuid } }"
                     >
                       <VBtn
                         size="x-small"
