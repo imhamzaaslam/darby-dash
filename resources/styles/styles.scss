@@ -3,6 +3,10 @@
     border-left: 4px solid rgb(var(--v-global-theme-primary));
 }
 
+.upcoming-task-list .v-list-item:not(:last-child) {
+  padding-block-end: 5px !important;
+}
+
 .layout-wrapper.layout-nav-type-vertical .layout-navbar, .layout-wrapper.layout-nav-type-vertical .layout-footer {
   padding-inline: 0 !important;
 }

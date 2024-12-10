@@ -1,56 +1,78 @@
 <template>
   <div>
-    <!-- Toggle -->
-    <VRow class="mb-0">
+    <VRow class="mb-3">
       <VCol
         cols="12"
-        md="10"
+        md="9"
         class="d-flex pb-0"
       >
-        <VBtnToggle
-          v-model="viewType"
-          class="d-toggle"
-          rounded="0"
-        >
-          <VIcon
-            icon="tabler-list"
-            class="me-1"
-            :class="{ 'bg-primary': viewType === 'list' }"
-            @click="viewType = 'list'"
-          />
-          <VIcon
-            icon="tabler-layout-grid"
-            :class="{ 'bg-primary': viewType === 'grid' }"
-            @click="viewType = 'grid'"
-          />
-        </VBtnToggle>
-        <VIcon
-          icon="tabler-filter"
-          class="bg-primary ms-2"
-          @click="isFilterDrawerOpen = !isFilterDrawerOpen"
-        />
-      </VCol>
-      <VCol
-        cols="12"
-        md="2"
-        class="pb-0"
-      >
-        <div class="d-flex justify-end">
-          <VBtn
-            prepend-icon="tabler-plus"
-            :to="{ name: 'add-company-details' }"
-          >
-            New Company
-          </VBtn>
+        <div>
+          <div class="d-flex align-center">
+            <VAvatar
+              icon="tabler-align-box-bottom-center"
+              size="36"
+              class="me-2"
+              color="primary"
+              variant="tonal"
+            />
+            <h3 class="text-primary">
+              Manage Companies
+            </h3>
+          </div>
+          <p class="text-body-1 text-muted mt-1">
+            Oversee and manage company operations and projects with ease, ensuring streamlined workflows and effective decision-making.
+          </p>
         </div>
       </VCol>
-    </VRow>
-    <VRow class="mt-0 pt-0">
       <VCol
         cols="12"
-        class="pt-0 ps-4"
+        md="3"
+        class="pb-0"
       >
-        <h3>Manage Company</h3>
+        <div class="d-flex flex-row align-center justify-end">
+          <VBtnToggle
+            v-model="viewType"
+            class="d-toggle"
+            rounded="0"
+          >
+            <VIcon
+              icon="tabler-list"
+              class="me-1"
+              :class="{ 'bg-primary': viewType === 'list' }"
+              @click="viewType = 'list'"
+            />
+            <VIcon
+              icon="tabler-layout-grid"
+              :class="{ 'bg-primary': viewType === 'grid' }"
+              @click="viewType = 'grid'"
+            />
+          </VBtnToggle>
+          <VIcon
+            icon="tabler-filter"
+            class="bg-primary ms-2"
+            @click="isFilterDrawerOpen = !isFilterDrawerOpen"
+          />
+          <VBtn
+            icon
+            color="td-hover"
+            class="ma-2"
+            size="small"
+            rounded="pills"
+            @click.prevent
+          >
+            <VIcon icon="tabler-dots" />
+            <VMenu activator="parent">
+              <VList>
+                <VListItem
+                  value="add-company"
+                  :to="{ name: 'add-company-details' }"
+                >
+                  Add Company
+                </VListItem>
+              </VList>
+            </VMenu>
+          </VBtn>
+        </div>
       </VCol>
     </VRow>
 
@@ -343,6 +365,7 @@ import { useCompanyStore } from "@/store/companies"
 import { useAuthStore } from '@/store/auth'
 import { useRoute } from 'vue-router'
 import moment from 'moment'
+import { VListItemAction } from 'vuetify/lib/components/index.mjs'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Companies` })
 onBeforeMount(async () => {

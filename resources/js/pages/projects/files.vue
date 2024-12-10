@@ -120,7 +120,7 @@
                 @click.stop="downloadFile(file)"
               />
               <VIcon
-                class="tabler-trash-filled ml-1"
+                class="tabler-trash-filled ms-1"
                 size="small"
                 color="error"
                 @click.stop="deleteImage(file)"
@@ -151,60 +151,60 @@
   </div>
 
   <div v-else>
-    <VRow 
+    <VRow
       v-if="folders.length > 0"
-      class="mt-4"
+      class="mt-4 justify-start"
     >
       <VCol
         v-for="folder in folders"
         :key="folder.id"
         cols="12"
-        md="3"
+        sm="6"
+        md="4"
         lg="2"
-        @dblclick="setOpenFolder(folder)"
+        class="folder-col"
       >
         <div class="folder-container">
           <IconBtn
-            class="action-icon"
+            class="action-icon mb-5"
+            size="x-small"
             @click.prevent
           >
             <VIcon icon="tabler-dots-vertical" />
-            <VMenu 
-              activator="parent" 
+            <VMenu
+              activator="parent"
               class="p-0"
             >
               <VList class="p-0">
-                <VListItem
-                  value="edit"
-                  class="p-0"
-                  @click="editFolder(folder)"
-                >
+                <VListItem @click.stop="editFolder(folder)">
                   Edit
                 </VListItem>
-                <VListItem
-                  value="delete"
-                  class="p-0"
-                  @click="deleteFolder(folder)"
-                >
+                <VListItem @click.stop="deleteFolder(folder)">
                   Delete
                 </VListItem>
               </VList>
             </VMenu>
           </IconBtn>
-          <div class="folder-icon">
-            <VIcon 
-              class="tabler-folder"
+          <div
+            class="folder-content"
+            @click="setOpenFolder(folder)"
+          >
+            <VIcon
+              class="folder-icon"
               size="large"
               color="primary"
+              icon="tabler-folder-filled"
             />
+            <span
+              class="folder-name"
+              :title="folder.name"
+            >
+              {{ folder.name }} ({{ folder.filesCount }})
+            </span>
           </div>
-          <div class="folder-name">
-            {{ folder.name }} ({{ folder.filesCount }})
-          </div>
-        </div> 
+        </div>
       </VCol>
     </VRow>
-
     <VRow
       v-if="allFiles.length > 0"
       class="mt-4"
@@ -388,6 +388,7 @@ import { useFileStore } from '@/store/files'
 import { useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
 import sketch from '@images/icons/project-icons/sketch.png'
+import { VListItemMedia } from 'vuetify/lib/components/VList/index.mjs'
 
 onBeforeMount(async () => {
   await getFolders()
@@ -769,35 +770,54 @@ watch(project, () => {
 }
 
 .folder-container {
+  position: relative; 
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  justify-content: center;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  position: relative;
+}
+
+.folder-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.folder-content {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+}
+
+.folder-icon {
+  font-size: 36px;
+}
+
+.folder-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 120px;
 }
 
 .action-icon {
   position: absolute;
-  top: -4px;
-  right: -8px;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.folder-container:hover {
-  transform: scale(1.05);
-}
-
-.folder-icon {
-  font-size: 48px;
-  margin-bottom: 8px;
-}
-
-.folder-name {
-  font-weight: bold;
-  text-align: center;
+.folder-col {
+  margin-bottom: 16px;
 }
 </style>

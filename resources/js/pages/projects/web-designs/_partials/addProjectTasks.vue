@@ -93,14 +93,12 @@
           <VIcon icon="tabler-dots" />
           <VMenu activator="parent">
             <VList>
-              <!--
-                <VListItem
+              <VListItem
                 value="add-list"
                 @click="isAddListDialogVisible = true"
-                >
+              >
                 Add List
-                </VListItem>
-              -->
+              </VListItem>
               <VListItem
                 value="sort-list"
                 @click="isSortListModalOpen = true"
@@ -147,10 +145,18 @@
                   Cancel
                 </VBtn>
                 <VBtn
+                  :disabled="getListLoadStatus === 1"
                   type="submit"
                   @click="addListForm?.validate()"
                 >
-                  Add
+                  <VProgressCircular
+                    v-if="getListLoadStatus === 1"
+                    indeterminate
+                    size="16"
+                    color="white"
+                  />
+                  <span v-if="getListLoadStatus === 1">Processing...</span>
+                  <span v-else>Add</span>
                 </VBtn>
               </VCardText>
             </VForm>
@@ -2196,19 +2202,46 @@ function cancelKanbanListTask(list) {
   kanbanListTaskName.value = ""
 }
 
-async function deleteTask(task) {
+const deleteTask = async task => {
   try {
     task.isDeleting = true
 
     const taskWithProjectId = { ...task, project_uuid: projectId.value }
 
-    await projectTaskStore.delete(taskWithProjectId)
-    toast.success('Task deleted successfully', { timeout: 1000 })
-    task.isDeleting = false
-    fetchProjectLists()
-    fetchProjectTasks()
+    const confirmDelete = await Swal.fire({
+      title: "Are you certain about deleting this task?",
+      text: `Once it’s gone, it’s gone.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
+      cancelButtonColor: "#808390",
+      confirmButtonText: "Yes, delete it!",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+
+        const title = document.querySelector('.swal2-title')
+        if (title) {
+          title.style.fontSize = '18px'
+        }
+
+        // Apply custom styles to text
+        const text = document.querySelector('.swal2-html-container')
+        if (text) {
+          text.style.marginTop = '8px'
+        }
+      },
+    })
+
+    if (confirmDelete.isConfirmed) {
+
+      await projectTaskStore.delete(taskWithProjectId)
+      toast.success('Task deleted successfully', { timeout: 1000 })
+      task.isDeleting = false
+      fetchProjectLists()
+      fetchProjectTasks()
+    }
   } catch (error) {
-    toast.error('Failed to delete task:', error)
+    toast.error('Failed to delete task:', error.message || error)
   }
 }
 
@@ -2268,6 +2301,10 @@ getProjectLists.value.forEach(() => {
 
 const getLoadStatus = computed(() => {
   return projectTaskStore.getLoadStatus
+})
+
+const getListLoadStatus = computed(() => {
+  return projectListStore.getLoadStatus
 })
 
 const getStatuses = computed(() => {

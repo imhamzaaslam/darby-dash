@@ -29,6 +29,7 @@ class TaskResource extends JsonResource
             ],
             'project_id' => $this->project_id,
             'list_id' => $this->list_id,
+            'list_uuid' => $this->list->uuid ?? NULL,
             'list_name' => $this->list->name ?? '',
             'start_date' => $this->start_date ? Carbon::parse($this->start_date)->format('m/d/Y') : NULL,
             'due_date' => $this->due_date,

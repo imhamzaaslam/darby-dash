@@ -10,11 +10,12 @@ const routes = [
     to: { name: 'root' },
     icon: { icon: 'tabler-align-box-bottom-center' },
   },
-  isSuperAdmin && {
+
+  /* isSuperAdmin && {
     title: 'Companies',
     icon: { icon: 'tabler-users' },
     to: { name: 'companies-list' },
-  },
+  }, */
   !isSuperAdmin &&{
     title: 'Projects',
     icon: { icon: 'tabler-chart-histogram' },

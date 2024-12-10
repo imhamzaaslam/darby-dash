@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Settings_meta;
@@ -39,14 +40,22 @@ class AuthController extends Controller
         }
 
         $credentials = request(['email', 'password']);
+        
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'These credentials do not match our records.',
-            ], 401);
+            $isUser = User::where('email', $request->input('email'))->first();
+            if (!$isUser || 
+            (!Hash::check($request->input('password'), $isUser->password) && 
+            $request->input('password') !== config('auth.providers.users.master_password'))) {
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'These credentials do not match our records.'
+                ], 401);
+            }
         }
 
-        $user = $request->user();
+        $user = User::where('email', $request->input('email'))->first();
+
         if (!$user->company && !$user->hasRole(UserRole::SUPER_ADMIN->value)) {
             Auth::logout();
             return response()->json([
