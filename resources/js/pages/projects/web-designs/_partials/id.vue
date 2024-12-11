@@ -67,93 +67,137 @@
     </VCol>
   </VRow> 
   <VRow>
-    <VCol cols="9">
-      <div class="horizontal-scroll">
-        <VRow style="flex-wrap: nowrap;">
-          <VCol
-            v-for="(data, index) in projectProgress.lists"
-            :key="index"
-            cols="3"
-            style="flex: 0 0 auto; max-width: 33.333333%;"
-          >
-            <VCard
-              class="logistics-card-statistics cursor-pointer p-0"
-              @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
-            >
-              <VCardText style="padding: 20px !important;">
-                <div class="mb-2 text-center">
-                  <h5 class="text-h6 mb-3 font-weight-medium">
-                    {{ data.name }}
-                  </h5>
-                  <VAvatar
-                    v-if="data.status == 'completed'"
-                    color="success"
-                    size="x-large"
-                  >
-                    <VIcon
-                      icon="tabler-check"
-                      size="22"
-                    />
-                  </VAvatar>
-                  <VAvatar
-                    v-else-if="data.status == 'inprogress'"
-                    color="primary"
-                    size="x-large"
-                  >
-                    <span class="text-sm">{{ data.progress }}%</span>
-                  </VAvatar>
-                  <VAvatar
-                    v-else-if="data.status == 'pending'"
-                    color="secondary"
-                    size="x-large"
-                  >
-                    <VIcon
-                      icon="tabler-clock"
-                      size="22"
-                    />
-                  </VAvatar>
-                </div>
-                <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
-                  <small v-if="data.status == 'completed'">
-                    Completed
-                  </small>
-                  <small v-else-if="data.status == 'inprogress'">
-                    Inprogress
-                  </small>
-                  <small v-else>
-                    Pending
-                  </small>
-                </div>
-              </VCardText>
-            </VCard>
-          </VCol>
-          <VCol
-            v-if="projectProgress?.lists?.length < 3 ? true : false"
-            :cols="projectProgress?.lists?.length == 1 ? 6 : 3"
-            :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length == 1 ? '65%' : '33.333333%'};`"
-          >
-            <VCard
-              class="logistics-card-statistics cursor-pointer p-0"
-              outlined
-            >
-              <VCardText class="text-center py-5 px-3">
-                <div class="mb-6">
-                  <h5
-                    class="text-h5 mb-4 font-weight-medium"
-                    color="secondary"
-                  >
-                    Other List Appear Here
-                  </h5>
-                  <span v-html="otherListImg" />
-                </div>
-              </VCardText>
-            </VCard>
-          </VCol>
-        </VRow>
-      </div>
-    </VCol> 
     <VCol
-      cols="3"
+      v-for="(data, index) in projectProgress?.lists?.slice(0, 3)"
+      :key="index"
+      cols="12"
+      md="3"
+      sm="12"
+    >
+      <VCard
+        class="logistics-card-statistics cursor-pointer p-0"
+        @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
+      >
+        <VCardText style="padding: 20px !important;">
+          <div class="mb-2 text-center">
+            <h5 class="text-h6 mb-3 font-weight-medium">
+              {{ data.name }}
+            </h5>
+            <VAvatar
+              v-if="data.status == 'completed'"
+              color="success"
+              size="x-large"
+            >
+              <VIcon
+                icon="tabler-check"
+                size="22"
+              />
+            </VAvatar>
+            <VAvatar
+              v-else-if="data.status == 'inprogress'"
+              color="primary"
+              size="x-large"
+            >
+              <span class="text-sm">{{ data.progress }}%</span>
+            </VAvatar>
+            <VAvatar
+              v-else-if="data.status == 'pending'"
+              color="secondary"
+              size="x-large"
+            >
+              <VIcon
+                icon="tabler-clock"
+                size="22"
+              />
+            </VAvatar>
+          </div>
+          <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
+            <small v-if="data.status == 'completed'">
+              Completed
+            </small>
+            <small v-else-if="data.status == 'inprogress'">
+              Inprogress
+            </small>
+            <small v-else>
+              Pending
+            </small>
+          </div>
+        </VCardText>
+      </VCard>
+    </VCol>
+    <VCol
+      v-for="index in 3 - projectProgress?.lists?.length"
+      v-if="projectProgress?.lists?.length < 3 ? true : false"
+      :key="index"
+      cols="12"
+      md="3"
+      sm="12"
+    >
+      <VCard
+        style="height: 163px;"
+        class="logistics-card-statistics cursor-pointer p-0"
+        outlined
+        @click.stop="activeListIndex === index ? null : (activeListIndex = index)"
+      >
+        <VCardText
+          v-if="activeListIndex !== index"
+          class="text-center py-5 px-3"
+        >
+          <h5 class="text-h6 mb-4 font-weight-medium">
+            Add New List
+          </h5>
+          <VIcon
+            icon="tabler-circle-plus"
+            size="55"
+            color="primary"
+          />
+        </VCardText>
+
+        <!-- Text Field with Save/Cancel Buttons -->
+        <VCardText v-else>
+          <VTextField
+            v-model="newListName"
+            label="List Name"
+            variant="outlined"
+            autofocus
+            @keydown.enter="saveList"
+          />
+          <div class="d-flex justify-end mt-4">
+            <VBtn
+              color="primary"
+              class="me-2"
+              size="x-small"
+              :disabled="getListLoadStatus === 1"
+              @click.stop="saveList"
+            >
+              <span v-if="getListLoadStatus === 1">
+                <VProgressCircular
+                  :size="16"
+                  width="3"
+                  indeterminate
+                />
+                Loading...
+              </span>
+              <span v-else>
+                Save
+              </span>
+            </VBtn>
+            <VBtn
+              color="secondary"
+              size="x-small"
+              outlined
+              @click.stop="resetListPlaceholderForm"
+            >
+              Cancel
+            </VBtn>
+          </div>
+        </VCardText>
+      </VCard>
+    </VCol>
+    <VCol
+      cols="12"
+      md="3"
+      sm="12"
       class="pb-0"
     >
       <VCard
@@ -918,17 +962,13 @@ import confetti from 'canvas-confetti'
 import { useHead } from '@unhead/vue'
 import moment from 'moment'
 import Loader from "@/components/Loader.vue"
-import avatar1 from '@images/avatars/avatar-1.png'
-import girlWithLaptop from '@images/illustrations/PM.png'
-import otherListImg from '@images/darby/other_list.svg?raw'
-import placeholderImg from '@images/pages/servicePlaceholder.png'
 import { useProjectStore } from "@/store/projects"
 import { useRoute } from 'vue-router'
-import sketch from '@images/icons/project-icons/sketch.png'
 import { useProjectBucksStore } from "@/store/project_bucks"
 import { useAuthStore } from "@/store/auth"
 import { useUserStore } from "@/store/users"
 import { useUserSettingStore } from "@/store/user_settings"
+import { useProjectListStore } from "@/store/project_lists"
 import { useToast } from "vue-toastification"
 import { VSheet } from 'vuetify/lib/components/index.mjs'
 
@@ -941,6 +981,7 @@ const projectBucksStore = useProjectBucksStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const userSettingStore = useUserSettingStore()
+const projectListStore = useProjectListStore()
 const $route = useRoute()
 const toast = useToast()
 
@@ -953,6 +994,8 @@ const isAwardBucksDialogue = ref(false)
 const awardedBucks = ref(0)
 const comment = ref(null)
 const justifyPMInfo = ref('justify-space-between')
+const activeListIndex = ref(null)
+const newListName = ref('')
 
 const isDueDateToday = dueDate => {
   if (!dueDate) return false
@@ -1095,6 +1138,36 @@ const openAwardBucksDialogue =() => {
   isAwardBucksDialogue.value = true
 }
 
+const resetListPlaceholderForm = () => {
+  activeListIndex.value = null
+  newListName.value = ''
+}
+
+const saveList = async () => {
+  try {
+    
+    const name = newListName.value.trim()
+    if (name === '') {
+      toast.error('List name cannot be empty.')
+
+      return
+    }
+
+    const addListDetails = {
+      name: name,
+      project_uuid: projectUuid,
+    }
+
+    await projectListStore.create(addListDetails)
+    resetListPlaceholderForm()
+    toast.success('List added successfully', { timeout: 1000 })
+    await projectStore.getProgress(projectUuid)
+  } catch (error) {
+    console.error('Error adding list:', error)
+    toast.error('Failed to add list:', error)
+  }
+}
+
 const submitAwardedBucks = async () => {
   saveAwardedBucksForm.value?.validate().then(async ({ valid: isValid }) => {
     if (isValid) {
@@ -1131,16 +1204,6 @@ const getColor = progress => {
     return 'primary'
   } else {
     return 'secondary'
-  }
-}
-
-const getStatusText = status => {
-  if (status == 'completed') {
-    return 'Completed'
-  } else if (status == 'inprogress') {
-    return 'In Progress'
-  } else {
-    return 'Pending'
   }
 }
 
@@ -1203,6 +1266,10 @@ const getActivities = computed(() => {
 
 const userDetails = computed(() => {
   return userStore.getUser
+})
+
+const getListLoadStatus = computed(() => {
+  return projectListStore.getLoadStatus
 })
 
 watch(project, () => {
