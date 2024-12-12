@@ -126,10 +126,12 @@
         cols="12"
         sm="12"
         md="3"
+        class="pe-3 pb-3"
       >
         <VCard
           class="elevation-3 hover-card rounded-sm overflow-hidden"
-          style="height: 335px;"
+          style="height: 280px;"
+          @click.stop="showServiceDetails(service)"
         >
           <!-- Service Image -->
           <VImg
@@ -144,23 +146,13 @@
             </div>
           </VImg>
 
-          <!-- Card Content -->
-          <VCardText class="pa-4">
-            <p 
-              class="text-body-2 text-high-emphasis mb-0 text-align-between" 
-              v-html="truncateDescription(related.description, 80)" 
-            />
-          </VCardText>
-
-          <!-- Card Actions -->
-          <VCardActions class="justify-center pb-4">
+          <VCardActions class="justify-center pt-6">
             <VBtn
               color="primary"
               variant="elevated"
               rounded="pill"
               size="small"
-              :to="{ name: 'marketplace-service-detail', params: { id: related.uuid } }"
-              target="_blank"
+              @click.stop="showServiceDetails(related)"
             >
               Learn More
             </VBtn>
@@ -169,6 +161,59 @@
       </VCol>
     </VRow>
   </div>
+  <!-- Overlay for Service Details -->
+  <VDialog
+    v-model="isOverlayVisible"
+    max-width="800px"
+    persistent
+  >
+    <DialogCloseBtn @click="cancelServiceDetails" />
+    <VCard
+      class="overflow-hidden"
+      style="height: 300px !important"
+    >
+      <VRow>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <VImg
+            :src="selectedService?.image ? getImageUrl(selectedService?.image?.path) : placeholderImg"
+            height="100%"
+            width="100%"
+            cover
+          />
+        </VCol>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <VCardText>
+            <h3 class="text-primary">
+              {{ selectedService?.title }}
+            </h3>
+            <p 
+              class="text-body-2 text-high-emphasis mt-2 mb-0 text-align-between" 
+              v-html="truncateDescription(selectedService?.description, 300)" 
+            />
+            <VBtn
+              color="primary"
+              variant="elevated"
+              rounded="pill"
+              size="small"
+              :to="{ name: 'marketplace-service-detail', params: { id: selectedService.uuid } }"
+              target="_blank"
+            >
+              Learn more <VIcon
+                icon="tabler-arrow-right"
+                class="ms-2"
+              />
+            </VBtn>
+          </VCardText>
+        </VCol>
+      </VRow>
+    </VCard>
+  </VDialog>
 </template>
   
 <script setup lang="js">
@@ -184,6 +229,9 @@ const userStore = useUserStore()
 const $route = useRoute()
   
 const serviceUuid = $route.params.id
+
+const isOverlayVisible = ref(false)
+const selectedService = ref(null)
   
 const service = computed(() => userSettingStore.getProjectService)
   
@@ -208,6 +256,15 @@ const fetchRelatedServices = async () => {
     console.error("Error fetching related services:", error)
   }
 }
+
+const showServiceDetails = service => {
+  selectedService.value = service
+  isOverlayVisible.value = true
+}
+
+const cancelServiceDetails = () => {
+  isOverlayVisible.value = false
+}
   
 const getImageUrl = path => {
   const baseUrl = import.meta.env.VITE_APP_URL
@@ -216,7 +273,7 @@ const getImageUrl = path => {
 }
 
 const truncateDescription = (description, length) => {
-  return description.length > length
+  return description?.length > length
     ? description.slice(0, length) + '...'
     : description
 }
