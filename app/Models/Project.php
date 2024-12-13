@@ -74,12 +74,12 @@ class Project extends Base
     public function upcomingTasks()
     {
         return $this->tasks()
-        ->where(function ($query) {
-            $query->where('due_date', '>=', Carbon::now()->startOfDay());
-        })
-        ->where('status', '!=', 3)
-        ->orderByRaw('due_date IS NULL, due_date ASC')
-        ->take(10);
+        ->whereNotNull('due_date') 
+        ->where('status', '!=', 3) 
+        ->latest() 
+        ->take(10) 
+        ->orderBy('due_date', 'ASC') 
+        ->get();
     }
 
     public function uncompletedTasks()
