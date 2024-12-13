@@ -77,7 +77,7 @@ class Project extends Base
         ->whereNotNull('due_date')
         ->where('status', '!=', 3)
         ->latest() 
-        ->orderByRaw('due_date IS NULL, due_date ASC')
+        ->orderBy('due_date', 'ASC')
         ->take(10);
     }
 
