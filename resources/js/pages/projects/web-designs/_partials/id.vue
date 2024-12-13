@@ -429,9 +429,9 @@
                   >
                     <small v-if="isDueDateToday(task.due_date)">Due Today</small>
                     <small v-else-if="isDueDateOverdue(task.due_date)">Overdue on {{ formatDate(task.due_date) }}</small>
-                    <span v-else>
+                    <small v-else>
                       {{ formatDate(task.due_date) }}
-                    </span>
+                    </small>
                   </VChip>
                   <VChip
                     v-else
@@ -1001,25 +1001,21 @@ const newListName = ref('')
 const isDueDateToday = dueDate => {
   if (!dueDate) return false
 
-  const today = new Date()
-  const dueDateObj = new Date(dueDate)
-
-  today.setHours(0, 0, 0, 0)
-  dueDateObj.setHours(0, 0, 0, 0)
-
-  return dueDateObj.getTime() === today.getTime()
+  const now = new Date();
+  const due = new Date(dueDate);
+  return (
+    due.getDate() === now.getDate() &&
+    due.getMonth() === now.getMonth() &&
+    due.getFullYear() === now.getFullYear()
+  );
 }
 
 const isDueDateOverdue = dueDate => {
   if (!dueDate) return false
 
-  const today = new Date()
-  const dueDateObj = new Date(dueDate)
-
-  today.setHours(0, 0, 0, 0)
-  dueDateObj.setHours(0, 0, 0, 0)
-
-  return dueDateObj.getTime() < today.getTime()
+  const now = new Date();
+  const due = new Date(dueDate);
+  return due < now.setHours(0, 0, 0, 0);
 }
 
 const isMobile = () => {
