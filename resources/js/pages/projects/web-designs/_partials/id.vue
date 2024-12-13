@@ -424,7 +424,7 @@
                     v-if="task.due_date"
                     label
                     size="small"
-                    :color="(isDueDateOverdue(task.due_date) || isDueDateToday(task.due_date)) ? 'primary' : 'error'"
+                    :color="isDueDateOverdue(task.due_date) ? 'error' : isDueDateToday(task.due_date) ? 'warning' : 'primary'"
                     class="text-body-2 text-error"
                   >
                     <small v-if="isDueDateToday(task.due_date)">Due Today</small>
