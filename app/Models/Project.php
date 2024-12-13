@@ -74,12 +74,11 @@ class Project extends Base
     public function upcomingTasks()
     {
         return $this->tasks()
-        ->whereNotNull('due_date') 
-        ->where('status', '!=', 3) 
+        ->whereNotNull('due_date')
+        ->where('status', '!=', 3)
         ->latest() 
-        ->take(10) 
-        ->orderBy('due_date', 'ASC') 
-        ->get();
+        ->orderByRaw('due_date IS NULL, due_date ASC')
+        ->take(10);
     }
 
     public function uncompletedTasks()
