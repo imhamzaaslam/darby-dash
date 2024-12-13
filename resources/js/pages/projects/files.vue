@@ -110,7 +110,7 @@
             >
             <span class="file-type">.{{ file.name.split('.').pop().toLowerCase() }}</span>
           </div>
-          <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center justify-space-between mt-2">
             <span class="text-xs">{{ file.created_at }}</span>
             <div class="d-flex align-center">
               <VIcon
@@ -235,7 +235,7 @@
             >
             <span class="file-type">.{{ file.name.split('.').pop().toLowerCase() }}</span>
           </div>
-          <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center justify-space-between mt-2">
             <span class="text-xs">{{ file.created_at }}</span>
             <div class="d-flex align-center">
               <VIcon
@@ -322,7 +322,7 @@
         </div>
         <div
           v-else
-          class="d-flex align-center justify-space-between"
+          class="d-flex align-center justify-space-between mt-2"
         >
           <span class="text-sm">2 secs ago</span>
           <div class="d-flex align-center">
