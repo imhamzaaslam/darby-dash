@@ -76,7 +76,7 @@ class Project extends Base
         return $this->tasks()
         ->where('status', '!=', 3)
         ->latest()
-        ->orderBy('due_date', 'ASC')
+        ->orderByRaw('due_date IS NULL, due_date ASC')
         ->take(10);
     }
 
