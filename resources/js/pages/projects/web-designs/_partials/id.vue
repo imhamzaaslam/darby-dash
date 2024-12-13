@@ -1019,7 +1019,7 @@ const isDueDateOverdue = dueDate => {
   today.setHours(0, 0, 0, 0)
   dueDateObj.setHours(0, 0, 0, 0)
 
-  return dueDateObj.getTime() > today.getTime()
+  return dueDateObj.getTime() < today.getTime()
 }
 
 const isMobile = () => {

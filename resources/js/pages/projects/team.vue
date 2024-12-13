@@ -60,10 +60,10 @@
             <VMenu activator="parent">
               <VList>
                 <VListItem
-                  value="add-member"
+                  value="add-team-member"
                   @click="(isAddMemberDialogueOpen = !isAddMemberDialogueOpen, isMultiselectValid = true)"
                 >
-                  Team Member
+                  Add Team Member
                 </VListItem>
               </VList>
             </VMenu>
