@@ -425,7 +425,7 @@
                     label
                     size="small"
                     :color="isDueDateOverdue(task.due_date) ? 'error' : isDueDateToday(task.due_date) ? 'warning' : 'primary'"
-                    class="text-body-2 text-error"
+                    class="text-body-2"
                   >
                     <small v-if="isDueDateToday(task.due_date)">Due Today</small>
                     <small v-else-if="isDueDateOverdue(task.due_date)">Overdue on {{ formatDate(task.due_date) }}</small>
