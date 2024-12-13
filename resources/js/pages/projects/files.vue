@@ -697,7 +697,7 @@ watch(project, () => {
   padding: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-  max-width: 180px; /* Reduced size */
+  max-width: 210px; /* Reduced size */
   cursor: pointer;
 }
 
@@ -815,9 +815,5 @@ watch(project, () => {
   background: none;
   border: none;
   cursor: pointer;
-}
-
-.folder-col {
-  margin-bottom: 16px;
 }
 </style>
