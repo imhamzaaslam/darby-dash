@@ -299,6 +299,7 @@
                           {{ project.title }}
                         </h6>
                         <VChip
+                        v-if="project?.project_manager"
                           color="primary"
                           size="x-small"
                         >
@@ -306,6 +307,22 @@
                             {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
                           </span>
                         </VChip>
+                        <RouterLink
+                            v-else
+                            :to="{ name: 'team', params: { id: project?.uuid } }"
+                          >
+                            <VBtn
+                              size="x-small"
+                              rounded="pill"
+                              color="primary"
+                            >
+                              <VIcon
+                                icon="tabler-user"
+                                class="me-1"
+                              />
+                              Assign PM
+                            </VBtn>
+                        </RouterLink>
                         <VTooltip>
                           <template #activator="{ props }">
                             <VIcon

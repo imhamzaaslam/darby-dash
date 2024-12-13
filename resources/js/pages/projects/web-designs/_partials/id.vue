@@ -428,6 +428,7 @@
                     class="text-body-2 text-error"
                   >
                     <small v-if="isDueDateToday(task.due_date)">Due Today</small>
+                    <small v-else-if="isDueDateOverdue(task.due_date)">Overdue on {{ formatDate(task.due_date) }}</small>
                     <span v-else>
                       {{ formatDate(task.due_date) }}
                     </span>
@@ -1007,6 +1008,18 @@ const isDueDateToday = dueDate => {
   dueDateObj.setHours(0, 0, 0, 0)
 
   return dueDateObj.getTime() === today.getTime()
+}
+
+const isDueDateOverdue = dueDate => {
+  if (!dueDate) return false
+
+  const today = new Date()
+  const dueDateObj = new Date(dueDate)
+
+  today.setHours(0, 0, 0, 0)
+  dueDateObj.setHours(0, 0, 0, 0)
+
+  return dueDateObj.getTime() > today.getTime()
 }
 
 const isMobile = () => {
