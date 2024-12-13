@@ -75,7 +75,15 @@ class Project extends Base
     {
         return $this->tasks()
         ->where('status', '!=', 3)
-        ->orderByRaw('due_date IS NULL, due_date ASC')
+        ->orderByRaw("
+            CASE
+                WHEN due_date = CURDATE() THEN 1
+                WHEN due_date > CURDATE() THEN 2
+                WHEN due_date < CURDATE() THEN 3
+                ELSE 4
+            END ASC, 
+            due_date ASC
+        ")
         ->take(50);
     }
 
