@@ -75,9 +75,8 @@ class Project extends Base
     {
         return $this->tasks()
         ->where('status', '!=', 3)
-        ->latest()
         ->orderByRaw('due_date IS NULL, due_date ASC')
-        ->take(10);
+        ->take(50);
     }
 
     public function uncompletedTasks()
