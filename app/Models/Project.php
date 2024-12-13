@@ -75,8 +75,12 @@ class Project extends Base
     {
         return $this->tasks()
         ->whereNotNull('due_date')
+        ->where(function ($query) {
+            $query->orWhere(function ($query) {
+              $query->where('created_at', '<', Carbon::now()->subMonths(3));
+            });
+        })
         ->where('status', '!=', 3)
-        ->latest() 
         ->orderBy('due_date', 'ASC')
         ->take(10);
     }
