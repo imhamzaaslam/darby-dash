@@ -19,19 +19,21 @@
           />
           Manage Lists ({{ props.getProjectAllLists ? props.getProjectAllLists.length : 0 }})
         </span>
-        <VTooltip location="top">
+        <!--
+          <VTooltip location="top">
           <template #activator="{ props }">
-            <VIcon
-              v-bind="props"
-              icon="tabler-circle-plus"
-              class="cursor-pointer ms-2"
-              color="primary"
-              size="small"
-              @click="toggleAddList"
-            />
+          <VIcon
+          v-bind="props"
+          icon="tabler-circle-plus"
+          class="cursor-pointer ms-2"
+          color="primary"
+          size="small"
+          @click="toggleAddList"
+          />
           </template>
           <span>Add List</span>
-        </VTooltip>
+          </VTooltip> 
+        -->
       </VCardTitle>
 
       <!-- Add new list section -->
@@ -100,25 +102,27 @@
           </div>
         </VCol>
       </VRow>
-      <VRow
+      <!--
+        <VRow
         v-else
         class="px-1"
-      >
-        <VCol
-          cols="12"
-          class="py-0"
         >
-          <VBtn
-            color="primary"
-            class="mt-2 float-right mb-2"
-            size="small"
-            @click.stop="toggleAddList"
-          >
-            <VIcon icon="tabler-plus" />
-            <small>Add List</small>
-          </VBtn>
+        <VCol
+        cols="12"
+        class="py-0"
+        >
+        <VBtn
+        color="primary"
+        class="mt-2 float-right mb-2"
+        size="small"
+        @click.stop="toggleAddList"
+        >
+        <VIcon icon="tabler-plus" />
+        <small>Add List</small>
+        </VBtn>
         </VCol>
-      </VRow>
+        </VRow> 
+      -->
 
       <VCardText class="px-4">
         <VueDraggableNext
@@ -259,7 +263,7 @@
             color="white"
           />
           <span v-if="loadStatus === 1">Processing...</span>
-          <span v-else>Save</span>
+          <span v-else>Rearrange</span>
         </VBtn>
       </VCardText>
     </VCard>
