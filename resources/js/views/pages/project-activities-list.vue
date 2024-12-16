@@ -8,6 +8,15 @@
     </VCardItem>
 
     <VCardText>
+      <div
+        v-if="activities ? activities.length == 0 : 0"
+        class="text-center py-5"
+      >
+        <div v-html="noDataFound" />
+        <p class="text-body-2 text-high-emphasis">
+          No activities created yet.
+        </p>
+      </div>
       <div class="d-flex flex-wrap gap-4 mb-4">
         <VRow>
           <VCol cols="12">
@@ -80,6 +89,7 @@
 <script setup>
 import { computed, ref, onBeforeMount } from 'vue'
 import { useProjectStore } from "@/store/projects"
+import noDataFound from '@images/darby/noData.svg?raw'
 import moment from 'moment'
 import { useRoute } from 'vue-router'
 

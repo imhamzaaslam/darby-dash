@@ -8,6 +8,15 @@
     </VCardItem>
 
     <VCardText>
+      <div
+        v-if="notifications ? notifications.length == 0 : 0"
+        class="text-center py-5"
+      >
+        <div v-html="noDataFound" />
+        <p class="text-body-2 text-high-emphasis">
+          No notification created yet.
+        </p>
+      </div>
       <div class="d-flex flex-wrap gap-4 mb-4">
         <VRow>
           <VCol cols="12">
@@ -85,6 +94,7 @@
 import { computed } from 'vue'
 import { useNotificationStore } from "@/store/notifications"
 import moment from 'moment'
+import noDataFound from '@images/darby/noData.svg?raw'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()

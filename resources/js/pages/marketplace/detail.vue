@@ -119,7 +119,6 @@
       </VCol>
     </VRow>
     <VRow
-      v-else
       class="mt-4"
       dense
     >

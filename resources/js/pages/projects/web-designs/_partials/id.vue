@@ -986,7 +986,7 @@
 <script setup lang="js">
 import { layoutConfig } from '@layouts'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
-import noDataFound from '../../../../../images/darby/noData.svg?raw'
+import noDataFound from '@images/darby/noData.svg?raw'
 import Swal from 'sweetalert2'
 import confetti from 'canvas-confetti'
 import { useHead } from '@unhead/vue'
