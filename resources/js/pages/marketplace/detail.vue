@@ -107,16 +107,19 @@
       Related Services
     </h4>
     <VRow
-      class="mt-4"
+      v-if="getRelatedServices ? getRelatedServices.length === 0 : 0"
       dense
     >
-      <VCol v-if="getRelatedServices ? getRelatedServices.length === 0 : 0">
-        <p class="text-h6 text-center">
-          No related services found.
-        </p>
+      <VCol
+        cols="12" 
+        class="d-flex flex-column align-center justify-center text-center"
+      >
+        <span v-html="emptyServices" />
+        <span class="">No related services found.</span>
       </VCol>
     </VRow>
     <VRow
+      v-else
       class="mt-4"
       dense
     >
@@ -219,6 +222,7 @@
 <script setup lang="js">
 import { computed, watch, onBeforeMount } from "vue"
 import placeholderImg from '@images/pages/servicePlaceholder.png'
+import emptyServices from '@images/darby/projects_list.svg?raw'
 import { useRoute } from "vue-router"
 import { useUserSettingStore } from "@/store/user_settings"
 import { useUserStore } from "@/store/users"

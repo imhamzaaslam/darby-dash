@@ -94,10 +94,12 @@
 
     <div v-else>
       <VRow v-if="getProjects.length === 0">
-        <VCol cols="12">
-          <VCard class="px-3 py-3 text-center">
-            <span>No projects found</span>
-          </VCard>
+        <VCol
+          cols="12"
+          class="d-flex flex-column align-center justify-center text-center" 
+        >
+          <span v-html="emptyProjects" />
+          <span class="">No projects found.</span>
         </VCol>
       </VRow>
       <VRow v-else-if="viewType === 'list'">
@@ -299,7 +301,7 @@
                           {{ project.title }}
                         </h6>
                         <VChip
-                        v-if="project?.project_manager"
+                          v-if="project?.project_manager"
                           color="primary"
                           size="x-small"
                         >
@@ -308,20 +310,20 @@
                           </span>
                         </VChip>
                         <RouterLink
-                            v-else
-                            :to="{ name: 'team', params: { id: project?.uuid } }"
+                          v-else
+                          :to="{ name: 'team', params: { id: project?.uuid } }"
+                        >
+                          <VBtn
+                            size="x-small"
+                            rounded="pill"
+                            color="primary"
                           >
-                            <VBtn
-                              size="x-small"
-                              rounded="pill"
-                              color="primary"
-                            >
-                              <VIcon
-                                icon="tabler-user"
-                                class="me-1"
-                              />
-                              Assign PM
-                            </VBtn>
+                            <VIcon
+                              icon="tabler-user"
+                              class="me-1"
+                            />
+                            Assign PM
+                          </VBtn>
                         </RouterLink>
                         <VTooltip>
                           <template #activator="{ props }">
@@ -460,7 +462,7 @@
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import Swal from 'sweetalert2'
-import sketch from '@images/icons/project-icons/sketch.png'
+import emptyProjects from '@images/darby/projects_list.svg?raw'
 import AddProjectDrawer from '@/pages/projects/web-designs/_partials/add-project-drawer.vue'
 import EditProjectDrawer from '@/pages/projects/web-designs/_partials/update-project-drawer.vue'
 import FilterDrawer from '@/pages/projects/web-designs/_partials/filter-projects-drawer.vue'
@@ -468,9 +470,9 @@ import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-s
 import GridViewSkeleton from '@/pages/projects/web-designs/_partials/grid-view-skeleton.vue'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from "vue-toastification"
-import { useProjectStore } from "../../../store/projects"
-import { useProjectTypeStore } from "../../../store/project_types"
-import { useUserStore } from "../../../store/users"
+import { useProjectStore } from "@/store/projects"
+import { useProjectTypeStore } from "@/store/project_types"
+import { useUserStore } from "@/store/users"
 import { useAuthStore } from '@/store/auth'
 import { useTemplateStore } from '@/store/templates'
 import { useRoute } from 'vue-router'

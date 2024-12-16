@@ -66,14 +66,14 @@ export default defineComponent({
 
       // 👉 Navbar
       const logoNavbar = h('header', { class: ['layout-navbar', 'logo-navbar', { 'navbar-blur': configStore.isNavbarBlurEnabled }] }, [
-        h('div', { class: ['navbar-content-container', 'logo-navbar-content-container'] }, slots.logoNavbar?.()),
+        h('div', { class: ['navbar-content-container', 'logo-navbar-content-container'] }, slots.logoNavbar?.({
+          toggleVerticalOverlayNavActive: toggleIsOverlayNavActive,
+        })),
       ])
 
       const navbar = shouldShowNavbar.value
-        ? h('header', { class: ['layout-navbar', 'project-navbar'] }, [
-          h('div', { class: 'navbar-content-container' }, slots.navbar?.({
-            toggleVerticalOverlayNavActive: toggleIsOverlayNavActive,
-          })),
+        ? h('header', { class: ['layout-navbar', 'project-navbar'], style: { top: '70px !important' } }, [
+          h('div', { class: 'navbar-content-container' }, slots.navbar?.()),
         ])
         : null
 

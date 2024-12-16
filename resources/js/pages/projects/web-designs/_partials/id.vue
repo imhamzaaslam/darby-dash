@@ -239,7 +239,27 @@
           class="inbox-card"
           style="max-height: 250px!important;"
         >
-          <VList class="card-list">
+          <div
+            v-if="project.project_members?.filter(member => member.id != userDetails.id).length === 0"
+            class="text-center py-5"
+          >
+            <div v-html="noDataFound" />
+            <p class="text-body-2 text-high-emphasis">
+              No member found.
+            </p>
+            <VBtn
+              size="small"
+              rounded="pill"
+              color="primary"
+              :to="`/projects/${projectUuid}/team`"
+            >
+              Add Team Member
+            </VBtn>
+          </div>
+          <VList
+            v-else
+            class="card-list"
+          >
             <VListItem
               v-for="inbox in project.project_members?.filter(member => member.id != userDetails.id)"
               :key="inbox.id"
@@ -286,7 +306,10 @@
             </VListItem>
           </VList>
         </VCardText>
-        <div style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center;">
+        <div
+          v-if="!(project.project_members?.filter(member => member.id != userDetails.id).length === 0)"
+          style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center;"
+        >
           <VBtn
             size="small"
             rounded="pill"
@@ -318,8 +341,9 @@
         <VCardText style="overflow-y: auto; max-height: calc(100% - 56px);">
           <div
             v-if="upcomingTasks ? upcomingTasks.length == 0 : 0"
-            class="text-center py-10"
+            class="text-center py-5"
           >
+            <div v-html="noDataFound" />
             <p class="text-body-2 text-high-emphasis">
               No upcoming task found.
             </p>
@@ -500,8 +524,9 @@
           </VTimeline>
           <div
             v-else
-            class="text-center py-10"
+            class="text-center py-5"
           >
+            <div v-html="noDataFound" />
             <p class="text-body-2 text-high-emphasis">
               No upcoming events for this project.
             </p>
@@ -638,7 +663,8 @@
           </template>
   
           <template v-else>
-            <div class="text-center py-10">
+            <div class="text-center py-5">
+              <div v-html="noDataFound" />
               <p class="text-body-2 text-high-emphasis">
                 No activities created yet.
               </p>
@@ -774,7 +800,8 @@
             </template>
           </VCardItem>
           <VCardText>
-            <div class="text-center py-10">
+            <div class="text-center">
+              <div v-html="noDataFound" />
               <p class="text-body-2 text-high-emphasis">
                 Currently, there is no project manager assigned to this project.
               </p>
@@ -857,7 +884,8 @@
               class="d-flex flex-column align-center justify-center"
               style="height: 180px; text-align: center;"
             >
-              <p class="font-weight-bold text-body-1 mb-2">
+              <div v-html="noDataFound" />
+              <p class="text-body-2 text-high-emphasis mb-2">
                 No services available
               </p>
               <VBtn
@@ -958,6 +986,7 @@
 <script setup lang="js">
 import { layoutConfig } from '@layouts'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
+import noDataFound from '../../../../../images/darby/noData.svg?raw'
 import Swal from 'sweetalert2'
 import confetti from 'canvas-confetti'
 import { useHead } from '@unhead/vue'
@@ -1001,21 +1030,23 @@ const newListName = ref('')
 const isDueDateToday = dueDate => {
   if (!dueDate) return false
 
-  const now = new Date();
-  const due = new Date(dueDate);
+  const now = new Date()
+  const due = new Date(dueDate)
+  
   return (
     due.getDate() === now.getDate() &&
     due.getMonth() === now.getMonth() &&
     due.getFullYear() === now.getFullYear()
-  );
+  )
 }
 
 const isDueDateOverdue = dueDate => {
   if (!dueDate) return false
 
-  const now = new Date();
-  const due = new Date(dueDate);
-  return due < now.setHours(0, 0, 0, 0);
+  const now = new Date()
+  const due = new Date(dueDate)
+  
+  return due < now.setHours(0, 0, 0, 0)
 }
 
 const isMobile = () => {

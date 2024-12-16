@@ -67,11 +67,13 @@
 
     <div v-else>
       <VRow v-if="getTemplates.length === 0">
-        <VCol cols="12">
-          <VCard class="px-3 py-3 text-center">
-            <span>No Templates found</span>
-          </VCard>
-        </VCol>
+        <VCol
+        cols="12"
+        class="d-flex flex-column align-center justify-center text-center" 
+      >
+        <span v-html="emptyTemplates" />
+        <span class="">No templates found.</span>
+      </VCol>
       </VRow>
       <VRow v-else-if="viewType === 'list'">
         <VCol
@@ -265,6 +267,7 @@ import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
+import emptyTemplates from '@images/darby/projects_list.svg?raw'
 import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-skeleton.vue'
 import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'

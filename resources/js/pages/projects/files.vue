@@ -697,7 +697,7 @@ watch(project, () => {
   padding: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-  max-width: 210px; /* Reduced size */
+  max-width: 100%;
   cursor: pointer;
 }
 

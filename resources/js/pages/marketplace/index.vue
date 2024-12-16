@@ -22,13 +22,14 @@
   <div class="related-section">
     <VRow
       v-if="getServices.length === 0"
-      class="mt-4"
       dense
     >
-      <VCol>
-        <p class="text-h6 text-center">
-          No services found.
-        </p>
+      <VCol
+        cols="12"
+        class="d-flex flex-column align-center justify-center text-center" 
+      >
+        <span v-html="emptyServices" />
+        <span class="">No services found.</span>
       </VCol>
     </VRow>
     
@@ -135,6 +136,7 @@
 
 <script setup lang="js">
 import { computed, ref, watch, onBeforeMount } from "vue"
+import emptyServices from '@images/darby/projects_list.svg?raw'
 import placeholderImg from '@images/pages/servicePlaceholder.png'
 import { useUserSettingStore } from "@/store/user_settings"
 import { useUserStore } from "@/store/users"

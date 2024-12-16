@@ -67,7 +67,7 @@
     >
       <div
         class="mt-12"
-        v-html="NoTaskInList"
+        v-html="NoMilestoneFound"
       />
       <span>
         No Milestones Added Yet
@@ -426,7 +426,7 @@ import Multiselect from '@vueform/multiselect'
 import TeamListSkeleton from '@/pages/projects/_partials/team-list-skeleton.vue'
 import TeamGridSkeleton from '@/pages/projects/_partials/team-grid-skeleton.vue'
 import Page2 from '../../../images/pages/2.png'
-import NoTaskInList from '@images/darby/tasks_list.svg?raw'
+import NoMilestoneFound from '@images/darby/tasks_list.svg?raw'
 import { useProjectStore } from "../../store/projects"
 import { useMileStoneStore } from "@/store/milestones"
 import { useProjectListStore } from "@/store/project_lists"

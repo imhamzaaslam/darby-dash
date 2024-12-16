@@ -94,10 +94,12 @@
 
   <div v-else>
     <VRow v-if="getUsers.length === 0">
-      <VCol cols="12">
-        <VCard class="px-3 py-3 text-center">
-          <span>No members found</span>
-        </VCard>
+      <VCol
+        cols="12"
+        class="d-flex flex-column align-center justify-center text-center" 
+      >
+        <span v-html="emptyMembers" />
+        <span class="">No members found.</span>
       </VCol>
     </VRow>
     <VRow
@@ -163,7 +165,7 @@
             class="ms-8"
           >
             <IconBtn
-              v-if="user.role !== 'Admin'"
+              v-if="user.role !== 'Admin' && user.role !== 'Super Admin'"
               @click.prevent
             >
               <VIcon icon="tabler-dots" />
@@ -231,7 +233,7 @@
               </VCol>
               <VCol cols="2">
                 <IconBtn
-                  v-if="user.role !== 'Admin'"
+                  v-if="user.role !== 'Admin' && user.role !== 'Super Admin'"
                   @click.prevent
                 >
                   <VIcon icon="tabler-dots-vertical" />
@@ -325,6 +327,7 @@ import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
+import emptyMembers from '@images/darby/projects_list.svg?raw'
 import AddMemberDrawer from '@/pages/teams/_partials/add-member-drawer.vue'
 import EditMemberDrawer from '@/pages/teams/_partials/update-member-drawer.vue'
 import ListViewSkeleton from '@/pages/teams/_partials/list-view-skeleton.vue'
@@ -401,7 +404,7 @@ const applyFilters = async (name = '', email = null, roleId = null) => {
 }
 
 const editMember = async member => {
-  if (member.role === 'Admin') {
+  if (member.role === 'Admin' || member.role === 'Super Admin') {
     // If not, show a modal with the message
     await Swal.fire({
       title: "Permission Denied",

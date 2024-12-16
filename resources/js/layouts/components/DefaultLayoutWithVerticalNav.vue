@@ -62,8 +62,18 @@ const project = computed(() =>{
 <template>
   <VerticalNavLayout :nav-items="navItems">
     <!-- 👉 navbar -->
-    <template #logoNavbar>
+    <template #logoNavbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
+        <IconBtn
+          id="vertical-nav-toggle-btn"
+          class="ms-n3 d-lg-none"
+          @click="toggleVerticalOverlayNavActive(true)"
+        >
+          <VIcon
+            size="26"
+            icon="tabler-menu-2"
+          />
+        </IconBtn>
         <RouterLink
           to="/"
           class="app-logo app-title-wrapper"
@@ -76,19 +86,8 @@ const project = computed(() =>{
       </div>
     </template>
 
-    <template #navbar="{ toggleVerticalOverlayNavActive }">
+    <template #navbar>
       <div class="d-flex h-100 align-center">
-        <IconBtn
-          id="vertical-nav-toggle-btn"
-          class="ms-n3 d-lg-none"
-          @click="toggleVerticalOverlayNavActive(true)"
-        >
-          <VIcon
-            size="26"
-            icon="tabler-menu-2"
-          />
-        </IconBtn>
-
         <!-- Dropdown for router links on mobile view -->
 
         <IconBtn

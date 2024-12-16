@@ -93,10 +93,12 @@
 
     <div v-else>
       <VRow v-if="getServices.length === 0">
-        <VCol cols="12">
-          <VCard class="px-3 py-3 text-center">
-            <span>No Services found</span>
-          </VCard>
+        <VCol
+          cols="12"
+          class="d-flex flex-column align-center justify-center text-center" 
+        >
+          <span v-html="emptyServices" />
+          <span class="">No services found.</span>
         </VCol>
       </VRow>
       <VRow v-else-if="viewType === 'list'">
@@ -313,6 +315,7 @@ import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import placeholderImg from '@images/pages/servicePlaceholder.png'
+import emptyServices from '@images/darby/projects_list.svg?raw'
 import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-skeleton.vue'
 import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
 import AddServiceDrawer from '@/pages/settings/services/_partials/add-service-drawer.vue'
