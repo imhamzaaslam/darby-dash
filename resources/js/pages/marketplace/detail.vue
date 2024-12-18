@@ -203,7 +203,7 @@
               variant="elevated"
               rounded="pill"
               size="small"
-              :to="{ name: 'marketplace-service-detail', params: { id: selectedService.uuid } }"
+              @click="goToServiceDetail(selectedService.uuid)"
             >
               Learn more <VIcon
                 icon="tabler-arrow-right"
@@ -221,7 +221,7 @@
 import { computed, watch, onBeforeMount } from "vue"
 import placeholderImg from '@images/pages/servicePlaceholder.png'
 import emptyServices from '@images/darby/projects_list.svg?raw'
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { useUserSettingStore } from "@/store/user_settings"
 import { useUserStore } from "@/store/users"
 import { VDivider } from "vuetify/lib/components/index.mjs"
@@ -229,6 +229,7 @@ import { VDivider } from "vuetify/lib/components/index.mjs"
 const userSettingStore = useUserSettingStore()
 const userStore = useUserStore()
 const $route = useRoute()
+const router = useRouter()
   
 const serviceUuid = $route.params.id
 
@@ -283,6 +284,12 @@ const truncateDescription = (description, length) => {
 const userDetails = computed(() => {
   return userStore.getUser
 })
+
+const goToServiceDetail = uuid => {
+  isOverlayVisible.value = false
+  router.push({ name: 'marketplace-service-detail', params: { id: uuid } })
+  userSettingStore.showService(uuid)
+} 
   
 onBeforeMount(async () => {
   await fetchService()
