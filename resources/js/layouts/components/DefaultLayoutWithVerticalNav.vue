@@ -30,6 +30,10 @@ onMounted(async () => {
   await authStore.tenantInfo()
 })
 
+const generalSetting = computed(() => {
+  return authStore.getGeneralSetting
+})
+
 watchEffect(() => {
   projectId.value = $route.params.id
 })
@@ -128,11 +132,11 @@ const project = computed(() =>{
                 <RouterLink :to="authStore.isAdmin || authStore.isManager ? `/projects/${projectId}/bucks` : `/projects/${projectId}/bucks?tab=manage-bucks`">
                   <VListItemTitle>
                     <span v-if="authStore.isAdmin || authStore.isManager">
-                      Darby Bucks
+                      {{ generalSetting?.bucks_label || 'Darby Bucks' }}
                       <span class="text-primary">${{ project?.bucks_share_amount }}</span>
                     </span>
                     <span v-else>
-                      Earned Bucks
+                      Earned {{ generalSetting?.bucks_label || 'Darby Bucks' }}
                       <span class="text-primary">${{ project?.bucks_earnings }}</span>
                     </span>
                   </VListItemTitle>
@@ -232,12 +236,12 @@ const project = computed(() =>{
         >
           <span v-if="authStore.isAdmin || authStore.isManager">
             <RouterLink :to="`/projects/${projectId}/bucks`">
-              Darby Bucks <span class="text-primary">${{ project?.bucks_share_amount }}</span>
+              {{ generalSetting?.bucks_label || 'Darby Bucks' }} <span class="text-primary">${{ project?.bucks_share_amount }}</span>
             </RouterLink>
           </span>
           <span v-else>
             <RouterLink :to="`/projects/${projectId}/bucks?tab=manage-bucks`">
-              Earned Bucks <span class="text-primary">${{ project?.bucks_earnings }}</span>
+              Earned {{ generalSetting?.bucks_label || 'Darby Bucks' }} <span class="text-primary">${{ project?.bucks_earnings }}</span>
             </RouterLink>
           </span>
         </span>

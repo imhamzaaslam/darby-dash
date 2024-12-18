@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', {
     logo: null,
     favicon: null,
     title: null,
-    primaryColor: null,
+    generalSetting: [],
     authUser: null,
     authenticated: false,
     token: null,
@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
           this.logo = this.getImageUrl(res.data.logo)
           this.favicon = this.getImageUrl(res.data.favicon)
           this.title = res.data.title
-          this.primaryColor = res.data.primaryColor
+          this.generalSetting = res.data.general_setting
         }
       } catch (error) {
         this.error = error.response
@@ -135,7 +135,7 @@ export const useAuthStore = defineStore('auth', {
     getCompanyUuid: state => state.authUser?.user?.company?.uuid,
     getFavicon: state => state.favicon,
     getTitle: state => state.title,
-    getPrimaryColor: state => state.primaryColor,
+    getGeneralSetting: state => state.generalSetting,
     getErrors: state => state.error,
     isSuperAdmin: state => state.authUser?.user?.roles[0].name == 'Super Admin',
     isAdmin: state => state.authUser?.user?.roles[0].name == 'Admin',

@@ -8,6 +8,7 @@ use App\Models\Base;
 use App\Models\Task;
 use App\Models\TaskAssignee;
 use App\Models\ProjectBucks;
+use App\Enums\Settings;
 use Carbon\Carbon;
 use App\Services\ProjectProgressService;
 use Illuminate\Database\Eloquent\Builder;
@@ -211,5 +212,11 @@ class Project extends Base
         ->first();
 
         return $projectBucks ? $projectBucks->shares : null;
+    }
+
+    public function IsBucksSetting()
+    {
+        $isSetting = Settings_meta::where('setting_id', Settings::GENERAL->value)->where('key', 'is_bucks_setting')->value('value');
+        return $isSetting == 1 ? 1 : 0;
     }
 }

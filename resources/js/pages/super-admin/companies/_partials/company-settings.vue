@@ -338,6 +338,72 @@
           </VCard>
         </VCol>
       </VRow>
+      <VRow
+        v-if="activeTab == 'bucks-setting'"
+        class="ms-1"
+      >
+        <!-- Bucks Info Section -->
+        <VCol
+          cols="12"
+          md="12"
+        >
+          <VCard
+            class="px-3 py-2 d-flex flex-column"
+            style="height: 270px;"
+          >
+            <VCardTitle class="d-flex justify-space-between align-center">
+              <h6 class="text-h6 mt-2">
+                Bucks Management
+              </h6>
+            </VCardTitle>
+
+            <VCardText class="px-4 pb-3 mt-3">
+              <div class="d-flex align-items-center mb-2">
+                <VRadioGroup
+                  v-model="isBucksSetting"
+                  label="Do you want to enable bucks settings for project management?"
+                  inline
+                  @change="saveBucksDetails"
+                >
+                  <VRadio
+                    label="Yes"
+                    value="1"
+                    class="me-2"
+                    density="compact"
+                  />
+                  <VRadio
+                    label="No"
+                    value="0"
+                    class="me-2"
+                    density="compact"
+                  />
+                </VRadioGroup>
+              </div>
+              <AppTextField
+                v-if="isBucksSetting === '1'"
+                v-model="bucksLabel"
+                label="Label"
+                class="cursor-not-allowed"
+                placeholder="e.g., Darby Bucks"
+                outlined
+                dense
+                :style="{ width: '300px' }"
+              /> 
+            </VCardText>
+            <VCardActions class="px-5 py-3 d-flex justify-end">
+              <VBtn
+                color="primary"
+                :loading="isLoading"
+                size="small"
+                variant="flat"
+                @click="updateBucksInfo"
+              >
+                Save
+              </VBtn>
+            </VCardActions> 
+          </VCard>
+        </VCol>
+      </VRow>
       <!-- Users & Roles Section -->
       <VRow
         v-if="(activeTab == 'users-and-roles') && authStore.isSuperAdmin"
@@ -785,13 +851,16 @@ const editMemberDetails = ref({})
 const selectedRole = ref(null)
 const searchName = ref('')
 const searchEmail = ref('')
+const bucksLabel = ref('')
+const isBucksSetting = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
-const tabs = [
+const tabs = ref([
   { title: 'Basic Setting', tab: 'basic-setting' },
   { title: 'Theme Setting', tab: 'theme-setting' },
-  authStore.isSuperAdmin && { title: 'Users & Roles', tab: 'users-and-roles' },
-]
+  { title: `Bucks Setting`, tab: 'bucks-setting' },
+  ...(authStore.isSuperAdmin ? [{ title: 'Users & Roles', tab: 'users-and-roles' }] : []),
+])
 
 const allowedLogoTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/avif', 'image/webp']
 const allowedFaviconType = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/x-icon']
@@ -822,7 +891,7 @@ onBeforeMount(async () => {
   const searchParams = new URLSearchParams(window.location.search)
   const requestedTab = searchParams.get('tab')
   
-  if (requestedTab && tabs.some(tab => tab.tab === requestedTab)) {
+  if (requestedTab && tabs.value.some(tab => tab.tab === requestedTab)) {
     selectTab(requestedTab)
   }
 
@@ -834,7 +903,9 @@ const fetchCompany = async () => {
   try {
     await companyStore.show(companyUuid)
     companyDetails.value.name = company?.value?.name ?? ''
-    primaryColor.value = company?.value?.primary_color ?? '#a12592'
+    primaryColor.value = company?.value?.general_setting?.primary_color ?? '#a12592'
+    bucksLabel.value = company?.value?.general_setting?.bucks_label ?? `${layoutConfig.app.bucksLabel}`
+    isBucksSetting.value = company?.value?.general_setting?.is_bucks_setting ?? '0'
     isActive.value = company?.value?.is_active
   } catch (error) {
     toast.error('Error fetching company:', error)
@@ -967,6 +1038,35 @@ const updateCompanyInfo = async() => {
   }
   isLoading.value = false
 }
+
+const updateBucksInfo = async() => {
+  isLoading.value = true
+  if (bucksLabel.value.trim() === '') {
+    toast.error('Label cannot be empty')
+    isLoading.value = false
+
+    return
+  }
+  try {
+    const payload = {
+      'label': bucksLabel.value,
+      'isBucksSetting': isBucksSetting.value,
+    }
+
+    const response = await companyStore.saveBucksDetails(payload, companyUuid)
+
+    if(authStore.isTenant){
+      await authStore.tenantInfo()
+    }
+
+    toast.success('Details saved successfully.')
+    isLoading.value = false
+  } catch (error) {
+    console.error('bucks details failed:', error)
+    isLoading.value = false
+  }
+  isLoading.value = false
+}
   
 const saveColor = async () => {
   isLoading.value = true
@@ -985,7 +1085,7 @@ const saveColor = async () => {
     
     if(authStore.isTenant){
       await authStore.tenantInfo()
-      setPrimaryColor(authStore.getPrimaryColor)
+      setPrimaryColor(authStore.generalSetting?.primary_color)
     }
 
     toast.success('Colors saved successfully.')
@@ -1246,7 +1346,7 @@ const getStatusCode = computed(() => {
 
 watch(activeTab, newActiveTab => {
   router.push({ query: { tab: newActiveTab } })
-  useHead({ title: `${layoutConfig.app.title} | ${tabs.find(tab => tab.tab === newActiveTab).title}` })
+  useHead({ title: `${layoutConfig.app.title} | ${tabs?.value?.find(tab => tab.tab === newActiveTab).title}` })
 })
 </script>
   

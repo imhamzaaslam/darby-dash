@@ -449,6 +449,90 @@ class CompanyController extends Controller
     }
 
     /**
+     * Save bucks details.
+     *
+     * @param Request $request
+     * @param  string  $uuid
+     * @return Response|JsonResponse
+     */
+    public function saveBucksDetails(Request $request, string $uuid): JsonResponse
+    {
+        if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value) || Auth::user()->hasRole(UserRole::ADMIN->value))
+        {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+
+            if (!$company) {
+                return null;
+            }
+
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenant = $this->tenantService->setTenant($company->name);
+
+                if (!$tenant) {
+                    return null;
+                }
+            }
+    
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+            else{
+                $tenantCompany = Company::where('name', $company->name)->orderBy('id', 'asc')->first();
+            }
+
+            if($tenantCompany)
+            {
+                $settings = [
+                    ['key' => 'bucks_label', 'value' => $request->label],
+                    ['key' => 'is_bucks_setting', 'value' => $request->isBucksSetting],
+                ];
+
+                if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+                {
+                    foreach ($settings as $setting) {
+                        Settings_meta::on('tenant')->updateOrCreate(
+                            [
+                                'user_id' => null,
+                                'setting_id' => Settings::GENERAL->value,
+                                'key' => $setting['key'],
+                            ],
+                            [
+                                'type' => 'string',
+                                'value' => $setting['value'],
+                            ]
+                        );
+                    }
+                }else{
+                    foreach ($settings as $setting) {
+                        Settings_meta::updateOrCreate(
+                            [
+                                'user_id' => null,
+                                'setting_id' => Settings::GENERAL->value,
+                                'key' => $setting['key'],
+                            ],
+                            [
+                                'type' => 'string',
+                                'value' => $setting['value'],
+                            ]
+                        );
+                    }
+                }
+            }
+
+            if(Auth::user()->hasRole(UserRole::SUPER_ADMIN->value))
+            {
+                $this->tenantService->resetTenant();
+            }
+
+            return response()->json([
+                'message' => 'Details saved successfully!'
+            ]);
+        }
+    }
+
+    /**
      * Save colors.
      *
      * @param StoreCompanyThemeColorsRequest $request

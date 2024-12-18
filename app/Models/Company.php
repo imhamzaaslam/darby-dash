@@ -155,15 +155,13 @@ class Company extends Base
         return $status ? 1 : 0;
     }
 
-    public function getPimaryColor()
+    public function getGeneralSetting()
     {
         if(Auth::user()->hasRole(UserRole::ADMIN->value))
         {
-            $primaryColor = Settings_meta::where('setting_id', Settings::GENERAL->value)
-            ->where('key', 'primary_color')
-            ->value('value');
+            $settings = Settings_meta::where('setting_id', Settings::GENERAL->value)->pluck('value', 'key');
 
-            return $primaryColor ?? null;
+            return $settings ?? [];
         }
 
         $tenantService = app(TenantService::class);
@@ -174,11 +172,9 @@ class Company extends Base
             return null;
         }
 
-        $primaryColor = Settings_meta::on('tenant')->where('setting_id', Settings::GENERAL->value)
-            ->where('key', 'primary_color')
-            ->value('value');
+        $settings = Settings_meta::on('tenant')->where('setting_id', Settings::GENERAL->value)->pluck('value', 'key');
         $tenantService->resetTenant();
 
-        return $primaryColor ?? null;
+        return $settings ?? [];
     }
 }

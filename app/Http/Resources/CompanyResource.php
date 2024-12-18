@@ -26,7 +26,7 @@ class CompanyResource extends JsonResource
             'admin' => $this->getClient() ? new UserResource($this->getClient()) : null,
             'logo' => $this->getLogo() ?? null,
             'favicon' => $this->getFavicon() ?? null,
-            'primary_color' => $this->getPimaryColor() ?? null,
+            'general_setting' => $this->getGeneralSetting(),
             'is_active' => $this->active(),
         ];
     }

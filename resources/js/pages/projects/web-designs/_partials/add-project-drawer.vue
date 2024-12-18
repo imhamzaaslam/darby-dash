@@ -127,7 +127,7 @@
               >
                 <AppTextField
                   v-model="newProjectDetails.bucks_share"
-                  label="Darby Bucks Share*"
+                  :label="`${generalSetting?.bucks_label} Share*`"
                   :rules="[requiredValidator]"
                   placeholder="0.00"
                   type="number"
@@ -136,10 +136,13 @@
                 />
               </VCol>
 
-              <VCol cols="12">
+              <VCol
+                v-if="generalSetting?.is_bucks_setting == 1"
+                cols="12"
+              >
                 <VSwitch
                   v-model="showBucksShare"
-                  label="Enable Darby Bucks Share"
+                  :label="`Enable ${generalSetting?.bucks_label} Share`"
                   class="mb-3"
                 />
               </VCol>
@@ -188,7 +191,8 @@ import { ref, nextTick } from 'vue'
 import Multiselect from '@vueform/multiselect'
 import { useToast } from "vue-toastification"
 import { useRouter } from 'vue-router'
-import { useProjectStore } from "../../../../store/projects"
+import { useProjectStore } from "@/store/projects"
+import { useAuthStore } from "@/store/auth"
 
 const props = defineProps({
   isDrawerOpen: {
@@ -208,6 +212,7 @@ const emit = defineEmits(['update:isDrawerOpen'])
 const toast = useToast()
 const router = useRouter()
 const projectStore = useProjectStore()
+const authStore = useAuthStore()
 
 const focusField = ref(null)
 const addProjectForm = ref()
@@ -258,7 +263,7 @@ async function submitAddProjectForm() {
         //   }
         // }
         if (parseFloat(newProjectDetails.value.bucks_share) > 100) {
-          toast.error('Darby Bucks Share cannot be greater than 100%')
+          toast.error(`${generalSetting?.bucks_label} Share cannot be greater than 100%`)
 
           return
         }
@@ -295,6 +300,10 @@ async function submitAddProjectForm() {
     }
   })
 }
+
+const generalSetting = computed(() => {
+  return authStore.getGeneralSetting
+})
 
 watch(() => props.isDrawerOpen, val => {
   if (val) {

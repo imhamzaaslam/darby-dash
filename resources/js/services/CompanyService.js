@@ -34,6 +34,9 @@ export default {
   saveCompanyDetails(payload, companyId) {
     return apiClient.post(`/super-admin/companies/${companyId}/save-details`, payload)
   },
+  saveBucksDetails(payload, companyId) {
+    return apiClient.post(`/super-admin/companies/${companyId}/save-bucks-details`, payload)
+  },
   saveColors(payload, companyId) {
     return apiClient.post(`/super-admin/companies/${companyId}/save-colors`, payload)
   },

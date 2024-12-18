@@ -36,7 +36,7 @@
           @change="handleProjectCompleteSwitchChange(project?.title)"
         />
         <VBtn
-          v-if="projectProgress.overallProgress === 100 && showAwardBucksBtn && authStore.isAdmin"
+          v-if="projectProgress.overallProgress === 100 && showAwardBucksBtn && authStore.isAdmin && (generalSetting?.is_bucks_setting == 1)"
           size="x-small"
           color="primary"
           rounded="pill"
@@ -1306,6 +1306,10 @@ const getActivities = computed(() => {
 
 const userDetails = computed(() => {
   return userStore.getUser
+})
+
+const generalSetting = computed(() => {
+  return authStore.getGeneralSetting
 })
 
 const getListLoadStatus = computed(() => {

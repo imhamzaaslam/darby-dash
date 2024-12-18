@@ -114,7 +114,7 @@
                 <!-- Input Field -->
                 <AppTextField
                   v-model="projectDetails.bucks_share"
-                  label="Darby Bucks Share*"
+                  :label="`${generalSetting?.bucks_label} Share*`"
                   :rules="[requiredValidator]"
                   placeholder="0.00"
                   type="number"
@@ -122,10 +122,13 @@
                   prepend-inner-icon="tabler-percentage"
                 />
               </VCol>
-              <VCol cols="12">
+              <VCol
+                v-if="generalSetting?.is_bucks_setting == 1"
+                cols="12"
+              >
                 <VSwitch
                   v-model="showBucksShare"
-                  label="Enable Darby Bucks Share"
+                  :label="`Enable ${generalSetting?.bucks_label} Share`"
                   class="mb-3"
                 />
               </VCol>
@@ -167,12 +170,14 @@
 </template>
 
 <script setup>
+import { layoutConfig } from '@layouts'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { ref, nextTick } from 'vue'
 import Multiselect from '@vueform/multiselect'
 import { useToast } from "vue-toastification"
-import { useProjectStore } from "../../../../store/projects"
+import { useProjectStore } from "@/store/projects"
+import { useAuthStore } from "@/store/auth"
 
 const props = defineProps({
   isEditDrawerOpen: {
@@ -192,6 +197,7 @@ const props = defineProps({
 const emit = defineEmits(['update:isEditDrawerOpen'])
 const toast = useToast()
 const projectStore = useProjectStore()
+const authStore = useAuthStore()
 
 const focusField = ref(null)
 const editProjectForm = ref()
@@ -240,7 +246,7 @@ async function submitEditProjectForm() {
         payload.uuid = props.editProjectDetails.uuid
 
         if (parseFloat(payload.bucks_share) > 100) {
-          toast.error('Darby Bucks Share cannot be greater than 100%')
+          toast.error(`${generalSetting?.bucks_label} Share cannot be greater than 100%`)
 
           return
         }
@@ -265,6 +271,10 @@ async function submitEditProjectForm() {
     }
   })
 }
+
+const generalSetting = computed(() => {
+  return authStore.getGeneralSetting
+})
 
 watch(
   () => [props.editProjectDetails, props.isEditDrawerOpen],

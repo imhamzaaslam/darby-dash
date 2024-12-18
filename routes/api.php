@@ -78,6 +78,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::patch('/', [CompanyController::class, 'update']);
                 Route::delete('/', [CompanyController::class, 'delete']);
                 Route::post('/save-details', [CompanyController::class, 'saveDetails']);
+                Route::post('/save-bucks-details', [CompanyController::class, 'saveBucksDetails']);
                 Route::post('/save-colors', [CompanyController::class, 'saveColors']);
                 Route::patch('/update-active-state', [CompanyController::class, 'updateActiveState']);
                 Route::delete('/delete-asset/{fileUuid}', [CompanyController::class, 'deleteAsset']);

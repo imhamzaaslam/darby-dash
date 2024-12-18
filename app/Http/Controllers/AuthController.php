@@ -161,9 +161,7 @@ class AuthController extends Controller
             $favicon = $tenantCompany->favicon;
             $logo = $tenantCompany->logo;
 
-            $primaryColor = Settings_meta::on('tenant')->where('setting_id', Settings::GENERAL->value)
-            ->where('key', 'primary_color')
-            ->value('value');
+            $generalSetting = Settings_meta::on('tenant')->where('setting_id', Settings::GENERAL->value)->pluck('value', 'key');
 
             $this->tenantService->resetTenant();
 
@@ -172,7 +170,7 @@ class AuthController extends Controller
                 'logo' => $logo->path ?? null,
                 'favicon' => $favicon->path ?? null,
                 'title' => $company->name,
-                'primaryColor' => $primaryColor,
+                'general_setting' => $generalSetting,
                 'status' => true,
             ]);
         }

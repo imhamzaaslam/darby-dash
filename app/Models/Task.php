@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\Settings; 
 use App\Models\TaskAssignee;
 use App\Models\User;
 use App\Models\Base;
@@ -191,5 +192,11 @@ class Task extends Base
     public function getHasBucksShareAttribute()
     {
         return $this->project && $this->project->bucks_share > 0;
+    }
+
+    public function IsBucksSetting()
+    {
+        $isSetting = Settings_meta::where('setting_id', Settings::GENERAL->value)->where('key', 'is_bucks_setting')->value('value');
+        return $isSetting == 1 ? 1 : 0;
     }
 }

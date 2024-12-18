@@ -1,5 +1,5 @@
 const store = JSON.parse(localStorage.getItem('auth'))
-const getPrimaryColor = () => (store && store.tenant && store.primaryColor  ? store.primaryColor : '#a12592')
+const getPrimaryColor = () => (store && store.tenant && store.generalSetting && store.generalSetting?.primary_color  ? store.generalSetting?.primary_color  : '#a12592')
 export const staticPrimaryColor = getPrimaryColor()
 
 const adjustColor = (color, amount) => {
