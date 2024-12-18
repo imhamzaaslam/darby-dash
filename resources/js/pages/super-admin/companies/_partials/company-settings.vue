@@ -339,7 +339,7 @@
         </VCol>
       </VRow>
       <VRow
-        v-if="activeTab == 'bucks-setting'"
+        v-if="activeTab == 'incentive-hub'"
         class="ms-1"
       >
         <!-- Bucks Info Section -->
@@ -353,7 +353,7 @@
           >
             <VCardTitle class="d-flex justify-space-between align-center">
               <h6 class="text-h6 mt-2">
-                Bucks Management
+                Incentive Hub Management
               </h6>
             </VCardTitle>
 
@@ -858,7 +858,7 @@ const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 const tabs = ref([
   { title: 'Basic Setting', tab: 'basic-setting' },
   { title: 'Theme Setting', tab: 'theme-setting' },
-  { title: `Bucks Setting`, tab: 'bucks-setting' },
+  { title: `Incentive Hub`, tab: 'incentive-hub' },
   ...(authStore.isSuperAdmin ? [{ title: 'Users & Roles', tab: 'users-and-roles' }] : []),
 ])
 

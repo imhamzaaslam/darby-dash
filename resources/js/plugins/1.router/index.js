@@ -105,6 +105,7 @@ const router = createRouter({
       {
         path: '/marketplace/services/:id',
         name: 'marketplace-service-detail',
+        props: true,
         component: MarketPlace,
         meta: { layout: 'default' },
       },

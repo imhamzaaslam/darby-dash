@@ -120,7 +120,6 @@
               rounded="pill"
               size="small"
               :to="{ name: 'marketplace-service-detail', params: { id: selectedService.uuid } }"
-              target="_blank"
             >
               Learn more <VIcon
                 icon="tabler-arrow-right"
