@@ -361,7 +361,7 @@
               <div class="d-flex align-items-center mb-2">
                 <VRadioGroup
                   v-model="isBucksSetting"
-                  label="Do you want to enable bucks settings for project management?"
+                  label="Do you want to enable reward allocation for project management?"
                   inline
                   @change="saveBucksDetails"
                 >
@@ -382,7 +382,7 @@
               <AppTextField
                 v-if="isBucksSetting === '1'"
                 v-model="bucksLabel"
-                label="Label"
+                label="Reward Label"
                 class="cursor-not-allowed"
                 placeholder="e.g., Darby Bucks"
                 outlined
