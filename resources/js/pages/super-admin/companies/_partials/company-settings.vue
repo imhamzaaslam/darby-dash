@@ -904,7 +904,7 @@ const fetchCompany = async () => {
     await companyStore.show(companyUuid)
     companyDetails.value.name = company?.value?.name ?? ''
     primaryColor.value = company?.value?.general_setting?.primary_color ?? '#a12592'
-    bucksLabel.value = company?.value?.general_setting?.bucks_label ?? `${layoutConfig.app.bucksLabel}`
+    bucksLabel.value = company?.value?.general_setting?.bucks_label ?? 'Darby Bucks'
     isBucksSetting.value = company?.value?.general_setting?.is_bucks_setting ?? '0'
     isActive.value = company?.value?.is_active
   } catch (error) {
