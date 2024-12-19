@@ -65,140 +65,96 @@
         </template>
       </VProgressLinear>
     </VCol>
-  </VRow> 
+  </VRow>
   <VRow>
     <VCol
-      v-for="(data, index) in projectProgress?.lists?.slice(0, 3)"
-      :key="index"
-      cols="12"
-      md="3"
-      sm="12"
+      cols="9"
+      :class="{'pe-0': projectProgress?.lists?.length > 4}"
     >
-      <VCard
-        class="logistics-card-statistics cursor-pointer p-0"
-        @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
-      >
-        <VCardText style="padding: 20px !important;">
-          <div class="mb-2 text-center">
-            <h5 class="text-h6 mb-3 font-weight-medium">
-              {{ data.name }}
-            </h5>
-            <VAvatar
-              v-if="data.status == 'completed'"
-              color="success"
-              size="x-large"
-            >
-              <VIcon
-                icon="tabler-check"
-                size="22"
-              />
-            </VAvatar>
-            <VAvatar
-              v-else-if="data.status == 'inprogress'"
-              color="primary"
-              size="x-large"
-            >
-              <span class="text-sm">{{ data.progress }}%</span>
-            </VAvatar>
-            <VAvatar
-              v-else-if="data.status == 'pending'"
-              color="secondary"
-              size="x-large"
-            >
-              <VIcon
-                icon="tabler-clock"
-                size="22"
-              />
-            </VAvatar>
-          </div>
-          <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
-            <small v-if="data.status == 'completed'">
-              Completed
-            </small>
-            <small v-else-if="data.status == 'inprogress'">
-              Inprogress
-            </small>
-            <small v-else>
-              Pending
-            </small>
-          </div>
-        </VCardText>
-      </VCard>
-    </VCol>
-    <VCol
-      v-for="index in 3 - projectProgress?.lists?.length"
-      v-if="projectProgress?.lists?.length < 3 ? true : false"
-      :key="index"
-      cols="12"
-      md="3"
-      sm="12"
-    >
-      <VCard
-        style="height: 163px;"
-        class="logistics-card-statistics cursor-pointer p-0"
-        outlined
-        @click.stop="activeListIndex === index ? null : (activeListIndex = index)"
-      >
-        <VCardText
-          v-if="activeListIndex !== index"
-          class="text-center py-5 px-3"
+      <VRow :class="{'horizontal-scroll': projectProgress?.lists?.length > 4}">
+        <VCol
+          v-for="(data, index) in projectProgress.lists"
+          :key="index"
+          cols="3"
+          style="flex: 0 0 auto; max-width: 25%;"
         >
-          <h5 class="text-h6 mb-4 font-weight-medium">
-            Add New List
-          </h5>
-          <VIcon
-            icon="tabler-circle-plus"
-            size="55"
-            color="primary"
-          />
-        </VCardText>
-
-        <!-- Text Field with Save/Cancel Buttons -->
-        <VCardText v-else>
-          <VTextField
-            v-model="newListName"
-            label="List Name"
-            variant="outlined"
-            autofocus
-            @keydown.enter="saveList"
-          />
-          <div class="d-flex justify-end mt-4">
-            <VBtn
-              color="primary"
-              class="me-2"
-              size="x-small"
-              :disabled="getListLoadStatus === 1"
-              @click.stop="saveList"
-            >
-              <span v-if="getListLoadStatus === 1">
-                <VProgressCircular
-                  :size="16"
-                  width="3"
-                  indeterminate
-                />
-                Loading...
-              </span>
-              <span v-else>
-                Save
-              </span>
-            </VBtn>
-            <VBtn
-              color="secondary"
-              size="x-small"
-              outlined
-              @click.stop="resetListPlaceholderForm"
-            >
-              Cancel
-            </VBtn>
-          </div>
-        </VCardText>
-      </VCard>
+          <VCard
+            class="logistics-card-statistics cursor-pointer p-0"
+            @click="() => $router.push({ path: `/projects/${projectUuid}/tasks/add`, query: { expanded: index, type: data.uuid } })"
+          >
+            <VCardText class="px-3 py-2">
+              <div class="mb-2 text-center">
+                <small>Phase {{ index+1 }}</small>
+                <h5
+                  class="text-h6 mb-3 font-weight-medium text-truncate"
+                  style="max-width: 300px;"
+                >
+                  {{ data.name }}
+                </h5>
+                <VAvatar
+                  v-if="data.status == 'completed'"
+                  color="success"
+                  size="x-large"
+                >
+                  <VIcon
+                    icon="tabler-check"
+                    size="22"
+                  />
+                </VAvatar>
+                <VAvatar
+                  v-else-if="data.status == 'inprogress'"
+                  color="primary"
+                  size="x-large"
+                >
+                  <span class="text-sm">{{ data.progress }}%</span>
+                </VAvatar>
+                <VAvatar
+                  v-else-if="data.status == 'pending'"
+                  color="secondary"
+                  size="x-large"
+                >
+                  <VIcon
+                    icon="tabler-clock"
+                    size="22"
+                  />
+                </VAvatar>
+              </div>
+              <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
+                <small v-if="data.status == 'completed'">Completed</small>
+                <small v-else-if="data.status == 'inprogress'">Inprogress</small>
+                <small v-else>Pending</small>
+              </div>
+            </VCardText>
+          </VCard>
+        </VCol>
+        <VCol
+          v-if="projectProgress?.lists?.length < 4 ? true : false"
+          :cols="projectProgress?.lists?.length === 1 ? 9 : projectProgress?.lists?.length === 2 ? 6 : 3"
+          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length === 1 ? '75%' : projectProgress?.lists?.length === 2 ? '50%' : '25%'};`"
+        >
+          <VCard
+            class="logistics-card-statistics cursor-pointer p-0"
+            outlined
+          >
+            <VCardText class="text-center py-5 px-3">
+              <div class="mb-6">
+                <h5
+                  class="text-h6 mb-5 font-weight-medium"
+                  color="secondary"
+                >
+                  Other List Appear Here
+                </h5>
+                <span v-html="otherListImg" />
+              </div>
+            </VCardText>
+          </VCard>
+        </VCol>
+      </VRow>
     </VCol>
     <VCol
-      cols="12"
-      md="3"
-      sm="12"
+      cols="3"
       class="pb-0"
+      :class="{'ps-0': projectProgress?.lists?.length > 4}"
     >
       <VCard
         style="height: 163px;"
@@ -211,7 +167,7 @@
           <div class="text-body-1 text-center d-flex align-center mb-4">
             <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
           </div>
-          <div class="text-body-1 text-center d-flex align-center mb-4">
+          <div class="text-body-1 text-center d-flex align-center mb-2">
             <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
           </div>
         </VCardText>
@@ -987,6 +943,7 @@
 import { layoutConfig } from '@layouts'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import noDataFound from '@images/darby/noData.svg?raw'
+import otherListImg from '@images/darby/other_list.svg?raw'
 import Swal from 'sweetalert2'
 import confetti from 'canvas-confetti'
 import { useHead } from '@unhead/vue'
@@ -1362,12 +1319,7 @@ watch(project, () => {
   .custom-border-list:hover{
     border-bottom: 3px solid rgba(var(--v-theme-primary));
   }
-.horizontal-scroll {
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-}
-.upcoming-task-item{
+  .upcoming-task-item{
   border-bottom: 1px solid rgba(var(--v-theme-background));
   margin-bottom: 5px;
   margin-top: 5px;
@@ -1382,21 +1334,40 @@ watch(project, () => {
   border-bottom: none;
 }
 
+.horizontal-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap; 
+  white-space: nowrap;
+  width: 100%; 
+}
+
 .horizontal-scroll::-webkit-scrollbar {
-  height: 10px; /* Set height of the scrollbars */
+  height: 8px; 
 }
 
-.horizontal-scroll::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Set track color */
+.horizontal-scroll::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+	border-radius: 10px;
+  margin: 0 12px;
 }
 
-.horizontal-scroll::-webkit-scrollbar-thumb {
-  background: #888; /* Set thumb color */
-  border-radius: 5px; /* Set thumb border radius */
+.horizontal-scroll::-webkit-scrollbar
+{
+	background-color: #F5F5F5;
 }
 
-.horizontal-scroll::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Set thumb color on hover */
+.horizontal-scroll::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear,
+  left bottom,
+  left top,
+  color-stop(0.44, rgba(var(--v-theme-primary))),
+  color-stop(0.72, rgba(var(--v-theme-primary))),
+  color-stop(0.86, rgba(var(--v-theme-primary))));
 }
 
 .v-col {
