@@ -69,14 +69,15 @@
   <VRow>
     <VCol
       cols="9"
-      :class="{'pe-0': projectProgress?.lists?.length > 4}"
+      :class="{'pe-0': projectProgress?.lists?.length > 3}"
     >
-      <VRow :class="{'horizontal-scroll': projectProgress?.lists?.length > 4}">
+      <VRow :class="{'horizontal-scroll': projectProgress?.lists?.length > 3}">
+        <!-- Loop through the lists -->
         <VCol
           v-for="(data, index) in projectProgress.lists"
           :key="index"
-          cols="3"
-          style="flex: 0 0 auto; max-width: 25%;"
+          :cols="projectProgress?.lists?.length >= 4 ? 3 : 12 / (projectProgress?.lists?.length + 1)"
+          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length >= 4 ? '25%' : `${100 / (projectProgress?.lists?.length + 1)}%`};`"
         >
           <VCard
             class="logistics-card-statistics cursor-pointer p-0"
@@ -84,15 +85,17 @@
           >
             <VCardText class="px-3 py-2">
               <div class="mb-2 text-center">
-                <small>Phase {{ index+1 }}</small>
+                <small>Phase {{ index + 1 }}</small>
                 <h5
-                  class="text-h6 mb-3 font-weight-medium text-truncate"
-                  style="max-width: 300px;"
+                  class="text-h6 mb-3 font-weight-medium text-truncate text-center"
+                  :style="{
+                    maxWidth: projectProgress?.lists?.length > 3 ? '300px' : 'unset',
+                  }"
                 >
                   {{ data.name }}
                 </h5>
                 <VAvatar
-                  v-if="data.status == 'completed'"
+                  v-if="data.status === 'completed'"
                   color="success"
                   size="x-large"
                 >
@@ -102,14 +105,14 @@
                   />
                 </VAvatar>
                 <VAvatar
-                  v-else-if="data.status == 'inprogress'"
+                  v-else-if="data.status === 'inprogress'"
                   color="primary"
                   size="x-large"
                 >
                   <span class="text-sm">{{ data.progress }}%</span>
                 </VAvatar>
                 <VAvatar
-                  v-else-if="data.status == 'pending'"
+                  v-else
                   color="secondary"
                   size="x-large"
                 >
@@ -120,31 +123,73 @@
                 </VAvatar>
               </div>
               <div :class="`text-center text-h6 font-weight-medium text-${getColor(data.status)}`">
-                <small v-if="data.status == 'completed'">Completed</small>
-                <small v-else-if="data.status == 'inprogress'">Inprogress</small>
+                <small v-if="data.status === 'completed'">Completed</small>
+                <small v-else-if="data.status === 'inprogress'">Inprogress</small>
                 <small v-else>Pending</small>
               </div>
             </VCardText>
           </VCard>
         </VCol>
+
+        <!-- Add Plus Icon Card -->
         <VCol
-          v-if="projectProgress?.lists?.length < 4 ? true : false"
-          :cols="projectProgress?.lists?.length === 1 ? 9 : projectProgress?.lists?.length === 2 ? 6 : 3"
-          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length === 1 ? '75%' : projectProgress?.lists?.length === 2 ? '50%' : '25%'};`"
+          :cols="projectProgress?.lists?.length >= 4 ? 3 : 12 / (projectProgress?.lists?.length + 1)"
+          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length >= 4 ? '25%' : `${100 / (projectProgress?.lists?.length + 1)}%`};`"
         >
           <VCard
             class="logistics-card-statistics cursor-pointer p-0"
             outlined
+            style="height: 162px;"
+            @click="toggleAddField"
           >
             <VCardText class="text-center py-5 px-3">
-              <div class="mb-6">
-                <h5
-                  class="text-h6 mb-5 font-weight-medium"
-                  color="secondary"
-                >
-                  Other List Appear Here
-                </h5>
-                <span v-html="otherListImg" />
+              <h5 class="text-h6 mb-4 font-weight-medium">
+                Add New List
+              </h5>
+              <VIcon
+                v-if="showAddListField == false"
+                icon="tabler-circle-plus"
+                size="65"
+                class="mt-1"
+                color="primary"
+              />
+              <div v-else>
+                <VTextField
+                  v-model="newListName"
+                  label="List Name"
+                  variant="outlined"
+                  autofocus
+                  @keydown.enter="saveList"
+                />
+                <div class="d-flex justify-end mt-4">
+                  <VBtn
+                    color="primary"
+                    class="me-2"
+                    size="x-small"
+                    :disabled="getListLoadStatus === 1"
+                    @click.stop="saveList"
+                  >
+                    <span v-if="getListLoadStatus === 1">
+                      <VProgressCircular
+                        :size="16"
+                        width="3"
+                        indeterminate
+                      />
+                      Loading...
+                    </span>
+                    <span v-else>
+                      Save
+                    </span>
+                  </VBtn>
+                  <VBtn
+                    color="secondary"
+                    size="x-small"
+                    outlined
+                    @click.stop="resetListPlaceholderForm"
+                  >
+                    Cancel
+                  </VBtn>
+                </div>
               </div>
             </VCardText>
           </VCard>
@@ -154,10 +199,10 @@
     <VCol
       cols="3"
       class="pb-0"
-      :class="{'ps-0': projectProgress?.lists?.length > 4}"
+      :class="{'ps-0': projectProgress?.lists?.length > 3}"
     >
       <VCard
-        style="height: 163px;"
+        style="height: 162px;"
         class="logistics-card-statistics cursor-pointer p-1"
       >
         <VCardText>
@@ -294,7 +339,10 @@
             />
           </template>
         </VCardItem>
-        <VCardText style="overflow-y: auto; max-height: calc(100% - 56px);">
+        <VCardText
+          class="inbox-card"
+          style="max-height: 250px!important;"
+        >
           <div
             v-if="upcomingTasks ? upcomingTasks.length == 0 : 0"
             class="text-center py-5"
@@ -810,7 +858,9 @@
                     width="250"
                   >
                     <div class="d-flex flex-column px-3 py-2 fill-height">
-                      <span class="font-weight-bold text-h5 text-primary mb-2">{{ service.title }}</span>
+                      <h4 class="mb-2">
+                        {{ service.title }}
+                      </h4>
                       <p 
                         class="text-body-2 text-high-emphasis text-wrap"
                         style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;margin-bottom: 10px;"
@@ -981,8 +1031,8 @@ const isAwardBucksDialogue = ref(false)
 const awardedBucks = ref(0)
 const comment = ref(null)
 const justifyPMInfo = ref('justify-space-between')
-const activeListIndex = ref(null)
 const newListName = ref('')
+const showAddListField = ref(false)
 
 const isDueDateToday = dueDate => {
   if (!dueDate) return false
@@ -1126,6 +1176,11 @@ const handleProjectCompleteSwitchChange = async projectName => {
   }
 }
 
+const toggleAddField = () => {
+  showAddListField.value = true
+  comment.value = null
+}
+
 const closeAwardBucksDialogue = () => {
   isAwardBucksDialogue.value = false
   comment.value = null
@@ -1136,7 +1191,7 @@ const openAwardBucksDialogue =() => {
 }
 
 const resetListPlaceholderForm = () => {
-  activeListIndex.value = null
+  showAddListField.value = false
   newListName.value = ''
 }
 
@@ -1305,8 +1360,8 @@ watch(project, () => {
   border-bottom: 3px solid rgba(var(--v-theme-primary));
 }
 .custom-border {
-  border: 1px solid rgba(var(--v-theme-primary));
-  border-radius: 4px;
+  border: 1px solid rgba(var(--v-theme-background));
+  border-radius: 8px;
   background-color: rgb(var(--v-theme-grey-50));
 }
 .custom-border-list{

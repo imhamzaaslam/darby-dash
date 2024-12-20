@@ -85,7 +85,7 @@
       md="9"
     >
       <VCard
-        class="rounded-lg pa-6"
+        class="rounded-lg pa-4"
         style="height: 440px;"
       >
         <VCardTitle class="text-h5 font-weight-bold text-primary">
@@ -93,7 +93,7 @@
         </VCardTitle>
         <VCardText>
           <p
-            class="text-body-1 text-secondary"
+            class="text-body-1 text-secondary px-4"
             v-html="service?.description || ''"
           />
         </VCardText>
@@ -231,7 +231,7 @@ const userStore = useUserStore()
 const $route = useRoute()
 const router = useRouter()
   
-const serviceUuid = $route.params.id
+const serviceUuid = computed(() => $route.params.id)
 
 const isOverlayVisible = ref(false)
 const selectedService = ref(null)
@@ -240,13 +240,13 @@ const service = computed(() => userSettingStore.getProjectService)
   
 const getRelatedServices = computed(() =>
   userSettingStore.getProjectServicesByType.filter(
-    service => service.uuid !== serviceUuid,
+    service => service.uuid !== serviceUuid.value,
   ),
 )
   
 const fetchService = async () => {
   try {
-    await userSettingStore.showService(serviceUuid)
+    await userSettingStore.showService(serviceUuid.value)
   } catch (error) {
     console.error("Error fetching service:", error)
   }
@@ -285,10 +285,11 @@ const userDetails = computed(() => {
   return userStore.getUser
 })
 
-const goToServiceDetail = uuid => {
+const goToServiceDetail = async uuid => {
   isOverlayVisible.value = false
+  await userSettingStore.showService(uuid)
   router.push({ name: 'marketplace-service-detail', params: { id: uuid } })
-  userSettingStore.showService(uuid)
+  await userSettingStore.getServicesByType(service?.value?.project_type_uuid) 
 } 
   
 onBeforeMount(async () => {
