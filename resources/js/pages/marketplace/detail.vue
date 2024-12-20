@@ -85,15 +85,15 @@
       md="9"
     >
       <VCard
-        class="rounded-lg pa-4"
+        class="rounded-lg pa-3"
         style="height: 440px;"
       >
         <VCardTitle class="text-h5 font-weight-bold text-primary">
           {{ service?.title || "Service Title" }}
         </VCardTitle>
-        <VCardText>
+        <VCardText class="px-4">
           <p
-            class="text-body-1 text-secondary px-4"
+            class="text-body-1 text-secondary"
             v-html="service?.description || ''"
           />
         </VCardText>
