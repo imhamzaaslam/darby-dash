@@ -287,8 +287,8 @@ const userDetails = computed(() => {
 
 const goToServiceDetail = async uuid => {
   isOverlayVisible.value = false
-  await userSettingStore.showService(uuid)
   router.push({ name: 'marketplace-service-detail', params: { id: uuid } })
+  await userSettingStore.showService(uuid)
   await userSettingStore.getServicesByType(service?.value?.project_type_uuid) 
 } 
   
