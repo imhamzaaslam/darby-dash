@@ -211,16 +211,18 @@ const dialogModelValueUpdate = val => {
               </VCol>
 
               <!-- 👉 End date -->
-              <VCol cols="12">
+              <!--
+                <VCol cols="12">
                 <AppDateTimePicker
-                  :key="JSON.stringify(endDateTimePickerConfig)"
-                  v-model="event.end"
-                  label="Due date"
-                  placeholder="Select Date"
-                  :disabled="event.id && event.extendedProps.isTask"
-                  :config="endDateTimePickerConfig"
+                :key="JSON.stringify(endDateTimePickerConfig)"
+                v-model="event.end"
+                label="Due date"
+                placeholder="Select Date"
+                :disabled="event.id && event.extendedProps.isTask"
+                :config="endDateTimePickerConfig"
                 />
-              </VCol>
+                </VCol> 
+              -->
 
               <!-- 👉 Event URL -->
               <VCol
@@ -285,7 +287,7 @@ const dialogModelValueUpdate = val => {
                     Loading...
                   </span>
                   <span v-else>
-                    Submit
+                    Create Event
                   </span>
                 </VBtn>
                 <VBtn

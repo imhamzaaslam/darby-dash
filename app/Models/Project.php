@@ -95,7 +95,7 @@ class Project extends Base
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'project_members');
+        return $this->belongsToMany(User::class, 'project_members')->distinct();
     }
 
     public function progress()

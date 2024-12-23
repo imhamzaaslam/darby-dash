@@ -142,8 +142,8 @@
             style="height: 162px;"
             @click="toggleAddField"
           >
-            <VCardText class="text-center py-5 px-3">
-              <h5 class="text-h6 mb-4 font-weight-medium">
+            <VCardText class="text-center pt-5 px-3">
+              <h5 class="text-h6 mb-1 mt-3 font-weight-medium">
                 Add New List
               </h5>
               <VIcon
@@ -205,15 +205,34 @@
         style="height: 162px;"
         class="logistics-card-statistics cursor-pointer p-1"
       >
-        <VCardText>
+        <!--
+          <VCardText>
           <div class="text-body-1 text-center d-flex align-center mb-4">
-            <span class="text-primary font-weight-bold me-1">Start Date:</span>{{ formatDate(project?.created_at) }}
+          <span class="text-primary font-weight-bold me-1">Start Date:</span>{{ formatDate(project?.created_at) }}
           </div>
           <div class="text-body-1 text-center d-flex align-center mb-4">
-            <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
+          <span class="text-primary font-weight-bold me-1">Estimated Hours:</span>{{ project?.total_estimated_hours }}
           </div>
           <div class="text-body-1 text-center d-flex align-center mb-2">
-            <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
+          <span class="text-primary font-weight-bold me-1">Due Date:</span>{{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} <small class="ms-1 font-weight-bold">({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})</small>
+          </div>
+          </VCardText> 
+        -->
+        <VCardText>
+          <div class="text-h5 text-center mb-4">
+            <p>
+              Project Launch Date
+            </p>
+          </div>
+          <div class="text-h4 text-center mb-4">
+            <p class="font-weight-bold">
+              {{ project?.total_estimated_hours }}
+            </p>
+          </div>
+          <div class="text-h6 text-center mb-2">
+            <p class="">
+              {{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} ({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})
+            </p>
           </div>
         </VCardText>
       </VCard>
@@ -286,7 +305,10 @@
                 </VBadge>
               </template>
               <VListItemTitle class="font-weight-medium">
-                <RouterLink :to="`/projects/${projectUuid}/chat?inbox=${inbox.uuid}`">
+                <RouterLink
+                  class="text-grey-800"
+                  :to="`/projects/${projectUuid}/chat?inbox=${inbox.uuid}`"
+                >
                   {{ inbox.name_first + ' ' + inbox.name_last }}
                 </RouterLink>
               </VListItemTitle>

@@ -154,6 +154,13 @@ class CompanyController extends Controller
                     '--force' => true,
                 ]);
 
+                Settings_meta::updateOrCreate([
+                    'user_id' => null,
+                    'setting_id' => Settings::GENERAL->value,
+                    'key' => 'is_bucks_setting',
+                    'value' => 1,
+                ]);
+
                 tenancy()->end();
 
             } catch (\Exception $e) {
