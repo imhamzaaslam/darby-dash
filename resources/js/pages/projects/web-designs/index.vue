@@ -108,162 +108,163 @@
           :key="project.id"
           cols="12"
         >
-          <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
-            <VIcon
-              v-if="project.is_completed"
-              icon="tabler-circle-check-filled"
-              class="project_completed_active"
-            />
-            <VCard class="d-flex ps-4 py-1 list-side-border">
-              <VCol cols="3">
-                <div class="d-flex align-center gap-x-3">
-                  <VAvatar
-                    icon="tabler-cube"
-                    size="34"
-                    class="me-1"
+          <VIcon
+            v-if="project.is_completed"
+            icon="tabler-circle-check-filled"
+            class="project_completed_active"
+          />
+          <VCard
+            class="d-flex ps-4 py-1 list-side-border"
+            @click.stop="goToProject(project?.uuid)"
+          >
+            <VCol cols="3">
+              <div class="d-flex align-center gap-x-3">
+                <VAvatar
+                  icon="tabler-cube"
+                  size="34"
+                  class="me-1"
+                  color="primary"
+                  variant="tonal"
+                />
+                <div>
+                  <h6 class="text-h6 text-no-wrap">
+                    <span class="d-block">{{ project.title }}</span>
+                  </h6>
+                  <VChip
+                    v-if="project?.project_manager"
                     color="primary"
-                    variant="tonal"
-                  />
-                  <div>
-                    <h6 class="text-h6 text-no-wrap">
-                      <span class="d-block">{{ project.title }}</span>
-                    </h6>
-                    <VChip
-                      v-if="project?.project_manager"
-                      color="primary"
+                    size="x-small"
+                  >
+                    <span class="text-high-emphasis text-xs">
+                      {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
+                    </span>
+                  </VChip>
+                  <RouterLink
+                    v-else
+                    :to="{ name: 'team', params: { id: project?.uuid } }"
+                  >
+                    <VBtn
                       size="x-small"
-                    >
-                      <span class="text-high-emphasis text-xs">
-                        {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
-                      </span>
-                    </VChip>
-                    <RouterLink
-                      v-else
-                      :to="{ name: 'team', params: { id: project?.uuid } }"
-                    >
-                      <VBtn
-                        size="x-small"
-                        rounded="pill"
-                        color="primary"
-                      >
-                        <VIcon
-                          icon="tabler-user"
-                          class="me-1"
-                        />
-                        Assign PM
-                      </VBtn>
-                    </RouterLink>
-                    <VTooltip>
-                      <template #activator="{ props }">
-                        <VIcon
-                          v-if="project.is_completed && project.is_pm_bucks_awarded && (authStore.isAdmin || authStore.isManager)"
-                          color="primary"
-                          variant="text"
-                          class="tabler-coin-filled ms-1"
-                          rounded
-                          v-bind="props"
-                        />
-                      </template>
-                      <small>${{ project.pm_bucks }} Awarded to PM</small>
-                    </VTooltip>
-                  </div>
-                </div>
-              </VCol>
-              <VCol cols="3">
-                <div class="d-flex flex-column ms-3">
-                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
-                  <small>{{ project.project_type }}</small>
-                </div>
-              </VCol>
-              <VCol
-                cols="3"
-                class="d-flex justify-center align-items-center"
-              >
-                <div
-                  class="text-center text-h6 mb-2"
-                  style="position: absolute; bottom: 32px;"
-                >
-                  <small>{{ project.total_tasks }}</small>
-                </div>
-
-                <div class="d-flex justify-between align-center w-100">
-                  <div class="text-body-1 text-high-emphasis">
-                    <small>{{ project.progress }}%</small>
-                  </div>
-                  <div class="flex-grow-1 mx-2">
-                    <VProgressLinear
-                      :height="6"
-                      :model-value="project.progress"
+                      rounded="pill"
                       color="primary"
-                      rounded
-                    />
-                  </div>
-                  <div class="text-body-1 text-high-emphasis">
-                    <small>{{ project.completed_tasks }}</small>
-                  </div>
+                    >
+                      <VIcon
+                        icon="tabler-user"
+                        class="me-1"
+                      />
+                      Assign PM
+                    </VBtn>
+                  </RouterLink>
+                  <VTooltip>
+                    <template #activator="{ props }">
+                      <VIcon
+                        v-if="project.is_completed && project.is_pm_bucks_awarded && (authStore.isAdmin || authStore.isManager)"
+                        color="primary"
+                        variant="text"
+                        class="tabler-coin-filled ms-1"
+                        rounded
+                        v-bind="props"
+                      />
+                    </template>
+                    <small>${{ project.pm_bucks }} Awarded to PM</small>
+                  </VTooltip>
                 </div>
-              </VCol>
-
-              <VCol
-                v-if="project.is_completed"
-                cols="2"
+              </div>
+            </VCol>
+            <VCol cols="3">
+              <div class="d-flex flex-column ms-3">
+                <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
+                <small>{{ project.project_type }}</small>
+              </div>
+            </VCol>
+            <VCol
+              cols="3"
+              class="d-flex justify-center align-items-center"
+            >
+              <div
+                class="text-center text-h6 mb-2"
+                style="position: absolute; bottom: 32px;"
               >
-                <div class="d-flex flex-column ms-3">
-                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Completed At</span>
-                  <small class="text-center">{{ formatDate(project.completed_at) }}</small>
+                <small>{{ project.total_tasks }}</small>
+              </div>
+
+              <div class="d-flex justify-between align-center w-100">
+                <div class="text-body-1 text-high-emphasis">
+                  <small>{{ project.progress }}%</small>
                 </div>
-              </VCol>
-
-              <VCol
-                v-else
-                cols="2"
-              >
-                <div class="d-flex flex-column ms-3">
-                  <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Due Date</span>
-                  <small class="text-center">{{ project.launching_date == 'Today' ? '---' : formatDate(project.launching_date) }}</small>
+                <div class="flex-grow-1 mx-2">
+                  <VProgressLinear
+                    :height="6"
+                    :model-value="project.progress"
+                    color="primary"
+                    rounded
+                  />
                 </div>
-              </VCol>
+                <div class="text-body-1 text-high-emphasis">
+                  <small>{{ project.completed_tasks }}</small>
+                </div>
+              </div>
+            </VCol>
 
-              <VCol
-                cols="1"
-                class="d-flex justify-end"
-              >
-                <IconBtn @click.prevent>
-                  <VIcon icon="tabler-dots" />
-                  <VMenu activator="parent">
-                    <VList>
-                      <VListItem
-                        value="phases"
-                        :to="{ name: 'add-project-tasks', params: { id: project.uuid } }"
-                      >
-                        Tasks
-                      </VListItem>
-                      <VListItem
-                        value="view"
-                        :to="{ name: 'web-design', params: { id: project.uuid } }"
-                      >
-                        View
-                      </VListItem>
-                      <VListItem
-                        v-if="authStore.hasPermission('project-edit')"
-                        value="edit"
-                        @click="editProject(project)"
-                      >
-                        Edit
-                      </VListItem>
-                      <VListItem
-                        v-if="authStore.hasPermission('project-delete')"
-                        value="delete"
-                        @click="deleteProject(project)"
-                      >
-                        Delete
-                      </VListItem>
-                    </VList>
-                  </VMenu>
-                </IconBtn>
-              </VCol>
-            </VCard>
-          </RouterLink>
+            <VCol
+              v-if="project.is_completed"
+              cols="2"
+            >
+              <div class="d-flex flex-column ms-3">
+                <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Completed At</span>
+                <small class="text-center">{{ formatDate(project.completed_at) }}</small>
+              </div>
+            </VCol>
+
+            <VCol
+              v-else
+              cols="2"
+            >
+              <div class="d-flex flex-column ms-3">
+                <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Due Date</span>
+                <small class="text-center">{{ project.launching_date == 'Today' ? '---' : formatDate(project.launching_date) }}</small>
+              </div>
+            </VCol>
+
+            <VCol
+              cols="1"
+              class="d-flex justify-end"
+            >
+              <IconBtn @click.prevent>
+                <VIcon icon="tabler-dots" />
+                <VMenu activator="parent">
+                  <VList>
+                    <VListItem
+                      value="phases"
+                      :to="{ name: 'add-project-tasks', params: { id: project.uuid } }"
+                    >
+                      Tasks
+                    </VListItem>
+                    <VListItem
+                      value="view"
+                      :to="{ name: 'web-design', params: { id: project.uuid } }"
+                    >
+                      View
+                    </VListItem>
+                    <VListItem
+                      v-if="authStore.hasPermission('project-edit')"
+                      value="edit"
+                      @click="editProject(project)"
+                    >
+                      Edit
+                    </VListItem>
+                    <VListItem
+                      v-if="authStore.hasPermission('project-delete')"
+                      value="delete"
+                      @click="deleteProject(project)"
+                    >
+                      Delete
+                    </VListItem>
+                  </VList>
+                </VMenu>
+              </IconBtn>
+            </VCol>
+          </VCard>
         </VCol>
       </VRow>
 
@@ -275,146 +276,145 @@
           cols="12"
           md="4"
         >
-          <RouterLink :to="{ name: 'web-design', params: { id: project.uuid } }">
-            <VCard
-              class="pt-2"
-              style="position: relative; overflow: visible;"
-            >
-              <VIcon
-                v-if="project.is_completed"
-                icon="tabler-circle-check-filled"
-                class="project_completed_active_grid"
-              />
-              <VCardTitle>
-                <VRow>
-                  <VCol cols="10">
-                    <div class="d-flex align-center gap-x-3">
-                      <VAvatar
-                        icon="tabler-cube"
-                        size="34"
-                        class="me-1"
+          <VCard
+            class="pt-2"
+            style="position: relative; overflow: visible;"
+            @click.stop="goToProject(project?.uuid)"
+          >
+            <VIcon
+              v-if="project.is_completed"
+              icon="tabler-circle-check-filled"
+              class="project_completed_active_grid"
+            />
+            <VCardTitle>
+              <VRow>
+                <VCol cols="10">
+                  <div class="d-flex align-center gap-x-3">
+                    <VAvatar
+                      icon="tabler-cube"
+                      size="34"
+                      class="me-1"
+                      color="primary"
+                      variant="tonal"
+                    />
+                    <div>
+                      <h6 class="text-h6 text-no-wrap">
+                        {{ project.title }}
+                      </h6>
+                      <VChip
+                        v-if="project?.project_manager"
                         color="primary"
-                        variant="tonal"
-                      />
-                      <div>
-                        <h6 class="text-h6 text-no-wrap">
-                          {{ project.title }}
-                        </h6>
-                        <VChip
-                          v-if="project?.project_manager"
-                          color="primary"
-                          size="x-small"
-                        >
-                          <span class="text-high-emphasis text-xs">
-                            {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
-                          </span>
-                        </VChip>
-                        <RouterLink
-                          v-else
-                          :to="{ name: 'team', params: { id: project?.uuid } }"
-                        >
-                          <VBtn
-                            size="x-small"
-                            rounded="pill"
-                            color="primary"
-                          >
-                            <VIcon
-                              icon="tabler-user"
-                              class="me-1"
-                            />
-                            Assign PM
-                          </VBtn>
-                        </RouterLink>
-                        <VTooltip>
-                          <template #activator="{ props }">
-                            <VIcon
-                              v-if="project.is_completed && project.is_pm_bucks_awarded && (authStore.isAdmin || authStore.isManager)"
-                              color="primary"
-                              variant="text"
-                              class="tabler-coin-filled ms-1"
-                              rounded
-                              v-bind="props"
-                            />
-                          </template>
-                          <small>${{ project.pm_bucks }} Awarded to PM</small>
-                        </VTooltip>
-                      </div>
-                    </div>
-                  </VCol>
-                  <VCol cols="2">
-                    <IconBtn @click.prevent>
-                      <VIcon icon="tabler-dots-vertical" />
-                      <VMenu activator="parent">
-                        <VList>
-                          <VListItem
-                            value="phases"
-                            :to="{ name: 'add-project-tasks', params: { id: project.uuid } }"
-                          >
-                            Tasks
-                          </VListItem>
-                          <VListItem
-                            value="view"
-                            :to="{ name: 'web-design', params: { id: project.uuid } }"
-                          >
-                            View
-                          </VListItem>
-                          <VListItem
-                            v-if="authStore.hasPermission('project-edit')"
-                            value="edit"
-                            @click="editProject(project)"
-                          >
-                            Edit
-                          </VListItem>
-                          <VListItem
-                            v-if="authStore.hasPermission('project-delete')"
-                            value="delete"
-                            @click="deleteProject(project)"
-                          >
-                            Delete
-                          </VListItem>
-                        </VList>
-                      </VMenu>
-                    </IconBtn>
-                  </VCol>
-                </VRow>
-              </VCardTitle>
-              <VCardText class="px-3 pt-2">
-                <VRow>
-                  <VCol cols="8">
-                    <div class="d-flex flex-column ms-3">
-                      <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
-                      <small>{{ project.project_type }}</small>
-                    </div>
-                    <div
-                      v-if="project.is_completed"
-                      class="d-flex flex-column ms-3"
-                    >
-                      <small><span class="font-weight-bold text-high-emphasis text-xs text-center text-truncate">Completed At: {{ formatDate(project.completed_at) }}</span></small>
-                    </div>
-                    <div
-                      v-else
-                      class="d-flex flex-column ms-3"
-                    >
-                      <small><span class="font-weight-bold text-high-emphasis text-xs text-center text-truncate">Due Date: {{ project.launching_date == 'Today' ? '' : formatDate(project.launching_date) }}</span></small>
-                    </div>
-                  </VCol>
-                  <VCol cols="4">
-                    <div class="d-flex align-end justify-end">
-                      <VProgressCircular
-                        :rotate="360"
-                        :size="70"
-                        :width="6"
-                        :model-value="project.progress"
-                        color="primary"
+                        size="x-small"
                       >
-                        <span>{{ project.progress }}%</span>
-                      </VProgressCircular>
+                        <span class="text-high-emphasis text-xs">
+                          {{ project?.project_manager?.name_first + ' ' + project?.project_manager?.name_last }} (PM)
+                        </span>
+                      </VChip>
+                      <RouterLink
+                        v-else
+                        :to="{ name: 'team', params: { id: project?.uuid } }"
+                      >
+                        <VBtn
+                          size="x-small"
+                          rounded="pill"
+                          color="primary"
+                        >
+                          <VIcon
+                            icon="tabler-user"
+                            class="me-1"
+                          />
+                          Assign PM
+                        </VBtn>
+                      </RouterLink>
+                      <VTooltip>
+                        <template #activator="{ props }">
+                          <VIcon
+                            v-if="project.is_completed && project.is_pm_bucks_awarded && (authStore.isAdmin || authStore.isManager)"
+                            color="primary"
+                            variant="text"
+                            class="tabler-coin-filled ms-1"
+                            rounded
+                            v-bind="props"
+                          />
+                        </template>
+                        <small>${{ project.pm_bucks }} Awarded to PM</small>
+                      </VTooltip>
                     </div>
-                  </VCol>
-                </VRow>
-              </VCardText>
-            </VCard>
-          </RouterLink>
+                  </div>
+                </VCol>
+                <VCol cols="2">
+                  <IconBtn @click.prevent>
+                    <VIcon icon="tabler-dots-vertical" />
+                    <VMenu activator="parent">
+                      <VList>
+                        <VListItem
+                          value="phases"
+                          :to="{ name: 'add-project-tasks', params: { id: project.uuid } }"
+                        >
+                          Tasks
+                        </VListItem>
+                        <VListItem
+                          value="view"
+                          :to="{ name: 'web-design', params: { id: project.uuid } }"
+                        >
+                          View
+                        </VListItem>
+                        <VListItem
+                          v-if="authStore.hasPermission('project-edit')"
+                          value="edit"
+                          @click="editProject(project)"
+                        >
+                          Edit
+                        </VListItem>
+                        <VListItem
+                          v-if="authStore.hasPermission('project-delete')"
+                          value="delete"
+                          @click="deleteProject(project)"
+                        >
+                          Delete
+                        </VListItem>
+                      </VList>
+                    </VMenu>
+                  </IconBtn>
+                </VCol>
+              </VRow>
+            </VCardTitle>
+            <VCardText class="px-3 pt-2">
+              <VRow>
+                <VCol cols="8">
+                  <div class="d-flex flex-column ms-3">
+                    <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate">Project Type</span>
+                    <small>{{ project.project_type }}</small>
+                  </div>
+                  <div
+                    v-if="project.is_completed"
+                    class="d-flex flex-column ms-3"
+                  >
+                    <small><span class="font-weight-bold text-high-emphasis text-xs text-center text-truncate">Completed At: {{ formatDate(project.completed_at) }}</span></small>
+                  </div>
+                  <div
+                    v-else
+                    class="d-flex flex-column ms-3"
+                  >
+                    <small><span class="font-weight-bold text-high-emphasis text-xs text-center text-truncate">Due Date: {{ project.launching_date == 'Today' ? '' : formatDate(project.launching_date) }}</span></small>
+                  </div>
+                </VCol>
+                <VCol cols="4">
+                  <div class="d-flex align-end justify-end">
+                    <VProgressCircular
+                      :rotate="360"
+                      :size="70"
+                      :width="6"
+                      :model-value="project.progress"
+                      color="primary"
+                    >
+                      <span>{{ project.progress }}%</span>
+                    </VProgressCircular>
+                  </div>
+                </VCol>
+              </VRow>
+            </VCardText>
+          </VCard>
         </VCol>
       </VRow>
     </div>
@@ -475,7 +475,7 @@ import { useProjectTypeStore } from "@/store/project_types"
 import { useUserStore } from "@/store/users"
 import { useAuthStore } from '@/store/auth'
 import { useTemplateStore } from '@/store/templates'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import moment from 'moment'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Projects` })
@@ -494,6 +494,7 @@ const userStore = useUserStore()
 const authStore = useAuthStore()
 const templateStore = useTemplateStore()
 const route = useRoute()
+const router = useRouter()
 
 const totalRecords = ref(0)
 const viewType = ref('list')
@@ -720,6 +721,10 @@ const getImageUrl = path => {
 
   return `${baseUrl}storage/${path}`
 }
+
+const goToProject = async uuid => {
+  router.push({ name: 'web-design', params: { id: uuid } })
+} 
 
 watch(
   () => route.query.type,

@@ -226,12 +226,12 @@
           </div>
           <div class="text-h4 text-center mb-4">
             <p class="font-weight-bold">
-              {{ project?.total_estimated_hours }}
+              {{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }}
             </p>
           </div>
           <div class="text-h6 text-center mb-2">
             <p class="">
-              {{ projectProgress.launchingDate == 'Today' ? '' : formatDate(projectProgress.launchingDate) }} ({{ projectProgress.launchingDays }} {{ projectProgress.launchingDays > 1 ? 'days' : 'day' }})
+              {{ projectProgress.launchingDate == 'Today' ? 'The launch is happening today!' : formatDateWithDay(projectProgress.launchingDate) }}
             </p>
           </div>
         </VCardText>
@@ -1282,6 +1282,7 @@ const getColor = progress => {
 }
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
+const formatDateWithDay = date => moment(date).format('dddd MMMM D, YYYY')
 
 const getDaysLeft = date => {
   const today = moment()
@@ -1382,9 +1383,9 @@ watch(project, () => {
   border-bottom: 3px solid rgba(var(--v-theme-primary));
 }
 .custom-border {
-  border: 1px solid rgba(var(--v-theme-background));
+  border: 1px solid rgba(var(--v-theme-primary));
   border-radius: 8px;
-  background-color: rgb(var(--v-theme-grey-50));
+  background-color: rgb(var(--v-theme-grey-light));
 }
 .custom-border-list{
     box-shadow: 0 3px 12px rgba(var(--v-shadow-key-umbra-color), var(--v-shadow-md-opacity));
