@@ -133,7 +133,7 @@
         <VCard
           class="elevation-3 hover-card rounded-sm overflow-hidden"
           style="height: 280px;"
-          @click.stop="showServiceDetails(service)"
+          @click.stop="goToServiceDetail(related.uuid)"
         >
           <!-- Service Image -->
           <VImg
@@ -154,7 +154,7 @@
               variant="elevated"
               rounded="pill"
               size="small"
-              @click.stop="showServiceDetails(related)"
+              @click="goToServiceDetail(related.uuid)"
             >
               Learn More
             </VBtn>

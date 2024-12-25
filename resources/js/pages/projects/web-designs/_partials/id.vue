@@ -76,8 +76,8 @@
         <VCol
           v-for="(data, index) in projectProgress.lists"
           :key="index"
-          :cols="projectProgress?.lists?.length >= 4 ? 3 : 12 / (projectProgress?.lists?.length + 1)"
-          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length >= 4 ? '25%' : `${100 / (projectProgress?.lists?.length + 1)}%`};`"
+          :cols="projectProgress?.lists?.length >= 3 ? 4 : 12 / (projectProgress?.lists?.length + 1)"
+          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length >= 3 ? '33.333%' : `${100 / (projectProgress?.lists?.length + 1)}%`};`"
         >
           <VCard
             class="logistics-card-statistics cursor-pointer p-0"
@@ -133,8 +133,9 @@
 
         <!-- Add Plus Icon Card -->
         <VCol
-          :cols="projectProgress?.lists?.length >= 4 ? 3 : 12 / (projectProgress?.lists?.length + 1)"
-          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length >= 4 ? '25%' : `${100 / (projectProgress?.lists?.length + 1)}%`};`"
+          v-if="projectProgress?.lists?.length < 3"
+          :cols="projectProgress?.lists?.length > 3 ? 4 : 12 / (projectProgress?.lists?.length + 1)"
+          :style="`flex: 0 0 auto; max-width: ${projectProgress?.lists?.length >= 4 ? '33.333%' : `${100 / (projectProgress?.lists?.length + 1)}%`};`"
         >
           <VCard
             class="logistics-card-statistics cursor-pointer p-0"
