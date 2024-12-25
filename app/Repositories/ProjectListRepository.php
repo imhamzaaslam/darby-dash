@@ -27,7 +27,13 @@ class ProjectListRepository extends AbstractEloquentRepository implements Projec
             if (!empty($filters)) {
                 $query->filter($filters);
             }
-        }])->get();
+        }])
+        ->orderByRaw('
+            CASE 
+                WHEN display_order = 0 THEN created_at 
+                ELSE display_order 
+            END ASC
+        ')->get();
     }
 
     public function create(array $attributes): ProjectList
