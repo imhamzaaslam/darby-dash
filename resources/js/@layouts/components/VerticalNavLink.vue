@@ -28,7 +28,24 @@ const hideTitleAndBadge = configStore.isVerticalNavMini()
     <Component
       :is="item.to ? 'RouterLink' : 'a'"
       v-bind="getComputedNavLinkToProp(item)"
-      :class="{ 'router-link-active router-link-exact-active': isNavLinkActive(item, $router) }"
+      :class="{
+        'router-link-active router-link-exact-active': isNavLinkActive(item, $router) || (
+          item.to.name === 'web-designs-list' && (
+            [
+              'web-design',
+              'team',
+              'milestones',
+              'calendar',
+              'files',
+              'chat',
+              'add-project-tasks',
+              'marketplace-services',
+              'marketplace-service-detail',
+              'bucks-setting'
+            ].includes($router.currentRoute.value.name)
+          )
+        )
+      }"
     >
       <Component
         :is="layoutConfig.app.iconRenderer || 'div'"

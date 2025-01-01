@@ -297,8 +297,8 @@ class NotificationService
                 ];
             case 'new-event':
                 return [
-                    'title' => 'New Event Created in Project: ' . $data['project_title'],
-                    'message' => $sender->name_first . ' created a new event: ' . $data['name'],
+                    'title' => 'New Meeting on Calendar Created in Project: ' . $data['project_title'],
+                    'message' => $sender->name_first . ' created a new meeting on calendar: ' . $data['name'],
                     'type' => 'new-event',
                     'url' => "projects/{$data['project_uuid']}/calendar",
                 ];
