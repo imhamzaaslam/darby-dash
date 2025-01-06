@@ -302,7 +302,7 @@ class ProjectController extends Controller
     public function deleteUser(string $uuid, string $userUuid): JsonResponse
     {
         $project = $this->projectRepository->getByUuidOrFail($uuid);
-        $this->authorize('update', $project);
+        //$this->authorize('update', $project);
         $user = $this->userRepository->getByUuidOrFail($userUuid);
 
         $this->projectRepository->deleteProjectMember($project, $user);

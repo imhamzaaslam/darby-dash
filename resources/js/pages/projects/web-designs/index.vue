@@ -254,6 +254,13 @@
                       Edit
                     </VListItem>
                     <VListItem
+                      v-if="!authStore.isAdmin"
+                      value="leave_project"
+                      @click="leaveProject(project)"
+                    >
+                      Leave Project
+                    </VListItem>
+                    <VListItem
                       v-if="authStore.hasPermission('project-delete')"
                       value="delete"
                       @click="deleteProject(project)"
@@ -365,6 +372,13 @@
                           @click="editProject(project)"
                         >
                           Edit
+                        </VListItem>
+                        <VListItem
+                          v-if="!authStore.isAdmin"
+                          value="leave_project"
+                          @click="leaveProject(project)"
+                        >
+                          Leave Project
                         </VListItem>
                         <VListItem
                           v-if="authStore.hasPermission('project-delete')"
@@ -604,6 +618,31 @@ const deleteProject = async project => {
     }
   } catch (error) {
     toast.error('Failed to delete project:', error.message || error)
+  }
+}
+
+const leaveProject = async project => {
+  try {
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      html: `<small>Do you want to leave project named <b>${project.title}</b>?</small>`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "rgba(var(--v-theme-primary))",
+      cancelButtonColor: "#808390",
+      confirmButtonText: "Yes, leave it!",
+      didOpen: () => {
+        document.querySelector('.swal2-confirm').blur()
+      },
+    })
+
+    if (confirmDelete.isConfirmed) {
+      await projectStore.deleteMember(project.uuid, userDetails?.value?.uuid)
+      toast.success('Leave project successfully', { timeout: 1000 })
+      await fetchProjects()
+    }
+  } catch (error) {
+    toast.error('Error leave project:', error)
   }
 }
 

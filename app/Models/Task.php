@@ -54,6 +54,11 @@ class Task extends Base
         return $this->belongsTo(Project::class);
     }
 
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function assignees()
     {
         return $this->belongsToMany(User::class, 'task_assignees')->withTimestamps();

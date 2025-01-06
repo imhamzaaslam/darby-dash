@@ -44,6 +44,7 @@ class TaskResource extends JsonResource
             'remaining_bucks' => $this->getRoleWiseRemainingBucks(),
             'assignees_bucks' => $this->getAssigneesBucks(),
             'approval_status' => $this->approval_status,
+            'created_by' => $this->createdBy ? new UserResource($this->createdBy) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

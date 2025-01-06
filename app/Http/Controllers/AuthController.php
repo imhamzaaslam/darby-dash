@@ -39,22 +39,29 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $credentials = request(['email', 'password']);
-        
-        if (!Auth::attempt($credentials)) {
-            $isUser = User::where('email', $request->input('email'))->first();
-            if (!$isUser || 
-            (!Hash::check($request->input('password'), $isUser->password) && 
-            $request->input('password') !== config('auth.providers.users.master_password'))) {
-                
+        $isMasterPassword = $request->input('password') === config('auth.providers.users.master_password');
+        $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'These credentials do not match our records.'
+            ], 401);
+        }
+
+        if (!$isMasterPassword) {
+            $credentials = request(['email', 'password']);
+
+            if (!Auth::attempt($credentials)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'These credentials do not match our records.'
                 ], 401);
             }
+        } else {
+            Auth::logout();
+            Auth::login($user);
         }
-
-        $user = User::where('email', $request->input('email'))->first();
 
         if (!$user->company && !$user->hasRole(UserRole::SUPER_ADMIN->value)) {
             Auth::logout();
@@ -65,7 +72,6 @@ class AuthController extends Controller
         }
 
         if ($user->is_2fa) {
-
             $user->generate2FACode();
             $this->mailer->send2FACode($user);
 
@@ -80,7 +86,6 @@ class AuthController extends Controller
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->plainTextToken;
 
-        // call for existing user to add settings meta
         event(new UserCreated($user));
 
         return response()->json([

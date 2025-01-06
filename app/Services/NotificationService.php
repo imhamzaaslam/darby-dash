@@ -155,18 +155,18 @@ class NotificationService
     protected function getMemberNotificationTemplate($messageType, $sender, array $project)
     {
         switch ($messageType) {
-            case 'member-created':
+            case 'memeber-created':
                 return [
                     'title' => 'New Team Member',
                     'message' => $sender->name_first . ' has added you as a new team member to the project ' . $project['title'].".",
-                    'type' => 'member-created',
+                    'type' => 'memeber-created',
                     'url' => "projects/{$project['uuid']}/team",
                 ];
-            case 'member-deleted':
+            case 'memeber-deleted':
                 return [
                     'title' => 'You Were Removed as a Team Member',
-                    'message' => $sender->name . ' has removed you from the project ' . $project['title'] . '.',
-                    'type' => 'member-deleted',
+                    'message' => $sender->name_first . ' has removed you from the project ' . $project['title'] . '.',
+                    'type' => 'memeber-deleted',
                     'url' => "projects/web-designs",
                 ];
             default:
