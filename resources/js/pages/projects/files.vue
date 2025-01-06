@@ -22,7 +22,15 @@
       cols="12"
       class="d-flex justify-space-between align-center"
     >
-      <h3>Media Files</h3>
+      <h4>
+        <span
+          v-if="openFolder"
+          class="breadcrumb-link"
+          @click="openFolder = null"
+        >Media Files</span>
+        <span v-else>Media Files</span>
+        <span v-if="openFolder"> / <span class="text-primary">{{ openFolder.name }}</span></span>
+      </h4>
       <VBtn
         icon
         color="td-hover"
@@ -61,7 +69,7 @@
   </VRow>
 
   <div v-if="openFolder">
-    <VRow class="mt-4">
+    <VRow class="">
       <VCol
         cols="12"
         class="d-flex align-center justify-space-between"
@@ -73,11 +81,13 @@
             color="primary"
             @click="openFolder = null"
           />
-          <span class="ml-2">Back</span>
+          <span class="ms-2">Back</span>
         </div>
-        <h3 class="text-primary">
+        <!--
+          <h3 class="text-primary">
           {{ openFolder.name }}
-        </h3>
+          </h3> 
+        -->
       </VCol>
     </VRow>
     <VRow
@@ -166,7 +176,7 @@
       >
         <div class="folder-container">
           <IconBtn
-            class="action-icon mb-5"
+            class="action-icon mt-1"
             size="x-small"
             @click.prevent
           >
@@ -191,7 +201,7 @@
           >
             <VIcon
               class="folder-icon"
-              size="large"
+              size="24"
               color="primary"
               icon="tabler-folder-filled"
             />
@@ -814,6 +824,10 @@ watch(project, () => {
   z-index: 10;
   background: none;
   border: none;
+  cursor: pointer;
+}
+.breadcrumb-link:hover{
+  color: rgba(var(--v-theme-primary));
   cursor: pointer;
 }
 </style>
