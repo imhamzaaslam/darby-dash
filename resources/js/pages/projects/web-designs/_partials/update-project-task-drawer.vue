@@ -14,94 +14,89 @@
 
     <VDivider />
 
-    <!-- Add Additional Details Section -->
-    <VCard flat>
-      <VCardText>
-        <VRow>
-          <VCol
-            cols="12"
-            md="4"
-          >
-            <div class="d-flex align-center">
-              <p class="mt-4 text-muted">
-                <VIcon
-                  class="me-1"
-                  icon="tabler-users"
-                  color="primary"
-                />
-                <span class="me-1">Assigned to:</span> 
-              </p>
-              <div
-                v-if="props.editingTask?.assignees?.length > 0"
-                class="d-flex align-center v-avatar-group demo-avatar-group"
-              >
-                <div
-                  v-for="(user, index) in props.editingTask?.assignees?.slice(0, 2)"
-                  :key="index"
-                  class="me-1"
-                >
-                  <VAvatar :size="30">
-                    <VAvatar
-                      size="25"
-                      class="text-white bg-primary"
-                      variant="tonal"
-                    >
-                      <small>{{ avatarText(user.name_first + ' ' + user.name_last) }}</small>
-                    </VAvatar>
-                    <VTooltip
-                      activator="parent"
-                      location="top"
-                    >
-                      <span>{{ user.name_first + ' ' + user.name_last }}</span>
-                    </VTooltip>
-                  </VAvatar>
-                </div>
-                <VAvatar
-                  v-if="props.editingTask?.assignees?.length > 2"
-                  :size="30"
-                  class="me-1"
-                >
-                  <VAvatar
-                    size="25"
-                    class="text-white bg-primary"
-                    variant="tonal"
-                  >
-                    <small>+{{ props.editingTask?.assignees?.length - 2 }}</small>
-                  </VAvatar>
-                </VAvatar>
-              </div>
-              <span
-                v-else
-                class="text-high-emphasis"
-              >None</span>
-            </div>
-          </VCol>
-          <VCol
-            cols="12"
-            md="8"
-          >
-            <div class="d-flex align-center">
-              <p class="mt-4 text-muted">
-                <VIcon
-                  class="me-1"
-                  icon="tabler-user-check"
-                  color="primary"
-                />
-                <span class="me-1">Created By:</span> <span class="text-high-emphasis">{{ props.editingTask?.created_by?.name_first }} {{ props.editingTask?.created_by?.name_last }} on {{ formatTaskDate(props.editingTask?.created_at) }}</span>
-              </p>
-            </div>
-          </VCol>
-        </VRow>
-      </VCardText>
-    </VCard>
-
-    <VDivider />
-
     <VCard flat>
       <PerfectScrollbar
         :options="{ wheelPropagation: false }"
         class="h-100"
       >
+        <VCardText>
+          <VRow>
+            <VCol
+              cols="12"
+              md="4"
+            >
+              <div class="d-flex align-center">
+                <p class="mt-4 text-muted">
+                  <VIcon
+                    class="me-1"
+                    icon="tabler-users"
+                    color="primary"
+                  />
+                  <span class="me-1">Assigned to:</span> 
+                </p>
+                <div
+                  v-if="props.editingTask?.assignees?.length > 0"
+                  class="d-flex align-center v-avatar-group demo-avatar-group"
+                >
+                  <div
+                    v-for="(user, index) in props.editingTask?.assignees?.slice(0, 2)"
+                    :key="index"
+                    class="me-1"
+                  >
+                    <VAvatar :size="30">
+                      <VAvatar
+                        size="30"
+                        class="text-white bg-primary"
+                        variant="tonal"
+                      >
+                        <small>{{ avatarText(user.name_first + ' ' + user.name_last) }}</small>
+                      </VAvatar>
+                      <VTooltip
+                        activator="parent"
+                        location="top"
+                      >
+                        <span>{{ user.name_first + ' ' + user.name_last }}</span>
+                      </VTooltip>
+                    </VAvatar>
+                  </div>
+                  <VAvatar
+                    v-if="props.editingTask?.assignees?.length > 2"
+                    :size="30"
+                    class="me-1"
+                  >
+                    <VAvatar
+                      size="25"
+                      class="text-white bg-primary"
+                      variant="tonal"
+                    >
+                      <small>+{{ props.editingTask?.assignees?.length - 2 }}</small>
+                    </VAvatar>
+                  </VAvatar>
+                </div>
+                <span
+                  v-else
+                  class="text-high-emphasis"
+                >None</span>
+              </div>
+            </VCol>
+            <VCol
+              cols="12"
+              md="8"
+            >
+              <div class="d-flex align-center">
+                <p class="mt-4 text-muted">
+                  <VIcon
+                    class="me-1"
+                    icon="tabler-user-check"
+                    color="primary"
+                  />
+                  <span class="me-1">Created By:</span> <span class="text-high-emphasis">{{ props.editingTask?.created_by?.name_first }} {{ props.editingTask?.created_by?.name_last }} on {{ formatTaskDate(props.editingTask?.created_at) }}</span>
+                </p>
+              </div>
+            </VCol>
+          </VRow>
+        </VCardText>
+        <VDivider />
         <VCardText style="block-size: calc(100vh - 5rem);">
           <VForm
             ref="editTaskForm"

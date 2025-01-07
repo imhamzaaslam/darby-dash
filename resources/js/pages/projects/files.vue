@@ -103,6 +103,8 @@
         <div
           class="image-container"
           @click="file.mime_type.includes('image/') ? openFileViewer(file) : copyPath(file, true)"
+          @mouseover="hoverIndex = index" 
+          @mouseleave="hoverIndex = null"
         >
           <img
             v-if="file.mime_type.includes('image/')"
@@ -120,7 +122,10 @@
             >
             <span class="file-type">.{{ file.name.split('.').pop().toLowerCase() }}</span>
           </div>
-          <div class="d-flex align-center justify-space-between mt-2">
+          <div
+            v-if="hoverIndex === index"
+            class="d-flex align-center justify-space-between mt-2"
+          >
             <span class="text-xs">{{ file.created_at }}</span>
             <div class="d-flex align-center">
               <VIcon
@@ -228,6 +233,8 @@
         <div
           class="image-container"
           @click="file.mime_type.includes('image/') ? openFileViewer(file) : copyPath(file, true)"
+          @mouseover="hoverIndex = index" 
+          @mouseleave="hoverIndex = null"
         >
           <img
             v-if="file.mime_type.includes('image/')"
@@ -245,7 +252,10 @@
             >
             <span class="file-type">.{{ file.name.split('.').pop().toLowerCase() }}</span>
           </div>
-          <div class="d-flex align-center justify-space-between mt-2">
+          <div
+            v-if="hoverIndex === index"
+            class="d-flex align-center justify-space-between mt-2"
+          >
             <span class="text-xs">{{ file.created_at }}</span>
             <div class="d-flex align-center">
               <VIcon
@@ -424,6 +434,7 @@ const selectedFile = ref(null)
 const selectedFolder = ref(null)
 const files = ref([])
 const openFolder = ref(null)
+const hoverIndex = ref(null)
 
 const getFolders = async () => {
   isLoading.value = true

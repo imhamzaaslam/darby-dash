@@ -53,6 +53,7 @@
             @click="isFilterDrawerOpen = !isFilterDrawerOpen"
           />
           <VBtn
+            v-if="authStore.hasPermission('project-create')"
             icon
             color="td-hover"
             class="ma-2"
@@ -64,7 +65,6 @@
             <VMenu activator="parent">
               <VList>
                 <VListItem
-                  v-if="authStore.hasPermission('project-create')"
                   value="add-project"
                   @click="isAddProjectDrawerOpen = true"
                 >
@@ -694,14 +694,14 @@ const getClients = computed(() => {
   let members = userStore.getMembersList
   let clients = members?.filter(member => member.role === USER_ROLES.CLIENT)
 
-  return clients.map(client => ({ id: client.id, name: client.name_first + " " + client.name_last }))
+  return clients.map(client => ({ id: client.id, name: client.name_first + " " + client.name_last, avatar: client.info?.avatar }))
 })
 
 const getProjectManagers = computed(() => {
   let members = userStore.getMembersList
   let projectManagers = members?.filter(member => member.role === USER_ROLES.PROJECT_MANAGER)
 
-  return projectManagers.map(manager => ({ id: manager.id, name: manager.name_first + " " + manager.name_last }))
+  return projectManagers.map(manager => ({ id: manager.id, name: manager.name_first + " " + manager.name_last, avatar: manager.info?.avatar }))
 })
 
 const projectTypesWithFirstOption = (firstOption = null) => {

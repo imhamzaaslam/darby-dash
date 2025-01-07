@@ -38,7 +38,38 @@
                   :items="props.getClients"
                   item-title="name"
                   item-value="id"
-                />
+                >
+                  <template #chip="{ props, item }">
+                    <VListItem
+                      class="px-0"
+                      v-bind="props"
+                    >
+                      <VAvatar
+                        color="primary"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="28"
+                      >
+                        <span v-if="!item?.raw?.avatar">{{ avatarText(item?.raw?.name) }}</span>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.name }}</span>
+                    </VListItem>
+                  </template>
+
+                  <template #item="{ props, item }">
+                    <VListItem v-bind="{ ...props, title: '' }">
+                      <VAvatar
+                        color="primary"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="38"
+                      >
+                        <span v-if="!item?.raw?.avatar">{{ avatarText(item?.raw?.name) }}</span>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.name }}</span>
+                    </VListItem>
+                  </template>
+                </AppAutocomplete>
               </VCol>
               <VCol
                 md="6"
@@ -77,7 +108,38 @@
                   :items="props.getProjectManagersList"
                   item-title="name"
                   item-value="id"
-                />
+                >
+                  <template #chip="{ props, item }">
+                    <VListItem
+                      class="px-0"
+                      v-bind="props"
+                    >
+                      <VAvatar
+                        color="primary"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="28"
+                      >
+                        <span v-if="!item?.raw?.avatar">{{ avatarText(item?.raw?.name) }}</span>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.name }}</span>
+                    </VListItem>
+                  </template>
+
+                  <template #item="{ props, item }">
+                    <VListItem v-bind="{ ...props, title: '' }">
+                      <VAvatar
+                        color="primary"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="38"
+                      >
+                        <span v-if="!item?.raw?.avatar">{{ avatarText(item?.raw?.name) }}</span>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.name }}</span>
+                    </VListItem>
+                  </template>
+                </AppAutocomplete>
               </VCol>
               <VCol cols="12">
                 <label>Select Staff Members</label>
