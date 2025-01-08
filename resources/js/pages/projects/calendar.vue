@@ -20,11 +20,41 @@
   <div>
     <VRow class="mt-5 mb-1">
       <VCol
-        cols="12"
+        cols="6"
         class="pt-0 ps-4"
       >
         <h3>
           Manage Task & Events
+        </h3>
+      </VCol>
+      <VCol
+        cols="6"
+        class="pt-0 d-flex pe-4 justify-end"
+      >
+        <h3 class="text-h6 text-high-emphasis">
+          <VChip
+            color="error"
+            variant="elevated"
+            size="x-small"
+          >
+            <VIcon
+              start
+              icon="tabler-point-filled"
+            />
+            Task
+          </VChip>
+          <VChip
+            color="primary"
+            class="ms-2"
+            variant="elevated"
+            size="x-small"
+          >
+            <VIcon
+              start
+              icon="tabler-point-filled"
+            />
+            Event
+          </VChip>
         </h3>
       </VCol>
     </VRow>

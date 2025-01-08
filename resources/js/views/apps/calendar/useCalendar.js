@@ -163,9 +163,11 @@ export const useCalendar = (event, isEventHandlerSidebarActive, isLeftSidebarOpe
       */
     navLinks: true,
     eventClassNames({ event: calendarEvent }) {
+      const colorName = calendarEvent._def.extendedProps.isTask ? 'error' : 'primary'
+      
       return [
         // Background Color
-        `bg-light-primary text-primary`,
+        `bg-light-${colorName} text-${colorName}`,
       ]
     },
     eventClick({ event: clickedEvent, jsEvent }) {

@@ -34,49 +34,154 @@
                   />
                   <span class="me-1">Assigned to:</span> 
                 </p>
-                <div
-                  v-if="props.editingTask?.assignees?.length > 0"
-                  class="d-flex align-center v-avatar-group demo-avatar-group"
+                <VMenu
+                  v-model="userMenu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
                 >
-                  <div
-                    v-for="(user, index) in props.editingTask?.assignees?.slice(0, 2)"
-                    :key="index"
-                    class="me-1"
-                  >
-                    <VAvatar :size="30">
+                  <template #activator="{ props }">
+                    <div class="v-avatar-group demo-avatar-group">
+                      <div
+                        v-for="(user, index) in editingTask?.assignees?.slice(0, 2)"
+                        :key="index"
+                      >
+                        <VAvatar :size="30">
+                          <VAvatar
+                            size="25"
+                            class="text-white bg-primary"
+                            variant="tonal"
+                            v-bind="props"
+                          >
+                            <small>{{ avatarText(user.name_first + ' ' + user.name_last) }}</small>
+                          </VAvatar>
+                          <VTooltip
+                            activator="parent"
+                            location="top"
+                          >
+                            <span>{{ user.name_first + ' ' + user.name_last }}</span>
+                          </VTooltip>
+                        </VAvatar>
+                      </div>
                       <VAvatar
-                        size="30"
-                        class="text-white bg-primary"
-                        variant="tonal"
+                        v-if="editingTask?.assignees?.length > 2"
+                        :size="30"
+                        v-bind="props"
                       >
-                        <small>{{ avatarText(user.name_first + ' ' + user.name_last) }}</small>
+                        <VAvatar
+                          size="25"
+                          class="text-white bg-primary"
+                          variant="tonal"
+                          v-bind="props"
+                        >
+                          <small>+{{ editingTask?.assignees?.length - 2 }}</small>
+                        </VAvatar>
                       </VAvatar>
-                      <VTooltip
-                        activator="parent"
-                        location="top"
-                      >
-                        <span>{{ user.name_first + ' ' + user.name_last }}</span>
-                      </VTooltip>
-                    </VAvatar>
-                  </div>
-                  <VAvatar
-                    v-if="props.editingTask?.assignees?.length > 2"
-                    :size="30"
-                    class="me-1"
-                  >
-                    <VAvatar
-                      size="25"
-                      class="text-white bg-primary"
-                      variant="tonal"
+                    </div>
+
+                    <VChip
+                      v-if="!editingTask?.assignees?.length"
+                      color=""
+                      size="small"
+                      v-bind="props"
+                      class="cursor-pointer"
+                      rounded="md"
                     >
-                      <small>+{{ props.editingTask?.assignees?.length - 2 }}</small>
-                    </VAvatar>
-                  </VAvatar>
-                </div>
-                <span
-                  v-else
-                  class="text-high-emphasis"
-                >None</span>
+                      <VIcon
+                        icon="tabler-user-plus"
+                        size="small"
+                        class="text-primary"
+                      />
+                    </VChip>
+                  </template>
+                  <VList class="assignee-list">
+                    <VTextField
+                      v-model="searchUser"
+                      label="Search"
+                      placeholder="Search name or email"
+                      class="mx-4"
+                      dense
+                      hide-details
+                      autofocus
+                      @input="onMemberSearchInpt(editingTask)"
+                    />
+                    <template v-if="filteredUsers.length > 0 && !usersLoading && searchUser">
+                      <VListItem
+                        v-for="user in filteredUsers"
+                        :key="user.id"
+                        class="assignee-list-item"
+                        @click="assignTask(user, editingTask)"
+                      >
+                        <VListItemAvatar>
+                          <VAvatar
+                            size="34"
+                            class="text-white bg-primary"
+                            variant="tonal"
+                          >
+                            <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                          </VAvatar>
+                        </VListItemAvatar>
+                        <VListItemTitle class="ms-2">
+                          {{ user.name_first + ' ' + user.name_last }}
+                          <p class="text-xs mb-0">
+                            {{ user.role }}
+                          </p>
+                        </VListItemTitle>
+                      </VListItem>
+                    </template>
+                    <template v-else>
+                      <div
+                        v-if="usersLoading"
+                        class="members-loading"
+                      >
+                        <div class="dots-loader" />
+                      </div>
+                      <div v-else>
+                        <div v-if="editingTask?.assignees?.length > 0 && !searchUser">
+                          <VListItem
+                            v-for="user in editingTask?.assignees"
+                            :key="user.id"
+                            class="assignee-list-item"
+                            :disabled="isAssigneeRemoving"
+                            @mouseenter="showDeleteIcon = user.id"
+                            @mouseleave="showDeleteIcon = null"
+                          >
+                            <VListItemAvatar>
+                              <VAvatar
+                                size="34"
+                                class="text-white bg-primary"
+                                variant="tonal"
+                              >
+                                <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                              </VAvatar>
+                            </VListItemAvatar>
+                            <VListItemTitle class="ms-2">
+                              {{ user.name_first + ' ' + user.name_last }}
+                              <p class="text-xs mb-0">
+                                {{ user.role }}
+                              </p>
+                            </VListItemTitle>
+                            <VIcon
+                              v-if="showDeleteIcon === user.id"
+                              icon="tabler-circle-x-filled"
+                              color="error"
+                              class="cursor-pointer member-delete-icon"
+                              @click.stop="removeAssignee(user, editingTask)"
+                            />
+                          </VListItem>
+                        </div>
+                        <div v-else>
+                          <VListItem class="assignee-search-list-item">
+                            <VListItemTitle>
+                              <small v-if="searchUser && filteredUsers.length === 0 && !usersLoading">No Member found</small>
+                              <small v-else>Search Team Members...</small>
+                            </VListItemTitle>
+                          </VListItem>
+                        </div>
+                      </div>
+                    </template>
+                  </VList>
+                </VMenu>
               </div>
             </VCol>
             <VCol
@@ -287,7 +392,9 @@ import Swal from 'sweetalert2'
 import { useProjectTaskStore } from "@/store/project_tasks"
 import { useAuthStore } from '@/store/auth'
 import { useFileStore } from '@/store/files'
+import { useUserStore } from "@/store/users"
 import FileViewer from '@/pages/projects/web-designs/_partials/file-viewer.vue'
+import { debounce, truncate } from 'lodash'
 
 const props = defineProps({
   isEditTaskDrawerOpen: {
@@ -311,6 +418,7 @@ const toast = useToast()
 const projectTaskStore = useProjectTaskStore()
 const authStore = useAuthStore()
 const fileStore = useFileStore()
+const userStore = useUserStore()
 
 const formatTaskDate = date => moment(date).format('MMM DD, YYYY')
 
@@ -320,6 +428,12 @@ const isLoading= ref(false)
 const fileInputRef = ref(null)
 const isViewerOpen = ref(false)
 const selectedFile = ref(null)
+const userMenu = ref(false)
+const showDeleteIcon = ref(false)
+const filteredUsers = ref([])
+const searchUser = ref('')
+const usersLoading = ref(false)
+const isAssigneeRemoving = ref(false)
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isEditTaskDrawerOpen', val)
@@ -447,6 +561,73 @@ async function submitEditTaskForm() {
   })
 }
 
+const fetchMembers = async task => {
+  try {
+    if (!searchUser.value) {
+      filteredUsers.value = []
+      usersLoading.value = false
+
+      return
+    }
+
+    usersLoading.value = true
+
+    await userStore.fetchMembersForTask(props.editingTask.project_uuid, task.uuid, searchUser.value)
+    filteredUsers.value = userStore.getMembersForTask
+  } catch (error) {
+    console.error('Error fetching members:', error)
+    toast.error('Failed to fetch members:', error)
+  } finally {
+    usersLoading.value = false
+  }
+}
+
+const debouncedFilter = debounce(fetchMembers, 300)
+
+const onMemberSearchInpt = task => {
+  debouncedFilter(task)
+}
+
+const assignTask = async (user, task) => {
+  try {
+    userMenu.value = false
+
+    const payload = {
+      assignee: user.id,
+    }
+
+    await projectTaskStore.assignTask(task.uuid, payload)
+    filteredUsers.value = []
+    searchUser.value = ''
+    toast.success('Task assigned successfully', { timeout: 1000 })
+    await props.fetchProjectLists()
+    emit('update:isEditTaskDrawerOpen', false)
+  } catch (error) {
+    toast.error('Failed to assign task:', error)
+  }
+}
+
+const removeAssignee = async (user, task) => {
+  try {
+    showDeleteIcon.value = false
+    isAssigneeRemoving.value = true
+    userMenu.value = false
+
+    const payload = {
+      assignee: user.id,
+    }
+
+    await projectTaskStore.removeAssignee(task.uuid, payload)
+    await props.fetchProjectLists()
+    emit('update:isEditTaskDrawerOpen', false)
+    toast.success('Assignee removed successfully', { timeout: 1000 })
+  } catch (error) {
+    toast.error('Failed to remove assignee:', error)
+  } finally {
+    isAssigneeRemoving.value = false
+  }
+}
+
 const openFileViewer = file => {
   file.url = getImageUrl(file.path)
   selectedFile.value = file
@@ -531,5 +712,45 @@ overflow-y: hidden !important;
 }
 .d-none {
   display: none !important;
+}
+
+.assignee-list {
+  width: 250px;
+  overflow-x: hidden !important;
+  max-height: 300px !important;
+}
+
+.assignee-list-item {
+  width: 240px;
+  overflow: hidden !important;
+}
+
+.v-list-item__content {
+  display: flex;
+  align-items: center;
+}
+
+.assignee-search-list-item {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.members-loading {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.member-delete-icon {
+  position: absolute;
+  left: 37px;
+  top: 2px;
+  font-size: 18px;
+}
+.align-center-important {
+  align-items: center !important;
 }
 </style>
