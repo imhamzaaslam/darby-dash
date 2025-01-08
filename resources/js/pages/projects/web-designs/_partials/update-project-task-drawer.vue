@@ -112,21 +112,23 @@
                         class="assignee-list-item"
                         @click="assignTask(user, editingTask)"
                       >
-                        <VListItemAvatar>
-                          <VAvatar
-                            size="34"
-                            class="text-white bg-primary"
-                            variant="tonal"
-                          >
-                            <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
-                          </VAvatar>
-                        </VListItemAvatar>
-                        <VListItemTitle class="ms-2">
-                          {{ user.name_first + ' ' + user.name_last }}
-                          <p class="text-xs mb-0">
-                            {{ user.role }}
-                          </p>
-                        </VListItemTitle>
+                        <VListItemContent class="assignee-list-item-content">
+                          <VListItemAvatar>
+                            <VAvatar
+                              size="34"
+                              class="text-white bg-primary"
+                              variant="tonal"
+                            >
+                              <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                            </VAvatar>
+                          </VListItemAvatar>
+                          <VListItemTitle class="ms-2">
+                            {{ user.name_first + ' ' + user.name_last }}
+                            <p class="text-xs mb-0">
+                              {{ user.role }}
+                            </p>
+                          </VListItemTitle>
+                        </VListItemContent>
                       </VListItem>
                     </template>
                     <template v-else>
@@ -146,28 +148,30 @@
                             @mouseenter="showDeleteIcon = user.id"
                             @mouseleave="showDeleteIcon = null"
                           >
-                            <VListItemAvatar>
-                              <VAvatar
-                                size="34"
-                                class="text-white bg-primary"
-                                variant="tonal"
-                              >
-                                <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
-                              </VAvatar>
-                            </VListItemAvatar>
-                            <VListItemTitle class="ms-2">
-                              {{ user.name_first + ' ' + user.name_last }}
-                              <p class="text-xs mb-0">
-                                {{ user.role }}
-                              </p>
-                            </VListItemTitle>
-                            <VIcon
-                              v-if="showDeleteIcon === user.id"
-                              icon="tabler-circle-x-filled"
-                              color="error"
-                              class="cursor-pointer member-delete-icon"
-                              @click.stop="removeAssignee(user, editingTask)"
-                            />
+                            <VListItemContent class="assignee-list-item-content">
+                              <VListItemAvatar>
+                                <VAvatar
+                                  size="34"
+                                  class="text-white bg-primary"
+                                  variant="tonal"
+                                >
+                                  <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
+                                </VAvatar>
+                              </VListItemAvatar>
+                              <VListItemTitle class="ms-2">
+                                {{ user.name_first + ' ' + user.name_last }}
+                                <p class="text-xs mb-0">
+                                  {{ user.role }}
+                                </p>
+                              </VListItemTitle>
+                              <VIcon
+                                v-if="showDeleteIcon === user.id"
+                                icon="tabler-circle-x-filled"
+                                color="error"
+                                class="cursor-pointer member-delete-icon"
+                                @click.stop="removeAssignee(user, editingTask)"
+                              />
+                            </VListItemContent>
                           </VListItem>
                         </div>
                         <div v-else>
@@ -725,7 +729,7 @@ overflow-y: hidden !important;
   overflow: hidden !important;
 }
 
-.v-list-item__content {
+.assignee-list-item-content{
   display: flex;
   align-items: center;
 }

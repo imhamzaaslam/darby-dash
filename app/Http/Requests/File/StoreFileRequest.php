@@ -23,7 +23,7 @@ class StoreFileRequest extends FormRequest
     {
         return [
             'files' => 'required|array',
-            'files.*' => 'file|max:2048',
+            'files.*' => 'file|max:10240',
         ];
     }
 }

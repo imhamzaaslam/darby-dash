@@ -3,6 +3,7 @@ import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
 import { useToast } from "vue-toastification"
 import moment from 'moment'
+import Swal from 'sweetalert2'
 
 // 👉 store
 const props = defineProps({
@@ -55,18 +56,33 @@ const resetEvent = () => {
 
 watch(() => props.isDrawerOpen, resetEvent)
 
-const removeEvent = () => {
-  const eventDetails = ref({
-    id: event.value.id,
-    uuid: event.value.uuid,
-    project_uuid: props.projectUuid,
+const removeEvent = async () => {
+  const confirmDelete = await Swal.fire({
+    title: "Are you sure?",
+    html: `<small>Do you want to remove event title <b>${event.value.title}</b>?</small>`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "rgba(var(--v-theme-primary))",
+    cancelButtonColor: "#808390",
+    confirmButtonText: "Yes, delete it!",
+    didOpen: () => {
+      document.querySelector('.swal2-confirm').blur()
+    },
   })
 
-  emit('removeEvent', eventDetails.value)
+  if (confirmDelete.isConfirmed) {
+    const eventDetails = ref({
+      id: event.value.id,
+      uuid: event.value.uuid,
+      project_uuid: props.projectUuid,
+    })
 
-  // Close drawer
-  emit('update:isDrawerOpen', false)
-  toast.success('Event deleted successfully', { timeout: 1000 })
+    emit('removeEvent', eventDetails.value)
+
+    // Close drawer
+    emit('update:isDrawerOpen', false)
+    toast.success('Event deleted successfully', { timeout: 1000 })
+  }
 }
 
 const handleSubmit = async () => {
@@ -116,15 +132,13 @@ const onCancel = () => {
 }
 
 const startDateTimePickerConfig = computed(() => {
-  const config = {
+  /* if (event.value.end)
+    config.maxDate = event.value.end */
+
+  return {
     enableTime: true,
     dateFormat: `m/d/Y H:i`,
   }
-
-  if (event.value.end)
-    config.maxDate = event.value.end
-
-  return config
 })
 
 const endDateTimePickerConfig = computed(() => {
@@ -287,7 +301,7 @@ const dialogModelValueUpdate = val => {
                     Loading...
                   </span>
                   <span v-else>
-                    Create Event
+                    {{ event.id ? 'Update' : 'Create' }} Event
                   </span>
                 </VBtn>
                 <VBtn
