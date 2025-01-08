@@ -76,6 +76,7 @@ const userDetails = computed(() => {
       placeholder="Search..."
       prepend-inner-icon="tabler-search"
       class="ms-4 me-1 chat-list-search"
+      autofocus
     />
 
     <!--

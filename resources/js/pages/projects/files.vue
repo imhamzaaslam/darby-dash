@@ -43,6 +43,7 @@
         <VMenu activator="parent">
           <VList>
             <VListItem
+              v-if="!openFolder"
               value="create-folder"
               @click="isCreateFolderDialogOpen = true"
             >
@@ -124,7 +125,7 @@
           </div>
           <div
             v-if="hoverIndex === index"
-            class="d-flex align-center justify-space-between mt-2"
+            class="d-flex align-center justify-space-between mt-2 icon-overlay"
           >
             <span class="text-xs">{{ file.created_at }}</span>
             <div class="d-flex align-center">
@@ -150,17 +151,46 @@
           </div>
         </div>
       </VCol>
+      <VCol
+        cols="2"
+        class="d-flex justify-center align-center"
+      >
+        <div
+          class="dropzone dropzone-mini"
+          @click="chooseFile"
+        >
+          <div class="text-center">
+            <VIcon
+              icon="tabler-cloud-upload"
+              size="48"
+              class="mb-2"
+            />
+            <p>Click to upload files</p>
+          </div>
+        </div>
+      </VCol>
     </VRow>
     <VRow
-      v-if="folderFiles.length === 0 && images.length === 0"
+      v-if="images.length === 0 && folderFiles.length === 0"
       class="mt-4"
     >
       <VCol
         cols="12"
-        class="d-flex flex-column align-center justify-center text-center" 
+        class="d-flex justify-center align-center"
       >
-        <span v-html="emptyFileImg" />
-        <span class="mt-n11">No Files added yet.</span>
+        <div
+          class="dropzone"
+          @click="chooseFile"
+        >
+          <div class="text-center">
+            <VIcon
+              icon="tabler-cloud-upload"
+              size="48"
+              class="mb-2"
+            />
+            <p>Click to upload your files here</p>
+          </div>
+        </div>
       </VCol>
     </VRow>
   </div>
@@ -254,7 +284,7 @@
           </div>
           <div
             v-if="hoverIndex === index"
-            class="d-flex align-center justify-space-between mt-2"
+            class="d-flex align-center justify-space-between mt-2 icon-overlay"
           >
             <span class="text-xs">{{ file.created_at }}</span>
             <div class="d-flex align-center">
@@ -280,18 +310,47 @@
           </div>
         </div>
       </VCol>
+      <VCol
+        cols="2"
+        class="d-flex justify-center align-center"
+      >
+        <div
+          class="dropzone dropzone-mini"
+          @click="chooseFile"
+        >
+          <div class="text-center">
+            <VIcon
+              icon="tabler-cloud-upload"
+              size="48"
+              class="mb-2"
+            />
+            <p>Click to upload files</p>
+          </div>
+        </div>
+      </VCol>
     </VRow>
 
     <VRow
-      v-if="images.length === 0 && folders.length === 0 && allFiles.length === 0"
+      v-if="images.length === 0 && allFiles.length === 0"
       class="mt-4"
     >
       <VCol
         cols="12"
-        class="d-flex flex-column align-center justify-center text-center" 
+        class="d-flex justify-center align-center"
       >
-        <span v-html="emptyFileImg" />
-        <span class="mt-n11">No Files added yet.</span>
+        <div
+          class="dropzone"
+          @click="chooseFile"
+        >
+          <div class="text-center">
+            <VIcon
+              icon="tabler-cloud-upload"
+              size="48"
+              class="mb-2"
+            />
+            <p>Click to upload your files here</p>
+          </div>
+        </div>
       </VCol>
     </VRow>
   </div>
@@ -435,6 +494,7 @@ const selectedFolder = ref(null)
 const files = ref([])
 const openFolder = ref(null)
 const hoverIndex = ref(null)
+const uploadedFiles = ref([])
 
 const getFolders = async () => {
   isLoading.value = true
@@ -715,7 +775,7 @@ watch(project, () => {
   position: relative;
   border: 2px solid rgba(var(--v-theme-primary));
   border-radius: 10px;
-  padding: 5px;
+  padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   max-width: 100%;
@@ -798,7 +858,7 @@ watch(project, () => {
   padding: 12px;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
-  background-color: #ffffff;
+  background-color: rgba(var(--v-theme-surface));
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
@@ -840,5 +900,60 @@ watch(project, () => {
 .breadcrumb-link:hover{
   color: rgba(var(--v-theme-primary));
   cursor: pointer;
+}
+
+.dropzone-mini{
+  width: 100% !important;
+  height: 130px !important;
+}
+
+.dropzone {
+  width: 50%;
+  height: 200px;
+  border: 2px dashed rgba(var(--v-theme-primary));
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropzone:hover {
+  background-color: rgba(var(--v-theme-grey-300));
+}
+
+.uploaded-image {
+  max-width: 100%;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.file-placeholder {
+  text-align: center;
+}
+
+.file-type {
+  font-size: 12px;
+  color: #888;
+}
+.icon-overlay {
+  position: absolute;
+  top: 105px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(var(--v-theme-grey-100));
+  padding: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease; 
+  width: 100%;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.image-container:hover .icon-overlay {
+  opacity: 5; 
 }
 </style>

@@ -4,7 +4,7 @@
     <VCol
       cols="12"
       md="7"
-      class="d-flex"
+      class="d-flex mt-1"
     >
       <div class="d-flex align-center mb-2">
         <VAvatar
@@ -182,7 +182,6 @@
             density="default"
             class="chat-message-input"
             placeholder="Type your message..."
-            autofocus
           >
             <template #append-inner>
               <div class="d-flex gap-1">
