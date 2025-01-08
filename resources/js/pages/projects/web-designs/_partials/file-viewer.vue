@@ -10,6 +10,7 @@
         <VIcon
           size="small"
           class="float-right tabler-square-rounded-x-filled"
+          color="error"
           @click="handleClose"
         />
       </VCardTitle>

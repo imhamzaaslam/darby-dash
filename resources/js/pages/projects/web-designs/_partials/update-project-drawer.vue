@@ -38,6 +38,7 @@
                   :items="props.getClients"
                   item-title="name"
                   item-value="id"
+                  chips
                 >
                   <template #chip="{ props, item }">
                     <VListItem
@@ -107,6 +108,7 @@
                   :rules="[requiredValidator]"
                   :items="props.getProjectManagersList"
                   item-title="name"
+                  chips
                   item-value="id"
                 >
                   <template #chip="{ props, item }">
