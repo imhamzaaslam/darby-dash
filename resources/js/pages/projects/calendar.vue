@@ -225,6 +225,8 @@ const getProjectGuests = computed(() => {
   return userStore.getAllUsersByProjects.map(member => ({
     id: member.id,
     name: `${member.name_first} ${member.name_last} (${member.role})`,
+    shortName: `${member.name_first} ${member.name_last}`,
+    avatar: member?.info?.avatar,
   }))
 })
 

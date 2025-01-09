@@ -285,8 +285,8 @@
         @submit.prevent="submitAddMemberForm"
       >
         <VCardText>
-          <label>Select Members*</label>
-          <Multiselect
+          <!--
+            <Multiselect
             ref="focusInput"
             v-model="newMembers"
             mode="tags"
@@ -299,7 +299,56 @@
             style="color: #000 !important;"
             @blur="validateMultiselect"
             @update:model-value="isMultiselectValid = true"
-          />
+            /> 
+          -->
+          <AppAutocomplete
+            ref="focusInput"
+            v-model="newMembers"
+            label="Select Members*"
+            placeholder="Select Members"
+            :items="getMembers"
+            :item-title="item => item.name"
+            :item-value="item => item.id"
+            chips
+            multiple
+            closable-chips
+            eager
+          >
+            <template #chip="{ props, item }">
+              <VChip
+                v-bind="props"
+                variant="elevated"
+                color="primary"
+              >
+                <VAvatar
+                  color="white"
+                  :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                  :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                  size="18"
+                >
+                  <small
+                    v-if="!item?.raw?.avatar"
+                    class=""
+                  >{{ avatarText(item?.raw?.shortName) }}</small>
+                </VAvatar>
+                <span class="ms-2">{{ item.raw.shortName }}</span>
+              </VChip>
+            </template>
+
+            <template #item="{ props, item }">
+              <VListItem v-bind="{ ...props, title: '' }">
+                <VAvatar
+                  color="primary"
+                  :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                  :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                  size="38"
+                >
+                  <span v-if="!item?.raw?.avatar">{{ avatarText(item?.raw?.shortName) }}</span>
+                </VAvatar>
+                <span class="ms-2">{{ item.raw.shortName }}</span>
+              </VListItem>
+            </template>
+          </AppAutocomplete>
           <div
             v-if="!isMultiselectValid"
             class="text-error"
@@ -413,7 +462,7 @@ async function submitAddMemberForm() {
     try {
       const payload = {
         uuid: projectId.value,
-        member_ids: [...selectedMembers.value, ...newMembers.value],
+        member_ids: newMembers.value,
       }
 
       await projectStore.updateMember(payload)
@@ -460,10 +509,7 @@ const setSelectedMembers = async () => {
   const members = project.member_ids
 
   // set in selectedMembers
-  selectedMembers.value = members
-
-  // set newMembers to empty
-  newMembers.value = []
+  newMembers.value = members
 }
 
 const getByProjects = async () => {
@@ -531,9 +577,16 @@ const applyFilters = async (name = '', email = null, roleId = null) => {
 }
 
 const getMembers = computed(() => {
-  const members = userStore.getMemberListsForDropDown
+  const members = userStore.getMembersList
 
-  return members.filter(member => !selectedMembers.value.includes(member.value))
+  const remainingMembers = members.filter(member => !selectedMembers.value.includes(member.value))
+  
+  return remainingMembers.map(member => ({
+    id: member.id,
+    name: `${member.name_first} ${member.name_last} (${member.role})`,
+    shortName: `${member.name_first} ${member.name_last}`,
+    avatar: member?.info?.avatar,
+  }))
 })
 
 const project = computed(() =>{
@@ -559,6 +612,12 @@ const getUserLoadStatus = computed(() => {
 const getProjectLoadStatus = computed(() => {
   return projectStore.getLoadStatus
 })
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 
 watch([project, isAddMemberDialogueOpen], ([newProject, newDialogueState]) => {
   if (newProject) {

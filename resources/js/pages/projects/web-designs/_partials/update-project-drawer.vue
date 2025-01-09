@@ -144,8 +144,9 @@
                 </AppAutocomplete>
               </VCol>
               <VCol cols="12">
-                <label>Select Staff Members</label>
-                <Multiselect
+                <!--
+                  <label>Select Staff Members</label>
+                  <Multiselect
                   v-model="projectDetails.staff_ids"
                   mode="tags"
                   placeholder="Select Staff Members"
@@ -154,7 +155,57 @@
                   :options="props.getStaffList"
                   class="bg-background multiselect-purple"
                   style="color: #000 !important;"
-                />
+                  /> 
+                -->
+                <AppAutocomplete
+                  v-model="projectDetails.staff_ids"
+                  label="Select Staff Members"
+                  placeholder="Select Staff Members"
+                  :items="props.getStaffList"
+                  :item-title="item => item.label"
+                  :item-value="item => item.value"
+                  chips
+                  multiple
+                  closable-chips
+                  eager
+                  clearable
+                  clear-icon="tabler-x"
+                >
+                  <template #chip="{ props, item }">
+                    <VChip
+                      v-bind="props"
+                      variant="elevated"
+                      color="primary"
+                    >
+                      <VAvatar
+                        color="white"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="18"
+                      >
+                        <small
+                          v-if="!item?.raw?.avatar"
+                          class=""
+                        >{{ avatarText(item?.raw?.label) }}</small>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.label }}</span>
+                    </VChip>
+                  </template>
+
+                  <template #item="{ props, item }">
+                    <VListItem v-bind="{ ...props, title: '' }">
+                      <VAvatar
+                        color="primary"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="38"
+                      >
+                        <span v-if="!item?.raw?.avatar">{{ avatarText(item?.raw?.label) }}</span>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.label }}</span>
+                    </VListItem>
+                  </template>
+                </AppAutocomplete>
               </VCol>
               <VCol
                 md="6"
@@ -339,6 +390,12 @@ async function submitEditProjectForm() {
 const generalSetting = computed(() => {
   return authStore.getGeneralSetting
 })
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
 
 watch(
   () => [props.editProjectDetails, props.isEditDrawerOpen],

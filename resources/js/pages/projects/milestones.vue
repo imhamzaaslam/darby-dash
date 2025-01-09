@@ -280,8 +280,9 @@
             />
           </VCardText>
           <VCardText>
-            <label>Select Project List</label>
-            <Multiselect
+            <!--
+              <label>Select Project List</label>
+              <Multiselect
               v-model="mileStoneForm.projectListIds"
               mode="tags"
               placeholder="Select Project List"
@@ -290,21 +291,37 @@
               :options="projectListsForDropDown"
               class="bg-background multiselect-purple"
               style="color: #000 !important;"
-            />
-            
-            <!--
-              <AppAutocomplete
+              /> 
+            -->
+            <AppAutocomplete
               v-model="mileStoneForm.projectListIds"
               :items="projectListsForDropDown"
-              item-title="name"
-              item-value="id"
-              label="Add Project List"
+              :item-title="item => item.label"
+              :item-value="item => item.value"
+              label="Select Project List"
               placeholder="Select Project List"
               multiple
               clearable
               clear-icon="tabler-x"
-              /> 
-            -->
+              chips
+              closable-chips
+            >
+              <template #chip="{ props, item }">
+                <VChip
+                  v-bind="props"
+                  :text="item.raw.label"
+                  color="primary"
+                  variant="elevated"
+                />
+              </template>
+
+              <template #item="{ props, item }">
+                <VListItem
+                  v-bind="props"
+                  :title="item?.raw?.label"
+                />
+              </template>
+            </AppAutocomplete> 
           </VCardText>
 
           <VCardText class="d-flex justify-end gap-3 flex-wrap">
@@ -361,8 +378,9 @@
             />
           </VCardText>
           <VCardText>
-            <label>Select Project List</label>
-            <Multiselect
+            <!-- <label>Select Project List</label> -->
+            <!--
+              <Multiselect
               v-model="editMileStoneFormData.projectListIds"
               mode="tags"
               placeholder="Select Project List"
@@ -371,20 +389,37 @@
               :options="editProjectList"
               class="bg-background multiselect-purple"
               style="color: #000 !important;"
-            />
-            <!--
-              <AppAutocomplete
+              /> 
+            -->
+            <AppAutocomplete
               v-model="editMileStoneFormData.projectListIds"
               :items="editProjectList"
-              item-title="name"
-              item-value="id"
-              label="Add Project List"
+              :item-title="item => item.label"
+              :item-value="item => item.value"
+              label="Select Project List"
               placeholder="Select Project List"
               multiple
               clearable
               clear-icon="tabler-x"
-              /> 
-            -->
+              chips
+              closable-chips
+            >
+              <template #chip="{ props, item }">
+                <VChip
+                  v-bind="props"
+                  :text="item.raw.label"
+                  color="primary"
+                  variant="elevated"
+                />
+              </template>
+
+              <template #item="{ props, item }">
+                <VListItem
+                  v-bind="props"
+                  :title="item?.raw?.label"
+                />
+              </template>
+            </AppAutocomplete> 
           </VCardText>
 
           <VCardText class="d-flex justify-end gap-3 flex-wrap">

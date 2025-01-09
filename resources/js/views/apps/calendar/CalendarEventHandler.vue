@@ -85,6 +85,12 @@ const removeEvent = async () => {
   }
 }
 
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
+}
+
 const handleSubmit = async () => {
   const { valid } = await refForm.value?.validate()
 
@@ -257,7 +263,7 @@ const dialogModelValueUpdate = val => {
                 v-if="!event.extendedProps.isTask"
                 cols="12"
               >
-                <AppSelect
+                <AppAutocomplete
                   v-model="event.extendedProps.guests"
                   label="Members"
                   placeholder="Select Members"
@@ -266,8 +272,46 @@ const dialogModelValueUpdate = val => {
                   :item-value="item => item.id"
                   chips
                   multiple
+                  closable-chips
                   eager
-                />
+                  clearable
+                  clear-icon="tabler-x"
+                >
+                  <template #chip="{ props, item }">
+                    <VChip
+                      v-bind="props"
+                      variant="elevated"
+                      color="primary"
+                    >
+                      <VAvatar
+                        color="white"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="18"
+                      >
+                        <small
+                          v-if="!item?.raw?.avatar"
+                          class=""
+                        >{{ avatarText(item?.raw?.shortName) }}</small>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.shortName }}</span>
+                    </VChip>
+                  </template>
+
+                  <template #item="{ props, item }">
+                    <VListItem v-bind="{ ...props, title: '' }">
+                      <VAvatar
+                        color="primary"
+                        :image="item?.raw?.avatar ? getImageUrl(item?.raw?.avatar?.path) : undefined"
+                        :variant="item?.raw?.avatar ? undefined : 'tonal'"
+                        size="38"
+                      >
+                        <span v-if="!item?.raw?.avatar">{{ avatarText(item?.raw?.shortName) }}</span>
+                      </VAvatar>
+                      <span class="ms-2">{{ item.raw.shortName }}</span>
+                    </VListItem>
+                  </template>
+                </AppAutocomplete>
               </VCol>
 
               <!-- 👉 Description -->

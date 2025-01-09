@@ -732,7 +732,7 @@ const getStaffListsForDropDown = computed(() => {
   let members = userStore.getMembersList
   let staff = members.filter(member => member.role === USER_ROLES.STAFF)
 
-  return staff.map(staff => ({ label: staff.name_first + " " + staff.name_last, value: staff.id }))
+  return staff.map(staff => ({ label: staff.name_first + " " + staff.name_last, value: staff.id, avatar: staff?.info?.avatar }))
 })
 
 const getTemplates = computed(() => {
