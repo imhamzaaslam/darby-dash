@@ -23,8 +23,8 @@
         }
 
         .email-header {
-            background-color: rgba(var(--v-theme-primary));
-            color: #ffffff;
+            background-color: #f8f9fa;
+            color: #333333;
             padding: 20px;
             border-radius: 8px 8px 0 0;
             text-align: center;
