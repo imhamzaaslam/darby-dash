@@ -127,6 +127,7 @@
                 <VAvatar
                   size="34"
                   :class="user.avatar ? '' : 'text-white bg-primary'"
+                  :image="user?.info?.avatar ? getImageUrl(user?.info?.avatar?.path) : undefined"
                   :variant="!user.avatar ? 'tonal' : ''"
                 >
                   <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
@@ -140,7 +141,7 @@
               </div>
             </div>
           </VCol>
-          <VCol cols="4">
+          <VCol cols="3">
             <div class="d-flex align-center">
               <div class="d-flex flex-column ms-3">
                 <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ user.email }}</span>
@@ -148,7 +149,7 @@
               </div>
             </div>
           </VCol>
-          <VCol cols="3">
+          <VCol cols="2">
             <div class="d-flex flex-column ms-3">
               <VChip
                 :color="getStatusColor(user.state)"
@@ -158,6 +159,12 @@
               >
                 {{ roleStore.capitalizeFirstLetter(user.state) }}
               </VChip>
+            </div>
+          </VCol>
+          <VCol cols="2">
+            <div class="d-flex flex-column ms-3">
+              <span class="d-block font-weight-bold text-high-emphasis text-sm text-truncate text-center">Created At</span>
+              <small class="text-center">{{ formatDate(user.created_at) }}</small>
             </div>
           </VCol>
           <VCol
@@ -219,6 +226,7 @@
                     <VAvatar
                       size="34"
                       :class="user.avatar ? '' : 'text-white bg-primary'"
+                      :image="user?.info?.avatar ? getImageUrl(user?.info?.avatar?.path) : undefined"
                       :variant="!user.avatar ? 'tonal' : ''"
                     >
                       <span>{{ avatarText(user.name_first + ' ' + user.name_last) }}</span>
@@ -266,6 +274,9 @@
                   <div class="d-flex flex-column ms-3">
                     <span class="d-block font-weight-medium text-high-emphasis text-sm text-truncate">{{ user.email }}</span>
                     <small class="mt-0">{{ roleStore.capitalizeFirstLetter(user.role) }}</small>
+                    <small class="text-muted">
+                      <span class="font-weight-bold text-black">Created At:</span> {{ formatDate(user.created_at) }}
+                    </small>
                   </div>
                 </div>
               </VCol>
@@ -335,8 +346,9 @@ import GridViewSkeleton from '@/pages/teams/_partials/grid-view-skeleton.vue'
 import FilterDrawer from '@/pages/teams/_partials/filter-members-drawer.vue'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from "vue-toastification"
-import { useRoleStore } from "../../store/roles"
-import { useUserStore } from "../../store/users"
+import { useRoleStore } from "@/store/roles"
+import { useUserStore } from "@/store/users"
+import moment from 'moment'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Members` })
 
@@ -355,6 +367,8 @@ const isLoading = ref(false)
 const searchName = ref('')
 const searchEmail = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
+
+const formatDate = date => moment(date).format('MM/DD/YYYY')
 
 const isMobile = () => {
   return window.innerWidth <= 768 || window.innerWidth <= 926
@@ -492,6 +506,12 @@ const rolesWithFirstOption = (firstOption = null) => {
 const handlePageChange = async page => {
   options.value.page = page
   await fetchMembers()
+}
+
+const getImageUrl = path => {
+  const baseUrl = import.meta.env.VITE_APP_URL
+
+  return `${baseUrl}storage/${path}`
 }
 
 const onFilter = async value => {

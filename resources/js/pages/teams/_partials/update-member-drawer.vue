@@ -85,6 +85,19 @@
                 />
               </VCol>
 
+              <VCol
+                cols="6"
+                class="pt-8"
+              >
+                <VSwitch
+                  v-model="props.editMemberDetails.state"
+                  color="primary"
+                  label="Status"
+                  true-value="active"
+                  false-value="inactive"
+                />
+              </VCol>
+
               <VCol cols="12">
                 <div class="d-flex justify-start">
                   <VBtn

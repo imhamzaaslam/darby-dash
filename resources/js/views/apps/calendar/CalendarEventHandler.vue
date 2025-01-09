@@ -209,7 +209,7 @@ const dialogModelValueUpdate = val => {
                 <AppTextField
                   v-model="event.title"
                   autofocus
-                  label="Title *"
+                  label="Event Title *"
                   :disabled="event.extendedProps.isTask"
                   placeholder="Meeting with Jane"
                   :class="{ 'cursor-not-allowed': event.extendedProps.isTask }"

@@ -118,7 +118,10 @@
             :key="member.value"
             cols="12"
           >
-            <VCard class="d-flex align-center ps-4 py-1 list-side-border">
+            <VCard
+              class="d-flex align-center ps-4 py-1 list-side-border"
+              @click.stop="isAddMemberDialogueOpen = true"
+            >
               <VCol cols="4">
                 <div class="d-flex align-center">
                   <VBadge
@@ -131,6 +134,7 @@
                     <VAvatar
                       size="36"
                       :class="member.avatar ? '' : 'text-white bg-primary'"
+                      :image="member?.info?.avatar ? getImageUrl(member?.info?.avatar?.path) : undefined"
                       :variant="!member.avatar ? 'tonal' : ''"
                     >
                       <span>{{ avatarText(member.name_first + ' ' + member.name_last) }}</span>
@@ -168,7 +172,7 @@
               <VCol
                 cols="1"
                 class="ms-2 cursor-pointer"
-                @click="deleteMember(member)"
+                @click.stop="deleteMember(member)"
               >
                 <VIcon
                   color="primary"
@@ -194,7 +198,7 @@
             cols="12"
             md="4"
           >
-            <VCard>
+            <VCard @click.stop="isAddMemberDialogueOpen = true">
               <div class="image-container">
                 <VImg :src="Page2" />
               </div>
@@ -202,6 +206,7 @@
                 <VAvatar
                   size="80"
                   :class="member.avatar ? '' : 'text-white bg-primary'"
+                  :image="member?.info?.avatar ? getImageUrl(member?.info?.avatar?.path) : undefined"
                   :variant="!member.avatar ? 'tonal' : ''"
                   class="avatar-center"
                 >
@@ -234,7 +239,7 @@
               </VCardText>
               <div
                 class="position-absolute delete-icon"
-                @click="deleteMember(member)"
+                @click.stop="deleteMember(member)"
               >
                 <VIcon
                   color="primary"

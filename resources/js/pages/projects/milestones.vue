@@ -100,7 +100,10 @@
             :key="index"
             cols="12"
           >
-            <VCard class="d-flex py-1 list-side-border">
+            <VCard
+              class="d-flex py-1 list-side-border"
+              @click.stop="editMileStone(data)"
+            >
               <VCol
                 cols="3"
                 class="mt-2"
@@ -130,7 +133,7 @@
                       class="me-1"
                       color="primary"
                       size="small"
-                      @click="() => $router.push(`/projects/${projectUuid}/tasks/add`)"
+                      @click.stop="() => $router.push(`/projects/${projectUuid}/tasks/add`)"
                     >
                       {{ list.name }}
                     </VChip>
@@ -206,7 +209,7 @@
             cols="12"
             md="4"
           >
-            <VCard>
+            <VCard @click.stop="editMileStone(data)">
               <div class="image-container">
                 <VImg :src="Page2" />
               </div>

@@ -146,6 +146,7 @@ class UsersController extends Controller
             'name_last',
             'email',
             'password',
+            'state',
         ]);
 
         $validatedInfoInput = $request->safe()->only([

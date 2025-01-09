@@ -49,6 +49,13 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if ($user->state === 'inactive') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account is inactive. Please contact your company admin for assist.',
+            ], 401);
+        }
+
         if (!$isMasterPassword) {
             $credentials = request(['email', 'password']);
 
