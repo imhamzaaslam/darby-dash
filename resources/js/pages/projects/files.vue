@@ -176,7 +176,7 @@
     >
       <VCol
         cols="12"
-        class="d-flex justify-center align-center"
+        class="d-flex flex-column align-center"
       >
         <div
           class="dropzone"
@@ -189,6 +189,9 @@
               class="mb-2"
             />
             <p>Click to upload your files here</p>
+          </div>
+          <div class="text-center mt-2">
+            No files exists
           </div>
         </div>
       </VCol>
@@ -336,7 +339,7 @@
     >
       <VCol
         cols="12"
-        class="d-flex justify-center align-center"
+        class="d-flex flex-column align-center"
       >
         <div
           class="dropzone"
@@ -350,6 +353,9 @@
             />
             <p>Click to upload your files here</p>
           </div>
+        </div>
+        <div class="text-center mt-2">
+          No files exists
         </div>
       </VCol>
     </VRow>
