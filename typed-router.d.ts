@@ -75,6 +75,7 @@ declare module 'vue-router/auto/routes' {
     'projects-web-designs-partials-update-project-task-drawer': RouteRecordInfo<'projects-web-designs-partials-update-project-task-drawer', '/projects/web-designs/_partials/update-project-task-drawer', Record<never, never>, Record<never, never>>,
     'roles': RouteRecordInfo<'roles', '/roles', Record<never, never>, Record<never, never>>,
     'roles-partials-role-management-dialog': RouteRecordInfo<'roles-partials-role-management-dialog', '/roles/_partials/RoleManagementDialog', Record<never, never>, Record<never, never>>,
+    'roles-partials-user-list-dialogue': RouteRecordInfo<'roles-partials-user-list-dialogue', '/roles/_partials/UserListDialogue', Record<never, never>, Record<never, never>>,
     'settings-services': RouteRecordInfo<'settings-services', '/settings/services', Record<never, never>, Record<never, never>>,
     'settings-services-partials-add-service-drawer': RouteRecordInfo<'settings-services-partials-add-service-drawer', '/settings/services/_partials/add-service-drawer', Record<never, never>, Record<never, never>>,
     'settings-services-partials-sort-service-modal': RouteRecordInfo<'settings-services-partials-sort-service-modal', '/settings/services/_partials/sort-service-modal', Record<never, never>, Record<never, never>>,

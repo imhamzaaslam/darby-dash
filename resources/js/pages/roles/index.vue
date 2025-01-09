@@ -45,6 +45,7 @@
               class="text-capitalize"
               variant="outlined"
               size="small"
+              @click="openUserList(item.name)"
             >
               {{ item.total_users }} users
             </VChip>
@@ -72,12 +73,20 @@
     :role-id="selectedRoleId"
     :role-name="selectedRoleName"
   />
+  <UserListDialog
+    v-if="isUserListDialogVisible"
+    v-model:is-dialog-visible="isUserListDialogVisible"
+    :users-list="usersList"
+    :role-name="selectedRoleName"
+    :role-users-length="selectedRoleLength"
+  />
 </template>
 
 <script setup>
 import { useRoleStore } from "@/store/roles"
 import { useUserStore } from "@/store/users"
 import Loader from "@/components/Loader.vue"
+import UserListDialog from "@/pages/roles/_partials/UserListDialogue.vue"
 
 const roleStore = useRoleStore()
 const userStore = useUserStore()
@@ -86,6 +95,7 @@ const isRoleFetching = ref(false)
 
 onMounted(async () => {
   await fetchRoles()
+  await fetchMembers()
 })
 
 const fetchRoles = async () => {
@@ -99,18 +109,45 @@ const fetchRoles = async () => {
   }
 }
 
+const fetchMembers = async () => {
+  try {
+    await userStore.getMembers()
+  } catch (error) {
+    toast.error('Error fetching members:', error)
+  }
+}
+
 const roles = computed(() => {
   return roleStore.getRolesFullData
 })
 
+const members = computed(() => {
+  return userStore.getMembersList
+})
+
 const isRoleDialogVisible = ref(null)
+const isUserListDialogVisible = ref(false)
 const selectedRoleId = ref()
 const selectedRoleName = ref()
+const selectedRoleLength = ref(0)
+const usersList = ref({})
 
 const editPermission = value => {
   isRoleDialogVisible.value = true
   selectedRoleId.value = value.id
   selectedRoleName.value = value.name
+}
+
+const openUserList = roleName => {
+  const users = members.value.filter(member =>
+    member.role == roleName,
+  )
+
+  selectedRoleName.value = roleName
+  selectedRoleLength.value = users.length
+  usersList.value = { ...users }
+
+  isUserListDialogVisible.value = true
 }
 
 const userDetails = computed(() => {
