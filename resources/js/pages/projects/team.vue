@@ -120,7 +120,6 @@
           >
             <VCard
               class="d-flex align-center ps-4 py-1 list-side-border"
-              @click.stop="isAddMemberDialogueOpen = true"
             >
               <VCol cols="4">
                 <div class="d-flex align-center">
@@ -198,7 +197,7 @@
             cols="12"
             md="4"
           >
-            <VCard @click.stop="isAddMemberDialogueOpen = true">
+            <VCard>
               <div class="image-container">
                 <VImg :src="Page2" />
               </div>
