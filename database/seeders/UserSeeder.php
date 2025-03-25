@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Company;
 use App\Models\Role;
 use App\Enums\UserRole;
 use Faker\Generator;
