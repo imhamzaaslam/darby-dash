@@ -19,6 +19,10 @@ class UserSeeder extends Seeder
      */
     public function run(Generator $faker): void
     {
+        $company = Company::firstOrCreate(
+            ['id' => 1],
+            ['name' => 'WithDarby']
+        );
         $users = [
             [
                 'name_first' => 'Eric',
@@ -73,7 +77,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'state' => 'active',
-                'company_id' => 1,
+                'company_id' => $company->id,
             ]);
 
             $this->addDummyInfo($faker, $user);
