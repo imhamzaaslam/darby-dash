@@ -1372,7 +1372,7 @@ margin: auto;
   display: flex;
   flex-direction: column;
 }
-
+/* cutome tabs */
 .custom-tabs li {
   padding: 10px 15px;
   cursor: pointer;
