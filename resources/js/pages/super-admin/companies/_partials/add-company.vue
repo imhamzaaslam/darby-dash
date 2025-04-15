@@ -54,7 +54,7 @@
             md="6"
             cols="12"
           >
-            <!-- Subdomain Field -->
+            <!-- Subdomain Fields -->
             <AppTextField
               v-if="selectedDomainType === 'subdomain'"
               :value="generateSubdomain"
