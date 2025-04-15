@@ -3,6 +3,7 @@ import { useAuthStore } from '@/store/auth'
 const isAdmin = useAuthStore().isAdmin
 const isSuperAdmin = useAuthStore().isSuperAdmin
 const companyUuid = useAuthStore().getCompanyUuid
+const isTenant = useAuthStore().isTenant
 
 const routes = [
   {
@@ -31,7 +32,7 @@ const routes = [
     title: 'Settings',
     icon: { icon: 'tabler-settings' },
     children: [
-      companyUuid && {
+      companyUuid && isTenant && {
         title: 'Company Setting',
         to: { name: 'manage-company-settings', params: { id: companyUuid } },
       },

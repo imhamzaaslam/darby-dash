@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Http\UploadedFile;
+use App\Enums\UserRole;
 
 abstract class AbstractUserRepository implements AbstractUserRepositoryInterface
 {
@@ -25,7 +26,10 @@ abstract class AbstractUserRepository implements AbstractUserRepositoryInterface
 
     public function getAllRecordsQuery(): Builder
     {
-        return $this->model->query()->where('company_id', auth()->user()->company_id);
+        return $this->model->query()->where('company_id', auth()->user()->company_id)
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', UserRole::SUPER_ADMIN->value);
+            });
     }
 
     public function getFirstByOrFail(string $key, $value): ?User
