@@ -229,7 +229,7 @@
                 <!-- Input Field -->
                 <AppTextField
                   v-model="projectDetails.bucks_share"
-                  :label="`${generalSetting?.bucks_label ?? 'Darby Bucks'} Share*`"
+                  :label="`${generalSetting?.bucks_label || 'Darby Bucks'} Share*`"
                   :rules="[requiredValidator]"
                   placeholder="0.00"
                   type="number"
@@ -243,7 +243,7 @@
               >
                 <VSwitch
                   v-model="showBucksShare"
-                  :label="`Enable ${generalSetting?.bucks_label ?? 'Darby Bucks'} Share`"
+                  :label="`Enable ${generalSetting?.bucks_label || 'Darby Bucks'} Share`"
                   class="mb-3"
                 />
               </VCol>

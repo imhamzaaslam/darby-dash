@@ -3,7 +3,7 @@ import { useAuthStore } from '@/store/auth'
 const isAdmin = useAuthStore().isAdmin
 const isSuperAdmin = useAuthStore().isSuperAdmin
 const companyUuid = useAuthStore().getCompanyUuid
-const isTenant = useAuthStore().isTenant
+const isTenant = useAuthStore().isTenant ?? false
 
 const routes = [
   {
