@@ -187,8 +187,11 @@ class AuthController extends Controller
             ]);
         }
 
+        $generalSetting = Settings_meta::where('setting_id', Settings::GENERAL->value)->pluck('value', 'key');
+
         return response()->json([
             'status' => false,
+            'general_setting' => $generalSetting,
         ]);
     }
 }

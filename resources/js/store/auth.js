@@ -57,8 +57,8 @@ export const useAuthStore = defineStore('auth', {
           this.logo = this.getImageUrl(res.data.logo)
           this.favicon = this.getImageUrl(res.data.favicon)
           this.title = res.data.title
-          this.generalSetting = res.data.general_setting
         }
+        this.generalSetting = res.data.general_setting
       } catch (error) {
         this.error = error.response
         this.loadStatus = 3

@@ -51,6 +51,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     Route::post('verify-2fa-code', [AuthController::class, 'verify2FA']);
+    Route::get('/check-tenant', [AuthController::class, 'tenantInfo']);
 
     Route::group(['middleware' => 'auth:sanctum'], function() {
       Route::post('logout', [AuthController::class, 'logout']);
