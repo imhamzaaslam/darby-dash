@@ -61,14 +61,12 @@
                     v-model="form.remember"
                     label="Remember me"
                   />
-                  <!--
-                    <a
+                  <RouterLink
                     class="text-primary ms-2 mb-1"
-                    href="#"
-                    >
+                    :to="{ name: 'forgot-password' }"
+                  >
                     Forgot Password?
-                    </a> 
-                  -->
+                  </RouterLink>
                 </div>
 
                 <VBtn
@@ -105,7 +103,7 @@ import { useHead } from '@unhead/vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { useAuthStore } from "../store/auth"
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
 
 definePage({ meta: { layout: 'blank' } })
@@ -121,11 +119,19 @@ const refForm = ref(null)
 const isPasswordVisible = ref(false)
 const authStore = useAuthStore()
 const $router = useRouter()
+const route = useRoute()
 const toast = useToast()
 const loadStatus = computed(() => authStore.getLoadStatus)
 
 onBeforeMount(async () => {
   await getTenant()
+})
+
+onMounted(() => {
+  const message = route.query.message
+  if (message) {
+    toast.success(decodeURIComponent(message))
+  }
 })
 
 const getTenant = async () => {

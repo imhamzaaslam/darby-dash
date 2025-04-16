@@ -73,6 +73,7 @@ declare module 'vue-router/auto/routes' {
     'projects-web-designs-partials-sort-lists-modal': RouteRecordInfo<'projects-web-designs-partials-sort-lists-modal', '/projects/web-designs/_partials/sort-lists-modal', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-update-project-drawer': RouteRecordInfo<'projects-web-designs-partials-update-project-drawer', '/projects/web-designs/_partials/update-project-drawer', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-update-project-task-drawer': RouteRecordInfo<'projects-web-designs-partials-update-project-task-drawer', '/projects/web-designs/_partials/update-project-task-drawer', Record<never, never>, Record<never, never>>,
+    'reset-password': RouteRecordInfo<'reset-password', '/reset-password', Record<never, never>, Record<never, never>>,
     'roles': RouteRecordInfo<'roles', '/roles', Record<never, never>, Record<never, never>>,
     'roles-partials-role-management-dialog': RouteRecordInfo<'roles-partials-role-management-dialog', '/roles/_partials/RoleManagementDialog', Record<never, never>, Record<never, never>>,
     'roles-partials-user-list-dialogue': RouteRecordInfo<'roles-partials-user-list-dialogue', '/roles/_partials/UserListDialogue', Record<never, never>, Record<never, never>>,

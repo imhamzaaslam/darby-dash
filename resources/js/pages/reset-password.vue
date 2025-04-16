@@ -4,7 +4,6 @@
       <VNodeRenderer :nodes="themeConfig.app.logo" />
     </div>
   </RouterLink>
-  
   <VRow
     no-gutters
     class="auth-wrapper bg-surface"
@@ -13,6 +12,7 @@
       cols="12"
       class="d-flex align-center justify-center"
     >
+      <!-- 👉 Auth Card -->
       <VCard
         class="auth-card"
         max-width="500"
@@ -20,35 +20,49 @@
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Forgot Password
+            Reset Password
           </h4>
           <div class="mb-1 mt-4 bg-td-hover px-4 py-2 rounded">
             <div class="text-primary text-sm">
               <p class="mb-0">
-                Type your email address here. If the email address is known to us, you will receive an email to reset your password.
+                Your new password must be different from previously used passwords
               </p>
             </div>
           </div>
         </VCardText>
+
         <VCardText>
           <VForm
             ref="refForm"
             @submit.prevent="submit"
           >
             <VRow>
-              <!-- email -->
+              <!-- password -->
               <VCol cols="12">
                 <VTextField
-                  v-model="form.email"
+                  v-model="form.newPassword"
                   autofocus
-                  label="Email"
-                  type="email"
-                  :rules="[requiredValidator, emailValidator]"
-                  :error-messages="submitError.email"
+                  label="New Password"
+                  placeholder="············"
+                  :type="isPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
               </VCol>
-  
-              <!-- Submit Button -->
+
+              <!-- Confirm Password -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.confirmPassword"
+                  label="Confirm Password"
+                  placeholder="············"
+                  :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+                />
+              </VCol>
+
+              <!-- reset password -->
               <VCol cols="12">
                 <VBtn
                   block
@@ -67,9 +81,10 @@
                   >Processing...</span><span
                     v-else
                     class="px-1"
-                  >Send Password Reset Link</span>
+                  >Set New Password</span>
                 </VBtn>
               </VCol>
+
               <!-- back to login -->
               <VCol cols="12">
                 <RouterLink
@@ -91,7 +106,7 @@
     </VCol>
   </VRow>
 </template>
-  
+
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
@@ -99,18 +114,22 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import AuthService from '@/services/AuthService'
 import { useToast } from "vue-toastification"
+import { useRouter, useRoute } from 'vue-router'
   
 definePage({ meta: { layout: 'blank' } })
-useHead({ title: `${layoutConfig.app.title} | Forgot Password` })
-  
+useHead({ title: `${layoutConfig.app.title} | Reset Password` })
+
+const $router = useRouter()
+const route = useRoute()
+
 const form = ref({
-  email: '',
+  newPassword: '',
+  confirmPassword: '',
 })
 
-const submitError = ref({
-  email: '',
-})
-  
+const isPasswordVisible = ref(false)
+const isConfirmPasswordVisible = ref(false)
+
 const refForm = ref(null)
 const toast = useToast()
 const loadStatus = ref(false)
@@ -120,14 +139,20 @@ async function submit() {
     loadStatus.value = true
     if (isValid) {
       let paylaod = {
-        email: form.value.email,
+        token: route.query.token,
+        email: route.query.email,
+        password: form.value.newPassword,
+        password_confirmation: form.value.confirmPassword,
       }
 
       try {
-        const response = await AuthService.forgotPassword(paylaod)
+        const response = await AuthService.resetPassword(paylaod)
 
         if (response.status === 200) {
-          toast.success(response.data.message)
+          $router.push({
+            name: 'login',
+            query: { message: encodeURIComponent(response.data.message) },
+          })
         }
       } catch (error) {
         if (error.response.status === 422) {
@@ -143,8 +168,7 @@ async function submit() {
 
 }
 </script>
-  
+
 <style lang="scss">
 @use "@core-scss/template/pages/page-auth.scss";
 </style>
-  

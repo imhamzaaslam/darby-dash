@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Darby'),
+    'name' => env('APP_NAME', 'DarbyDash'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,11 +54,11 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://app.booky.nl'),
+    'url' => env('APP_URL', 'https://dash.withdarby.com'),
 
     'asset_url' => env('ASSET_URL'),
 
-    'corporate_url' => env('CORPORATE_URL', 'https://booky.nl'),
+    'corporate_url' => env('CORPORATE_URL', 'https://withdarby.com'),
 
     /*
     |--------------------------------------------------------------------------
