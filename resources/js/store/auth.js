@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', {
     favicon: null,
     title: null,
     generalSetting: [],
+    countryStates: [],
     authUser: null,
     authenticated: false,
     token: null,
@@ -35,6 +36,8 @@ export const useAuthStore = defineStore('auth', {
         this.authUser = res.data
 
         this.loginUserPermissions = res.data.permissions
+
+        this.countryStates = res.data.states
 
         return res
       } catch (error) {
@@ -136,6 +139,7 @@ export const useAuthStore = defineStore('auth', {
     getFavicon: state => state.favicon,
     getTitle: state => state.title,
     getGeneralSetting: state => state.generalSetting,
+    getCountryStates: state => state.countryStates,
     getErrors: state => state.error,
     isSuperAdmin: state => state.authUser?.user?.roles[0].name == 'Super Admin',
     isAdmin: state => state.authUser?.user?.roles[0].name == 'Admin',

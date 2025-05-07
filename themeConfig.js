@@ -60,7 +60,7 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     }),
     watermarkLogo: h('div', {
       class: 'system-watermark-company-logo',
-      innerHTML: `<img src="${systemLogo.value}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`,
+      innerHTML: `<img src="${logo}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:30px;">`,
     }),
     contentWidth: ContentWidth.Boxed,
     contentLayoutNav: AppContentLayoutNav.Vertical,

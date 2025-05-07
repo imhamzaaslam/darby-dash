@@ -159,6 +159,21 @@ class TaskController extends Controller
     }
 
     /**
+     * Get tasks by project.
+     *
+     * @param string $projectUuid
+     * @return AnonymousResourceCollection|JsonResponse
+     */
+    public function dueTasks(string $projectUuid): AnonymousResourceCollection|JsonResponse
+    {
+        $project = $this->projectRepository->getByUuidOrFail($projectUuid);
+        $this->authorize('view', $project);
+        $tasks = $this->taskRepository->getDueTasksByProject($project);
+
+        return TaskResource::collection($tasks);
+    }
+
+    /**
      * Store task by project.
      *
      * @param StoreTaskByProjectRequest $request

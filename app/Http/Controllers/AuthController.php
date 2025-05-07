@@ -101,6 +101,7 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'user' => $user->load('company'),
             'permissions' => $user->getAllPermissions()->pluck('name'),
+            'states' => getStates(),
         ]);
     }
 

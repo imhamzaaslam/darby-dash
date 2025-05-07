@@ -6,6 +6,7 @@ export const useProjectTaskStore = defineStore('project_tasks', {
     projectTasks: [],
     projectAllTasks: [],
     projectTask: null,
+    projectDueTasks: [],
     projectTasksCount: 0,
     taskFiles: [],
     loadStatus: 0,
@@ -25,6 +26,20 @@ export const useProjectTaskStore = defineStore('project_tasks', {
         this.error = error
         this.loadStatus = 3
         console.error('getLists error ', error)
+      }
+    },
+    async getDueTasks(projectId) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectTaskService.getDueTasks(projectId)
+
+        this.projectDueTasks = response.data.data
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('getDueTasks error ', error)
       }
     },
     async getUnlistedTasks(projectId) {
@@ -169,6 +184,7 @@ export const useProjectTaskStore = defineStore('project_tasks', {
     getProjectTasks: state => state.projectTasks,
     getProjectAllTasks: state => state.projectAllTasks,
     getProjectTask: state => state.projectTask,
+    getProjectDueTasks: state => state.projectDueTasks,
     getTaskFiles: state => state.taskFiles,
     getErrors: state => state.error,
   },

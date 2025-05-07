@@ -90,7 +90,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
             v-if="!hideTitleAndIcon"
             class="app-title text-h4 text-primary text-truncate"
             style="max-width: 200px;"
-          >{{ layoutConfig.app.title }}</span>
+          ><!-- {{ layoutConfig.app.title }} --></span>
           <VAvatar
             v-else
             color="primary"

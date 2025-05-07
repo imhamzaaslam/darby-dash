@@ -157,7 +157,7 @@
               <!-- 👉 City -->
               <VCol
                 cols="12"
-                md="6"
+                md="4"
               >
                 <AppTextField
                   v-model="accountData.city"
@@ -168,10 +168,25 @@
                 />
               </VCol>
 
+              <VCol
+                cols="12"
+                md="4"
+              >
+                <AppAutocomplete
+                  v-model="accountData.american_state"
+                  label="State*"
+                  placeholder="Select State"
+                  :rules="[requiredValidator]"
+                  :items="getStates"
+                  item-title="name"
+                  item-value="id"
+                />
+              </VCol>
+
               <!-- 👉 Zip Code -->
               <VCol
                 cols="12"
-                md="6"
+                md="4"
               >
                 <AppTextField
                   v-model="accountData.zip"
@@ -329,6 +344,7 @@ const setUserDetails = async () => {
   accountData.value.city = userDetails?.info?.city
   accountData.value.address = userDetails?.info?.address
   accountData.value.zip = userDetails?.info?.zip
+  accountData.value.american_state = userDetails?.info?.american_state
 }
 
 const showError = () => {
@@ -348,6 +364,10 @@ const getImageUrl = path => {
 
 const getLoadStatus = computed(() => {
   return userStore.getLoadStatus
+})
+
+const getStates = computed(() => {
+  return authStore.getCountryStates
 })
 
 const getStatusCode = computed(() => {

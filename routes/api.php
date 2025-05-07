@@ -150,6 +150,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
                 Route::get('/tasks', [TaskController::class, 'fetchUnlistedTasks']);
                 Route::get('/allTasks', [TaskController::class, 'getByProject']);
+                Route::get('/dueTasks', [TaskController::class, 'dueTasks']);
                 Route::post('/task', [TaskController::class, 'storeByProject']);
                 Route::prefix('task/{taskUuid}')->group(function () {
                     Route::patch('/', [TaskController::class, 'updateByProject']);

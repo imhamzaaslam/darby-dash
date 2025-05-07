@@ -151,13 +151,13 @@ const project = computed(() =>{
         >
           <RouterLink :to="`/projects/web-designs/${projectId}`">
             <span
-              class="text-h6 ms-3 me-5 inner-badge-text"
+              class="text-h6 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/web-designs/${projectId}` }"
             >Overview</span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/tasks/add`">
             <span
-              class="text-h6 me-8 inner-badge-text"
+              class="text-h6 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/tasks/add` }"
             >
               Tasks
@@ -174,26 +174,26 @@ const project = computed(() =>{
           </RouterLink>
           <RouterLink
             :to="`/projects/${projectId}/milestones`"
-            class="text-h6 me-8 inner-badge-text"
+            class="text-h6 inner-badge-text"
             :class="{ 'text-primary': $route.path === `/projects/${projectId}/milestones` }"
           >
             Milestones
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/calendar`">
             <span
-              class="text-h6 me-8 inner-badge-text"
+              class="text-h6 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/calendar` }"
             >Calendar</span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/files`">
             <span
-              class="text-h6 me-8 inner-badge-text"
+              class="text-h6 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/files` }"
             >Files</span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/chat`">
             <span
-              class="text-h6 me-5 inner-badge-text"
+              class="text-h6 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/chat` }"
             >
               <VBadge
@@ -209,13 +209,13 @@ const project = computed(() =>{
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/team`">
             <span
-              class="text-h6 me-8 inner-badge-text"
+              class="text-h6 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/team` }"
             >Your Team</span>
           </RouterLink>
           <RouterLink :to="`/projects/${projectId}/marketplace`">
             <span
-              class="text-h6 me-8 inner-badge-text"
+              class="text-h6 inner-badge-text"
               :class="{ 'text-primary': $route.path === `/projects/${projectId}/marketplace` }"
             >Marketplace</span>
           </RouterLink> 
@@ -268,7 +268,8 @@ const project = computed(() =>{
 
 <style lang="scss" scoped>
 .inner-badge-text{
-    font-size: .85rem!important;
+    font-size: 1.1rem!important;
+    padding: 0 15px;
 }
 .app-title-wrapper {
     margin-inline-end: auto;

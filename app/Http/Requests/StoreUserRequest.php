@@ -36,6 +36,7 @@ class StoreUserRequest extends FormRequest
             'avatar' => 'sometimes|image|mimes:jpg,jpeg,gif,png|max:1024',
             'address' => 'sometimes|string|max:255',
             'city' => 'sometimes|string|max:255',
+            'american_state' => 'sometimes|string|max:255',
             'zip' => 'sometimes|string|max:255',
         ];
     }

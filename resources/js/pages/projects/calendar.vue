@@ -139,7 +139,7 @@ const fetchProjectTasks = async () => {
   try {
     const projectUuid = route.params.id
 
-    await projectTaskStore.getAll(projectUuid)
+    await projectTaskStore.getDueTasks(projectUuid)
   } catch (error) {
     console.error('Error fetching project tasks', error)
   }
@@ -179,7 +179,7 @@ const setCalendarEvents = async () => {
   await fetchProjectTasks()
   await fetchProjectGuests()
 
-  const projectTasks = projectTaskStore.getProjectAllTasks
+  const projectTasks = projectTaskStore.getProjectDueTasks
   const calendarEvents = calendarEventStore.getCalendarEvents
 
   const combinedEvents = [
@@ -187,7 +187,7 @@ const setCalendarEvents = async () => {
       id: task.id,
       uuid: task.uuid,
       title: task.name,
-      start: task.due_date ? task.due_date : task.created_at,
+      start: task.due_date ?? task.due_date,
       extendedProps: {
         description: task.description,
         guests: task.guests || [],

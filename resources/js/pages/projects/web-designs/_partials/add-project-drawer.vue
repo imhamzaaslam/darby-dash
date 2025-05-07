@@ -32,8 +32,8 @@
                 <AppAutocomplete
                   ref="focusField"
                   v-model="newProjectDetails.client_id"
-                  label="Client*"
-                  placeholder="Select Client"
+                  label="Business Name*"
+                  placeholder="Select Business Name"
                   :rules="[requiredValidator]"
                   :items="props.getClients"
                   item-title="name"
@@ -91,9 +91,9 @@
               >
                 <AppTextField
                   v-model="newProjectDetails.title"
-                  label="Title*"
+                  label="Point of Contact*"
                   :rules="[requiredValidator]"
-                  placeholder="Title"
+                  placeholder="Point of Contact"
                 />
               </VCol>
               <VCol

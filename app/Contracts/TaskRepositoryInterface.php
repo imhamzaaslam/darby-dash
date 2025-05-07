@@ -21,6 +21,8 @@ interface TaskRepositoryInterface
 
     public function getByProject(Project $project): Collection;
 
+    public function getDueTasksByProject(Project $project): Collection;
+
     public function createByProject(Project $project, array $attributes): Task;
 
     public function updateTasksOrder(Task $task, array $attributes): Task;

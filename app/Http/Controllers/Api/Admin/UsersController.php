@@ -94,6 +94,7 @@ class UsersController extends Controller
             'avatar' => $validated['avatar'] ?? null,
             'address' => $validated['address'] ?? '',
             'city' => $validated['city'] ?? '',
+            'american_state' => $validated['american_state'] ?? '',
             'zip' => $validated['zip'] ?? '',
         ];
 
@@ -154,6 +155,7 @@ class UsersController extends Controller
             'avatar' => $validated['avatar'] ?? $user->info->avatar,
             'address' => $validated['address'] ?? '',
             'city' => $validated['city'] ?? '',
+            'american_state' => $validated['american_state'] ?? '',
             'zip' => $validated['zip'] ?? '',
         ]);
 

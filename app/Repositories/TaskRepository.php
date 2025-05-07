@@ -87,6 +87,15 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         return $this->model->where(['project_id' => $project->id])->get();
     }
 
+    public function getDueTasksByProject(Project $project): Collection
+    {
+        return $this->model
+        ->where('project_id', $project->id)
+        ->where('status', '!=', 3)
+        ->whereNotNull('due_date')
+        ->get();
+    }
+
     public function createByProject(Project $project, array $attributes): Task
     {
         $data = array_merge($attributes, ['project_id' => $project->id]);

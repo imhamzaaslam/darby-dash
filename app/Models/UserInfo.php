@@ -62,6 +62,7 @@ class UserInfo extends Base
         'address',
         'city',
         'state',
+        'american_state',
         'zip',
     ];
 

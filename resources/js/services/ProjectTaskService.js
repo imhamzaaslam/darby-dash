@@ -4,6 +4,9 @@ export default {
   getAll(projectId) {
     return apiClient.get(`admin/projects/${projectId}/allTasks`)
   },
+  getDueTasks(projectId) {
+    return apiClient.get(`admin/projects/${projectId}/dueTasks`)
+  },
   getUnlistedTasks(projectId) {
     return apiClient.get(`admin/projects/${projectId}/tasks`)
   },
