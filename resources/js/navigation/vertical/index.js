@@ -7,7 +7,7 @@ const companyUuid = authStore.getCompanyUuid
 const isTenant = authStore.isTenant ?? false
 
 const settingsChildren = [
-  companyUuid && isTenant && {
+  {
     title: 'Company Setting',
     to: { name: 'manage-company-settings', params: { id: companyUuid } },
   },

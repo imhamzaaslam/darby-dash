@@ -57,10 +57,10 @@ export const useAuthStore = defineStore('auth', {
         if(res.data.status)
         {
           this.tenant = res.data.isTenant
-          this.logo = this.getImageUrl(res.data.logo)
-          this.favicon = this.getImageUrl(res.data.favicon)
           this.title = res.data.title
         }
+        this.logo = this.getImageUrl(res.data.logo)
+        this.favicon = this.getImageUrl(res.data.favicon)
         this.generalSetting = res.data.general_setting
       } catch (error) {
         this.error = error.response

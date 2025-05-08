@@ -813,6 +813,7 @@ import { useStorage } from '@vueuse/core'
 import { cookieRef, namespaceConfig } from '@layouts/stores/config'
 import { updateSystemLogo, updateSystemFavicon } from '@themeConfig'
 
+
 const toast = useToast()
 const $route = useRoute()
 const router = useRouter()
@@ -1054,10 +1055,8 @@ const updateBucksInfo = async() => {
     }
 
     const response = await companyStore.saveBucksDetails(payload, companyUuid)
-
-    if(authStore.isTenant){
-      await authStore.tenantInfo()
-    }
+    
+    await authStore.tenantInfo()
 
     toast.success('Details saved successfully.')
     isLoading.value = false
@@ -1083,10 +1082,13 @@ const saveColor = async () => {
 
     const response = await companyStore.saveColors(payload, companyUuid)
     
-    if(authStore.isTenant){
+    /* if(authStore.isTenant){
       await authStore.tenantInfo()
       setPrimaryColor(authStore.generalSetting?.primary_color)
-    }
+    } */
+
+    await authStore.tenantInfo()
+    setPrimaryColor(authStore.generalSetting?.primary_color)
 
     toast.success('Colors saved successfully.')
     isLoading.value = false
@@ -1145,6 +1147,7 @@ const deleteFavicon = async fileId => {
     favicon.value = null
     company.value.favicon = null
     faviconInputRef.value = null
+    updateSystemFavicon(null)
   } catch (error) {
     console.error('favicon delete failed:', error)
   }
@@ -1158,6 +1161,7 @@ const deleteLogo = async fileId => {
     logo.value = null
     company.value.logo = null
     logoInputRef.value = null
+    updateSystemLogo(null)
   } catch (error) {
     console.error('Logo delete failed:', error)
   }
@@ -1185,11 +1189,8 @@ const handleLogoChange = async event => {
     try {
       const response = await companyStore.uploadLogo(formData, companyUuid)
 
-      if(authStore.isTenant){
-        await authStore.tenantInfo()
-        updateSystemLogo(authStore.getLogo)
-        console.log('At here')
-      }
+      await authStore.tenantInfo()
+      updateSystemLogo(authStore.getLogo)
 
       toast.success('Logo uploaded successfully.')
       fetchCompany()
@@ -1223,15 +1224,13 @@ const handleFaviconChange = async event => {
     try {
       const response = await companyStore.uploadFavicon(formData, companyUuid)
 
-      if(authStore.isTenant){
-        await authStore.tenantInfo()
-        updateSystemFavicon(authStore.getFavicon)
-      }
+      await authStore.tenantInfo()
+      updateSystemFavicon(authStore.getFavicon)
 
       toast.success('Favicon uploaded successfully.')
+      fetchCompany()
       favicon.value = getImageUrl(response.data.url)
       faviconInputRef.value = null
-      fetchCompany()
     } catch (error) {
       console.error('Favicon upload failed:', error)
     }

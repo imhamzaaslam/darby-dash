@@ -24,8 +24,8 @@ class CompanyResource extends JsonResource
             'total_companies' => Company::count() - 1,
             'url' => $this->makeDomainUrl(),
             'admin' => $this->getClient() ? new UserResource($this->getClient()) : null,
-            'logo' => $this->getLogo() ?? null,
-            'favicon' => $this->getFavicon() ?? null,
+            'logo' => $this->getLogo() ?? ($this->logo ?? null),
+            'favicon' => $this->getFavicon() ?? ($this->favicon ?? null),
             'general_setting' => $this->getGeneralSetting(),
             'is_active' => $this->active(),
         ];

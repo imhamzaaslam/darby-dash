@@ -182,17 +182,21 @@ class AuthController extends Controller
                 'isTenant' => $isTenant,
                 'logo' => $logo->path ?? null,
                 'favicon' => $favicon->path ?? null,
-                'title' => $company->name,
+                'title' => $company->name ?? null,
                 'general_setting' => $generalSetting,
                 'status' => true,
             ]);
         }
-
+        $company = Company::where('name', 'Darby Dash')->orderBy('id', 'asc')->first();
+        $favicon = $company->favicon;
+        $logo = $company->logo;
         $generalSetting = Settings_meta::where('setting_id', Settings::GENERAL->value)->pluck('value', 'key');
 
         return response()->json([
             'status' => false,
             'general_setting' => $generalSetting,
+            'logo' => $logo->path ?? null,
+            'favicon' => $favicon->path ?? null,
         ]);
     }
 }

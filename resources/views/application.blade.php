@@ -29,9 +29,9 @@
 
         const setCompanyDetails = () => {
             const store = JSON.parse(localStorage.getItem('auth'))
-            const storedFavicon = store && store.tenant && store.favicon ? store.favicon : null;
+            const storedFavicon = store && store.favicon ? store.favicon : null;
             const storedTitle = store && store.tenant && store.title ? store.title : null;
-            const storedPrimaryColor = store && store.tenant && store.generalSetting && store.generalSetting?.primary_color  ? store.generalSetting?.primary_color  : '#a12592';
+            const storedPrimaryColor = store && store.generalSetting && store.generalSetting?.primary_color  ? store.generalSetting?.primary_color  : '#a12592';
 
             const faviconElement = document.getElementById('favicon');
             const titleElement = document.getElementById('companyTitle');

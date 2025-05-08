@@ -10,8 +10,8 @@ import logoHalf from '@images/half-logo.png'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
 const store = JSON.parse(localStorage.getItem('auth'))
-const getDynamicLogo = () => (store && (store.tenant && store.logo)  ? store.logo : logo)
-const getDynamicFavicon = () => (store && (store.tenant && store.favicon)  ? store.favicon : logoHalf)
+const getDynamicLogo = () => (store && store.logo ? store.logo : logo)
+const getDynamicFavicon = () => (store && store.favicon ? store.favicon : logoHalf)
 const getDynamicTitle = () => (store && store.tenant ? store.title : 'Darby Dash')
 
 const systemLogo = ref(getDynamicLogo())
