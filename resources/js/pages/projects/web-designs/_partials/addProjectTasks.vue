@@ -406,6 +406,22 @@
                         <span class="text-xs">Edit Task</span>
                       </VTooltip>
                     </VIcon>
+                    <VIcon 
+                      v-if="item.subtasks?.length > 1"
+                      :color="showAddSubtaskIcon === item.uuid ? 'primary' : 'white'"
+                      variant="text"
+                      class="tabler-list-check ms-1"
+                      rounded
+                      size="small"
+                      @click.stop="openSubtaskSortModal(item)"
+                    >
+                      <VTooltip
+                        activator="parent"
+                        location="top"
+                      >
+                        <span class="text-xs">Sort Subtasks</span>
+                      </VTooltip>
+                    </VIcon>
                     <span
                       v-if="item?.files_count > 0"
                       class="text-sm font-weight-bold cursor-pointer ms-1"
@@ -1717,6 +1733,12 @@
     :selected-project="projectId"
     :get-project-all-lists="getProjectAllLists"
   />
+  <SortSubTaskModal
+    v-model:is-sort-sub-task-modal-open="isSortSubTaskModalOpen"
+    :selected-project="projectId"
+    :selected-parent-task="parentTaskId"
+    :get-subtasks="subTasksList"
+  />
 </template>
 
 <script setup="js">
@@ -1729,6 +1751,7 @@ import EditTaskDrawer from '@/pages/projects/web-designs/_partials/update-projec
 import FilterTaskDrawer from '@/pages/projects/web-designs/_partials/filter-task-drawer.vue'
 import SaveTemplateModal from '@/pages/projects/web-designs/_partials/save-template-modal.vue'
 import SortListModal from '@/pages/projects/web-designs/_partials/sort-lists-modal.vue'
+import SortSubTaskModal from '@/pages/projects/web-designs/_partials/sort-sub-tasks-modal.vue'
 import { computed, onBeforeMount, onMounted, onUnmounted, nextTick, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useAuthStore } from "@/store/auth"
@@ -1743,6 +1766,7 @@ import { VueDraggableNext } from 'vue-draggable-next'
 import { useTheme } from 'vuetify'
 import { VIcon } from 'vuetify/lib/components/index.mjs'
 import { debounce, truncate } from 'lodash'
+import _cloneDeep from 'lodash/cloneDeep'
 import sketch from '@images/icons/project-icons/sketch.png'
 import Loader from "@/components/Loader.vue"
 
@@ -1767,6 +1791,7 @@ const filtersApplied = ref(false)
 
 const isSaveTemplateModalOpen = ref(false)
 const isSortListModalOpen = ref(false)
+const isSortSubTaskModalOpen = ref(false)
 
 const isAddListDialogVisible = ref(false)
 const addListForm = ref()
@@ -1812,6 +1837,8 @@ const selectedAssignee = ref(null)
 const filteredUsers = ref([])
 const showDeleteIcon = ref(null)
 const focusDeleteListId = ref(null)
+const parentTaskId = ref(null)
+const subTasksList = ref(null)
 
 const isLoading = ref(false)
 
@@ -2280,6 +2307,12 @@ const deleteProjectList = async list => {
   } catch (error) {
     toast.error('Failed to delete project list:', error)
   }
+}
+
+function openSubtaskSortModal(parentTask){
+  parentTaskId.value = parentTask.uuid
+  subTasksList.value = _cloneDeep(parentTask.subtasks)
+  isSortSubTaskModalOpen.value = true
 }
 
 function filteredTasks(index, tasks) {

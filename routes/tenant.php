@@ -157,6 +157,7 @@ Route::middleware([
                     Route::prefix('task/{taskUuid}')->group(function () {
                         Route::patch('/', [TaskController::class, 'updateByProject']);
                         Route::post('/order', [TaskController::class, 'updateProjectTasksOrder']);
+                        Route::post('/sort', [TaskController::class, 'updateProjectSubTasksOrder']);
                         Route::delete('/', [TaskController::class, 'deleteByProject']);
                         Route::get('/members', [TaskController::class, 'getMembersForTask']);
                     });

@@ -26,6 +26,7 @@ interface TaskRepositoryInterface
     public function createByProject(Project $project, array $attributes): Task;
 
     public function updateTasksOrder(Task $task, array $attributes): Task;
+    public function updateSubTasksOrder(array $tasks): void;
 
     public function getMembersForTask(Project $project, Task $task, string $keyword = null): Collection;
 

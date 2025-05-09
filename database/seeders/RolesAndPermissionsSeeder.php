@@ -67,6 +67,24 @@ class RolesAndPermissionsSeeder extends Seeder
                 'file' => ['view'],
                 'team' => ['view'],
                 'payment' => ['view'],
+            ],
+            UserRole::DEVELOPER->value => [
+                'project' => ['view'],
+                'task' => ['view'],
+                'milestone' => ['view'],
+                'calendar' => ['view'],
+                'file' => ['view'],
+                'team' => ['view'],
+                'payment' => ['view'],
+            ],
+            UserRole::DESIGNER->value => [
+                'project' => ['view'],
+                'task' => ['view'],
+                'milestone' => ['view'],
+                'calendar' => ['view'],
+                'file' => ['view'],
+                'team' => ['view'],
+                'payment' => ['view'],
             ]
         ];
     }

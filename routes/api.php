@@ -155,6 +155,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                 Route::prefix('task/{taskUuid}')->group(function () {
                     Route::patch('/', [TaskController::class, 'updateByProject']);
                     Route::post('/order', [TaskController::class, 'updateProjectTasksOrder']);
+                    Route::post('/sort', [TaskController::class, 'updateProjectSubTasksOrder']);
                     Route::delete('/', [TaskController::class, 'deleteByProject']);
                     Route::get('/members', [TaskController::class, 'getMembersForTask']);
                 });

@@ -19,6 +19,9 @@ export default {
   updateProjectTasksOrder(task) {
     return apiClient.post(`admin/projects/${task.project_uuid}/task/${task.uuid}/order`, task)
   },
+  updateSubTaskOrdering(projectId, taskId, tasks) {
+    return apiClient.post(`admin/projects/${projectId}/task/${taskId}/sort`, { tasks: tasks })
+  },
   fetchFiles(taskUuid) {
     return apiClient.get(`admin/task/${taskUuid}/files`)
   },

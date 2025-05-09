@@ -36,7 +36,7 @@ class Task extends Base
 
     public function subtasks()
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id')->orderBy('display_order');
     }
 
     public function getStatus()

@@ -294,6 +294,25 @@ class TaskController extends Controller
     }
 
     /**
+     * Update project subtasks order.
+     *
+     * @param Request $request
+     * @param string $projectUuid
+     * @param string $taskUuid
+     * @return Response|JsonResponse
+     */
+
+    public function updateProjectSubTasksOrder(Request $request, string $projectUuid, string $taskUuid):Response|JsonResponse
+    {
+        $task = $this->taskRepository->getByUuidOrFail($taskUuid);
+        $project = $task->project;
+        $this->authorize('view', $project);
+        $this->taskRepository->updateSubTasksOrder($request->input('tasks'));
+        
+        return response()->json(['message' => 'Subtasks sorted successfully']);
+    }
+
+    /**
      * Delete task by project.
      *
      * @param string $projectUuid

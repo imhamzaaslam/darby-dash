@@ -124,6 +124,19 @@ export const useProjectTaskStore = defineStore('project_tasks', {
         console.error('updateProjectTasksOrder error ', error)
       }
     },
+    async updateSubTaskOrdering(projectId, taskId, tasks) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const response = await ProjectTaskService.updateSubTaskOrdering(projectId, taskId, tasks)
+        
+        this.loadStatus = 2
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('updateSubTaskOrdering error ', error)
+      }
+    },
     async delete(task) {
       this.error = null
       this.loadStatus = 1

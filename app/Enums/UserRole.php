@@ -8,5 +8,7 @@ enum UserRole: string
     case ADMIN = 'Admin';
     case PROJECT_MANAGER = 'Project Manager';
     case CLIENT = 'Client User';
-    case STAFF = 'Staff User';
+    case STAFF = 'Staff';
+    case DEVELOPER = 'Developer';
+    case DESIGNER = 'Designer';
 }

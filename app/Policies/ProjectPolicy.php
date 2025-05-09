@@ -30,7 +30,7 @@ class ProjectPolicy
      */
     public function viewAll(User $user): bool
     {
-        return $user->hasRole(UserRole::ADMIN->value) || $user->hasRole(UserRole::PROJECT_MANAGER->value) || $user->hasRole(UserRole::CLIENT->value) || $user->hasRole(UserRole::STAFF->value);
+        return $user->hasRole(UserRole::ADMIN->value) || $user->hasRole(UserRole::PROJECT_MANAGER->value) || $user->hasRole(UserRole::CLIENT->value) || $user->hasRole(UserRole::STAFF->value || $user->hasRole(UserRole::DEVELOPER->value) || $user->hasRole(UserRole::DESIGNER->value));
     }
 
     /**

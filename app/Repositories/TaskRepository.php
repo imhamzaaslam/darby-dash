@@ -110,6 +110,16 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
         return $task;
     }
 
+    public function updateSubTasksOrder(array $tasks): void
+    {
+        foreach ($tasks as $task) {
+            $projectTask = $this->model->findOrFail($task['id']);
+            if($projectTask){
+                $projectTask->update(['display_order' => $task['order']]);
+            }
+        }
+    }
+
     public function getMembersForTask(Project $project, Task $task, string $keyword = null): Collection
     {
         $projectMembers = $project->members;

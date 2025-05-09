@@ -71,6 +71,7 @@ declare module 'vue-router/auto/routes' {
     'projects-web-designs-partials-list-view-skeleton': RouteRecordInfo<'projects-web-designs-partials-list-view-skeleton', '/projects/web-designs/_partials/list-view-skeleton', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-save-template-modal': RouteRecordInfo<'projects-web-designs-partials-save-template-modal', '/projects/web-designs/_partials/save-template-modal', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-sort-lists-modal': RouteRecordInfo<'projects-web-designs-partials-sort-lists-modal', '/projects/web-designs/_partials/sort-lists-modal', Record<never, never>, Record<never, never>>,
+    'projects-web-designs-partials-sort-sub-tasks-modal': RouteRecordInfo<'projects-web-designs-partials-sort-sub-tasks-modal', '/projects/web-designs/_partials/sort-sub-tasks-modal', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-update-project-drawer': RouteRecordInfo<'projects-web-designs-partials-update-project-drawer', '/projects/web-designs/_partials/update-project-drawer', Record<never, never>, Record<never, never>>,
     'projects-web-designs-partials-update-project-task-drawer': RouteRecordInfo<'projects-web-designs-partials-update-project-task-drawer', '/projects/web-designs/_partials/update-project-task-drawer', Record<never, never>, Record<never, never>>,
     'reset-password': RouteRecordInfo<'reset-password', '/reset-password', Record<never, never>, Record<never, never>>,

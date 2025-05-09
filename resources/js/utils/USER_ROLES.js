@@ -3,5 +3,7 @@ export const USER_ROLES = {
   ADMIN: 'Admin',
   PROJECT_MANAGER: 'Project Manager',
   CLIENT: 'Client User',
-  STAFF: 'Staff User',
+  STAFF: 'Staff',
+  DEVELOPER: 'Developer',
+  DESIGNER: 'Designer',
 }

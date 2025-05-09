@@ -144,8 +144,10 @@ export const useAuthStore = defineStore('auth', {
     isSuperAdmin: state => state.authUser?.user?.roles[0].name == 'Super Admin',
     isAdmin: state => state.authUser?.user?.roles[0].name == 'Admin',
     isManager: state => state.authUser?.user?.roles[0].name == 'Project Manager',
-    isStaff: state => state.authUser?.user?.roles[0].name == 'Staff User',
+    isStaff: state => state.authUser?.user?.roles[0].name == 'Staff',
     isClient: state => state.authUser?.user?.roles[0].name == 'Client User',
+    isDeveloper: state => state.authUser?.user?.roles[0].name == 'Developer',
+    isDesigner: state => state.authUser?.user?.roles[0].name == 'Designer',
     getRole: state => state.authUser?.user?.roles[0],
     getUserFromLocalStorage: () => getUserFromLocalStorage(),
     hasPermission: state => permission => {
