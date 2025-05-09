@@ -132,7 +132,8 @@ class TaskRepository extends AbstractEloquentRepository implements TaskRepositor
 
         if ($keyword) {
             $projectMembers = $projectMembers->filter(function ($member) use ($keyword) {
-                return str_contains($member->name, $keyword) || str_contains($member->email, $keyword);
+                $fullName = strtolower($member->name_first . ' ' . $member->name_last);
+                return str_contains($fullName, strtolower($keyword));
             });
         }
 

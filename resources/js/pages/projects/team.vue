@@ -509,11 +509,7 @@ const fetchProject = async () => {
 }
 
 const setSelectedMembers = async () => {
-  const project = projectStore.getProject
-  const members = project.member_ids
-
-  // set in selectedMembers
-  newMembers.value = members
+  newMembers.value = null
 }
 
 const getByProjects = async () => {
@@ -582,9 +578,14 @@ const applyFilters = async (name = '', email = null, roleId = null) => {
 
 const getMembers = computed(() => {
   const members = userStore.getMembersList
+  const usersByProjects = userStore.getUsersByProjects
 
-  const remainingMembers = members.filter(member => !selectedMembers.value.includes(member.value))
+  const excludedIds = usersByProjects.map(user => user.id)
   
+  const remainingMembers = members.filter(member => {
+    return !selectedMembers.value.includes(member.value) && !excludedIds.includes(member.id)
+  })
+
   return remainingMembers.map(member => ({
     id: member.id,
     name: `${member.name_first} ${member.name_last} (${member.role})`,

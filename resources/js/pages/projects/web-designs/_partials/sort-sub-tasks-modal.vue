@@ -57,7 +57,9 @@
                 color="grey darken-1"
               />
               <div class="text-body-1 text-high-emphasis">
-                <small class="progress-text">{{ task.name }}</small>
+                <small class="progress-text">
+                  {{ task.name.length > 70 ? task.name.substring(0, 70) + "..." : task.name }}
+                </small>
               </div>
             </VCol>
           </VRow>

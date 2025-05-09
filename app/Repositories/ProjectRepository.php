@@ -137,7 +137,7 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
 
     public function updateProjectMembers(Project $project, array $member_ids): void
     {
-        ProjectMember::where('project_id', $project->id)->delete();
+        //ProjectMember::where('project_id', $project->id)->delete();
         $this->storeProjectMembers($project, $member_ids);
     }
 
