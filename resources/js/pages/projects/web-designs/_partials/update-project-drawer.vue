@@ -206,6 +206,16 @@
                     </VListItem>
                   </template>
                 </AppAutocomplete>
+                <div class="mt-2 d-flex justify-end">
+                  <VBtn
+                    variant="text"
+                    class="text-primary text-sm"
+                    size="x-small"
+                    @click="router.push({ name: 'members-list', query: { openDrawer: '1' } })"
+                  >
+                    + Add New Member
+                  </VBtn>
+                </div>
               </VCol>
               <VCol
                 md="6"
@@ -293,6 +303,7 @@ import Multiselect from '@vueform/multiselect'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "@/store/projects"
 import { useAuthStore } from "@/store/auth"
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   isEditDrawerOpen: {
@@ -313,6 +324,7 @@ const emit = defineEmits(['update:isEditDrawerOpen'])
 const toast = useToast()
 const projectStore = useProjectStore()
 const authStore = useAuthStore()
+const router = useRouter()
 
 const focusField = ref(null)
 const editProjectForm = ref()

@@ -43,7 +43,7 @@
               @click="viewType = 'grid'"
             />
             <VIcon
-              icon="tabler-filter"
+              :icon="useMagnifierIcon ? 'tabler-search' : 'tabler-filter'"
               class="bg-primary ms-1"
               @click="isFilterDrawerOpen = !isFilterDrawerOpen"
             />
@@ -406,6 +406,7 @@ import { useToast } from "vue-toastification"
 import { useProjectStore } from "../../store/projects"
 import { useUserStore } from "../../store/users"
 import { useRoleStore } from "../../store/roles"
+import { useAuthStore } from "@/store/auth"
 import { useRoute } from 'vue-router'
 import sketch from '@images/icons/project-icons/sketch.png'
 
@@ -413,6 +414,7 @@ const toast = useToast()
 const projectStore = useProjectStore()
 const userStore = useUserStore()
 const roleStore = useRoleStore()
+const authStore = useAuthStore()
 const router = useRoute()
 
 const focusInput = ref()
@@ -623,6 +625,10 @@ const getImageUrl = path => {
 
   return `${baseUrl}storage/${path}`
 }
+
+const useMagnifierIcon  = computed(() => {
+  return authStore.generalSetting?.is_magnifier_icon
+})
 
 watch([project, isAddMemberDialogueOpen], ([newProject, newDialogueState]) => {
   if (newProject) {

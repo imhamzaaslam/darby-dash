@@ -48,7 +48,7 @@
           />
         </VBtnToggle>
         <VIcon
-          icon="tabler-filter"
+          :icon="useMagnifierIcon ? 'tabler-search' : 'tabler-filter'"
           class="bg-primary ms-2"
           @click="isFilterDrawerOpen = !isFilterDrawerOpen"
         />
@@ -336,7 +336,7 @@
 <script setup>
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import Swal from 'sweetalert2'
 import emptyMembers from '@images/darby/projects_list.svg?raw'
 import AddMemberDrawer from '@/pages/teams/_partials/add-member-drawer.vue'
@@ -348,14 +348,17 @@ import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useRoleStore } from "@/store/roles"
 import { useUserStore } from "@/store/users"
+import { useAuthStore } from "@/store/auth"
 import moment from 'moment'
 
 useHead({ title: `${layoutConfig.app.title} | Manage Members` })
 
 const router = useRouter()
+const route = useRoute()
 const toast = useToast()
 const roleStore = useRoleStore()
 const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const editMemberDetails = ref({})
 const isAddMemberDrawerOpen = ref(false)
@@ -379,6 +382,7 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+  checkDrawerQuery()
   handleResize()
   window.addEventListener('resize', handleResize)
 })
@@ -396,6 +400,12 @@ onBeforeMount(async () => {
   await fetchRoles()
   await fetchMembers()
 })
+
+const checkDrawerQuery = () => {
+  if (route.query.openDrawer === '1') {
+    isAddMemberDrawerOpen.value = true
+  }
+}
 
 const fetchMembers = async () => {
   try {
@@ -547,6 +557,12 @@ const getLoadStatus = computed(() => {
 const userDetails = computed(() => {
   return userStore.getUser
 })
+
+const useMagnifierIcon  = computed(() => {
+  return authStore.generalSetting?.is_magnifier_icon
+})
+
+watch(() => route.query.openDrawer, checkDrawerQuery)
 
 watch([viewType], ([newViewType]) => {
   router.push({

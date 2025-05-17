@@ -15,7 +15,8 @@ class ProjectTypeController extends Controller
 
     public function index(Request $request)
     {
-        $projectTypes = $this->projectTypeRepository->getAll();
-        return ProjectTypeResource::collection($projectTypes);
+        $projectTypes = $this->projectTypeRepository->getFirstBy('id', 1);
+        return new ProjectTypeResource($projectTypes);
+        //return ProjectTypeResource::collection($projectTypes);
     }
 }

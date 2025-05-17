@@ -48,7 +48,7 @@
             />
           </VBtnToggle>
           <VIcon
-            icon="tabler-filter"
+            :icon="useMagnifierIcon ? 'tabler-search' : 'tabler-filter'"
             class="bg-primary ms-2"
             @click="isFilterDrawerOpen = !isFilterDrawerOpen"
           />
@@ -681,6 +681,10 @@ const onFilter = async value => {
   options.value.page = 1
   await fetchProjects()
 }
+
+const useMagnifierIcon  = computed(() => {
+  return authStore.generalSetting?.is_magnifier_icon
+})
 
 const getProjects = computed(() => {
   return projectStore.getProjects

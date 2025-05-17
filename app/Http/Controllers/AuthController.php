@@ -171,8 +171,8 @@ class AuthController extends Controller
             }
     
             $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
-            $favicon = $tenantCompany->favicon;
-            $logo = $tenantCompany->logo;
+            $favicon = $tenantCompany?->favicon;
+            $logo = $tenantCompany?->logo;
 
             $generalSetting = Settings_meta::on('tenant')->where('setting_id', Settings::GENERAL->value)->pluck('value', 'key');
 
@@ -180,23 +180,23 @@ class AuthController extends Controller
 
             return response()->json([
                 'isTenant' => $isTenant,
-                'logo' => $logo->path ?? null,
-                'favicon' => $favicon->path ?? null,
+                'logo' => isset($logo) && isset($logo->path) ? $logo->path : null,
+                'favicon' => isset($favicon) && isset($favicon->path) ? $favicon->path : null,
                 'title' => $company->name ?? null,
                 'general_setting' => $generalSetting,
                 'status' => true,
             ]);
         }
         $company = Company::where('name', 'Darby Dash')->orderBy('id', 'asc')->first();
-        $favicon = $company->favicon;
-        $logo = $company->logo;
+        $favicon = $company?->favicon;
+        $logo = $company?->logo;
         $generalSetting = Settings_meta::where('setting_id', Settings::GENERAL->value)->pluck('value', 'key');
 
         return response()->json([
             'status' => false,
             'general_setting' => $generalSetting,
-            'logo' => $logo->path ?? null,
-            'favicon' => $favicon->path ?? null,
+            'logo' => isset($logo) && isset($logo->path) ? $logo->path : null,
+            'favicon' => isset($favicon) && isset($favicon->path) ? $favicon->path : null,
         ]);
     }
 }

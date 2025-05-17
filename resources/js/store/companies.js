@@ -156,6 +156,21 @@ export const useCompanyStore = defineStore('companies', {
         console.error('save bucks details error ', error)
       }
     },
+    async saveUIPrefrences(payload, companyId) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        const res = await CompanyService.saveUIPrefrences(payload, companyId)
+
+        this.loadStatus = 2
+
+        return res
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('saveUIPrefrences error ', error)
+      }
+    },
     async saveColors(payload, companyId) {
       this.error = null
       this.loadStatus = 1

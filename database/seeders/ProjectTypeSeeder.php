@@ -19,7 +19,7 @@ class ProjectTypeSeeder extends Seeder
         try {
             $projectTypes = [
                 [
-                    'name' => 'Website Design Project',
+                    'name' => 'Web Development',
                     'icon' => 'tabler-world',
                     'display_order' => 1,
                     'uuid' => Str::uuid(),

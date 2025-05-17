@@ -18,14 +18,12 @@
   </div>
   <VRow class="mt-3">
     <VCol
-      v-for="(data, index) in getProjectTypes"
-      :key="index"
       cols="12"
       md="4"
       sm="12"
     >
       <div>
-        <RouterLink :to="{ path: '/projects/web-designs', query: { type: data.id } }">
+        <RouterLink :to="{ path: '/projects/web-designs', query: { type: projectType.id } }">
           <VCard class="logistics-card-statistics cursor-pointer">
             <VCardText>
               <div class="d-flex align-center gap-x-4 mb-2">
@@ -35,12 +33,12 @@
                   rounded
                 >
                   <VIcon
-                    :icon="data.icon"
+                    :icon="projectType.icon"
                     size="28"
                   />
                 </VAvatar>
                 <h5 class="text-h6 text-center">
-                  {{ data.name }}
+                  {{ projectType.name }}
                 </h5>
               </div>
               <VRow>
@@ -48,10 +46,10 @@
                   cols="12"
                   class="text-center"
                 >
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects: <strong> {{ data.total_projects }} | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks: <strong> {{ data.total_tasks }} | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Members: <strong> {{ data.total_members }} | </strong></small>
-                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File: <strong> {{ data.total_files }} </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Projects: <strong> {{ projectType.total_projects }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Tasks: <strong> {{ projectType.total_tasks }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">Members: <strong> {{ projectType.total_members }} | </strong></small>
+                  <small class="font-weight-medium text-high-emphasis text-sm text-truncate">File: <strong> {{ projectType.total_files }} </strong></small>
                 </VCol>
               </VRow>
             </VCardText>
@@ -82,7 +80,7 @@ const fetchProjectTypes = async () => {
   }
 }
   
-const getProjectTypes = computed(() => {
+const projectType = computed(() => {
   return projectTypeStore.getProjectTypesWithAttributes
 })
 </script>

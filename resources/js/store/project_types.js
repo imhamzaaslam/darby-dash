@@ -16,8 +16,13 @@ export const useProjectTypeStore = defineStore('project_types', {
       try {
         const response = await ProjectTypeService.getProjectTypes()
 
-        this.projectTypes = response.data.data.map(type => ({ id: type.id, name: type.name }))
-        this.projectTypesWithAttributes = response.data.data
+        /* this.projectTypes = response.data.data.map(type => ({ id: type.id, name: type.name }))
+        this.projectTypesWithAttributes = response.data.data */
+
+        const type = response.data.data
+
+        this.projectTypes = [{ id: type.id, name: type.name }]
+        this.projectTypesWithAttributes = type
 
         this.loadStatus = 2
       } catch (error) {

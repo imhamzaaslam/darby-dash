@@ -204,6 +204,16 @@
                     </VListItem>
                   </template>
                 </AppAutocomplete>
+                <div class="mt-2 d-flex justify-end">
+                  <VBtn
+                    variant="text"
+                    class="text-primary text-sm"
+                    size="x-small"
+                    @click="router.push({ name: 'members-list', query: { openDrawer: '1' } })"
+                  >
+                    + Add New Member
+                  </VBtn>
+                </div>
               </VCol>
               <VCol
                 v-if="showTemplateField"
@@ -218,6 +228,7 @@
                   item-value="id"
                 />
               </VCol>
+              
               <VCol
                 md="6"
                 cols="12"

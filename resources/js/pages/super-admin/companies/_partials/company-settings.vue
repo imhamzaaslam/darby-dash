@@ -404,6 +404,61 @@
           </VCard>
         </VCol>
       </VRow>
+      <VRow
+        v-if="activeTab == 'ui-preferences'"
+        class="ms-1"
+      >
+        <!-- Bucks Info Section -->
+        <VCol
+          cols="12"
+          md="12"
+        >
+          <VCard
+            class="px-3 py-2 d-flex flex-column"
+            style="height: 270px;"
+          >
+            <VCardTitle class="d-flex justify-space-between align-center">
+              <h6 class="text-h6 mt-2">
+                UI Preferences
+              </h6>
+            </VCardTitle>
+
+            <VCardText class="px-4 pb-3 mt-3">
+              <div class="d-flex align-items-center mb-2">
+                <VRadioGroup
+                  v-model="isMagnifierIcon"
+                  label="Show a magnifier icon on filters across all pages"
+                  inline
+                >
+                  <VRadio
+                    label="Yes"
+                    value="1"
+                    class="me-2"
+                    density="compact"
+                  />
+                  <VRadio
+                    label="No"
+                    value="0"
+                    class="me-2"
+                    density="compact"
+                  />
+                </VRadioGroup>
+              </div>
+            </VCardText>
+            <VCardActions class="px-5 py-3 d-flex justify-end">
+              <VBtn
+                color="primary"
+                :loading="isLoading"
+                size="small"
+                variant="flat"
+                @click="updateUIPrefrences"
+              >
+                Save
+              </VBtn>
+            </VCardActions> 
+          </VCard>
+        </VCol>
+      </VRow>
       <!-- Users & Roles Section -->
       <VRow
         v-if="(activeTab == 'users-and-roles') && authStore.isSuperAdmin"
@@ -854,12 +909,14 @@ const searchName = ref('')
 const searchEmail = ref('')
 const bucksLabel = ref('')
 const isBucksSetting = ref('')
+const isMagnifierIcon = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
 const tabs = ref([
   { title: 'Basic Setting', tab: 'basic-setting' },
   { title: 'Theme Setting', tab: 'theme-setting' },
   { title: `Incentive Hub`, tab: 'incentive-hub' },
+  { title: `UI Preferences`, tab: 'ui-preferences' },
   ...(authStore.isSuperAdmin ? [{ title: 'Users & Roles', tab: 'users-and-roles' }] : []),
 ])
 
@@ -907,6 +964,7 @@ const fetchCompany = async () => {
     primaryColor.value = company?.value?.general_setting?.primary_color ?? '#a12592'
     bucksLabel.value = company?.value?.general_setting?.bucks_label ?? 'Darby Bucks'
     isBucksSetting.value = company?.value?.general_setting?.is_bucks_setting ?? '0'
+    isMagnifierIcon.value = company?.value?.general_setting?.is_magnifier_icon ?? '0'
     isActive.value = company?.value?.is_active
   } catch (error) {
     toast.error('Error fetching company:', error)
@@ -1062,6 +1120,26 @@ const updateBucksInfo = async() => {
     isLoading.value = false
   } catch (error) {
     console.error('bucks details failed:', error)
+    isLoading.value = false
+  }
+  isLoading.value = false
+}
+
+const updateUIPrefrences = async() => {
+  isLoading.value = true
+  try {
+    const payload = {
+      'isMagnifierIcon': isMagnifierIcon.value,
+    }
+
+    const response = await companyStore.saveUIPrefrences(payload, companyUuid)
+    
+    await authStore.tenantInfo()
+
+    toast.success('Details saved successfully.')
+    isLoading.value = false
+  } catch (error) {
+    console.error('ui prefrences details failed:', error)
     isLoading.value = false
   }
   isLoading.value = false

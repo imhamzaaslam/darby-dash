@@ -57,7 +57,7 @@
             @click="viewType = 'grid'"
           />
           <VIcon
-            icon="tabler-filter"
+            :icon="useMagnifierIcon ? 'tabler-search' : 'tabler-filter'"
             class="bg-primary ms-2"
             @click="isFilterDrawerOpen = !isFilterDrawerOpen"
           />
@@ -741,6 +741,14 @@
                           />
                         </VListItem>
                         <VListItem class="me-3">
+                          <VBtn
+                            color="error"
+                            size="x-small"
+                            class="me-2"
+                            @click="resetTime(item)"
+                          >
+                            Reset
+                          </VBtn>
                           <VBtn
                             color="primary"
                             size="x-small"
@@ -2326,6 +2334,10 @@ const getProjectLists = computed(() => projectListStore.getProjectLists)
 const getProjectAllLists = computed(() => projectListStore.getProjectLists)
 const project = computed(() => projectStore.getProject)
 
+const useMagnifierIcon  = computed(() => {
+  return authStore.generalSetting?.is_magnifier_icon
+})
+
 getProjectLists.value.forEach(() => {
   showAddListTaskField.value.push(false)
   quickListTaskInput.value.push(null)
@@ -2479,6 +2491,11 @@ const updateStatus = async (item, status) => {
 const setInputTime = item => {
   inputHoursRef.value[item.id] = item.est_time_hours
   inputMinutesRef.value[item.id] = item.est_time_minutes
+}
+
+const resetTime = item => {
+  inputHoursRef.value[item.id] = ''
+  inputMinutesRef.value[item.id] = ''
 }
 
 const saveTime = async item => {
