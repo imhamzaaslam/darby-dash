@@ -57,7 +57,7 @@
             @click="viewType = 'grid'"
           />
           <VIcon
-            :icon="useMagnifierIcon ? 'tabler-search' : 'tabler-filter'"
+            :icon="useMagnifierIcon == 1 ? 'tabler-search' : 'tabler-filter'"
             class="bg-primary ms-2"
             @click="isFilterDrawerOpen = !isFilterDrawerOpen"
           />
