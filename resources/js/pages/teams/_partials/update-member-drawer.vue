@@ -58,6 +58,14 @@
                   placeholder="Email"
                 />
               </VCol>
+              
+              <VCol cols="6">
+                <AppTextField
+                  v-model="props.editMemberDetails.company_name"
+                  label="Company Name"
+                  placeholder="Company Name"
+                />
+              </VCol>
 
               <!-- Phone -->
               <VCol cols="6">
@@ -84,7 +92,26 @@
                   :error-messages="editErrors.role"
                 />
               </VCol>
+              
+              <VCol v-if="props.editMemberDetails.role == 'Client User'" cols="6">
+                <label class="text-sm font-medium mb-1 d-block">Company Logo</label>
+                <VFileInput
+                  v-model="props.editMemberDetails.company_logo"
+                  :error-messages="editErrors.company_logo"
+                  accept="image/*"
+                  variant="filled"
+                  label="Company Logo"
+                />
 
+                <VImg
+                  v-if="props.editMemberDetails.companyLogo"
+                  :src="props.editMemberDetails.companyLogo"
+                  class="rounded-lg mt-1"
+                  width="60"
+                  height="60"
+                />
+              </VCol>
+              
               <VCol
                 cols="6"
                 class="pt-8"
@@ -169,6 +196,7 @@ const editErrors = ref({
   email: '',
   role: '',
   phone: '',
+  company_logo: '',
 })
 
 const handleDrawerModelValueUpdate = val => {

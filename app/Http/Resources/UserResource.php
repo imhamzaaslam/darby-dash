@@ -47,6 +47,8 @@ class UserResource extends JsonResource
                 'american_state' => $this->info->american_state,
                 'zip' => $this->info->zip,
                 'avatar' => $this->avatar,
+                'company_name' => $this->info->company_name,
+                'company_logo' => $this->info->company_logo ?  asset('images/company_logos/' . $this->info->company_logo) : null,   
             ],
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y h:i:s A'),
             'unseen_messages' => auth()->user()->unseenMessagesFromTeamMember($this->id, $this->projectId) ?? 0,

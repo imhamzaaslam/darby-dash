@@ -37,6 +37,11 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
             $avatarPath = $this->saveFile($infoAttributes['avatar'], 'images/avatars');
             $infoAttributes['avatar'] = $avatarPath;
         }
+        
+        if (isset($infoAttributes['company_logo'])) {
+            $companyLogoPath = $this->saveCompanyLogo($infoAttributes['company_logo'], 'images/company_logos');
+            $infoAttributes['company_logo'] = $companyLogoPath;
+        }
 
         $this->userInfoRepository->create($user, $infoAttributes);
 
@@ -124,5 +129,22 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
     public function update2FA(User $user, bool $isEnable): bool
     {
         return $user->fill([ 'is_2fa' => $isEnable ])->save();
+    }
+    
+    public function saveCompanyLogo($file, $path): string
+    {
+        $originalName = preg_replace('/[^a-zA-Z0-9._-]/', '', $file->getClientOriginalName());
+
+        $filename = time() . '-' . $originalName;
+        
+        $destination = public_path($path);
+
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $file->move($destination, $filename);
+
+        return $filename;
     }
 }

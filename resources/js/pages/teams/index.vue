@@ -444,8 +444,11 @@ const editMember = async member => {
     return
   }
   const { role, ...rest } = member
+  const { company_name } = member.info
+  const companyLogo = member.info.company_logo
+  console.log('companyLogo', companyLogo)
 
-  editMemberDetails.value = { ...rest, role: role }
+  editMemberDetails.value = { ...rest, role: role, company_name, companyLogo }
   isEditMemberDrawerOpen.value = true
 }
 

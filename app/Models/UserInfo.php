@@ -64,6 +64,8 @@ class UserInfo extends Base
         'state',
         'american_state',
         'zip',
+        'company_name',
+        'company_logo',
     ];
 
     protected $hidden = ['date_deleted'];

@@ -96,6 +96,8 @@ class UsersController extends Controller
             'city' => $validated['city'] ?? '',
             'american_state' => $validated['american_state'] ?? '',
             'zip' => $validated['zip'] ?? '',
+            'company_name' => $validated['company_name'] ?? '',
+            'company_logo' => $validated['role'] === UserRole::CLIENT->value ? ($validated['company_logo'] ?? null) : null,
         ];
 
         $user = $this->userRepository->create($role, $attributes, $infoAttributes ?? []);
@@ -157,6 +159,8 @@ class UsersController extends Controller
             'city' => $validated['city'] ?? '',
             'american_state' => $validated['american_state'] ?? '',
             'zip' => $validated['zip'] ?? '',
+            'company_name' => $validated['company_name'] ?? '',
+            'company_logo' => $validated['role'] === UserRole::CLIENT->value ? ($validated['company_logo'] ?? $user->info->company_logo) : null,
         ]);
 
         $role = $validated['role'];

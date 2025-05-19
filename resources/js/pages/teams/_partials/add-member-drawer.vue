@@ -57,6 +57,14 @@
                   placeholder="Email"
                 />
               </VCol>
+              
+              <VCol cols="6">
+                <AppTextField
+                  v-model="newMemberDetails.company_name"
+                  label="Company Name"
+                  placeholder="Company Name"
+                />
+              </VCol>
 
               <!-- Phone Mask Field -->
               <VCol cols="6">
@@ -110,6 +118,17 @@
                   :error-messages="addingErrors.confirmPassword"
                   placeholder="Confirm Password"
                   @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+                />
+              </VCol>
+              
+              <VCol v-if="newMemberDetails.role == 'Client User'" cols="6">
+                <label class="text-sm font-medium mb-1 d-block">Company Logo</label>
+                <VFileInput
+                  v-model="newMemberDetails.company_logo"
+                  :error-messages="newMemberDetails.company_logo"
+                  accept="image/*"
+                  variant="filled"
+                  label="Company Logo"
                 />
               </VCol>
 
@@ -183,10 +202,12 @@ const newMemberDetails = ref({
   name_first: '',
   name_last: '',
   email: '',
+  company_name: '',
   role: null,
   phone: '',
   password: '',
   confirmPassword: '',
+  company_logo: '',
 })
 
 const addingErrors = ref({

@@ -80,17 +80,41 @@ export default {
   },
 
   createUser(user) {
-    return apiClient.post('admin/users', user)
-  },
+    const formData = new FormData()
 
-  updateUser(user) {
-    // delete user avatar
-    let newUser = { ...user }
-    if (user.avatar) {
-      delete newUser.avatar
+    for (const key in user) {
+      if (key === 'company_logo' && user[key][0] instanceof File) {
+        formData.append('company_logo', user[key][0])
+      } else if (user[key] !== null && user[key] !== undefined) {
+        formData.append(key, user[key])
+      }
     }
 
-    return apiClient.patch(`admin/users/${user.uuid}`, newUser)
+    return apiClient.post('admin/users', formData)
+  },
+  
+  updateUser(user) {
+    const formData = new FormData()
+
+    formData.append('_method', 'PATCH') // Ensure Laravel understands it
+
+    for (const key in user) {
+      if (key === 'avatar' || key === 'info') continue
+
+      if (key === 'company_logo' && user[key][0] instanceof File) {
+        formData.append('company_logo', user[key][0])
+      } else if (user[key] !== null && user[key] !== undefined) {
+        formData.append(key, user[key])
+      }
+    }
+    
+    return apiClient.post(`admin/users/${user.uuid}`, formData)
+
+    return apiClient
+      .post(`admin/users/${user.uuid}`, formData)
+      .catch((error) => {
+        console.error("Validation error:", error.response?.data?.errors)
+      })
   },
 
   deleteUser(id) {
