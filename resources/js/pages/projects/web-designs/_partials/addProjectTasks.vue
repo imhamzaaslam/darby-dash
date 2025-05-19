@@ -742,14 +742,6 @@
                         </VListItem>
                         <VListItem class="me-3">
                           <VBtn
-                            color="error"
-                            size="x-small"
-                            class="me-2"
-                            @click="resetTime(item)"
-                          >
-                            Reset
-                          </VBtn>
-                          <VBtn
                             color="primary"
                             size="x-small"
                             class="me-2"
@@ -771,9 +763,17 @@
                           <VBtn
                             color="secondary"
                             size="x-small"
+                            class="me-2"
                             @click="inputTimeRef[item.id] = false"
                           >
                             Cancel
+                          </VBtn>
+                          <VBtn
+                            color="error"
+                            size="x-small"
+                            @click="resetTime(item)"
+                          >
+                            Reset
                           </VBtn>
                         </VListItem>
                       </VList>
