@@ -2496,15 +2496,17 @@ const setInputTime = item => {
 const resetTime = item => {
   inputHoursRef.value[item.id] = ''
   inputMinutesRef.value[item.id] = ''
+  
+  saveTime(item, false)
 }
 
-const saveTime = async item => {
+const saveTime = async (item, timerequired = true) => {
 
   try {
     const hours = inputHoursRef.value[item.id]
     const minutes = inputMinutesRef.value[item.id]
 
-    if(!hours && !minutes)
+    if(timerequired && !hours && !minutes)
     {
       toast.error('Please enter hours or minutes')
 
