@@ -92,9 +92,9 @@
               >
                 <AppTextField
                   v-model="projectDetails.title"
-                  label="Point of Contact*"
+                  label="Project Title*"
                   :rules="[requiredValidator]"
-                  placeholder="Point of Contact"
+                  placeholder="Project Title"
                 />
               </VCol>
               <VCol
@@ -206,7 +206,7 @@
                     </VListItem>
                   </template>
                 </AppAutocomplete>
-                <div class="mt-2 d-flex justify-end">
+                <!-- <div class="mt-2 d-flex justify-end">
                   <VBtn
                     variant="text"
                     class="text-primary text-sm"
@@ -215,7 +215,7 @@
                   >
                     + Add New Member
                   </VBtn>
-                </div>
+                </div> -->
               </VCol>
               <VCol
                 md="6"
