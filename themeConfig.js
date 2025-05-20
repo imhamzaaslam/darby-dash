@@ -13,9 +13,12 @@ const store = JSON.parse(localStorage.getItem('auth'))
 const role = store.authenticated ? store.authUser.user?.roles[0]?.name : null
 
 const getDynamicLogo = () => {
+  console.log('role', role)
   if (role === 'Client User') {
     const companyLogo = store?.authUser?.user?.info?.company_logo
-
+    
+    console.log('companyLogo', companyLogo)
+    
     return companyLogo
       ? `${import.meta.env.VITE_APP_URL}/images/company_logos/${companyLogo}`
       : logo
