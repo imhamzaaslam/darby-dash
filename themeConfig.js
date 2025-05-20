@@ -10,7 +10,7 @@ import logoHalf from '@images/half-logo.png'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
 const store = JSON.parse(localStorage.getItem('auth'))
-const role = store.authenticated ? store.authUser.user?.roles[0]?.name : null
+const role = store?.authUser ? store?.authUser?.user?.roles[0]?.name : null
 
 console.log('store', store)
 console.log('role', role)
