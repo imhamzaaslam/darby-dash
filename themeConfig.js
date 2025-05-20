@@ -46,26 +46,6 @@ export const updateSystemFavicon = async newFavicon => {
   updateFaviconInDOM()
 }
 
-export const setLogoAfterLogin = () => {
-  console.log('role', role)
-  if (role === 'Client User') {
-    const companyLogo = store?.authUser?.user?.info?.company_logo
-    
-    console.log('companyLogo', companyLogo)
-    
-    let latestLogo = companyLogo
-      ? `${window.location.origin}/images/company_logos/${companyLogo}`
-      : logo
-      
-    systemLogo.value = latestLogo
-    updateLogoInDOM()
-  } else {
-    let latestLogo = store && store.logo ? store.logo : logo
-    systemLogo.value = latestLogo
-    updateLogoInDOM()
-  }
-}
-
 const updateLogoInDOM = () => {
   const logoElement = document.querySelector('.system-company-logo')
   const watermarkLogoElement = document.querySelector('.system-watermark-company-logo')

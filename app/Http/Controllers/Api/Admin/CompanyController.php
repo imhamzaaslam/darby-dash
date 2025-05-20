@@ -464,9 +464,12 @@ class CompanyController extends Controller
             }
             
             if ($company->name === 'Darby Dash') {
+                $company->update([
+                    'display_name' => $request->display_name,
+                ]);
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Unable to set tenant for Darby Dash.'
+                    'success' => true,
+                    'message' => 'Company details updated successfully.',
                 ]);
             } else {           
                 $tenant = $this->tenantService->setTenant($company->name);
