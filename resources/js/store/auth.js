@@ -12,6 +12,7 @@ export const useAuthStore = defineStore('auth', {
     logo: null,
     favicon: null,
     title: null,
+    companyDisplayName: null,
     generalSetting: [],
     countryStates: [],
     authUser: null,
@@ -58,6 +59,7 @@ export const useAuthStore = defineStore('auth', {
         {
           this.tenant = res.data.isTenant
           this.title = res.data.title
+          this.companyDisplayName = res.data.display_name
         }
         this.logo = this.getImageUrl(res.data.logo)
         this.favicon = this.getImageUrl(res.data.favicon)

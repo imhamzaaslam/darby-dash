@@ -183,6 +183,7 @@ class AuthController extends Controller
                 'logo' => isset($logo) && isset($logo->path) ? $logo->path : null,
                 'favicon' => isset($favicon) && isset($favicon->path) ? $favicon->path : null,
                 'title' => $company->name ?? null,
+                'display_name' => $company->display_name ?? null,
                 'general_setting' => $generalSetting,
                 'status' => true,
             ]);
