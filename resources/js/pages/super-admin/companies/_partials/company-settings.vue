@@ -1136,6 +1136,7 @@ const updateCompanyInfo = async() => {
     
     if(response.success === true) {
       toast.success(response.message)
+      fetchCompany()
     } else {
       toast.error(response.message)
     }
