@@ -473,11 +473,11 @@ class CompanyController extends Controller
             }
 
             $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
-            dd($tenantCompany);
+            // dd($tenantCompany);
 
             if ($tenantCompany) {
                 $tenantCompany->update([
-                    'display_name' => $request->name,
+                    'display_name' => 'hello12',
                 ]);
             } else {
                 return response()->json([
