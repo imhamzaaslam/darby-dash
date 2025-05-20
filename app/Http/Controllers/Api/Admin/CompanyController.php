@@ -451,7 +451,7 @@ class CompanyController extends Controller
     public function saveDetails(Request $request, string $uuid): JsonResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'display_name' => 'required|string|max:255',
         ]);
         if (Auth::user()->hasRole(UserRole::SUPER_ADMIN->value) || Auth::user()->hasRole(UserRole::ADMIN->value)) {
             $company = $this->companyRepository->getByUuidOrFail($uuid);
@@ -477,7 +477,7 @@ class CompanyController extends Controller
 
             if ($tenantCompany) {
                 $tenantCompany->update([
-                    'display_name' => $request->name,
+                    'display_name' => $request->display_name,
                 ]);
             } else {
                 return response()->json([

@@ -314,7 +314,7 @@
             </VCardTitle>
             <VCardText class="px-4 pb-3 mt-3">
               <VTextField
-                v-model="companyDetails.name"
+                v-model="companyDetails.display_name"
                 label="Company Name *"
                 placeholder="Company Name *"
                 :error-messages="companyUpdatingError.name"
@@ -919,6 +919,7 @@ const companyUuid = $route.params.id
   
 const companyDetails = ref({
   name: '',
+  display_name: '',
 })
 
 const companyUpdatingError = ref({
@@ -1118,7 +1119,7 @@ const onFaviconHover = state => {
 }
   
 const updateCompanyInfo = async() => {
-  if (companyDetails.value.name.trim() === '') {
+  if (companyDetails.value.display_name.trim() === '') {
     // toast.error('Company name cannot be empty')
     // isLoading.value = false
 
@@ -1126,10 +1127,17 @@ const updateCompanyInfo = async() => {
   }
   isLoading.value = true
   try {
-
-    const response = await companyStore.saveCompanyDetails(companyDetails.value, companyUuid)
+    const payload = {
+      'display_name': companyDetails.value.display_name,
+    }
     
-    toast.success('Details saved successfully.')
+    const response = await companyStore.saveCompanyDetails(payload, companyUuid)
+    
+    if(response.success === true) {
+      toast.success(response.message)
+    } else {
+      toast.error(response.message)
+    }
     isLoading.value = false
   } catch (error) {
     console.error('company details failed:', error)
