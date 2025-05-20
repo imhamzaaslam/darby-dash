@@ -99,7 +99,7 @@ class AuthController extends Controller
             'success' => true,
             'accessToken' => $token,
             'token_type' => 'Bearer',
-            'user' => $user->load('company'),
+            'user' => $user->load('company', 'info'),
             'permissions' => $user->getAllPermissions()->pluck('name'),
             'states' => getStates(),
         ]);
