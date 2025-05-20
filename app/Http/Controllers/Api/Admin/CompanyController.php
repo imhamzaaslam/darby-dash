@@ -473,7 +473,7 @@ class CompanyController extends Controller
             }
 
             $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
-            Log::info('Tenant Company: ', ['tenantCompany' => $tenantCompany]);
+            dd($tenantCompany);
 
             if ($tenantCompany) {
                 $tenantCompany->update([
