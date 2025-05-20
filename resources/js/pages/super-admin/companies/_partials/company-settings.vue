@@ -1003,6 +1003,7 @@ const fetchCompany = async () => {
   try {
     await companyStore.show(companyUuid)
     companyDetails.value.name = company?.value?.name ?? ''
+    companyDetails.value.display_name = company?.value?.display_name ?? ''
     primaryColor.value = company?.value?.general_setting?.primary_color ?? '#a12592'
     bucksLabel.value = company?.value?.general_setting?.bucks_label ?? 'Darby Bucks'
     isBucksSetting.value = company?.value?.general_setting?.is_bucks_setting ?? '0'
@@ -1134,11 +1135,11 @@ const updateCompanyInfo = async() => {
     
     const response = await companyStore.saveCompanyDetails(payload, companyUuid)
     
-    if(response.success === true) {
-      toast.success(response.message)
+    if(response?.data?.success === true) {
+      toast.success(response?.data?.message)
       fetchCompany()
     } else {
-      toast.error(response.message)
+      toast.error(response?.data?.message)
     }
     isLoading.value = false
   } catch (error) {
