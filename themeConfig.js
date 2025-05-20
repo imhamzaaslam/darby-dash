@@ -3,6 +3,7 @@ import { VIcon } from 'vuetify/components/VIcon'
 import { defineThemeConfig } from '@core'
 import { Skins } from '@core/enums'
 import { ref } from 'vue'
+import { useAuthStore } from './resources/js/store/auth'
 
 // ❗ Logo SVG must be imported with ?raw suffix
 import logo from '@images/logo.png'
@@ -10,12 +11,13 @@ import logoHalf from '@images/half-logo.png'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
 const store = JSON.parse(localStorage.getItem('auth'))
-const role = store.authenticated ? store.authUser.user?.roles[0]?.name : null
+const authStore = useAuthStore()
 
-console.log('store', store)
-console.log('role', role)
+console.log('authStore', authStore)
 
 const getDynamicLogo = () => {
+  const role = authStore?.authenticated ? authStore?.authUser?.user?.roles[0]?.name : null
+  
   console.log('role', role)
   if (role === 'Client User') {
     const companyLogo = store?.authUser?.user?.info?.company_logo
@@ -44,26 +46,6 @@ export const updateSystemLogo = async newLogo => {
 export const updateSystemFavicon = async newFavicon => {
   systemLogoHalf.value = newFavicon || logoHalf
   updateFaviconInDOM()
-}
-
-export const setLogoAfterLogin = () => {
-  console.log('role', role)
-  if (role === 'Client User') {
-    const companyLogo = store?.authUser?.user?.info?.company_logo
-    
-    console.log('companyLogo', companyLogo)
-    
-    let latestLogo = companyLogo
-      ? `${window.location.origin}/images/company_logos/${companyLogo}`
-      : logo
-      
-    systemLogo.value = latestLogo
-    updateLogoInDOM()
-  } else {
-    let latestLogo = store && store.logo ? store.logo : logo
-    systemLogo.value = latestLogo
-    updateLogoInDOM()
-  }
 }
 
 const updateLogoInDOM = () => {

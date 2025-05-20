@@ -101,7 +101,7 @@
 import { layoutConfig } from '@layouts'
 import { useHead } from '@unhead/vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig, setDynamicLogoAfterLogin } from '@themeConfig'
+import { themeConfig } from '@themeConfig'
 import { useAuthStore } from "../store/auth"
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from "vue-toastification"
@@ -161,8 +161,6 @@ async function submit() {
       }
 
       localStorage.setItem('user', JSON.stringify(res.data))
-      
-      setLogoAfterLogin()
 
       $router.push('/')
     }
