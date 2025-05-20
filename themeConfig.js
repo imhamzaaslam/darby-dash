@@ -20,7 +20,7 @@ const getDynamicLogo = () => {
     console.log('companyLogo', companyLogo)
     
     return companyLogo
-      ? `${import.meta.env.VITE_APP_URL}/images/company_logos/${companyLogo}`
+      ? `${window.location.origin}/images/company_logos/${companyLogo}`
       : logo
   } else {
     return store && store.logo ? store.logo : logo
