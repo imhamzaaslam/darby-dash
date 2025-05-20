@@ -27,6 +27,7 @@ class Company extends Base
         'uuid',
         'name',
         'status',
+        'display_name',
     ];
 
     public function users(): HasMany

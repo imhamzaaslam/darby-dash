@@ -477,7 +477,7 @@ class CompanyController extends Controller
 
             if ($tenantCompany) {
                 $tenantCompany->update([
-                    'display_name' => 'hello12',
+                    'display_name' => $request->name,
                 ]);
             } else {
                 return response()->json([
