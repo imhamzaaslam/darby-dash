@@ -462,36 +462,42 @@ class CompanyController extends Controller
                     'message' => 'Company not found.'
                 ]);
             }
-
-            $tenant = $this->tenantService->setTenant($company->name);
-
-            if (!$tenant) {
+            
+            if ($company->name === 'Darby Dash') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Unable to set tenant.'
+                    'message' => 'Unable to set tenant for Darby Dash.'
                 ]);
-            }
+            } else {           
+                $tenant = $this->tenantService->setTenant($company->name);
 
-            $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
-            // dd($tenantCompany);
+                if (!$tenant) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Unable to set tenant.'
+                    ]);
+                }
 
-            if ($tenantCompany) {
-                $tenantCompany->update([
-                    'display_name' => $request->display_name,
-                ]);
-            } else {
+                $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+
+                if ($tenantCompany) {
+                    $tenantCompany->update([
+                        'display_name' => $request->display_name,
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Company not found in tenant.'
+                    ]);
+                }
+
+                $this->tenantService->resetTenant();
+
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Company not found in tenant.'
+                    'success' => true,
+                    'message' => 'Company details updated successfully.',
                 ]);
             }
-
-            $this->tenantService->resetTenant();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Company details updated successfully.',
-            ]);
         }
 
         return response()->json([

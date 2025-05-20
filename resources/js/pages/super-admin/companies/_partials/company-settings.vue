@@ -300,7 +300,6 @@
         </VCol>
         
         <VCol
-          v-if="companyDetails.name !== 'Darby Dash'"
           cols="12"
           md="4"
         >
