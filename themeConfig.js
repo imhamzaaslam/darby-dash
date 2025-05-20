@@ -12,6 +12,9 @@ import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layo
 const store = JSON.parse(localStorage.getItem('auth'))
 const role = store.authenticated ? store.authUser.user?.roles[0]?.name : null
 
+console.log('store', store)
+console.log('role', role)
+
 const getDynamicLogo = () => {
   console.log('role', role)
   if (role === 'Client User') {
