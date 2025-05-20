@@ -473,10 +473,16 @@ class CompanyController extends Controller
             }
 
             $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+            Log::info('Tenant Company: ', ['tenantCompany' => $tenantCompany]);
 
             if ($tenantCompany) {
                 $tenantCompany->update([
                     'display_name' => $request->name,
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Company not found in tenant.'
                 ]);
             }
 
