@@ -20,6 +20,7 @@ class CompanyResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => ucwords($this->name),
+            'display_name' => $this->display_name,
             'created_at' => $this->created_at,
             'total_companies' => Company::count() - 1,
             'url' => $this->makeDomainUrl(),

@@ -450,10 +450,50 @@ class CompanyController extends Controller
      */
     public function saveDetails(Request $request, string $uuid): JsonResponse
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+        if (Auth::user()->hasRole(UserRole::SUPER_ADMIN->value) || Auth::user()->hasRole(UserRole::ADMIN->value)) {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+
+            if (!$company) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Company not found.'
+                ]);
+            }
+
+            $tenant = $this->tenantService->setTenant($company->name);
+
+            if (!$tenant) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unable to set tenant.'
+                ]);
+            }
+
+            $tenantCompany = Company::on('tenant')->where('name', $company->name)->orderBy('id', 'asc')->first();
+
+            if ($tenantCompany) {
+                $tenantCompany->update([
+                    'display_name' => $request->name,
+                ]);
+            }
+
+            $this->tenantService->resetTenant();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Company details updated successfully.',
+            ]);
+        }
+
         return response()->json([
-            'message' => 'Details saved successfully!'
+            'success' => false,
+            'message' => 'Unauthorized',
         ]);
     }
+
 
     /**
      * Save bucks details.

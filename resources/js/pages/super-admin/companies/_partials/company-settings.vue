@@ -11,7 +11,7 @@
           variant="tonal"
         />
         <h3 class="text-primary">
-          {{ company.name }} Settings
+          {{ company.display_name }} Settings
         </h3>
       </div>
       <p class="text-body-1 text-muted mt-1">
@@ -134,7 +134,7 @@
         <!-- Branding Section -->
         <VCol
           cols="12"
-          md="6"
+          md="4"
         >
           <VCard
             style="height: 241px;"
@@ -217,7 +217,7 @@
 
         <VCol
           cols="12"
-          md="6"
+          md="4"
         >
           <VCard
             style="height: 241px;"
@@ -296,6 +296,42 @@
               class="d-none"
               @change="handleFaviconChange"
             >
+          </VCard>
+        </VCol>
+        
+        <VCol
+          cols="12"
+          md="4"
+        >
+          <VCard
+            style="height: 241px;"
+            class="px-3 py-2"
+          >
+            <VCardTitle class="d-flex justify-space-between align-center">
+              <h5 class="text-h6 mt-2">
+                General Settings
+              </h5>
+            </VCardTitle>
+            <VCardText class="px-4 pb-3 mt-3">
+              <VTextField
+                v-model="companyDetails.name"
+                label="Company Name *"
+                placeholder="Company Name *"
+                :error-messages="companyUpdatingError.name"
+                :rules="[requiredValidator]"
+              />
+              <VCardActions class="px-0 py-3">
+                <VBtn
+                  color="primary"
+                  :loading="isLoading"
+                  size="small"
+                  variant="flat"
+                  @click="updateCompanyInfo"
+                >
+                  Save
+                </VBtn>
+              </VCardActions>
+            </VCardText>
           </VCard>
         </VCol>
       </VRow>
@@ -884,6 +920,10 @@ const companyUuid = $route.params.id
 const companyDetails = ref({
   name: '',
 })
+
+const companyUpdatingError = ref({
+  name: '',
+})
   
 const logo = ref(null)
 const favicon = ref(null)
@@ -1078,13 +1118,13 @@ const onFaviconHover = state => {
 }
   
 const updateCompanyInfo = async() => {
-  isLoading.value = true
   if (companyDetails.value.name.trim() === '') {
-    toast.error('Company name cannot be empty')
-    isLoading.value = false
+    // toast.error('Company name cannot be empty')
+    // isLoading.value = false
 
     return
   }
+  isLoading.value = true
   try {
 
     const response = await companyStore.saveCompanyDetails(companyDetails.value, companyUuid)
