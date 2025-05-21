@@ -247,14 +247,37 @@
                   prepend-inner-icon="tabler-percentage"
                 />
               </VCol>
+            </VRow>
+            <VRow>
               <VCol
                 v-if="generalSetting?.is_bucks_setting == 1"
+                md="6"
                 cols="12"
               >
                 <VSwitch
                   v-model="showBucksShare"
                   :label="`Enable ${generalSetting?.bucks_label || 'Darby Bucks'} Share`"
-                  class="mb-3"
+                  class="mb-3 mt-5"
+                />
+              </VCol>
+              <VCol
+                md="6"
+                cols="12"
+              >
+                <label class="text-sm font-medium mb-1 d-block">Project Logo</label>
+                <VFileInput
+                  v-model="projectDetails.project_logo"
+                  accept="image/*"
+                  variant="filled"
+                  label="Project Logo"
+                />
+
+                <VImg
+                  v-if="projectLogo"
+                  :src="projectLogo"
+                  class="rounded-lg mt-1"
+                  width="60"
+                  height="60"
                 />
               </VCol>
               <VCol cols="12">
@@ -339,7 +362,10 @@ const projectDetails = ref({
   staff_ids: [],
   budget_amount: '',
   bucks_share: null,
+  project_logo: null,
 })
+
+const projectLogo = ref(null)
 
 const handleDrawerModelValueUpdate = val => {
   emit('update:isEditDrawerOpen', val)
@@ -433,6 +459,7 @@ watch(
       projectDetails.value.title = editProjectDetails?.title
       projectDetails.value.budget_amount = editProjectDetails?.budget_amount
       projectDetails.value.bucks_share = editProjectDetails?.bucks_share
+      projectLogo.value = editProjectDetails?.project_logo
     }
 
     if (isEditDrawerOpen) {

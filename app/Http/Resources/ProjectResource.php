@@ -64,6 +64,7 @@ class ProjectResource extends JsonResource
             'created_at' => $this->created_at,
             'total_unseen_messages' => $this->totalUnseenMessagesOfProject(),
             'updated_at' => $this->updated_at,
+            'project_logo' => $this->project_logo ?  asset('images/project_logos/' . $this->project_logo) : null, 
         ];
     }
 }

@@ -109,12 +109,6 @@ export default {
     }
     
     return apiClient.post(`admin/users/${user.uuid}`, formData)
-
-    return apiClient
-      .post(`admin/users/${user.uuid}`, formData)
-      .catch((error) => {
-        console.error("Validation error:", error.response?.data?.errors)
-      })
   },
 
   deleteUser(id) {

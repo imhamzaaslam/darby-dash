@@ -46,6 +46,7 @@ class StoreProjectRequest extends FormRequest
             'budget_amount' => 'required',
             'bucks_share' => 'sometimes|nullable',
             'bucks_share_type' => 'sometimes|nullable|in:fixed,percentage',
+            'project_logo' => 'sometimes|nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
         ];
     }
 }

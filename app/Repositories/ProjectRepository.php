@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\ProjectMember;
 use App\Models\ProjectList;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 
 class ProjectRepository extends AbstractEloquentRepository implements ProjectRepositoryInterface
 {
@@ -39,6 +40,11 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
 
     public function create(array $attributes): Project
     {
+        if (isset($attributes['project_logo']) && $attributes['project_logo'] instanceof UploadedFile) {
+            $logoPath = $this->saveProjectLogo($attributes['project_logo'], 'images/project_logos');
+            $attributes['project_logo'] = $logoPath;
+        }
+        
         return $this->model->create($attributes);
     }
 
@@ -72,6 +78,11 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
 
     public function update(Project $project, array $attributes): bool
     {
+        if (isset($attributes['project_logo']) && $attributes['project_logo'] instanceof UploadedFile) {
+            $logoPath = $this->saveProjectLogo($attributes['project_logo'], 'images/project_logos');
+            $attributes['project_logo'] = $logoPath;
+        }
+        
         return $project->fill($attributes)->save();
     }
 
@@ -144,5 +155,22 @@ class ProjectRepository extends AbstractEloquentRepository implements ProjectRep
     public function deleteProjectMember(Project $project, User $user): void
     {
         ProjectMember::where(['project_id' => $project->id, 'user_id' => $user->id])->delete();
+    }
+    
+    public function saveProjectLogo($file, $path): string
+    {
+        $originalName = preg_replace('/[^a-zA-Z0-9._-]/', '', $file->getClientOriginalName());
+
+        $filename = time() . '-' . $originalName;
+        
+        $destination = public_path($path);
+
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $file->move($destination, $filename);
+
+        return $filename;
     }
 }

@@ -259,15 +259,30 @@
                   prepend-inner-icon="tabler-percentage"
                 />
               </VCol>
-
+            </VRow>
+            <VRow>
               <VCol
                 v-if="generalSetting?.is_bucks_setting == 1"
+                md="6"
                 cols="12"
               >
                 <VSwitch
                   v-model="showBucksShare"
                   :label="`Enable ${generalSetting?.bucks_label || 'Darby Bucks'} Share`"
-                  class="mb-3"
+                  class="mb-3 mt-5"
+                />
+              </VCol>
+              
+              <VCol
+                md="6"
+                cols="12"
+              >
+                <label class="text-sm font-medium mb-1 d-block">Project Logo</label>
+                <VFileInput
+                  v-model="newProjectDetails.project_logo"
+                  accept="image/*"
+                  variant="filled"
+                  label="Project Logo"
                 />
               </VCol>
 
@@ -353,6 +368,7 @@ const newProjectDetails = ref({
   staff_ids: [],
   budget_amount: '',
   bucks_share: null,
+  project_logo: null,
 })
 
 // const budgetTypes = [

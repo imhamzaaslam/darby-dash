@@ -34,6 +34,7 @@ class Project extends Base
         'is_pm_bucks_awarded',
         'comments',
         'completed_at',
+        'project_logo',
     ];
 
     public function projectType()

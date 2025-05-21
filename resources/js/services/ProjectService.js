@@ -30,10 +30,32 @@ export default {
     return apiClient.get(`admin/projects/${uuid}/activities`)
   },
   createProject(project) {
-    return apiClient.post('admin/projects', project)
+    const formData = new FormData()
+
+    for (const key in project) {
+      if (key === 'project_logo' && project[key][0] instanceof File) {
+        formData.append('project_logo', project[key][0])
+      } else if (project[key] !== null && project[key] !== undefined) {
+        formData.append(key, project[key])
+      }
+    }
+    
+    return apiClient.post('admin/projects', formData)
   },
   updateProject(project) {
-    return apiClient.patch(`admin/projects/${project.uuid}`, project)
+    const formData = new FormData()
+    
+    formData.append('_method', 'PATCH') // Ensure Laravel understands it
+    
+    for (const key in project) {
+      if (key === 'project_logo' && project[key][0] instanceof File) {
+        formData.append('project_logo', project[key][0])
+      } else if (project[key] !== null && project[key] !== undefined) {
+        formData.append(key, project[key])
+      }
+    }
+    
+    return apiClient.post(`admin/projects/${project.uuid}`, formData)
   },
   projectComplete(project){
     return apiClient.patch(`admin/projects/${project.uuid}/complete`, project)
