@@ -2372,9 +2372,35 @@ function openSubtaskSortModal(parentTask){
 }
 
 function filteredTasks(index, tasks) {
-  const query = searchQuery.value[index] || ''
+  const query = (searchQuery.value[index] || '').toLowerCase()
 
-  return tasks.filter(task => task.name.toLowerCase().includes(query.toLowerCase()))
+  return tasks
+    .map(task => {
+      const mainMatch = task.name.toLowerCase().includes(query)
+
+      // If no subtasks, just return task if main matches
+      if (!task.subtasks || task.subtasks.length === 0) {
+        return mainMatch ? { ...task } : null
+      }
+
+      // If main matches, keep all subtasks
+      if (mainMatch) {
+        return { ...task, subtasks: task.subtasks }
+      }
+
+      // Else filter subtasks that match query
+      const filteredSubs = task.subtasks.filter(sub =>
+        sub.name.toLowerCase().includes(query)
+      )
+
+      if (filteredSubs.length > 0) {
+        return { ...task, subtasks: filteredSubs }
+      }
+
+      // Neither main nor subtasks matched
+      return null
+    })
+    .filter(Boolean)
 }
 
 const getProjectTasks = computed(() => projectTaskStore.getProjectTasks)
