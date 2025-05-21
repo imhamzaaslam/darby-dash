@@ -101,7 +101,18 @@
                   accept="image/*"
                   variant="filled"
                   label="Company Logo"
-                />
+                >
+                  <template #selection="{ fileNames }">
+                    <div v-if="fileNames?.length">
+                      <span 
+                        v-for="(file, index) in fileNames" 
+                        :key="index"
+                      >
+                        {{ truncateFileName(file) }}
+                      </span>
+                    </div>
+                  </template>
+                </VFileInput>
 
                 <VImg
                   v-if="props.editMemberDetails.companyLogo"
@@ -242,6 +253,16 @@ const showError = () => {
 
 const resetForm = () => {
   editErrors.value = Object.fromEntries(Object.keys(editErrors.value).map(key => [key, '']))
+}
+
+const truncateFileName = name => {
+  const maxLength = 20
+  if (name.length <= maxLength) return name
+
+  const ext = name.substring(name.lastIndexOf('.'))
+  const base = name.substring(0, maxLength - ext.length - 3)
+
+  return `${base}...${ext}`
 }
 
 watch(() => props.isEditDrawerOpen, val => {

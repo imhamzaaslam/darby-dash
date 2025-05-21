@@ -283,7 +283,18 @@
                   accept="image/*"
                   variant="filled"
                   label="Project Logo"
-                />
+                >
+                  <template #selection="{ fileNames }">
+                    <div v-if="fileNames?.length">
+                      <span 
+                        v-for="(file, index) in fileNames" 
+                        :key="index"
+                      >
+                        {{ truncateFileName(file) }}
+                      </span>
+                    </div>
+                  </template>
+                </VFileInput>
               </VCol>
 
               <VCol cols="12">
@@ -449,6 +460,16 @@ const getImageUrl = path => {
   const baseUrl = import.meta.env.VITE_APP_URL
 
   return `${baseUrl}storage/${path}`
+}
+
+const truncateFileName = name => {
+  const maxLength = 20
+  if (name.length <= maxLength) return name
+
+  const ext = name.substring(name.lastIndexOf('.'))
+  const base = name.substring(0, maxLength - ext.length - 3)
+
+  return `${base}...${ext}`
 }
 
 watch(() => props.isDrawerOpen, val => {
