@@ -33,8 +33,12 @@ export default {
     const formData = new FormData()
 
     for (const key in project) {
-      if (key === 'project_logo' && project[key][0] instanceof File) {
+      if (key === 'project_logo' && project[key] && project[key][0] instanceof File) {
         formData.append('project_logo', project[key][0])
+      } else if (Array.isArray(project[key])) {
+        project[key].forEach(value => {
+          formData.append(`${key}[]`, value)
+        })
       } else if (project[key] !== null && project[key] !== undefined) {
         formData.append(key, project[key])
       }
@@ -48,8 +52,12 @@ export default {
     formData.append('_method', 'PATCH') // Ensure Laravel understands it
     
     for (const key in project) {
-      if (key === 'project_logo' && project[key][0] instanceof File) {
+      if (key === 'project_logo' && project[key] && project[key][0] instanceof File) {
         formData.append('project_logo', project[key][0])
+      } else if (Array.isArray(project[key])) {
+        project[key].forEach(value => {
+          formData.append(`${key}[]`, value)
+        })
       } else if (project[key] !== null && project[key] !== undefined) {
         formData.append(key, project[key])
       }
