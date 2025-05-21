@@ -4,6 +4,14 @@
       <VCol cols="12">
         <div class="d-flex align-center">
           <VAvatar
+            v-if="project?.project_logo"
+            size="36"
+            class="me-2"
+          >
+            <VImg :src="project?.project_logo" /> 
+          </VAvatar>
+          <VAvatar
+            v-else
             icon="tabler-cube"
             size="36"
             class="me-2"

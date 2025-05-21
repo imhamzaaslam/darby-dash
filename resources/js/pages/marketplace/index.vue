@@ -3,6 +3,14 @@
   <div class="header-section">
     <div class="d-flex align-center">
       <VAvatar
+        v-if="project?.project_logo"
+        size="36"
+        class="me-2"
+      >
+        <VImg :src="project?.project_logo" /> 
+      </VAvatar>
+      <VAvatar
+        v-else
         icon="tabler-building-store"
         size="36"
         class="me-2"
@@ -139,15 +147,19 @@ import emptyServices from '@images/darby/projects_list.svg?raw'
 import placeholderImg from '@images/pages/servicePlaceholder.png'
 import { useUserSettingStore } from "@/store/user_settings"
 import { useUserStore } from "@/store/users"
+import { useProjectStore } from "../../store/projects"
 import { useRouter } from 'vue-router'
 
 const userSettingStore = useUserSettingStore()
 const userStore = useUserStore()
+const projectStore = useProjectStore()
 const router = useRouter()
 
 const getServices = computed(() => userSettingStore.getProjectServicesWithoutPagination)
 const isOverlayVisible = ref(false)
 const selectedService = ref(null)
+
+const projectId = computed(() => router.params.id)
 
 const fetchServices = async () => {
   try {
@@ -183,8 +195,25 @@ const goToServiceDetail = uuid => {
   router.push({ name: 'marketplace-service-detail', params: { id: uuid } })
 } 
 
+const project = computed(() =>{
+  return projectStore.getProject
+})
+
+const fetchProject = async () => {
+  try {
+    await projectStore.show(projectId.value)
+    isLoading.value = true
+  } catch (error) {
+    toast.error('Error fetching project:', error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
 onBeforeMount(async () => {
   await fetchServices()
+  await fetchProject()
 })
 </script>
 

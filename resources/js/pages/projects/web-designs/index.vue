@@ -120,6 +120,14 @@
             <VCol cols="3">
               <div class="d-flex align-center gap-x-3">
                 <VAvatar
+                  v-if="project.project_logo"
+                  size="34"
+                  class="me-1"
+                >
+                  <VImg :src="project.project_logo" /> 
+                </VAvatar>
+                <VAvatar
+                  v-else
                   icon="tabler-cube"
                   size="34"
                   class="me-1"
@@ -298,6 +306,14 @@
                 <VCol cols="10">
                   <div class="d-flex align-center gap-x-3">
                     <VAvatar
+                      v-if="project?.project_logo"
+                      size="34"
+                      class="me-1"
+                    >
+                      <VImg :src="project?.project_logo" /> 
+                    </VAvatar>
+                    <VAvatar
+                      v-else
                       icon="tabler-cube"
                       size="34"
                       class="me-1"
