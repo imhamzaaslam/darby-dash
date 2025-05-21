@@ -329,6 +329,46 @@
               class="ms-3 py-3"
               :items-per-page="-1"
             >
+              <template #header.assignee>
+                <span class="text-xs">Assignee
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span class="text-xs">Assign task to member(s)</span>
+                  </VTooltip>
+                </span>
+              </template>
+              <template #header.status>
+                <span class="text-xs">Status
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span class="text-xs">Manage task status</span>
+                  </VTooltip>
+                </span>
+              </template>
+              <template #header.due_date>
+                <span class="text-xs">Due Date
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span class="text-xs">Set task due date</span>
+                  </VTooltip>
+                </span>
+              </template>
+              <template #header.est_time>
+                <span class="text-xs">EST Time
+                  <VTooltip
+                    activator="parent"
+                    location="top"
+                  >
+                    <span class="text-xs">Set task estimated time</span>
+                  </VTooltip>
+                </span>
+              </template>
               <template #item="{ item }">
                 <tr
                   :class="{ 'bg-td-hover': showAddSubtaskIcon === item.uuid }"
