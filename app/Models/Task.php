@@ -153,7 +153,14 @@ class Task extends Base
     public function scopeFilter($query, $filters)
     {
         if (!empty($filters['searchQuery'])) {
-            $query->where('name', 'like', '%' . $filters['searchQuery'] . '%');
+            $search = '%' . $filters['searchQuery'] . '%';
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                ->orWhereHas('subTasks', function ($subQuery) use ($search) {
+                    $subQuery->where('name', 'like', $search);
+                });
+            });
         }
 
         if (!empty($filters['assignees'])) {
