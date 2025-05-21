@@ -24,6 +24,7 @@
               <!-- Search filter -->
               <VCol cols="12">
                 <AppTextField
+                  ref="focusInput"
                   v-model="filterDetails.searchQuery"
                   label="Task Name"
                 />
@@ -180,6 +181,8 @@ const props = defineProps({
 
 const emit = defineEmits(['update:isFilterDrawerOpen', 'applyFilters'])
 
+const focusInput = ref(null)
+
 const filterDetails = ref({
   searchQuery: '',
   assignees: [],
@@ -241,6 +244,17 @@ const getImageUrl = path => {
 
   return `${baseUrl}storage/${path}`
 }
+
+watch(() => props.isFilterDrawerOpen, val => {
+  if (val) {
+    nextTick(() => {
+      const inputEl = focusInput.value.$el.querySelector('input')
+      if (inputEl) {
+        inputEl.focus()
+      }
+    })
+  }
+})
 </script>
 
   <style lang="scss">
