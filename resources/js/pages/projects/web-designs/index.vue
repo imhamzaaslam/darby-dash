@@ -467,6 +467,7 @@
     :get-templates="getTemplates"
     :get-project-managers-list="getProjectManagers"
     :get-load-status="getLoadStatus"
+    :open-add-new-member-modal="openAddNewMemberModal"
   />
   <EditProjectDrawer
     v-model:is-edit-drawer-open="isEditProjectDrawerOpen"
@@ -477,6 +478,7 @@
     :get-clients="getClients"
     :get-project-managers-list="getProjectManagers"
     :get-load-status="getLoadStatus"
+    :open-add-new-member-modal="openAddNewMemberModal"
   />
   <FilterDrawer
     v-model:is-filter-drawer-open="isFilterDrawerOpen"
@@ -485,6 +487,14 @@
     :selected-project-type="selectedProjectType"
     :get-project-managers="projectManagersWithFirstOption"
     :get-load-status="getLoadStatus"
+  />
+  <AddMemberModal
+    v-model:is-modal-open="isAddMemberModalOpen"
+    :fetch-members="fetchMembers"
+    :get-roles="getRoles"
+    :get-errors="getUserErrors"
+    :get-status-code="getUserStatusCode"
+    :get-load-status="getUserLoadStatus"
   />
 </template>
 
@@ -498,6 +508,7 @@ import EditProjectDrawer from '@/pages/projects/web-designs/_partials/update-pro
 import FilterDrawer from '@/pages/projects/web-designs/_partials/filter-projects-drawer.vue'
 import ListViewSkeleton from '@/pages/projects/web-designs/_partials/list-view-skeleton.vue'
 import GridViewSkeleton from '@/pages/projects/web-designs/_partials/grid-view-skeleton.vue'
+import AddMemberModal from '@/pages/teams/_partials/add-member-modal.vue'
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useToast } from "vue-toastification"
 import { useProjectStore } from "@/store/projects"
@@ -505,6 +516,7 @@ import { useProjectTypeStore } from "@/store/project_types"
 import { useUserStore } from "@/store/users"
 import { useAuthStore } from '@/store/auth'
 import { useTemplateStore } from '@/store/templates'
+import { useRoleStore } from "@/store/roles"
 import { useRoute, useRouter } from 'vue-router'
 import moment from 'moment'
 
@@ -515,6 +527,7 @@ onBeforeMount(async () => {
   await fetchTemplates()
   await fetchMembers()
   totalRecords.value = totalProjects.value
+  await fetchRoles()
 })
 
 const toast = useToast()
@@ -523,6 +536,7 @@ const projectTypeStore = useProjectTypeStore()
 const userStore = useUserStore()
 const authStore = useAuthStore()
 const templateStore = useTemplateStore()
+const roleStore = useRoleStore()
 const route = useRoute()
 const router = useRouter()
 
@@ -537,6 +551,8 @@ const editProjectDetails = ref({})
 const search = ref('')
 const selectedProjectManagerId = ref(null)
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
+
+const isAddMemberModalOpen = ref(false)
 
 const formatDate = date => moment(date).format('MM/DD/YYYY')
 
@@ -698,6 +714,28 @@ const onFilter = async value => {
   await fetchProjects()
 }
 
+const openAddNewMemberModal = async () => {
+  console.log('openAddNewMemberModal')
+  isAddMemberModalOpen.value = true
+}
+
+const fetchRoles = async () => {
+  try {
+    isLoading.value = true
+
+    await roleStore.getAll()
+  } catch (error) {
+    toast.error('Failed to get roles:', error.message || error)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
+
+const getRoles = computed(() => {
+  return roleStore.getRoles
+})
+
 const useMagnifierIcon  = computed(() => {
   return authStore.generalSetting?.is_magnifier_icon
 })
@@ -761,6 +799,18 @@ const getTemplates = computed(() => {
 
 const getErrors = computed(() => {
   return projectStore.getErrors
+})
+
+const getUserErrors = computed(() => {
+  return userStore.getErrors
+})
+
+const getUserStatusCode = computed(() => {
+  return userStore.getStatusCode
+})
+
+const getUserLoadStatus = computed(() => {
+  return userStore.getLoadStatus
 })
 
 const getLoadStatus = computed(() => {

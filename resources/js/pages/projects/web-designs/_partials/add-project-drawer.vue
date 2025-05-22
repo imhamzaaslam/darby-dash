@@ -204,16 +204,16 @@
                     </VListItem>
                   </template>
                 </AppAutocomplete>
-                <!-- <div class="mt-2 d-flex justify-end">
+                <div class="mt-2 d-flex justify-end">
                   <VBtn
                     variant="text"
                     class="text-primary text-sm"
                     size="x-small"
-                    @click="router.push({ name: 'members-list', query: { openDrawer: '1' } })"
+                    @click="props.openAddNewMemberModal()"
                   >
                     + Add New Member
                   </VBtn>
-                </div> -->
+                </div>
               </VCol>
               <VCol
                 v-if="showTemplateField"
@@ -356,6 +356,7 @@ const props = defineProps({
   getTemplates: Object,
   getProjectManagersList: Object,
   getLoadStatus: Number,
+  openAddNewMemberModal: Function,
 })
 
 const emit = defineEmits(['update:isDrawerOpen'])

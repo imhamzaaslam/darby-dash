@@ -95,6 +95,7 @@ declare module 'vue-router/auto/routes' {
     'super-dashboard': RouteRecordInfo<'super-dashboard', '/super-dashboard', Record<never, never>, Record<never, never>>,
     'teams': RouteRecordInfo<'teams', '/teams', Record<never, never>, Record<never, never>>,
     'teams-partials-add-member-drawer': RouteRecordInfo<'teams-partials-add-member-drawer', '/teams/_partials/add-member-drawer', Record<never, never>, Record<never, never>>,
+    'teams-partials-add-member-modal': RouteRecordInfo<'teams-partials-add-member-modal', '/teams/_partials/add-member-modal', Record<never, never>, Record<never, never>>,
     'teams-partials-filter-members-drawer': RouteRecordInfo<'teams-partials-filter-members-drawer', '/teams/_partials/filter-members-drawer', Record<never, never>, Record<never, never>>,
     'teams-partials-grid-view-skeleton': RouteRecordInfo<'teams-partials-grid-view-skeleton', '/teams/_partials/grid-view-skeleton', Record<never, never>, Record<never, never>>,
     'teams-partials-list-view-skeleton': RouteRecordInfo<'teams-partials-list-view-skeleton', '/teams/_partials/list-view-skeleton', Record<never, never>, Record<never, never>>,
