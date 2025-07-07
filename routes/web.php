@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 Route::get('last-change', function () {
-    return '4/4/2025 04:50 PM';
+    return '7/7/2025 07:02 PM';
 });
 
 Route::get('{any?}', function() {
