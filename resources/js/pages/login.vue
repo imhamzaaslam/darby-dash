@@ -1,7 +1,7 @@
 <template>
   <RouterLink to="/">
-    <div class="auth-logo d-flex align-center gap-x-3">
-      <VNodeRenderer :nodes="themeConfig.app.logo" />
+    <div class="auth-logo d-flex align-center justify-center gap-x-3">
+      <VNodeRenderer :nodes="themeConfig.app.loginPageLogo" />
     </div>
   </RouterLink>
 
@@ -19,13 +19,16 @@
         style="min-height: 400px;"
         class="mt-12 mt-sm-0 pa-4"
       >
-        <VCardText>
-          <h4 class="text-h4 mb-1">
-            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
+        <VCardText class="pb-2">
+          <h4 class="text-h4 mb-0 text-center welcome-text">
+            Welcome <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
           </h4>
-          <p class="mb-0">
-            Please sign-in to your account and start the adventure
+          <p class="text-center mb-3">
+            The only project management tool that incentivizes efficiency.
           </p>
+          <small class="mb-0 mt-2">
+            Please sign-in to your account and start the adventure
+          </small>
         </VCardText>
         <VCardText>
           <VForm
@@ -173,4 +176,11 @@ async function submit() {
 
 <style lang="scss">
 @use "@core-scss/template/pages/page-auth.scss";
+.auth-logo {
+  width: 92%;
+}
+.welcome-text {
+  font-weight: 600 !important;
+  color: #000 !important;
+}
 </style>

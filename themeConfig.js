@@ -7,6 +7,7 @@ import { ref } from 'vue'
 // ❗ Logo SVG must be imported with ?raw suffix
 import logo from '@images/logo.png'
 import logoHalf from '@images/half-logo.png'
+import loginPageLogo from '@images/login-page-logo.png'
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
 const store = JSON.parse(localStorage.getItem('auth'))
@@ -72,6 +73,10 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     logo: h('div', {
       class: 'system-company-logo',
       innerHTML: `<img src="${systemLogo.value}" alt="Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:45px;">`,
+    }),
+    loginPageLogo: h('div', {
+      class: 'system-company-logo',
+      innerHTML: `<img src="${loginPageLogo}" alt="Login Page Logo" style="line-height:0; color: rgb(var(--v-global-theme-primary));height:45px;">`,
     }),
     logoHalf: h('div', {
       class: 'system-company-favicon',
