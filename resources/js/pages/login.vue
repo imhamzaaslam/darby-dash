@@ -1,18 +1,20 @@
 <template>
-  <RouterLink to="/">
-    <div class="auth-logo d-flex align-center justify-center gap-x-3">
-      <VNodeRenderer :nodes="themeConfig.app.loginPageLogo" />
-    </div>
-  </RouterLink>
-
   <VRow
     no-gutters
     class="auth-wrapper bg-surface"
   >
     <VCol
       cols="12"
-      class="d-flex align-center justify-center"
+      class="d-flex flex-column align-center justify-center"
     >
+      <RouterLink 
+        to="/"
+        class="mb-7"
+      >
+        <div class="d-flex align-center justify-center gap-x-3">
+          <VNodeRenderer :nodes="themeConfig.app.loginPageLogo" />
+        </div>
+      </RouterLink>
       <VCard
         :max-width="500"
         width="100%"
@@ -21,14 +23,11 @@
       >
         <VCardText class="pb-2">
           <h4 class="text-h4 mb-0 text-center welcome-text">
-            Welcome <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
+            Welcome <span class="text-capitalize"> {{ themeConfig.app.title }} </span>!
           </h4>
-          <p class="text-center mb-3">
+          <p class="text-center mb-4">
             The only project management tool that incentivizes efficiency.
           </p>
-          <small class="mb-0 mt-2">
-            Please sign-in to your account and start the adventure
-          </small>
         </VCardText>
         <VCardText>
           <VForm
@@ -148,8 +147,8 @@ const getTenant = async () => {
 async function submit() {
   refForm.value?.validate().then(async ({ valid: isValid }) => {
     if (isValid) {
-      let { email, password } = form.value
-      let res = await authStore.login(email, password)
+      let { email, password, remember } = form.value
+      let res = await authStore.login(email, password, remember)
 
       if (!res.data.success) {
         toast.error(res.data.message)
@@ -176,9 +175,6 @@ async function submit() {
 
 <style lang="scss">
 @use "@core-scss/template/pages/page-auth.scss";
-.auth-logo {
-  width: 92%;
-}
 .welcome-text {
   font-weight: 600 !important;
   color: #000 !important;

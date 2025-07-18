@@ -32,7 +32,8 @@
     inset-inline-end: -58px;
   }
 
-  @media (min-width: 1264px), (max-width: 959px) and (min-width: 450px) {
+  @media (min-width: 1264px),
+  (max-width: 959px) and (min-width: 450px) {
     .v-otp-input .v-otp-input__content {
       gap: 1rem;
     }
@@ -45,13 +46,6 @@
       border-inline-start: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)) !important;
     }
   }
-}
-
-.auth-logo {
-  position: absolute;
-  z-index: 2;
-  inset-block-start: 2rem;
-  inset-inline-start: 2.3rem;
 }
 
 .auth-title {

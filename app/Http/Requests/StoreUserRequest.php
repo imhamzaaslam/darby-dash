@@ -38,7 +38,7 @@ class StoreUserRequest extends FormRequest
             'city' => 'sometimes|string|max:255',
             'american_state' => 'sometimes|string|max:255',
             'zip' => 'sometimes|string|max:255',
-            'company_name' => ['sometimes', 'string', 'max:255'],
+            'company_name' => 'sometimes|nullable|string|max:255',
             'company_logo' => 'sometimes|nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
         ];
     }

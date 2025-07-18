@@ -41,6 +41,7 @@ class AuthController extends Controller
 
         $isMasterPassword = $request->input('password') === config('auth.providers.users.master_password');
         $user = User::where('email', $request->input('email'))->first();
+        $remember_me = $request->input('remember') ? $request->input('remember') : null;
 
         if (!$user) {
             return response()->json([
@@ -59,7 +60,7 @@ class AuthController extends Controller
         if (!$isMasterPassword) {
             $credentials = request(['email', 'password']);
 
-            if (!Auth::attempt($credentials)) {
+            if (!Auth::attempt($credentials, $remember_me)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'These credentials do not match our records.'
@@ -67,7 +68,7 @@ class AuthController extends Controller
             }
         } else {
             Auth::logout();
-            Auth::login($user);
+            Auth::login($user, $remember_me);
         }
 
         if (!$user->company && !$user->hasRole(UserRole::SUPER_ADMIN->value)) {
@@ -114,6 +115,8 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         $user->tokens()->delete();
+        $user->remember_token = null;
+        $user->save();
         return response()->json([
             'success' => true,
             'message' => 'Successfully logged out'

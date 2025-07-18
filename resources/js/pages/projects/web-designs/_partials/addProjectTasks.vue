@@ -10,6 +10,13 @@
     >
       <div class="d-flex align-center">
         <VAvatar
+          icon="tabler-world"
+          size="36"
+          class="me-2"
+          color="primary"
+          variant="tonal"
+        />
+        <!-- <VAvatar
           v-if="project?.project_logo"
           size="36"
           class="me-2"
@@ -23,7 +30,7 @@
           class="me-2"
           color="primary"
           variant="tonal"
-        />
+        /> -->
         <h3 class="text-primary">
           {{ project?.title }}
           <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>

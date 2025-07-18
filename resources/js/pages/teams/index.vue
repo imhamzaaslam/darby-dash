@@ -371,7 +371,11 @@ const searchName = ref('')
 const searchEmail = ref('')
 const options = ref({ page: 1, itemsPerPage: 10, orderBy: '', order: '' })
 
-const formatDate = date => moment(date).format('MM/DD/YYYY')
+const formatDate = date => {
+  const parsed = moment(date, 'DD/MM/YYYY hh:mm:ss A')
+  
+  return parsed.format('MM/DD/YYYY')
+}
 
 const isMobile = () => {
   return window.innerWidth <= 768 || window.innerWidth <= 926

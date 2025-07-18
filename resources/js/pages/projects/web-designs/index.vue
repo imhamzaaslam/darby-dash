@@ -120,6 +120,13 @@
             <VCol cols="3">
               <div class="d-flex align-center gap-x-3">
                 <VAvatar
+                  icon="tabler-world"
+                  size="34"
+                  class="me-1"
+                  color="primary"
+                  variant="tonal"
+                />
+                <!-- <VAvatar
                   v-if="project.project_logo"
                   size="34"
                   class="me-1"
@@ -133,7 +140,7 @@
                   class="me-1"
                   color="primary"
                   variant="tonal"
-                />
+                /> -->
                 <div>
                   <h6 class="text-h6 text-no-wrap">
                     <span class="d-block">{{ project.title }}</span>
@@ -306,6 +313,13 @@
                 <VCol cols="10">
                   <div class="d-flex align-center gap-x-3">
                     <VAvatar
+                      icon="tabler-world"
+                      size="34"
+                      class="me-1"
+                      color="primary"
+                      variant="tonal"
+                    />
+                    <!-- <VAvatar
                       v-if="project?.project_logo"
                       size="34"
                       class="me-1"
@@ -319,7 +333,7 @@
                       class="me-1"
                       color="primary"
                       variant="tonal"
-                    />
+                    /> -->
                     <div>
                       <h6 class="text-h6 text-no-wrap">
                         {{ project.title }}

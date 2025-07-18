@@ -24,12 +24,12 @@ export const useAuthStore = defineStore('auth', {
   }),
   persist: true,
   actions: {
-    async login(email, password) {
+    async login(email, password, remember = false) {
       this.authenticated = false
       this.error = null
       this.loadStatus = 1
       try {
-        let res = await AuthService.login({ email, password })
+        let res = await AuthService.login({ email, password, remember })
         this.loadStatus = 2
         this.authenticated = true
         this.token = res.data.accessToken
@@ -55,8 +55,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         let res = await AuthService.tenantInfo()
         this.loadStatus = 2
-        if(res.data.status)
-        {
+        if (res.data.status) {
           this.tenant = res.data.isTenant
           this.title = res.data.title
           this.companyDisplayName = res.data.display_name
@@ -76,15 +75,15 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('user')
 
       return await AuthService.logout(this.token).then(() => {
-        this.token=null
+        this.token = null
         window.location.href = '/'
       }).catch(error => {
         console.error('Error during logout:', error)
-        this.token=null
+        this.token = null
         window.location.href = '/'
       })
     },
-    async getAuthUser()  {
+    async getAuthUser() {
       this.error = null
       this.loadStatus = 1
 
@@ -101,9 +100,9 @@ export const useAuthStore = defineStore('auth', {
         console.error('getUser error ', error)
       }
     },
-    getImageUrl (path) {
+    getImageUrl(path) {
       const baseUrl = import.meta.env.VITE_APP_URL
-    
+
       return `${baseUrl}storage/${path}`
     },
     async verifyTwoFactorCode(email, code) {
@@ -111,8 +110,7 @@ export const useAuthStore = defineStore('auth', {
       this.loadStatus = 1
       try {
         const res = await AuthService.verify2FACode(email, code)
-        if(res.data.success)
-        {
+        if (res.data.success) {
           this.authenticated = true
           this.token = res.data.accessToken
 

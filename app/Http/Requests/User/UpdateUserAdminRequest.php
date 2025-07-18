@@ -51,7 +51,7 @@ class UpdateUserAdminRequest extends FormRequest
             'zip' => 'sometimes|string|max:255',
             'american_state' => 'sometimes|string|max:255',
             'company' => ['sometimes', 'string', 'max:255', Rule::unique('companies', 'name')->ignore($user->company->id ?? null, 'id')],
-            'company_name' => ['sometimes', 'string', 'max:255'],
+            'company_name' => 'sometimes|nullable|string|max:255',
             'company_logo' => 'sometimes|nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
         ];
     }
