@@ -23,7 +23,7 @@
       >
         <VCardText class="pb-2">
           <h4 class="text-h4 mb-0 text-center welcome-text">
-            Welcome <span class="text-capitalize"> {{ themeConfig.app.title }} </span>!
+            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>!
           </h4>
           <p class="text-center mb-4">
             The only project management tool that incentivizes efficiency.
