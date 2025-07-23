@@ -1075,7 +1075,7 @@ class CompanyController extends Controller
                 DB::table('user_infos')->whereNotIn('user_id', $adminIds)->delete();
                 DB::table('chat_messages')->truncate(); // Move up
                 DB::table('chats')->truncate(); // If it also references users
-                DB::table('model_has_roles')->whereNotIn('user_id', $adminIds)->delete();
+                DB::table('model_has_roles')->whereNotIn('model_id', $adminIds)->delete();
 
                 DB::table('users')->whereNotIn('id', $adminIds)->delete();
                 DB::table('projects')->truncate();
