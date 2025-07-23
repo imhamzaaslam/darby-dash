@@ -51,7 +51,7 @@ class UsersController extends Controller
         $users = $this->userRepository
             ->getAllRecordsQuery()
             ->filtered($request->name ?? '', $request->email ?? '', $request->roleId ?? null)
-            ->ordered($request->orderBy ?? 'id', $request->order ?? 'desc')
+            ->ordered($request->orderBy ?? 'name_last', $request->order ?? 'desc')
             ->paginate($request->per_page ?? config('pagination.per_page', 10));
 
         return UserResource::collection($users);
