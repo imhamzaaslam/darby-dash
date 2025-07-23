@@ -17,7 +17,20 @@ console.log('store', store)
 console.log('role', role)
 
 const getDynamicLogo = () => {
-  return store && store.logo ? store.logo : logo
+  return `${window.location.origin}/images/login-page-logo.png`
+
+  console.log('role', role)
+  if (role === 'Client User') {
+    const companyLogo = store?.authUser?.user?.info?.company_logo
+
+    console.log('companyLogo', companyLogo)
+
+    return companyLogo
+      ? `${window.location.origin}/images/company_logos/${companyLogo}`
+      : logo
+  } else {
+    return store && store.logo ? store.logo : logo
+  }
 }
 
 const getDynamicFavicon = () => (store && store.favicon ? store.favicon : logoHalf)
