@@ -43,6 +43,7 @@ use App\Models\Settings_meta;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
@@ -1049,5 +1050,59 @@ class CompanyController extends Controller
                 ]);
             }
         }
+    }
+
+    public function wipeData(string $uuid): JsonResponse
+    {
+        if(Auth::user()->email === 'eric@withdarby.com' || Auth::user()->email === 'imhamzaaslam@gmail.com')
+        {
+            $company = $this->companyRepository->getByUuidOrFail($uuid);
+
+            if (!$company) {
+                return response()->json(['message' => 'Company not found'], 404);
+            }
+
+            try {
+                $tenantAdmin = User::role('Admin')->orderBy('id', 'asc')->first();
+
+                if (!$tenantAdmin) {
+                    return response()->json(['message' => 'No admin user found'], 404);
+                }
+
+                DB::statement('SET FOREIGN_KEY_CHECKS=0');
+                // Step 1: Delete or truncate dependent data FIRST
+                DB::table('user_infos')->where('user_id', '!=', $tenantAdmin->id)->delete();
+                DB::table('chat_messages')->truncate(); // Move up
+                DB::table('chats')->truncate(); // If it also references users
+                DB::table('model_has_roles')->where('model_id', '!=', $tenantAdmin->id)->delete();
+
+                DB::table('users')->where('id', '!=', $tenantAdmin->id)->delete();
+                DB::table('projects')->truncate();
+                DB::table('project_lists')->truncate();
+                DB::table('project_bucks')->truncate();
+                DB::table('project_members')->truncate();
+                DB::table('project_services')->truncate();
+                DB::table('tasks')->truncate();
+                DB::table('task_assignees')->truncate();
+                DB::table('calendar_events')->truncate();
+                DB::table('calendar_event_guests')->truncate();
+                DB::table('folders')->truncate();
+                DB::table('files')->truncate();
+                DB::table('milestones')->truncate();
+                DB::table('notifications')->truncate();
+                DB::table('payments')->truncate();
+                DB::table('template_lists')->truncate();
+                DB::table('template_list_tasks')->truncate();
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+                return response()->json(['message' => 'Wipe data successful'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Wipe data failed', 'error' => $e->getMessage()], 500);
+            }
+
+            return response()->json(['message' => 'Tenant data wiped successfully'], 200);
+        }
+
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
 }

@@ -626,7 +626,31 @@
           </VCard>
         </VCol>
       </VRow>
-    </vcol>
+      <VRow v-if="activeTab == 'wipe-data' && (authStore.getUserEmail === 'eric@withdarby.com' || authStore.getUserEmail === 'imhamzaaslam@gmail.com')">
+        <VCol cols="12">
+          <VCard class="px-3 py-2">
+            <VCardTitle class="d-flex justify-space-between align-center">
+              <h5 class="text-h6 mt-2">
+                Wipe Data
+              </h5>
+            </VCardTitle>
+            <VCardText class="px-4 pb-3 mt-3">
+              <p class="text-body-2 text-high-emphasis">
+                This action will permanently delete all data associated with this company, including members, projects, tasks, and documents. This action cannot be undone, so please proceed with caution.
+              </p>
+              <VBtn
+                color="error"
+                variant="tonal"
+                size="small"
+                @click="confirmWipeData"
+              >
+                Wipe Data
+              </VBtn>
+            </VCardText>
+          </VCard>
+        </VCol>
+      </VRow>
+    </VCol>
   </VRow>
   <VDialog
     v-model="isAddMemberDialogVisible"
@@ -959,6 +983,7 @@ const tabs = ref([
   { title: `Incentive Hub`, tab: 'incentive-hub' },
   { title: `UI Preferences`, tab: 'ui-preferences' },
   ...(authStore.isSuperAdmin ? [{ title: 'Users & Roles', tab: 'users-and-roles' }] : []),
+  ...((authStore.getUserEmail === 'eric@withdarby.com' || authStore.getUserEmail === 'imhamzaaslam@gmail.com') ? [{ title: 'Wipe Data', tab: 'wipe-data' }] : []),
 ])
 
 const allowedLogoTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/avif', 'image/webp']
@@ -1435,6 +1460,35 @@ const copyToClipboard = () => {
       isCopied.value = false 
     }, 1500)
   })
+}
+
+const confirmWipeData = async () => {
+  const confirmWipe = await Swal.fire({
+    title: "Are you sure?",
+    html: `<p>This action will permanently delete all data associated with this company.</p>`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "rgba(var(--v-theme-primary))",
+    cancelButtonColor: "#808390",
+    confirmButtonText: "Yes, wipe data!",
+  })
+
+  if (confirmWipe.isConfirmed) {
+    try {
+      isLoading.value = true
+      let res = await companyStore.wipeData(companyUuid)
+      if (res) {
+        toast.success('Data wiped successfully.')
+      } else {
+        toast.error('Failed to wipe data.')
+      }
+      isLoading.value = false
+    } catch (error) {
+      console.error('Failed to wipe data:', error)
+      toast.error('Failed to wipe data.')
+      isLoading.value = false
+    }
+  }
 }
 
 const company = computed(() =>{

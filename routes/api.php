@@ -96,6 +96,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
                     Route::post('/logo', [CompanyController::class, 'uploadLogo']);
                     Route::post('/favicon', [CompanyController::class, 'uploadFavicon']);
                 });
+                Route::delete('/wipe-data', [CompanyController::class, 'wipeData']);
             });
         });
     });

@@ -103,7 +103,7 @@ export const useCompanyStore = defineStore('companies', {
         const res = await CompanyService.favicon(payload, companyId)
 
         this.loadStatus = 2
-        
+
         return res
       } catch (error) {
         this.error = error
@@ -118,7 +118,7 @@ export const useCompanyStore = defineStore('companies', {
         const res = await CompanyService.deleteAsset(fileId, companyId)
 
         this.loadStatus = 2
-        
+
         return res
       } catch (error) {
         this.error = error
@@ -199,7 +199,7 @@ export const useCompanyStore = defineStore('companies', {
         console.error('updateActiveState error ', error)
       }
     },
-    async getAllUsers(companyId, page = 1, perPage = 10, searchName = null, searchEmail= null, roleId=null) {
+    async getAllUsers(companyId, page = 1, perPage = 10, searchName = null, searchEmail = null, roleId = null) {
       this.error = null
       this.loadStatus = 1
       try {
@@ -252,6 +252,23 @@ export const useCompanyStore = defineStore('companies', {
         this.error = error
         this.loadStatus = 3
         console.error('deleteUser error ', error)
+      }
+    },
+    async wipeData(companyId) {
+      this.error = null
+      this.loadStatus = 1
+      try {
+        await CompanyService.wipeData(companyId)
+
+        this.loadStatus = 2
+
+        return true
+      } catch (error) {
+        this.error = error
+        this.loadStatus = 3
+        console.error('wipeData error ', error)
+
+        return false
       }
     },
   },

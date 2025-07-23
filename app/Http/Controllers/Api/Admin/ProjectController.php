@@ -280,7 +280,7 @@ class ProjectController extends Controller
 
         $member_ids = $request->member_ids;
 
-        $this->projectRepository->updateProjectMembers($project, $member_ids);
+        $this->projectRepository->addNewMembers($project, $member_ids);
 
         //Send notification & create activity
         $this->notificationService->sendNotification(Management::MEMBER->value, 'memeber-created', $member_ids, $project->toArray());

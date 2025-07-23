@@ -153,5 +153,8 @@ export const useAuthStore = defineStore('auth', {
     hasPermission: state => permission => {
       return state.loginUserPermissions.includes(permission)
     },
+    getUserEmail: state => {
+      return state.authUser?.user?.email || ''
+    },
   },
 })

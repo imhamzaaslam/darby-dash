@@ -7,7 +7,7 @@ export default {
     const queryParams = [search && `keyword=${search}`].filter(Boolean)
 
     const queryString = queryParams.length ? `&${queryParams.join('&')}` : ''
-    
+
     return apiClient.get(baseUrl + queryString)
   },
   createCompany(payload) {
@@ -47,7 +47,7 @@ export default {
     return await apiClient.patch(`super-admin/companies/${companyId}/update-active-state`, payload)
   },
 
-  getAllUsers: async (companyId, page = 1, perPage = 10, searchName = null, searchEmail= null, roleId=null) => {
+  getAllUsers: async (companyId, page = 1, perPage = 10, searchName = null, searchEmail = null, roleId = null) => {
     const baseUrl = `/super-admin/companies/${companyId}/users/?page=${page}&per_page=${perPage}`
 
     const queryParams = [
@@ -57,7 +57,7 @@ export default {
     ].filter(Boolean)
 
     const queryString = queryParams.length ? `&${queryParams.join('&')}` : ''
-    
+
     return apiClient.get(baseUrl + queryString)
   },
   createUser(companyId, payload) {
@@ -71,5 +71,8 @@ export default {
   },
   updateActiveState: async (companyId, payload) => {
     return await apiClient.patch(`super-admin/companies/${companyId}/update-active-state`, payload)
+  },
+  wipeData: async companyId => {
+    return await apiClient.delete(`super-admin/companies/${companyId}/wipe-data`)
   },
 }

@@ -598,8 +598,14 @@ const getMembers = computed(() => {
   const usersByProjects = userStore.getUsersByProjects
 
   const excludedIds = usersByProjects.map(user => user.id)
+  const isClientAdded = usersByProjects.some(user => user.role == 'Client User')
+  const isManagerAdded = usersByProjects.some(user => user.role == 'Project Manager')
   
   const remainingMembers = members.filter(member => {
+    if ((member.role == 'Client User' && isClientAdded) || (member.role == 'Project Manager' && isManagerAdded)) {
+      return false
+    }
+
     return !selectedMembers.value.includes(member.value) && !excludedIds.includes(member.id)
   })
 
