@@ -1063,20 +1063,21 @@ class CompanyController extends Controller
             }
 
             try {
-                $tenantAdmin = User::role('Admin')->orderBy('id', 'asc')->first();
+                $adminIds = User::whereIn('email', ['eric@withdarby.com', 'imhamzaaslam@gmail.com'])->pluck('id');
 
-                if (!$tenantAdmin) {
+                if ($adminIds->isEmpty()) {
                     return response()->json(['message' => 'No admin user found'], 404);
                 }
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=0');
                 // Step 1: Delete or truncate dependent data FIRST
-                DB::table('user_infos')->where('user_id', '!=', $tenantAdmin->id)->delete();
+                // not delete user_infos of $adminIds
+                DB::table('user_infos')->whereNotIn('user_id', $adminIds)->delete();
                 DB::table('chat_messages')->truncate(); // Move up
                 DB::table('chats')->truncate(); // If it also references users
-                DB::table('model_has_roles')->where('model_id', '!=', $tenantAdmin->id)->delete();
+                DB::table('model_has_roles')->whereNotIn('user_id', $adminIds)->delete();
 
-                DB::table('users')->where('id', '!=', $tenantAdmin->id)->delete();
+                DB::table('users')->whereNotIn('id', $adminIds)->delete();
                 DB::table('projects')->truncate();
                 DB::table('project_lists')->truncate();
                 DB::table('project_bucks')->truncate();
