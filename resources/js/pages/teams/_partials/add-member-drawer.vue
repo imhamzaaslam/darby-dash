@@ -121,7 +121,7 @@
                 />
               </VCol>
               
-              <!-- <VCol v-if="newMemberDetails.role == 'Client User'" cols="6">
+              <VCol v-if="newMemberDetails.role == 'Client User'" cols="6">
                 <label class="text-sm font-medium mb-1 d-block">Company Logo</label>
                 <VFileInput
                   v-model="newMemberDetails.company_logo"
@@ -141,7 +141,7 @@
                     </div>
                   </template>
                 </VFileInput>
-              </VCol> -->
+              </VCol>
 
               <VCol cols="12">
                 <div class="d-flex justify-start">
