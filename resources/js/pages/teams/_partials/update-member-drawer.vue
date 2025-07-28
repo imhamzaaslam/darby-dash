@@ -93,7 +93,7 @@
                 />
               </VCol>
               
-              <VCol v-if="props.editMemberDetails.role == 'Client User'" cols="6">
+              <!-- <VCol v-if="props.editMemberDetails.role == 'Client User'" cols="6">
                 <label class="text-sm font-medium mb-1 d-block">Company Logo</label>
                 <VFileInput
                   v-model="props.editMemberDetails.company_logo"
@@ -121,7 +121,7 @@
                   width="60"
                   height="60"
                 />
-              </VCol>
+              </VCol> -->
               
               <VCol
                 cols="6"
