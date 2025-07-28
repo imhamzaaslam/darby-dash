@@ -12,9 +12,6 @@
         Project Dashboards
       </h3>
     </div>
-    <p class="text-body-1 text-muted mt-1">
-      View real-time insights and analytics to effectively track and manage project performance and progress.
-    </p>
   </div>
   <VRow class="mt-3">
     <VCol
