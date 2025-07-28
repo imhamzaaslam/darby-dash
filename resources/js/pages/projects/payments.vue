@@ -30,7 +30,7 @@
         /> -->
         <h3 class="text-primary">
           {{ project?.title }}
-          <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>
+          <span class="d-block text-xs text-black">{{ project?.project_type }}</span>
         </h3>
       </div>
     </VCol>
@@ -41,6 +41,7 @@
       <div class="d-flex justify-end">
         <VBtn
           prepend-icon="tabler-plus"
+          class="custom-btn-style"
           @click="isAddPaymentDrawerOpen = !isAddPaymentDrawerOpen"
         >
           New Payment

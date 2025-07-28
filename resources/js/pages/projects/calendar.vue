@@ -27,7 +27,7 @@
         /> -->
         <h3 class="text-primary">
           {{ project?.title }}
-          <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>
+          <span class="d-block text-xs text-black">{{ project?.project_type }}</span>
         </h3>
       </div>
     </VCol>

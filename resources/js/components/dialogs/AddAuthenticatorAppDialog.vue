@@ -81,7 +81,7 @@ const resetAuthCode = () => {
           <div class="d-flex justify-end flex-wrap gap-4">
             <VBtn
               color="secondary"
-              variant="tonal"
+              class="custom-secondary-btn"
               @click="resetAuthCode"
             >
               Cancel
@@ -89,6 +89,7 @@ const resetAuthCode = () => {
 
             <VBtn
               type="submit"
+              class="custom-btn-style"
               @click="formSubmit"
             >
               Continue

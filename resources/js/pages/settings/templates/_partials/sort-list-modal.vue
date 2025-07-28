@@ -60,7 +60,7 @@
             <div>
               <VBtn
                 color="success"
-                class="me-1"
+                class="me-1 custom-btn-style"
                 icon
                 size="x-small"
                 @click.stop="saveNewList"
@@ -80,7 +80,7 @@
             <div>
               <VBtn
                 color="error"
-                class="ms-1"
+                class="ms-1 error-btn-customer-style"
                 icon
                 size="x-small"
                 @click.stop="cancelAddList"
@@ -110,7 +110,7 @@
         >
           <VBtn
             color="primary"
-            class="mt-2 float-right mb-2"
+            class="mt-2 float-right mb-2 custom-btn-style"
             size="small"
             @click.stop="toggleAddList"
           >
@@ -156,7 +156,7 @@
                 />
                 <div>
                   <VBtn
-                    color="success"
+                    color="success custom-btn-style"
                     class="ms-2"
                     icon
                     size="x-small"
@@ -177,7 +177,7 @@
                 <div>
                   <VBtn
                     color="error"
-                    class="ms-1"
+                    class="ms-1 error-btn-customer-style"
                     icon
                     size="x-small"
                     @click.stop="cancelEdit(list)"
@@ -221,12 +221,14 @@
       <VCardText class="d-flex justify-end gap-3 flex-wrap px-3 mb-0">
         <VBtn
           color="secondary"
+          class="custom-secondary-btn"
           @click="$emit('update:isSortListModalOpen', false)"
         >
           Cancel
         </VBtn>
         <VBtn
           :disabled="loadStatus === 1"
+          class="custom-btn-style"
           @click="saveSortedOrder"
         >
           <VProgressCircular

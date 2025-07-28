@@ -24,7 +24,7 @@
           <VBtn
             :disabled="!isAccountDeleted"
             color="error"
-            class="mt-3"
+            class="mt-3 error-btn-customer-style"
             @click="isConfirmDeleteAccountDialogOpen = true"
           >
             Delete Account
@@ -56,7 +56,7 @@
           <!-- Button for Delete Account -->
           <VBtn
             :disabled="!isCancelSubscription"
-            color="error"
+            color="error error-btn-customer-style"
             class="mt-3"
             @click="isConfirmCancelSubscriptionDialogOpen = true"
           >

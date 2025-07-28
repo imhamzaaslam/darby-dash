@@ -104,6 +104,7 @@
           <VCardText class="d-flex flex-wrap gap-4">
             <VBtn
               type="submit"
+              class="custom-btn-style"
               :disabled="getLoadStatus === 1"
             >
               <span v-if="getLoadStatus === 1">

@@ -57,7 +57,7 @@
                 <div class="d-flex justify-start">
                   <VBtn
                     type="submit"
-                    class="me-2"
+                    class="me-2 custom-btn-style"
                     :disabled="props.getLoadStatus === 1"
                   >
                     <span v-if="props.getLoadStatus === 1">
@@ -74,7 +74,7 @@
                   </VBtn>
                   <VBtn
                     color="error"
-                    variant="tonal"
+                    class="error-btn-customer-style"
                     @click="resetFilters"
                   >
                     Reset

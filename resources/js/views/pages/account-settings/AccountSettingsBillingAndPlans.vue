@@ -147,7 +147,7 @@ const resetPaymentForm = () => {
             <VCol cols="12">
               <div class="d-flex flex-wrap gap-y-4">
                 <VBtn
-                  class="me-3"
+                  class="me-3 custom-btn-style"
                   @click="isPricingPlanDialogVisible = true"
                 >
                   upgrade plan
@@ -155,7 +155,7 @@ const resetPaymentForm = () => {
 
                 <VBtn
                   color="secondary"
-                  variant="tonal"
+                  class="custom-secondary-btn"
                   @click="isConfirmDialogVisible = true"
                 >
                   Cancel Subscription

@@ -33,7 +33,7 @@
         /> -->
         <h3 class="text-primary">
           {{ project?.title }}
-          <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>
+          <span class="d-block text-xs text-black">{{ project?.project_type }}</span>
         </h3>
       </div>
     </VCol>
@@ -155,12 +155,14 @@
               <VCardText class="d-flex justify-end gap-3 flex-wrap">
                 <VBtn
                   color="secondary"
+                  class="custom-secondary-btn"
                   @click="isAddListDialogVisible = false"
                 >
                   Cancel
                 </VBtn>
                 <VBtn
                   :disabled="getListLoadStatus === 1"
+                  class="custom-btn-style"
                   type="submit"
                   @click="addListForm?.validate()"
                 >
@@ -799,7 +801,7 @@
                           <VBtn
                             color="primary"
                             size="x-small"
-                            class="me-2"
+                            class="me-2 custom-btn-style"
                             :disabled="isSavingTime"
                             @click="saveTime(item)"
                           >
@@ -816,7 +818,7 @@
                             </span>
                           </VBtn>
                           <VBtn
-                            color="secondary"
+                            color="secondary custom-secondary-btn"
                             size="x-small"
                             class="me-2"
                             @click="inputTimeRef[item.id] = false"
@@ -825,6 +827,7 @@
                           </VBtn>
                           <VBtn
                             color="error"
+                            class="error-btn-customer-style"
                             size="x-small"
                             @click="resetTime(item)"
                           >
@@ -892,7 +895,7 @@
                         size="x-small"
                         color="primary ms-6 me-2"
                       />
-                      <span class="text-grey-600">{{ subtask.name.length > 50 ? subtask.name.substring(0, 50) + '...' : subtask.name }}</span>
+                      <span class="text-black">{{ subtask.name.length > 50 ? subtask.name.substring(0, 50) + '...' : subtask.name }}</span>
                       <span
                         v-if="subtask?.files_count > 0"
                         class="text-sm font-weight-bold cursor-pointer ms-1"
@@ -1212,7 +1215,7 @@
                             <VBtn
                               color="primary"
                               size="x-small"
-                              class="me-2"
+                              class="me-2 custom-btn-style"
                               :disabled="isSavingTime"
                               @click="saveTime(subtask)"
                             >
@@ -1230,6 +1233,7 @@
                             </VBtn>
                             <VBtn
                               color="secondary"
+                              class="custom-secondary-btn"
                               size="x-small"
                               @click="inputTimeRef[subtask.id] = false"
                             >
@@ -1760,6 +1764,7 @@
               <VBtn
                 color="primary"
                 variant="plain"
+                class="custom-btn-style"
                 size="small"
                 @click="activateAddKanbanListTask(status)"
               >

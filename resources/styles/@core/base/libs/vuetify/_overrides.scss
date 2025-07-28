@@ -24,7 +24,7 @@ h6,
 .text-button,
 .text-overline,
 .v-card-title {
-  color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
+  color: #000000;
 }
 
 body,
@@ -32,8 +32,93 @@ body,
 .text-body-2,
 .text-subtitle-1,
 .text-subtitle-2 {
-  color: rgba(var(--v-theme-on-background), var(--v-medium-emphasis-opacity));
+  color: #000000;
 }
+
+body .app-text-field .v-label, body .app-select .v-label, body .app-autocomplete .v-label, body .app-combobox .v-label, body .app-textarea .v-label, body .app-picker-field .v-label {
+  color: #000000 !important;
+}
+
+body .v-switch .v-label {
+  color: #000000;
+}
+
+.text-black {
+  color: #000000;
+}
+
+body .v-timeline-item .app-timeline-title{
+  color: #000000; 
+}
+
+.v-card--variant-elevated, .v-card--variant-flat {
+  color: #000000; 
+}
+
+body .v-timeline-item .app-timeline-meta {
+  color: #000000;
+}
+
+body .v-list {
+  color: #000000;
+}
+
+body .text-high-emphasis {
+  color: #000000 !important;
+}
+
+.light-gray {
+  color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity)) !important;
+}
+
+body .v-application {
+  color: #000000;
+}
+
+body .v-table th {
+  color: #000000 !important;
+}
+
+body .v-table {
+  color: #000000;
+}
+
+body .custom-btn-style.v-btn {
+  background-color: transparent !important;
+  border: 1px solid rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-primary)) !important;
+  box-shadow: none !important;
+}
+
+body .custom-btn-style.v-btn:hover {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: white !important;
+}
+
+body .error-btn-customer-style.v-btn {
+  background-color: transparent !important;
+  border: 1px solid rgb(var(--v-theme-error)) !important;
+  color: rgb(var(--v-theme-error)) !important;
+  box-shadow: none !important;
+}
+
+body .error-btn-customer-style.v-btn:hover {
+  background-color: rgb(var(--v-theme-error)) !important;
+  color: white !important;
+}
+
+body .custom-secondary-btn.v-btn {
+  background-color: transparent !important;
+  border: 1px solid rgb(var(--v-theme-secondary)) !important;
+  color: rgb(var(--v-theme-secondary)) !important;
+  box-shadow: none !important;
+}
+
+body .custom-secondary-btn.v-btn:hover {
+  background-color: rgb(var(--v-theme-secondary)) !important;
+  color: white !important;
+}
+
 
 // 👉 Grid
 // Remove margin-bottom of v-input_details inside grid (validation error message)

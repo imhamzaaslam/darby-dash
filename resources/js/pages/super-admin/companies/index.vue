@@ -55,7 +55,7 @@
           <VBtn
             icon
             color="td-hover"
-            class="ma-2"
+            class="ma-2 custom-btn-style"
             size="small"
             rounded="pills"
             @click.prevent
@@ -127,6 +127,7 @@
                               icon="tabler-pin-invoke"
                               variant="text"
                               color="primary"
+                              class="custom-btn-style"
                               @click.stop=""
                             />
                           </template>
@@ -245,6 +246,7 @@
                                   icon="tabler-pin-invoke"
                                   variant="text"
                                   color="primary"
+                                  class="custom-btn-style"
                                   @click.stop=""
                                 />
                               </template>
@@ -298,7 +300,7 @@
                         </div>
                       </div>
                       <VBtn
-                        class="ms-auto"
+                        class="ms-auto custom-btn-style"
                         color="primary"
                         size="x-small"
                         variant="elevated"

@@ -53,6 +53,7 @@
                 <VBtn
                   block
                   type="submit"
+                  class="custom-btn-style"
                   :disabled="loadStatus"
                 >
                   <VProgressCircular

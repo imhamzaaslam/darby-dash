@@ -23,6 +23,7 @@
           <VBtn
             type="submit"
             color="primary"
+            class="custom-btn-style"
             :disabled="folderLoadStatus === 1"
           >
             <span v-if="folderLoadStatus === 1">
@@ -39,6 +40,7 @@
           </VBtn>
           <VBtn
             color="secondary"
+            class="custom-secondary-btn"
             @click="closeDialog"
           >
             Cancel

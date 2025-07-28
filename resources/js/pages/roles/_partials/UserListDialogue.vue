@@ -108,6 +108,7 @@
       <VCardText class="d-flex justify-end gap-3 flex-wrap px-3 mb-0">
         <VBtn
           color="secondary"
+          class="custom-secondary-btn"
           @click="$emit('update:isDialogVisible', false)"
         >
           Cancel

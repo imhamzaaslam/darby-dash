@@ -54,7 +54,7 @@
             <VBtn
               color="primary"
               size="small"
-              class="mt-8"
+              class="mt-8 custom-btn-style"
               rounded="pill"
               @click="editPermission(item)"
             >

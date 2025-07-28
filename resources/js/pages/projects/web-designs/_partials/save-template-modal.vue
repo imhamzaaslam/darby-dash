@@ -26,12 +26,14 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             color="secondary"
+            class="custom-secondary-btn"
             @click="$emit('update:isSaveTemplateModalOpen', false)"
           >
             Cancel
           </VBtn>
           <VBtn
             :disabled="loadStatus === 1"
+            class="custom-btn-style"
             type="submit"
             @click="saveTemplateForm?.validate()"
           >

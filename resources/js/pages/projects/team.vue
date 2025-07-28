@@ -32,7 +32,7 @@
           /> -->
           <h3 class="text-primary">
             {{ project?.title }}
-            <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>
+            <span class="d-block text-xs text-black">{{ project?.project_type }}</span>
           </h3>
         </div>
       </VCol>
@@ -66,7 +66,7 @@
           <VBtn
             icon
             color="td-hover"
-            class="ma-2"
+            class="ma-2 custom-btn-style"
             size="small"
             rounded="pills"
             @click.prevent
@@ -379,6 +379,7 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             type="submit"
+            class="custom-btn-style"
             :disabled="getProjectLoadStatus === 1"
             @click="addMemberForm?.validate()"
           >
@@ -396,6 +397,7 @@
           </VBtn>
           <VBtn
             color="secondary"
+            class="custom-secondary-btn"
             @click="isAddMemberDialogueOpen = false"
           >
             Cancel

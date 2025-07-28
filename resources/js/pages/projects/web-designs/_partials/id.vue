@@ -31,7 +31,7 @@
           /> -->
           <h3 class="text-primary">
             {{ project?.title }}
-            <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>
+            <span class="d-block text-xs text-black">{{ project?.project_type }}</span>
           </h3>
         </div>
       </div>
@@ -55,6 +55,7 @@
           size="x-small"
           color="primary"
           rounded="pill"
+          class="custom-btn-style"
           @click="openAwardBucksDialogue"
         >
           <VIcon
@@ -180,7 +181,7 @@
                 <div class="d-flex justify-end mt-4">
                   <VBtn
                     color="primary"
-                    class="me-2"
+                    class="me-2 custom-btn-style"
                     size="x-small"
                     :disabled="getListLoadStatus === 1"
                     @click.stop="saveList"
@@ -199,6 +200,7 @@
                   </VBtn>
                   <VBtn
                     color="secondary"
+                    class="custom-secondary-btn"
                     size="x-small"
                     outlined
                     @click.stop="resetListPlaceholderForm"
@@ -287,6 +289,7 @@
               size="small"
               rounded="pill"
               color="primary"
+              class="custom-btn-style"
               :to="`/projects/${projectUuid}/team`"
             >
               Add Team Member
@@ -322,7 +325,7 @@
               </template>
               <VListItemTitle class="font-weight-medium">
                 <RouterLink
-                  class="text-grey-800"
+                  class="text-black"
                   :to="`/projects/${projectUuid}/chat?inbox=${inbox.uuid}`"
                 >
                   {{ inbox.name_first + ' ' + inbox.name_last }}
@@ -353,6 +356,7 @@
             size="small"
             rounded="pill"
             color="primary"
+            class="custom-btn-style"
             :to="`/projects/${projectUuid}/chat`"
           >
             Write Message
@@ -394,6 +398,7 @@
                 size="small"
                 rounded="pill"
                 color="primary"
+                class="custom-btn-style"
               >
                 Add Task
               </VBtn>
@@ -577,6 +582,7 @@
                 size="small"
                 rounded="pill"
                 color="primary"
+                class="custom-btn-style"
               >
                 Add Event
               </VBtn>
@@ -591,6 +597,7 @@
                 size="small"
                 rounded="pill"
                 color="primary"
+                class="custom-btn-style"
               >
                 Add More Event
               </VBtn>
@@ -697,7 +704,7 @@
                   </span>
                   <span class="app-timeline-meta">{{ activity.time }}</span>
                 </div>
-                <p class="text-body-2 text-high-emphasis  mb-2">
+                <p class="text-body-2 light-gray  mb-2">
                   {{ truncateDescription(activity.subtitle, 55) }}
                 </p>
               </VTimelineItem>
@@ -811,6 +818,7 @@
                         size="small"
                         rounded="pill"
                         color="primary"
+                        class="custom-btn-style"
                       >
                         Start A Chat
                       </VBtn>
@@ -821,6 +829,7 @@
                         size="small"
                         rounded="pill"
                         color="primary"
+                        class="custom-btn-style"
                       >
                         Send A Message
                       </VBtn>
@@ -852,6 +861,7 @@
                   size="small"
                   rounded="pill"
                   color="primary"
+                  class="custom-btn-style"
                 >
                   Assign Project Manager
                 </VBtn>
@@ -891,9 +901,9 @@
                   :key="index"
                 >
                   <VSheet
-                    class="mx-2 custom-border"
+                    class="mx-2"
                     height="180"
-                    width="250"
+                    width="510"
                   >
                     <div class="d-flex flex-column px-3 py-2 fill-height">
                       <h4 class="mb-2">
@@ -911,6 +921,7 @@
                           variant="elevated"
                           rounded="pill"
                           color="primary"
+                          class="custom-btn-style"
                           :to="{ name: 'marketplace-service-detail', params: { id: service.uuid } }"
                         >
                           Learn More
@@ -937,6 +948,7 @@
                 size="small"
                 rounded="pill"
                 color="primary"
+                class="custom-btn-style"
                 :to="{ name: 'services-setting' }"
               >
                 Add Services
@@ -1003,6 +1015,7 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             color="secondary"
+            class="custom-secondary-btn"
             @click="closeAwardBucksDialogue"
           >
             Cancel
@@ -1010,6 +1023,7 @@
           <VBtn
             :disabled="loadStatus === 1 || !project.is_bucks_share_assigned_to_pm"
             type="submit"
+            class="custom-btn-style"
             @click="saveAwardedBucksForm?.validate()"
           >
             <VProgressCircular

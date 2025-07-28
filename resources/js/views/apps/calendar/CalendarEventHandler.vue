@@ -333,7 +333,7 @@ const dialogModelValueUpdate = val => {
               >
                 <VBtn
                   type="submit"
-                  class="me-3"
+                  class="me-3 custom-btn-style"
                   :disabled="props.getLoadStatus === 1"
                 >
                   <span v-if="props.getLoadStatus === 1">
@@ -351,6 +351,7 @@ const dialogModelValueUpdate = val => {
                 <VBtn
                   variant="outlined"
                   color="secondary"
+                  class="custom-secondary-btn"
                   @click="onCancel"
                 >
                   Cancel

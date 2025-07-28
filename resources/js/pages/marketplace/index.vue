@@ -28,9 +28,6 @@
         {{ userDetails?.company }} Marketplace
       </h3>
     </div>
-    <p class="text-body-1 text-muted mt-1">
-      Explore a wide range of services offered by {{ userDetails?.company }} to meet all your needs.
-    </p>
   </div>
   
   <!-- Related Services Section -->
@@ -64,7 +61,7 @@
         <VCard
           class="elevation-3 hover-card rounded-sm overflow-hidden"
           style="height: 280px;"
-          @click.stop="showServiceDetails(service)"
+          @click="goToServiceDetail(service.uuid)"
         >
           <VImg
             :src="service.image ? getImageUrl(service?.image?.path) : placeholderImg"
@@ -84,7 +81,8 @@
               variant="elevated"
               rounded="pill"
               size="small"
-              @click.stop="showServiceDetails(service)"
+              class="custom-btn-style"
+              @click="goToServiceDetail(service.uuid)"
             >
               Read More
             </VBtn>
@@ -134,6 +132,7 @@
               variant="elevated"
               rounded="pill"
               size="small"
+              class="custom-btn-style"
               @click="goToServiceDetail(selectedService.uuid)"
             >
               Learn more <VIcon

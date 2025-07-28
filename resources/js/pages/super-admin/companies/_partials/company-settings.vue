@@ -323,6 +323,7 @@
               <VCardActions class="px-0 py-3">
                 <VBtn
                   color="primary"
+                  class="custom-btn-style"
                   :loading="isLoading"
                   size="small"
                   variant="flat"
@@ -363,6 +364,7 @@
             <VCardActions class="px-5 d-flex justify-end">
               <VBtn
                 color="primary"
+                class="custom-btn-style"
                 :loading="isLoading"
                 size="small"
                 variant="flat"
@@ -429,6 +431,7 @@
             <VCardActions class="px-5 py-3 d-flex justify-end">
               <VBtn
                 color="primary"
+                class="custom-btn-style"
                 :loading="isLoading"
                 size="small"
                 variant="flat"
@@ -484,6 +487,7 @@
             <VCardActions class="px-5 py-3 d-flex justify-end">
               <VBtn
                 color="primary"
+                class="custom-btn-style"
                 :loading="isLoading"
                 size="small"
                 variant="flat"
@@ -509,6 +513,7 @@
               <VBtn
                 variant="elevated"
                 color="primary"
+                class="custom-btn-style"
                 size="small"
                 prepend-icon="tabler-plus"
                 @click="isAddMemberDialogVisible = true"
@@ -640,7 +645,7 @@
               </p>
               <VBtn
                 color="error"
-                variant="tonal"
+                class="error-btn-customer-style"
                 size="small"
                 @click="confirmWipeData"
               >
@@ -760,12 +765,14 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             color="secondary"
+            class="custom-secondary-btn"
             @click="isAddMemberDialogVisible = false"
           >
             Cancel
           </VBtn>
           <VBtn
             type="submit"
+            class="custom-btn-style"
             :disabled="getLoadStatus === 1"
             @click="addMemberForm?.validate()"
           >
@@ -885,13 +892,14 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             color="secondary"
+            class="custom-secondary-btn"
             @click="isEditMemberDialogVisible = false"
           >
             Cancel
           </VBtn>
           <VBtn
             type="submit"
-            class="me-2"
+            class="me-2 custom-btn-style"
             :disabled="getLoadStatus === 1"
             @click="editMemberForm?.validate()"
           >

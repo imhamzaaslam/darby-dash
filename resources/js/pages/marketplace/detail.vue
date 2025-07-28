@@ -70,6 +70,7 @@
                 variant="elevated"
                 rounded="pill"
                 color="primary"
+                class="custom-btn-style"
               >
                 Add to Project
               </VBtn>
@@ -154,6 +155,7 @@
               variant="elevated"
               rounded="pill"
               size="small"
+              class="custom-btn-style"
               @click="goToServiceDetail(related.uuid)"
             >
               Learn More
@@ -203,6 +205,7 @@
               variant="elevated"
               rounded="pill"
               size="small"
+              class="custom-btn-style"
               @click="goToServiceDetail(selectedService.uuid)"
             >
               Learn more <VIcon

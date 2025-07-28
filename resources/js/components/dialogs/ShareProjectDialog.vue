@@ -134,6 +134,7 @@ const membersList = [
               <VBtn
                 variant="text"
                 color="secondary"
+                class="custom-secondary-btn"
                 :icon="$vuetify.display.xs"
               >
                 <span class="d-none d-sm-block me-1">{{ member.permission }}</span>
@@ -166,7 +167,7 @@ const membersList = [
           </h6>
 
           <VBtn
-            class="text-capitalize"
+            class="text-capitalize custom-btn-style"
             prepend-icon="tabler-link"
           >
             Copy Project Link

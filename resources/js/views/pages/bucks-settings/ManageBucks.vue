@@ -566,6 +566,7 @@
         <VCardText class="d-flex justify-end gap-3 flex-wrap">
           <VBtn
             color="secondary"
+            class="custom-secondary-btn"
             @click="closeLeaveCommentDialogue"
           >
             Cancel

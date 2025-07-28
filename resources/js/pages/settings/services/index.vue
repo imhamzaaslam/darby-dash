@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VRow class="pb-0">
+    <VRow class="pb-0 mb-2">
       <VCol
         cols="12"
         md="9"
@@ -19,9 +19,6 @@
               Manage Services
             </h3>
           </div>
-          <p class="text-body-1 text-muted mt-1">
-            Efficiently manage and organize the services offered by {{ userDetails?.company }} to enhance operations and deliver exceptional results.
-          </p>
         </div>
       </VCol>
       <VCol
@@ -49,7 +46,7 @@
           <VBtn
             icon
             color="td-hover"
-            class="ms-2"
+            class="ms-2 custom-btn-style"
             size="small"
             rounded="pills"
             @click.prevent

@@ -31,7 +31,7 @@
         /> -->
         <h3 class="text-primary">
           {{ project?.title }}
-          <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>
+          <span class="d-block text-xs text-black">{{ project?.project_type }}</span>
         </h3>
       </div>
     </VCol>
@@ -237,7 +237,7 @@
                   </div>
                 </div>
                 <VBtn
-                  :disabled="loadStatus === 1" 
+                  :disabled="loadStatus === 1"
                   @click="sendMessage(store.getActiveChat?.contact?.uuid, store.getActiveChat?.id)"
                 >
                   <template #append>
@@ -291,6 +291,7 @@
         <VBtn
           v-if="$vuetify.display.smAndDown"
           rounded="xl"
+          class="custom-btn-style"
           @click="startConversation"
         >
           Start Conversation
@@ -299,7 +300,7 @@
         <p
           v-else
           style="max-inline-size: 40ch; text-wrap: balance;"
-          class="text-center text-disabled"
+          class="text-center"
         >
           Start connecting with the people by selecting one of the chat or contact on left
         </p>

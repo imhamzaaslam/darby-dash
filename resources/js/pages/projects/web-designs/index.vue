@@ -19,9 +19,6 @@
               {{ userDetails?.company }} Projects
             </h3>
           </div>
-          <p class="text-body-1 text-muted mt-1">
-            Discover the diverse projects and solutions offered by {{ userDetails?.company }} to fulfill goals.
-          </p>
         </div>
       </VCol>
       <VCol
@@ -56,7 +53,7 @@
             v-if="authStore.hasPermission('project-create')"
             icon
             color="td-hover"
-            class="ma-2"
+            class="ma-2 custom-btn-style"
             size="small"
             rounded="pills"
             @click.prevent
@@ -162,6 +159,7 @@
                       size="x-small"
                       rounded="pill"
                       color="primary"
+                      class="custom-btn-style"
                     >
                       <VIcon
                         icon="tabler-user"
@@ -355,6 +353,7 @@
                           size="x-small"
                           rounded="pill"
                           color="primary"
+                          class="custom-btn-style"
                         >
                           <VIcon
                             icon="tabler-user"

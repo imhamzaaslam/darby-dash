@@ -141,7 +141,7 @@
                 <div class="d-flex justify-start">
                   <VBtn
                     type="submit"
-                    class="me-2"
+                    class="me-2 custom-btn-style"
                     :disabled="getLoadStatus === 1"
                     @click="addMemberForm?.validate()"
                   >
@@ -151,7 +151,11 @@
                     </span>
                     <span v-else>Save</span>
                   </VBtn>
-                  <VBtn color="error" variant="tonal" @click="resetFormFields">
+                  <VBtn 
+                    color="error" 
+                    class="error-btn-customer-style" 
+                    @click="resetFormFields"
+                  >
                     Cancel
                   </VBtn>
                 </div>

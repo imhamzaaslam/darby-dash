@@ -187,7 +187,7 @@
             <div class="d-flex justify-start">
               <VBtn
                 type="submit"
-                class="me-2"
+                class="me-2 custom-btn-style"
                 :disabled="getLoadStatus === 1"
                 @click="addCompanyForm?.validate()"
               >
@@ -205,7 +205,7 @@
               </VBtn>
               <VBtn
                 color="error"
-                variant="tonal"
+                class="error-btn-customer-style"
                 @click="resetFormFields"
               >
                 Reset

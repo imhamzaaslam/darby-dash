@@ -27,7 +27,7 @@
         /> -->
         <h3 class="text-primary">
           {{ project?.title }}
-          <span class="d-block text-xs text-secondary">{{ project?.project_type }}</span>
+          <span class="d-block text-xs text-black">{{ project?.project_type }}</span>
         </h3>
       </div>
     </VCol>
@@ -49,7 +49,7 @@
       <VBtn
         icon
         color="td-hover"
-        class="ma-2"
+        class="ma-2 custom-btn-style"
         size="small"
         rounded="pills"
         @click.prevent

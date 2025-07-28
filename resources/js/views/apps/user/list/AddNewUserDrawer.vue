@@ -190,14 +190,14 @@ const handleDrawerModelValueUpdate = val => {
               <VCol cols="12">
                 <VBtn
                   type="submit"
-                  class="me-3"
+                  class="me-3 custom-btn-style"
                 >
                   Submit
                 </VBtn>
                 <VBtn
                   type="reset"
-                  variant="tonal"
                   color="error"
+                  class="error-btn-customer-style"
                   @click="closeNavigationDrawer"
                 >
                   Cancel

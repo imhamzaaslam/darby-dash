@@ -19,9 +19,6 @@
             {{ userDetails?.company }} Members
           </h3>
         </div>
-        <p class="text-body-1 text-muted mt-1">
-          Meet the dedicated team members of {{ userDetails?.company }} who drive innovation and success.
-        </p>
       </div>
     </VCol>
     <VCol
@@ -55,7 +52,7 @@
         <VBtn
           icon
           color="td-hover"
-          class="ma-2"
+          class="ma-2 custom-btn-style"
           size="small"
           rounded="pills"
           @click.prevent

@@ -75,6 +75,7 @@
                   block
                   type="submit"
                   :disabled="loadStatus === 1"
+                  class="custom-btn-style"
                 >
                   <VProgressCircular
                     v-if="loadStatus === 1"

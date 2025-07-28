@@ -26,6 +26,7 @@
             <div class="d-flex flex-wrap gap-2">
               <VBtn
                 color="primary"
+                class="custom-btn-style"
                 @click="refInputEl?.click()"
               >
                 <VIcon
@@ -205,6 +206,7 @@
               >
                 <VBtn
                   type="submit"
+                  class="custom-btn-style"
                   :disabled="getLoadStatus === 1"
                   @click="editMemberForm?.validate()"
                 >

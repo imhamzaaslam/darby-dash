@@ -207,7 +207,7 @@
                 <div class="mt-2 d-flex justify-end">
                   <VBtn
                     variant="text"
-                    class="text-primary text-sm"
+                    class="text-primary text-sm custom-btn-style"
                     size="x-small"
                     @click="props.openAddNewMemberModal()"
                   >
@@ -301,7 +301,7 @@
                 <div class="d-flex justify-start">
                   <VBtn
                     type="submit"
-                    class="me-2"
+                    class="me-2 custom-btn-style"
                     :disabled="props.getLoadStatus === 1"
                     @click="addProjectForm?.validate()"
                   >
@@ -319,7 +319,7 @@
                   </VBtn>
                   <VBtn
                     color="error"
-                    variant="tonal"
+                    class="error-btn-customer-style"
                     @click="resetForm"
                   >
                     Cancel

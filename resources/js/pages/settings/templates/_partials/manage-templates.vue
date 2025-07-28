@@ -28,7 +28,7 @@
         <VBtn
           icon
           color="td-hover"
-          class="ma-2"
+          class="ma-2 custom-btn-style"
           size="small"
           rounded="pills"
           @click.prevent
@@ -70,12 +70,14 @@
               <VCardText class="d-flex justify-end gap-3 flex-wrap">
                 <VBtn
                   color="secondary"
+                  class="custom-secondary-btn"
                   @click="isAddListDialogVisible = false"
                 >
                   Cancel
                 </VBtn>
                 <VBtn
                   type="submit"
+                  class="custom-btn-style"
                   @click="addListForm?.validate()"
                 >
                   Add
@@ -147,6 +149,7 @@
                   <VBtn
                     v-if="!isListEditing[list.id] && !showAddListTaskField[index]"
                     color="primary"
+                    class="custom-btn-style"
                     variant="plain"
                     size="small"
                     @click.stop="activateQuickListTask(index)"
@@ -449,7 +452,7 @@
                   <VBtn
                     v-if="!showAddListTaskField[index]"
                     color="primary"
-                    class="ms-1 mt-2"
+                    class="ms-1 mt-2 custom-btn-style"
                     variant="plain"
                     size="small"
                     @click="activateQuickListTask(index)"
