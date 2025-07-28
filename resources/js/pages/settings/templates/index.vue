@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VRow class="pb-0">
+    <VRow class="pb-0 mb-1">
       <VCol
         cols="12"
         md="9"
@@ -19,9 +19,6 @@
               Manage Templates
             </h3>
           </div>
-          <p class="text-body-1 text-muted mt-1">
-            Seamlessly manage and organize project templates for {{ userDetails?.company }} to streamline your processes and improve efficiency.
-          </p>
         </div>
       </VCol>
       <VCol

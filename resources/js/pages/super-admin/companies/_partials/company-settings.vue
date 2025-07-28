@@ -1,6 +1,6 @@
 <template>
   <!-- Dashboard Header -->
-  <VRow class="pb-0">
+  <VRow class="pb-0 mb-1">
     <VCol cols="12">
       <div class="d-flex align-center">
         <VAvatar
@@ -14,9 +14,6 @@
           {{ company.display_name }} Settings
         </h3>
       </div>
-      <p class="text-body-1 text-muted mt-1">
-        Manage {{ company.name }}'s details, branding, users, and settings with ease.
-      </p>
     </VCol>
   </VRow>
   <VRow class="pt-0 mt-0">

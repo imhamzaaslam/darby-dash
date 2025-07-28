@@ -1,6 +1,6 @@
 <template>
   <Loader v-if="isRoleFetching" />
-  <VRow class="pb-0">
+  <VRow class="pb-0 mb-1">
     <VCol cols="12">
       <div class="d-flex align-center">
         <VAvatar
@@ -14,9 +14,6 @@
           Manage Roles & Permissions
         </h3>
       </div>
-      <p class="text-body-1 text-muted mt-1">
-        Effortlessly manage {{ userDetails?.company }}'s roles, permissions, user details, and settings to optimize team workflows.
-      </p>
     </VCol>
   </VRow>
   <VRow>
