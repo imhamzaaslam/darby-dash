@@ -94,7 +94,7 @@
         </VCardTitle>
         <VCardText class="px-4">
           <p
-            class="text-body-1 text-secondary"
+            class="text-body-1 text-black"
             v-html="service?.description || ''"
           />
         </VCardText>
