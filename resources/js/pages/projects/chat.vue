@@ -576,6 +576,7 @@ $chat-app-header-height: 76px;
 .chat-app-layout {
   height: 500px!important;
   border-radius: vuetify.$card-border-radius;
+  z-index: 0 !important;
 
   @include mixins.elevation(vuetify.$card-elevation);
 
