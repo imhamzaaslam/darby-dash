@@ -627,8 +627,10 @@ const deleteProject = async project => {
       text: `Once it’s gone, it’s gone.`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "rgba(var(--v-theme-primary))",
-      cancelButtonColor: "#808390",
+      customClass: {
+        confirmButton: 'v-btn custom-btn-style rounded-pill px-4',
+        cancelButton: 'v-btn custom-secondary-btn rounded-pill px-4',
+      },
       confirmButtonText: "Yes, delete it!",
       didOpen: () => {
         document.querySelector('.swal2-confirm').blur()
@@ -673,8 +675,10 @@ const leaveProject = async project => {
       html: `<small>Do you want to leave project named <b>${project.title}</b>?</small>`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "rgba(var(--v-theme-primary))",
-      cancelButtonColor: "#808390",
+      customClass: {
+        confirmButton: 'v-btn custom-btn-style rounded-pill px-4',
+        cancelButton: 'v-btn custom-secondary-btn rounded-pill px-4',
+      },
       confirmButtonText: "Yes, leave it!",
       didOpen: () => {
         document.querySelector('.swal2-confirm').blur()

@@ -479,8 +479,10 @@ const deleteFile = async file => {
     html: `<small>Do you want to delete this file?</small>`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "rgba(var(--v-theme-primary))",
-    cancelButtonColor: "#808390",
+    customClass: {
+      confirmButton: 'v-btn custom-btn-style rounded-pill px-4',
+      cancelButton: 'v-btn custom-secondary-btn rounded-pill px-4',
+    },
     confirmButtonText: "Yes, remove it!",
     didOpen: () => {
       document.querySelector('.swal2-confirm').blur()

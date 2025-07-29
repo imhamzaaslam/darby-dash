@@ -247,8 +247,6 @@
                   prepend-inner-icon="tabler-percentage"
                 />
               </VCol>
-            </VRow>
-            <VRow>
               <VCol
                 v-if="generalSetting?.is_bucks_setting == 1"
                 md="6"
@@ -260,7 +258,9 @@
                   class="mb-3 mt-5"
                 />
               </VCol>
-              <VCol
+            </VRow>
+            <VRow>
+              <!-- <VCol
                 md="6"
                 cols="12"
               >
@@ -290,7 +290,7 @@
                   width="60"
                   height="60"
                 />
-              </VCol>
+              </VCol> -->
               <VCol cols="12">
                 <div class="d-flex justify-start">
                   <VBtn
