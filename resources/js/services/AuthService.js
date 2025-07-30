@@ -67,7 +67,10 @@ export default {
   forgotPassword: async email => {
     await getCookie()
 
-    return await authClient.post('/forgot-password', email)
+    return await authClient.post('/api/forgot-password', {
+      'email': email.email,
+      'frontendUrl': window.location.origin,
+    })
   },
 
   getAuthUser: () => {

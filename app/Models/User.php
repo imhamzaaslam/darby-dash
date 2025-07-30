@@ -36,6 +36,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\UserRole;
+use App\Notifications\CustomResetPassword;
 
 /**
  * App\Models\User
@@ -163,6 +164,11 @@ class User extends Authenticatable implements MustVerifyEmail, BaseInterface
         'email_verified_at' => 'datetime',
         'last_active_at' => 'datetime',
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPassword($token));
+    }
 
     public function info(): HasOne
     {

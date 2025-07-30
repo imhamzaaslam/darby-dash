@@ -1,22 +1,25 @@
 <template>
-  <RouterLink to="/">
-    <div class="auth-logo d-flex align-center justify-center gap-x-3">
-      <VNodeRenderer :nodes="themeConfig.app.loginPageLogo" />
-    </div>
-  </RouterLink>
-  
   <VRow
     no-gutters
     class="auth-wrapper bg-surface"
   >
     <VCol
       cols="12"
-      class="d-flex align-center justify-center"
+      class="d-flex flex-column align-center justify-center"
     >
+      <RouterLink 
+        to="/"
+        class="mb-7"
+      >
+        <div class="d-flex align-center justify-center gap-x-3">
+          <VNodeRenderer :nodes="themeConfig.app.loginPageLogo" />
+        </div>
+      </RouterLink>
       <VCard
-        class="auth-card"
-        max-width="500"
-        :class="$vuetify.display.smAndUp ? 'pa-4' : 'pa-1'"
+        :max-width="500"
+        width="100%"
+        style="min-height: 400px;"
+        class="mt-12 mt-sm-0 pa-4"
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
@@ -118,8 +121,8 @@ const loadStatus = ref(false)
   
 async function submit() {
   refForm.value?.validate().then(async ({ valid: isValid }) => {
-    loadStatus.value = true
     if (isValid) {
+      loadStatus.value = true
       let paylaod = {
         email: form.value.email,
       }
@@ -129,13 +132,11 @@ async function submit() {
 
         if (response.status === 200) {
           toast.success(response.data.message)
+        } else {
+          toast.error('Something went wrong, Please try again later.')
         }
       } catch (error) {
-        if (error.response.status === 422) {
-          toast.error(error.response.data.message)
-        } else {
-          toast.error('Something went wrong. Please try again later.')
-        }
+        toast.error(error.response?.data?.message || 'Something went wrong, Please try again later.')
       }finally{
         loadStatus.value = false
       }
