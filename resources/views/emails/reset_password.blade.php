@@ -44,18 +44,6 @@
         margin: 0 0 15px;
     }
 
-    .reset-button {
-        display: inline-block;
-        padding: 8px 18px;
-        background-color: #2d3748;
-        color: #ffffff !important;
-        text-decoration: none;
-        border-radius: 4px;
-        font-weight: 600;
-        font-size: 14px;
-        text-align: center;
-    }
-
     .email-footer {
         padding: 20px;
         background-color: #f8f9fa;
@@ -79,8 +67,12 @@
         <strong>Hello!</strong>
         <p>You are receiving this email because we received a password reset request for your account.</p>
 
-        <p style="text-align: center;">
-            <a href="{{ $actionUrl }}" class="reset-button">Reset Password</a>
+        <p>
+            <a
+                href="{{ $actionUrl }}"
+                style="display: inline-block; padding: 8px 18px; background-color: #2d3748; color: #ffffff !important; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 14px; text-align: center;">
+                Reset Password
+            </a>
         </p>
 
         <p>If you did not request a password reset, no further action is required.</p>
