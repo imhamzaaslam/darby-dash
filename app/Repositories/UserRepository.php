@@ -64,6 +64,9 @@ class UserRepository extends AbstractUserRepository implements UserRepositoryInt
 
     public function delete(User $user): bool
     {
+        $user->email = 'deleted_' . $user->email;
+        $user->save();
+        
         return $user->delete();
     }
 

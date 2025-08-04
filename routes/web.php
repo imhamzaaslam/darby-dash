@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,8 @@ Route::get('/add-test-log', function () {
     Log::info('Test log entry from web route.');
     return 'Test log entry created.';
 });
+
+Route::get('update-deleted-user-mails', [TestController::class, 'testUpdateDeletedUserMails']);
 
 Route::get('{any?}', function() {
     return view('application');
