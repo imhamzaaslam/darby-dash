@@ -1,3 +1,3 @@
 <div class="email-header">
-    <h3>{{ $title }}</h3>
+    <h3 style="color: #8D117E;">{{ $title }}</h3>
 </div>

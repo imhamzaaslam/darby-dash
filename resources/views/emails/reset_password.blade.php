@@ -70,13 +70,13 @@
         <p>
             <a
                 href="{{ $actionUrl }}"
-                style="display: inline-block; padding: 8px 18px; background-color: #2d3748; color: #ffffff !important; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 14px; text-align: center;">
+                style="display: inline-block; padding: 8px 18px; background-color: #8D117E; color: #ffffff !important; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 14px; text-align: center;">
                 Reset Password
             </a>
         </p>
 
         <p>If you did not request a password reset, no further action is required.</p>
-        <p>Thank,<br>{{ config('app.name') }}</p>
+        <p>Thanks,<br>{{ config('app.name') }}</p>
     </div>
 
     @include('emails._partials.footer')
