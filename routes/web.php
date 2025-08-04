@@ -24,10 +24,8 @@ Route::get('last-change', function () {
 
 Route::get('send-test-email', function () {
     try {
-        ini_set('max_execution_time', 120);
-        
         Mail::raw('This is a test email.', function ($message) {
-            $message->to('rezoprogrammer@gmail.com')
+            $message->to('muzammilshahzad894@gmail.com')
                     ->subject('Test Email');
         });
         return 'Test email sent successfully!';

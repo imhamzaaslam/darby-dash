@@ -82,7 +82,7 @@ export default {
   resetPassword: async payload => {
     await getCookie()
 
-    return await authClient.post('/reset-password', payload)
+    return await authClient.post('/api/reset-password', payload)
   },
 
   updatePassword: payload => {

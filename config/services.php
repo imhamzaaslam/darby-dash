@@ -49,4 +49,9 @@ return [
     'yuki' => [
         'url' => env('YUKI_SOAP_URL'),
     ],
+
+    'resend' => [
+        'api_key' => env('RESEND_API_KEY'),
+        'from_email' => env('RESEND_FROM_EMAIL'),
+    ],
 ];

@@ -205,6 +205,7 @@ return [
         App\Providers\YukiServiceProvider::class,
         App\Providers\TenancyServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+        App\Providers\MailServiceProvider::class,
 
     ],
 
@@ -222,7 +223,6 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Vat' => \App\Facades\VatFacade::class,
     ])->toArray(),
 
     'admin' => [
