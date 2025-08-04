@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,11 @@ Route::get('/log-channel', function () {
     return response()->json([
         'default_log_channel' => config('logging.default'),
     ]);
+});
+
+Route::get('/add-test-log', function () {
+    Log::info('Test log entry from web route.');
+    return 'Test log entry created.';
 });
 
 Route::get('{any?}', function() {
