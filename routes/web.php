@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\TestController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,10 +24,13 @@ Route::get('last-change', function () {
     return '7/7/2025 07:02 PM';
 });
 
-Route::get('send-test-email', function () {
+Route::get('send-test-email', function (Request $request) {
+    if(!$request->has('email')) {
+        return 'Email address is required.';
+    }
     try {
-        Mail::raw('This is a test email.', function ($message) {
-            $message->to('muzammilshahzad894@gmail.com')
+        Mail::raw('This is a test email.', function ($message) use ($request) {
+            $message->to($request->email)
                     ->subject('Test Email');
         });
         return 'Test email sent successfully!';
