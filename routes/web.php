@@ -35,6 +35,12 @@ Route::get('send-test-email', function () {
     }
 });
 
+Route::get('/log-channel', function () {
+    return response()->json([
+        'default_log_channel' => config('logging.default'),
+    ]);
+});
+
 Route::get('{any?}', function() {
     return view('application');
 })->where('any', '.*');
