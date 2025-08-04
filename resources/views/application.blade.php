@@ -59,6 +59,8 @@
         if (primaryColor)
             document.documentElement.style.setProperty('--initial-loader-color', primaryColor)
     </script>
+    <script defer data-domain="dash.darbyware.com" src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"></script>
+    <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
 </body>
 
 </html>
